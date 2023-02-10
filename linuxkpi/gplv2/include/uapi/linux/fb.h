@@ -23,6 +23,6 @@
 #define FB_ROTATE_UD      2
 #define FB_ROTATE_CCW     3
 
-#define FBIO_WAITFORVSYNC	_IOW('F', 0x20, __u32)
+#define FBIO_WAITFORVSYNC  _IOW('F', 0x20, __u32)
 
 #endif

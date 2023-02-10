@@ -68,9 +68,9 @@ struct dc_plane_state;
 struct dmub_notification;
 
 struct common_irq_params {
-	struct amdgpu_device *adev;
-	enum dc_irq_source irq_src;
-	atomic64_t previous_timestamp;
+  struct amdgpu_device *adev;
+  enum dc_irq_source irq_src;
+  atomic64_t previous_timestamp;
 };
 
 /**
@@ -80,9 +80,9 @@ struct common_irq_params {
  * @gpu_addr: MMIO gpu addr
  */
 struct dm_compressor_info {
-	void *cpu_addr;
-	struct amdgpu_bo *bo_ptr;
-	uint64_t gpu_addr;
+  void *cpu_addr;
+  struct amdgpu_bo *bo_ptr;
+  uint64_t gpu_addr;
 };
 
 /**
@@ -93,10 +93,10 @@ struct dm_compressor_info {
  * @enable: true if enable vblank
  */
 struct vblank_workqueue {
-	struct work_struct mall_work;
-	struct amdgpu_display_manager *dm;
-	int otg_inst;
-	bool enable;
+  struct work_struct mall_work;
+  struct amdgpu_display_manager *dm;
+  int otg_inst;
+  bool enable;
 };
 
 /**
@@ -105,36 +105,36 @@ struct vblank_workqueue {
  * Describe the backlight support for ACPI or eDP AUX.
  */
 struct amdgpu_dm_backlight_caps {
-	/**
-	 * @ext_caps: Keep the data struct with all the information about the
-	 * display support for HDR.
-	 */
-	union dpcd_sink_ext_caps *ext_caps;
-	/**
-	 * @aux_min_input_signal: Min brightness value supported by the display
-	 */
-	u32 aux_min_input_signal;
-	/**
-	 * @aux_max_input_signal: Max brightness value supported by the display
-	 * in nits.
-	 */
-	u32 aux_max_input_signal;
-	/**
-	 * @min_input_signal: minimum possible input in range 0-255.
-	 */
-	int min_input_signal;
-	/**
-	 * @max_input_signal: maximum possible input in range 0-255.
-	 */
-	int max_input_signal;
-	/**
-	 * @caps_valid: true if these values are from the ACPI interface.
-	 */
-	bool caps_valid;
-	/**
-	 * @aux_support: Describes if the display supports AUX backlight.
-	 */
-	bool aux_support;
+  /**
+   * @ext_caps: Keep the data struct with all the information about the
+   * display support for HDR.
+   */
+  union dpcd_sink_ext_caps *ext_caps;
+  /**
+   * @aux_min_input_signal: Min brightness value supported by the display
+   */
+  u32 aux_min_input_signal;
+  /**
+   * @aux_max_input_signal: Max brightness value supported by the display
+   * in nits.
+   */
+  u32 aux_max_input_signal;
+  /**
+   * @min_input_signal: minimum possible input in range 0-255.
+   */
+  int min_input_signal;
+  /**
+   * @max_input_signal: maximum possible input in range 0-255.
+   */
+  int max_input_signal;
+  /**
+   * @caps_valid: true if these values are from the ACPI interface.
+   */
+  bool caps_valid;
+  /**
+   * @aux_support: Describes if the display supports AUX backlight.
+   */
+  bool aux_support;
 };
 
 /**
@@ -145,10 +145,10 @@ struct amdgpu_dm_backlight_caps {
  * @gpu_addr: GPU virtual address of the GPU buffer object
  */
 struct dal_allocation {
-	struct list_head list;
-	struct amdgpu_bo *bo;
-	void *cpu_ptr;
-	u64 gpu_addr;
+  struct list_head list;
+  struct amdgpu_bo *bo;
+  void *cpu_ptr;
+  u64 gpu_addr;
 };
 
 /**
@@ -171,346 +171,346 @@ struct dal_allocation {
  * @cached_dc_state: Cached state of content streams
  * @compressor: Frame buffer compression buffer. See &struct dm_compressor_info
  * @force_timing_sync: set via debugfs. When set, indicates that all connected
- *		       displays will be forced to synchronize.
+ *           displays will be forced to synchronize.
  * @dmcub_trace_event_en: enable dmcub trace events
  */
 struct amdgpu_display_manager {
 
-	struct dc *dc;
+  struct dc *dc;
 
-	/**
-	 * @dmub_srv:
-	 *
-	 * DMUB service, used for controlling the DMUB on hardware
-	 * that supports it. The pointer to the dmub_srv will be
-	 * NULL on hardware that does not support it.
-	 */
-	struct dmub_srv *dmub_srv;
+  /**
+   * @dmub_srv:
+   *
+   * DMUB service, used for controlling the DMUB on hardware
+   * that supports it. The pointer to the dmub_srv will be
+   * NULL on hardware that does not support it.
+   */
+  struct dmub_srv *dmub_srv;
 
-	struct dmub_notification *dmub_notify;
+  struct dmub_notification *dmub_notify;
 
-	/**
-	 * @dmub_fb_info:
-	 *
-	 * Framebuffer regions for the DMUB.
-	 */
-	struct dmub_srv_fb_info *dmub_fb_info;
+  /**
+   * @dmub_fb_info:
+   *
+   * Framebuffer regions for the DMUB.
+   */
+  struct dmub_srv_fb_info *dmub_fb_info;
 
-	/**
-	 * @dmub_fw:
-	 *
-	 * DMUB firmware, required on hardware that has DMUB support.
-	 */
-	const struct firmware *dmub_fw;
+  /**
+   * @dmub_fw:
+   *
+   * DMUB firmware, required on hardware that has DMUB support.
+   */
+  const struct firmware *dmub_fw;
 
-	/**
-	 * @dmub_bo:
-	 *
-	 * Buffer object for the DMUB.
-	 */
-	struct amdgpu_bo *dmub_bo;
+  /**
+   * @dmub_bo:
+   *
+   * Buffer object for the DMUB.
+   */
+  struct amdgpu_bo *dmub_bo;
 
-	/**
-	 * @dmub_bo_gpu_addr:
-	 *
-	 * GPU virtual address for the DMUB buffer object.
-	 */
-	u64 dmub_bo_gpu_addr;
+  /**
+   * @dmub_bo_gpu_addr:
+   *
+   * GPU virtual address for the DMUB buffer object.
+   */
+  u64 dmub_bo_gpu_addr;
 
-	/**
-	 * @dmub_bo_cpu_addr:
-	 *
-	 * CPU address for the DMUB buffer object.
-	 */
-	void *dmub_bo_cpu_addr;
+  /**
+   * @dmub_bo_cpu_addr:
+   *
+   * CPU address for the DMUB buffer object.
+   */
+  void *dmub_bo_cpu_addr;
 
-	/**
-	 * @dmcub_fw_version:
-	 *
-	 * DMCUB firmware version.
-	 */
-	uint32_t dmcub_fw_version;
+  /**
+   * @dmcub_fw_version:
+   *
+   * DMCUB firmware version.
+   */
+  uint32_t dmcub_fw_version;
 
-	/**
-	 * @cgs_device:
-	 *
-	 * The Common Graphics Services device. It provides an interface for
-	 * accessing registers.
-	 */
-	struct cgs_device *cgs_device;
+  /**
+   * @cgs_device:
+   *
+   * The Common Graphics Services device. It provides an interface for
+   * accessing registers.
+   */
+  struct cgs_device *cgs_device;
 
-	struct amdgpu_device *adev;
-	struct drm_device *ddev;
-	u16 display_indexes_num;
+  struct amdgpu_device *adev;
+  struct drm_device *ddev;
+  u16 display_indexes_num;
 
-	/**
-	 * @atomic_obj:
-	 *
-	 * In combination with &dm_atomic_state it helps manage
-	 * global atomic state that doesn't map cleanly into existing
-	 * drm resources, like &dc_context.
-	 */
-	struct drm_private_obj atomic_obj;
+  /**
+   * @atomic_obj:
+   *
+   * In combination with &dm_atomic_state it helps manage
+   * global atomic state that doesn't map cleanly into existing
+   * drm resources, like &dc_context.
+   */
+  struct drm_private_obj atomic_obj;
 
-	/**
-	 * @dc_lock:
-	 *
-	 * Guards access to DC functions that can issue register write
-	 * sequences.
-	 */
-	struct mutex dc_lock;
+  /**
+   * @dc_lock:
+   *
+   * Guards access to DC functions that can issue register write
+   * sequences.
+   */
+  struct mutex dc_lock;
 
-	/**
-	 * @audio_lock:
-	 *
-	 * Guards access to audio instance changes.
-	 */
-	struct mutex audio_lock;
+  /**
+   * @audio_lock:
+   *
+   * Guards access to audio instance changes.
+   */
+  struct mutex audio_lock;
 
 #if defined(CONFIG_DRM_AMD_DC_DCN)
-	/**
-	 * @vblank_lock:
-	 *
-	 * Guards access to deferred vblank work state.
-	 */
-	spinlock_t vblank_lock;
+  /**
+   * @vblank_lock:
+   *
+   * Guards access to deferred vblank work state.
+   */
+  spinlock_t vblank_lock;
 #endif
 
-	/**
-	 * @audio_component:
-	 *
-	 * Used to notify ELD changes to sound driver.
-	 */
-	struct drm_audio_component *audio_component;
+  /**
+   * @audio_component:
+   *
+   * Used to notify ELD changes to sound driver.
+   */
+  struct drm_audio_component *audio_component;
 
-	/**
-	 * @audio_registered:
-	 *
-	 * True if the audio component has been registered
-	 * successfully, false otherwise.
-	 */
-	bool audio_registered;
+  /**
+   * @audio_registered:
+   *
+   * True if the audio component has been registered
+   * successfully, false otherwise.
+   */
+  bool audio_registered;
 
-	/**
-	 * @irq_handler_list_low_tab:
-	 *
-	 * Low priority IRQ handler table.
-	 *
-	 * It is a n*m table consisting of n IRQ sources, and m handlers per IRQ
-	 * source. Low priority IRQ handlers are deferred to a workqueue to be
-	 * processed. Hence, they can sleep.
-	 *
-	 * Note that handlers are called in the same order as they were
-	 * registered (FIFO).
-	 */
-	struct list_head irq_handler_list_low_tab[DAL_IRQ_SOURCES_NUMBER];
+  /**
+   * @irq_handler_list_low_tab:
+   *
+   * Low priority IRQ handler table.
+   *
+   * It is a n*m table consisting of n IRQ sources, and m handlers per IRQ
+   * source. Low priority IRQ handlers are deferred to a workqueue to be
+   * processed. Hence, they can sleep.
+   *
+   * Note that handlers are called in the same order as they were
+   * registered (FIFO).
+   */
+  struct list_head irq_handler_list_low_tab[DAL_IRQ_SOURCES_NUMBER];
 
-	/**
-	 * @irq_handler_list_high_tab:
-	 *
-	 * High priority IRQ handler table.
-	 *
-	 * It is a n*m table, same as &irq_handler_list_low_tab. However,
-	 * handlers in this table are not deferred and are called immediately.
-	 */
-	struct list_head irq_handler_list_high_tab[DAL_IRQ_SOURCES_NUMBER];
+  /**
+   * @irq_handler_list_high_tab:
+   *
+   * High priority IRQ handler table.
+   *
+   * It is a n*m table, same as &irq_handler_list_low_tab. However,
+   * handlers in this table are not deferred and are called immediately.
+   */
+  struct list_head irq_handler_list_high_tab[DAL_IRQ_SOURCES_NUMBER];
 
-	/**
-	 * @pflip_params:
-	 *
-	 * Page flip IRQ parameters, passed to registered handlers when
-	 * triggered.
-	 */
-	struct common_irq_params
-	pflip_params[DC_IRQ_SOURCE_PFLIP_LAST - DC_IRQ_SOURCE_PFLIP_FIRST + 1];
+  /**
+   * @pflip_params:
+   *
+   * Page flip IRQ parameters, passed to registered handlers when
+   * triggered.
+   */
+  struct common_irq_params
+  pflip_params[DC_IRQ_SOURCE_PFLIP_LAST - DC_IRQ_SOURCE_PFLIP_FIRST + 1];
 
-	/**
-	 * @vblank_params:
-	 *
-	 * Vertical blanking IRQ parameters, passed to registered handlers when
-	 * triggered.
-	 */
-	struct common_irq_params
-	vblank_params[DC_IRQ_SOURCE_VBLANK6 - DC_IRQ_SOURCE_VBLANK1 + 1];
+  /**
+   * @vblank_params:
+   *
+   * Vertical blanking IRQ parameters, passed to registered handlers when
+   * triggered.
+   */
+  struct common_irq_params
+  vblank_params[DC_IRQ_SOURCE_VBLANK6 - DC_IRQ_SOURCE_VBLANK1 + 1];
 
-	/**
-	 * @vline0_params:
-	 *
-	 * OTG vertical interrupt0 IRQ parameters, passed to registered
-	 * handlers when triggered.
-	 */
-	struct common_irq_params
-	vline0_params[DC_IRQ_SOURCE_DC6_VLINE0 - DC_IRQ_SOURCE_DC1_VLINE0 + 1];
+  /**
+   * @vline0_params:
+   *
+   * OTG vertical interrupt0 IRQ parameters, passed to registered
+   * handlers when triggered.
+   */
+  struct common_irq_params
+  vline0_params[DC_IRQ_SOURCE_DC6_VLINE0 - DC_IRQ_SOURCE_DC1_VLINE0 + 1];
 
-	/**
-	 * @vupdate_params:
-	 *
-	 * Vertical update IRQ parameters, passed to registered handlers when
-	 * triggered.
-	 */
-	struct common_irq_params
-	vupdate_params[DC_IRQ_SOURCE_VUPDATE6 - DC_IRQ_SOURCE_VUPDATE1 + 1];
+  /**
+   * @vupdate_params:
+   *
+   * Vertical update IRQ parameters, passed to registered handlers when
+   * triggered.
+   */
+  struct common_irq_params
+  vupdate_params[DC_IRQ_SOURCE_VUPDATE6 - DC_IRQ_SOURCE_VUPDATE1 + 1];
 
-	/**
-	 * @dmub_trace_params:
-	 *
-	 * DMUB trace event IRQ parameters, passed to registered handlers when
-	 * triggered.
-	 */
-	struct common_irq_params
-	dmub_trace_params[1];
+  /**
+   * @dmub_trace_params:
+   *
+   * DMUB trace event IRQ parameters, passed to registered handlers when
+   * triggered.
+   */
+  struct common_irq_params
+  dmub_trace_params[1];
 
-	struct common_irq_params
-	dmub_outbox_params[1];
+  struct common_irq_params
+  dmub_outbox_params[1];
 
-	spinlock_t irq_handler_list_table_lock;
+  spinlock_t irq_handler_list_table_lock;
 
-	struct backlight_device *backlight_dev;
+  struct backlight_device *backlight_dev;
 
-	const struct dc_link *backlight_link[AMDGPU_DM_MAX_NUM_EDP];
+  const struct dc_link *backlight_link[AMDGPU_DM_MAX_NUM_EDP];
 
-	uint8_t num_of_edps;
+  uint8_t num_of_edps;
 
-	struct amdgpu_dm_backlight_caps backlight_caps;
+  struct amdgpu_dm_backlight_caps backlight_caps;
 
-	struct mod_freesync *freesync_module;
+  struct mod_freesync *freesync_module;
 #ifdef CONFIG_DRM_AMD_DC_HDCP
-	struct hdcp_workqueue *hdcp_workqueue;
+  struct hdcp_workqueue *hdcp_workqueue;
 #endif
 
 #if defined(CONFIG_DRM_AMD_DC_DCN)
-	/**
-	 * @vblank_workqueue:
-	 *
-	 * amdgpu workqueue during vblank
-	 */
-	struct vblank_workqueue *vblank_workqueue;
+  /**
+   * @vblank_workqueue:
+   *
+   * amdgpu workqueue during vblank
+   */
+  struct vblank_workqueue *vblank_workqueue;
 #endif
 
-	struct drm_atomic_state *cached_state;
-	struct dc_state *cached_dc_state;
+  struct drm_atomic_state *cached_state;
+  struct dc_state *cached_dc_state;
 
-	struct dm_compressor_info compressor;
+  struct dm_compressor_info compressor;
 
-	const struct firmware *fw_dmcu;
-	uint32_t dmcu_fw_version;
-	/**
-	 * @soc_bounding_box:
-	 *
-	 * gpu_info FW provided soc bounding box struct or 0 if not
-	 * available in FW
-	 */
-	const struct gpu_info_soc_bounding_box_v1_0 *soc_bounding_box;
+  const struct firmware *fw_dmcu;
+  uint32_t dmcu_fw_version;
+  /**
+   * @soc_bounding_box:
+   *
+   * gpu_info FW provided soc bounding box struct or 0 if not
+   * available in FW
+   */
+  const struct gpu_info_soc_bounding_box_v1_0 *soc_bounding_box;
 
 #if defined(CONFIG_DRM_AMD_DC_DCN)
-	/**
-	 * @active_vblank_irq_count:
-	 *
-	 * number of currently active vblank irqs
-	 */
-	uint32_t active_vblank_irq_count;
+  /**
+   * @active_vblank_irq_count:
+   *
+   * number of currently active vblank irqs
+   */
+  uint32_t active_vblank_irq_count;
 #endif
 
 #if defined(CONFIG_DRM_AMD_SECURE_DISPLAY)
-	/**
-	 * @crc_rd_wrk:
-	 *
-	 * Work to be executed in a separate thread to communicate with PSP.
-	 */
-	struct crc_rd_work *crc_rd_wrk;
+  /**
+   * @crc_rd_wrk:
+   *
+   * Work to be executed in a separate thread to communicate with PSP.
+   */
+  struct crc_rd_work *crc_rd_wrk;
 #endif
 
-	/**
-	 * @mst_encoders:
-	 *
-	 * fake encoders used for DP MST.
-	 */
-	struct amdgpu_encoder mst_encoders[AMDGPU_DM_MAX_CRTC];
-	bool force_timing_sync;
-	bool disable_hpd_irq;
-	bool dmcub_trace_event_en;
-	/**
-	 * @da_list:
-	 *
-	 * DAL fb memory allocation list, for communication with SMU.
-	 */
-	struct list_head da_list;
-	struct completion dmub_aux_transfer_done;
+  /**
+   * @mst_encoders:
+   *
+   * fake encoders used for DP MST.
+   */
+  struct amdgpu_encoder mst_encoders[AMDGPU_DM_MAX_CRTC];
+  bool force_timing_sync;
+  bool disable_hpd_irq;
+  bool dmcub_trace_event_en;
+  /**
+   * @da_list:
+   *
+   * DAL fb memory allocation list, for communication with SMU.
+   */
+  struct list_head da_list;
+  struct completion dmub_aux_transfer_done;
 
-	/**
-	 * @brightness:
-	 *
-	 * cached backlight values.
-	 */
-	u32 brightness[AMDGPU_DM_MAX_NUM_EDP];
+  /**
+   * @brightness:
+   *
+   * cached backlight values.
+   */
+  u32 brightness[AMDGPU_DM_MAX_NUM_EDP];
 };
 
 enum dsc_clock_force_state {
-	DSC_CLK_FORCE_DEFAULT = 0,
-	DSC_CLK_FORCE_ENABLE,
-	DSC_CLK_FORCE_DISABLE,
+  DSC_CLK_FORCE_DEFAULT = 0,
+  DSC_CLK_FORCE_ENABLE,
+  DSC_CLK_FORCE_DISABLE,
 };
 
 struct dsc_preferred_settings {
-	enum dsc_clock_force_state dsc_force_enable;
-	uint32_t dsc_num_slices_v;
-	uint32_t dsc_num_slices_h;
-	uint32_t dsc_bits_per_pixel;
-	bool dsc_force_disable_passthrough;
+  enum dsc_clock_force_state dsc_force_enable;
+  uint32_t dsc_num_slices_v;
+  uint32_t dsc_num_slices_h;
+  uint32_t dsc_bits_per_pixel;
+  bool dsc_force_disable_passthrough;
 };
 
 struct amdgpu_dm_connector {
 
-	struct drm_connector base;
-	uint32_t connector_id;
+  struct drm_connector base;
+  uint32_t connector_id;
 
-	/* we need to mind the EDID between detect
-	   and get modes due to analog/digital/tvencoder */
-	struct edid *edid;
+  /* we need to mind the EDID between detect
+     and get modes due to analog/digital/tvencoder */
+  struct edid *edid;
 
-	/* shared with amdgpu */
-	struct amdgpu_hpd hpd;
+  /* shared with amdgpu */
+  struct amdgpu_hpd hpd;
 
-	/* number of modes generated from EDID at 'dc_sink' */
-	int num_modes;
+  /* number of modes generated from EDID at 'dc_sink' */
+  int num_modes;
 
-	/* The 'old' sink - before an HPD.
-	 * The 'current' sink is in dc_link->sink. */
-	struct dc_sink *dc_sink;
-	struct dc_link *dc_link;
-	struct dc_sink *dc_em_sink;
+  /* The 'old' sink - before an HPD.
+   * The 'current' sink is in dc_link->sink. */
+  struct dc_sink *dc_sink;
+  struct dc_link *dc_link;
+  struct dc_sink *dc_em_sink;
 
-	/* DM only */
-	struct drm_dp_mst_topology_mgr mst_mgr;
-	struct amdgpu_dm_dp_aux dm_dp_aux;
-	struct drm_dp_mst_port *port;
-	struct amdgpu_dm_connector *mst_port;
-	struct drm_dp_aux *dsc_aux;
+  /* DM only */
+  struct drm_dp_mst_topology_mgr mst_mgr;
+  struct amdgpu_dm_dp_aux dm_dp_aux;
+  struct drm_dp_mst_port *port;
+  struct amdgpu_dm_connector *mst_port;
+  struct drm_dp_aux *dsc_aux;
 
-	/* TODO see if we can merge with ddc_bus or make a dm_connector */
-	struct amdgpu_i2c_adapter *i2c;
+  /* TODO see if we can merge with ddc_bus or make a dm_connector */
+  struct amdgpu_i2c_adapter *i2c;
 
-	/* Monitor range limits */
-	int min_vfreq ;
-	int max_vfreq ;
-	int pixel_clock_mhz;
+  /* Monitor range limits */
+  int min_vfreq ;
+  int max_vfreq ;
+  int pixel_clock_mhz;
 
-	/* Audio instance - protected by audio_lock. */
-	int audio_inst;
+  /* Audio instance - protected by audio_lock. */
+  int audio_inst;
 
-	struct mutex hpd_lock;
+  struct mutex hpd_lock;
 
-	bool fake_enable;
+  bool fake_enable;
 #ifdef CONFIG_DEBUG_FS
-	uint32_t debugfs_dpcd_address;
-	uint32_t debugfs_dpcd_size;
+  uint32_t debugfs_dpcd_address;
+  uint32_t debugfs_dpcd_size;
 #endif
-	bool force_yuv420_output;
-	struct dsc_preferred_settings dsc_settings;
-	/* Cached display modes */
-	struct drm_display_mode freesync_vid_base;
+  bool force_yuv420_output;
+  struct dsc_preferred_settings dsc_settings;
+  /* Cached display modes */
+  struct drm_display_mode freesync_vid_base;
 
-	int psr_skip_count;
+  int psr_skip_count;
 };
 
 #define to_amdgpu_dm_connector(x) container_of(x, struct amdgpu_dm_connector, base)
@@ -518,99 +518,99 @@ struct amdgpu_dm_connector {
 extern const struct amdgpu_ip_block_version dm_ip_block;
 
 struct dm_plane_state {
-	struct drm_plane_state base;
-	struct dc_plane_state *dc_state;
+  struct drm_plane_state base;
+  struct dc_plane_state *dc_state;
 };
 
 struct dm_crtc_state {
-	struct drm_crtc_state base;
-	struct dc_stream_state *stream;
+  struct drm_crtc_state base;
+  struct dc_stream_state *stream;
 
-	bool cm_has_degamma;
-	bool cm_is_degamma_srgb;
+  bool cm_has_degamma;
+  bool cm_is_degamma_srgb;
 
-	int update_type;
-	int active_planes;
+  int update_type;
+  int active_planes;
 
-	int crc_skip_count;
+  int crc_skip_count;
 
-	bool freesync_timing_changed;
-	bool freesync_vrr_info_changed;
+  bool freesync_timing_changed;
+  bool freesync_vrr_info_changed;
 
-	bool dsc_force_changed;
-	bool vrr_supported;
-	struct mod_freesync_config freesync_config;
-	struct dc_info_packet vrr_infopacket;
+  bool dsc_force_changed;
+  bool vrr_supported;
+  struct mod_freesync_config freesync_config;
+  struct dc_info_packet vrr_infopacket;
 
-	int abm_level;
+  int abm_level;
 };
 
 #define to_dm_crtc_state(x) container_of(x, struct dm_crtc_state, base)
 
 struct dm_atomic_state {
-	struct drm_private_state base;
+  struct drm_private_state base;
 
-	struct dc_state *context;
+  struct dc_state *context;
 };
 
 #define to_dm_atomic_state(x) container_of(x, struct dm_atomic_state, base)
 
 struct dm_connector_state {
-	struct drm_connector_state base;
+  struct drm_connector_state base;
 
-	enum amdgpu_rmx_type scaling;
-	uint8_t underscan_vborder;
-	uint8_t underscan_hborder;
-	bool underscan_enable;
-	bool freesync_capable;
+  enum amdgpu_rmx_type scaling;
+  uint8_t underscan_vborder;
+  uint8_t underscan_hborder;
+  bool underscan_enable;
+  bool freesync_capable;
 #ifdef CONFIG_DRM_AMD_DC_HDCP
-	bool update_hdcp;
+  bool update_hdcp;
 #endif
-	uint8_t abm_level;
-	int vcpi_slots;
-	uint64_t pbn;
+  uint8_t abm_level;
+  int vcpi_slots;
+  uint64_t pbn;
 };
 
 struct amdgpu_hdmi_vsdb_info {
-	unsigned int amd_vsdb_version;		/* VSDB version, should be used to determine which VSIF to send */
-	bool freesync_supported;		/* FreeSync Supported */
-	unsigned int min_refresh_rate_hz;	/* FreeSync Minimum Refresh Rate in Hz */
-	unsigned int max_refresh_rate_hz;	/* FreeSync Maximum Refresh Rate in Hz */
+  unsigned int amd_vsdb_version;    /* VSDB version, should be used to determine which VSIF to send */
+  bool freesync_supported;    /* FreeSync Supported */
+  unsigned int min_refresh_rate_hz;  /* FreeSync Minimum Refresh Rate in Hz */
+  unsigned int max_refresh_rate_hz;  /* FreeSync Maximum Refresh Rate in Hz */
 };
 
 
 #define to_dm_connector_state(x)\
-	container_of((x), struct dm_connector_state, base)
+  container_of((x), struct dm_connector_state, base)
 
 void amdgpu_dm_connector_funcs_reset(struct drm_connector *connector);
 struct drm_connector_state *
 amdgpu_dm_connector_atomic_duplicate_state(struct drm_connector *connector);
 int amdgpu_dm_connector_atomic_set_property(struct drm_connector *connector,
-					    struct drm_connector_state *state,
-					    struct drm_property *property,
-					    uint64_t val);
+              struct drm_connector_state *state,
+              struct drm_property *property,
+              uint64_t val);
 
 int amdgpu_dm_connector_atomic_get_property(struct drm_connector *connector,
-					    const struct drm_connector_state *state,
-					    struct drm_property *property,
-					    uint64_t *val);
+              const struct drm_connector_state *state,
+              struct drm_property *property,
+              uint64_t *val);
 
 int amdgpu_dm_get_encoder_crtc_mask(struct amdgpu_device *adev);
 
 void amdgpu_dm_connector_init_helper(struct amdgpu_display_manager *dm,
-				     struct amdgpu_dm_connector *aconnector,
-				     int connector_type,
-				     struct dc_link *link,
-				     int link_index);
+             struct amdgpu_dm_connector *aconnector,
+             int connector_type,
+             struct dc_link *link,
+             int link_index);
 
 enum drm_mode_status amdgpu_dm_connector_mode_valid(struct drm_connector *connector,
-				   struct drm_display_mode *mode);
+           struct drm_display_mode *mode);
 
 void dm_restore_drm_connector_state(struct drm_device *dev,
-				    struct drm_connector *connector);
+            struct drm_connector *connector);
 
 void amdgpu_dm_update_freesync_caps(struct drm_connector *connector,
-					struct edid *edid);
+          struct edid *edid);
 
 void amdgpu_dm_trigger_timing_sync(struct drm_device *dev);
 
@@ -622,13 +622,13 @@ void amdgpu_dm_init_color_mod(void);
 int amdgpu_dm_verify_lut_sizes(const struct drm_crtc_state *crtc_state);
 int amdgpu_dm_update_crtc_color_mgmt(struct dm_crtc_state *crtc);
 int amdgpu_dm_update_plane_color_mgmt(struct dm_crtc_state *crtc,
-				      struct dc_plane_state *dc_plane_state);
+              struct dc_plane_state *dc_plane_state);
 
 void amdgpu_dm_update_connector_after_detect(
-		struct amdgpu_dm_connector *aconnector);
+    struct amdgpu_dm_connector *aconnector);
 
 extern const struct drm_encoder_helper_funcs amdgpu_dm_encoder_helper_funcs;
 
 int amdgpu_dm_process_dmub_aux_transfer_sync(struct dc_context *ctx, unsigned int linkIndex,
-					struct aux_payload *payload, enum aux_return_code_type *operation_result);
+          struct aux_payload *payload, enum aux_return_code_type *operation_result);
 #endif /* __AMDGPU_DM_H__ */

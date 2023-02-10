@@ -38,20 +38,20 @@
 * Display Object Type Definition 
 *****************************************************/
 enum display_object_type{
-DISPLAY_OBJECT_TYPE_NONE						=0x00,
-DISPLAY_OBJECT_TYPE_GPU							=0x01,
-DISPLAY_OBJECT_TYPE_ENCODER						=0x02,
-DISPLAY_OBJECT_TYPE_CONNECTOR					=0x03
+DISPLAY_OBJECT_TYPE_NONE            =0x00,
+DISPLAY_OBJECT_TYPE_GPU              =0x01,
+DISPLAY_OBJECT_TYPE_ENCODER            =0x02,
+DISPLAY_OBJECT_TYPE_CONNECTOR          =0x03
 };
 
 /****************************************************
 * Encorder Object Type Definition 
 *****************************************************/
 enum encoder_object_type{
-ENCODER_OBJECT_ID_NONE							 =0x00,
-ENCODER_OBJECT_ID_INTERNAL_UNIPHY				 =0x01,
-ENCODER_OBJECT_ID_INTERNAL_UNIPHY1				 =0x02,
-ENCODER_OBJECT_ID_INTERNAL_UNIPHY2				 =0x03,
+ENCODER_OBJECT_ID_NONE               =0x00,
+ENCODER_OBJECT_ID_INTERNAL_UNIPHY         =0x01,
+ENCODER_OBJECT_ID_INTERNAL_UNIPHY1         =0x02,
+ENCODER_OBJECT_ID_INTERNAL_UNIPHY2         =0x03,
 };
 
 
@@ -60,14 +60,14 @@ ENCODER_OBJECT_ID_INTERNAL_UNIPHY2				 =0x03,
 *****************************************************/
 
 enum connector_object_type{
-CONNECTOR_OBJECT_ID_NONE						  =0x00, 
-CONNECTOR_OBJECT_ID_SINGLE_LINK_DVI_D			  =0x01,
-CONNECTOR_OBJECT_ID_DUAL_LINK_DVI_D				  =0x02,
-CONNECTOR_OBJECT_ID_HDMI_TYPE_A					  =0x03,
-CONNECTOR_OBJECT_ID_LVDS						  =0x04,
-CONNECTOR_OBJECT_ID_DISPLAYPORT					  =0x05,
-CONNECTOR_OBJECT_ID_eDP							  =0x06,
-CONNECTOR_OBJECT_ID_OPM							  =0x07
+CONNECTOR_OBJECT_ID_NONE              =0x00, 
+CONNECTOR_OBJECT_ID_SINGLE_LINK_DVI_D        =0x01,
+CONNECTOR_OBJECT_ID_DUAL_LINK_DVI_D          =0x02,
+CONNECTOR_OBJECT_ID_HDMI_TYPE_A            =0x03,
+CONNECTOR_OBJECT_ID_LVDS              =0x04,
+CONNECTOR_OBJECT_ID_DISPLAYPORT            =0x05,
+CONNECTOR_OBJECT_ID_eDP                =0x06,
+CONNECTOR_OBJECT_ID_OPM                =0x07
 };
 
 
@@ -81,24 +81,24 @@ CONNECTOR_OBJECT_ID_OPM							  =0x07
 *****************************************************/
 
 enum object_enum_id{
-OBJECT_ENUM_ID1									  =0x01,
-OBJECT_ENUM_ID2									  =0x02,
-OBJECT_ENUM_ID3									  =0x03,
-OBJECT_ENUM_ID4									  =0x04,
-OBJECT_ENUM_ID5									  =0x05,
-OBJECT_ENUM_ID6									  =0x06
+OBJECT_ENUM_ID1                    =0x01,
+OBJECT_ENUM_ID2                    =0x02,
+OBJECT_ENUM_ID3                    =0x03,
+OBJECT_ENUM_ID4                    =0x04,
+OBJECT_ENUM_ID5                    =0x05,
+OBJECT_ENUM_ID6                    =0x06
 };
 
 /****************************************************
 *Object ID Bit definition 
 *****************************************************/
 enum object_id_bit{
-OBJECT_ID_MASK									  =0x00FF,
-ENUM_ID_MASK									  =0x0F00,
-OBJECT_TYPE_MASK								  =0xF000,
-OBJECT_ID_SHIFT									  =0x00,
-ENUM_ID_SHIFT									  =0x08,
-OBJECT_TYPE_SHIFT								  =0x0C
+OBJECT_ID_MASK                    =0x00FF,
+ENUM_ID_MASK                    =0x0F00,
+OBJECT_TYPE_MASK                  =0xF000,
+OBJECT_ID_SHIFT                    =0x00,
+ENUM_ID_SHIFT                    =0x08,
+OBJECT_TYPE_SHIFT                  =0x0C
 };
 
 
@@ -146,78 +146,78 @@ ENCODER_INTERNAL_UNIPHY2_ENUM_ID2        =( DISPLAY_OBJECT_TYPE_ENCODER << OBJEC
 
 
 enum connector_objet_def{
-CONNECTOR_LVDS_ENUM_ID1							=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_LVDS_ENUM_ID1              =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID1 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_LVDS << OBJECT_ID_SHIFT),
 
 
-CONNECTOR_eDP_ENUM_ID1							=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_eDP_ENUM_ID1              =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID1 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_eDP << OBJECT_ID_SHIFT),
 
-CONNECTOR_SINGLE_LINK_DVI_D_ENUM_ID1			=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_SINGLE_LINK_DVI_D_ENUM_ID1      =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID1 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_SINGLE_LINK_DVI_D << OBJECT_ID_SHIFT),
 
-CONNECTOR_SINGLE_LINK_DVI_D_ENUM_ID2			=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_SINGLE_LINK_DVI_D_ENUM_ID2      =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID2 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_SINGLE_LINK_DVI_D << OBJECT_ID_SHIFT),
 
 
-CONNECTOR_DUAL_LINK_DVI_D_ENUM_ID1				=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_DUAL_LINK_DVI_D_ENUM_ID1        =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID1 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_DUAL_LINK_DVI_D << OBJECT_ID_SHIFT),
 
-CONNECTOR_DUAL_LINK_DVI_D_ENUM_ID2				=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_DUAL_LINK_DVI_D_ENUM_ID2        =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID2 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_DUAL_LINK_DVI_D << OBJECT_ID_SHIFT),
 
-CONNECTOR_HDMI_TYPE_A_ENUM_ID1					=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_HDMI_TYPE_A_ENUM_ID1          =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID1 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_HDMI_TYPE_A << OBJECT_ID_SHIFT),
 
-CONNECTOR_HDMI_TYPE_A_ENUM_ID2					=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_HDMI_TYPE_A_ENUM_ID2          =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID2 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_HDMI_TYPE_A << OBJECT_ID_SHIFT),
 
-CONNECTOR_DISPLAYPORT_ENUM_ID1					=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_DISPLAYPORT_ENUM_ID1          =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID1 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_DISPLAYPORT << OBJECT_ID_SHIFT),
 
-CONNECTOR_DISPLAYPORT_ENUM_ID2					=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_DISPLAYPORT_ENUM_ID2          =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID2 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_DISPLAYPORT << OBJECT_ID_SHIFT),
 
-CONNECTOR_DISPLAYPORT_ENUM_ID3					=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_DISPLAYPORT_ENUM_ID3          =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID3 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_DISPLAYPORT << OBJECT_ID_SHIFT),
 
-CONNECTOR_DISPLAYPORT_ENUM_ID4					=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_DISPLAYPORT_ENUM_ID4          =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID4 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_DISPLAYPORT << OBJECT_ID_SHIFT),
 
-CONNECTOR_OPM_ENUM_ID1							=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_OPM_ENUM_ID1              =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID1 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_OPM << OBJECT_ID_SHIFT),          //Mapping to MXM_DP_A
 
-CONNECTOR_OPM_ENUM_ID2							=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_OPM_ENUM_ID2              =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID2 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_OPM << OBJECT_ID_SHIFT),          //Mapping to MXM_DP_B
 
-CONNECTOR_OPM_ENUM_ID3							=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_OPM_ENUM_ID3              =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID3 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_OPM << OBJECT_ID_SHIFT),          //Mapping to MXM_DP_C
 
-CONNECTOR_OPM_ENUM_ID4							=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_OPM_ENUM_ID4              =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID4 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_OPM << OBJECT_ID_SHIFT),          //Mapping to MXM_DP_D
 
-CONNECTOR_OPM_ENUM_ID5							=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_OPM_ENUM_ID5              =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID5 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_OPM << OBJECT_ID_SHIFT),          //Mapping to MXM_LVDS_TXxx
 
 
-CONNECTOR_OPM_ENUM_ID6							=( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
+CONNECTOR_OPM_ENUM_ID6              =( DISPLAY_OBJECT_TYPE_CONNECTOR << OBJECT_TYPE_SHIFT |\
                                                  OBJECT_ENUM_ID6 << ENUM_ID_SHIFT |\
                                                  CONNECTOR_OBJECT_ID_OPM << OBJECT_ID_SHIFT)         //Mapping to MXM_LVDS_TXxx
 };

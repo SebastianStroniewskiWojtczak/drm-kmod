@@ -26,9 +26,9 @@ void i915_unaligned_memcpy_from_wc(void *dst, const void *src, unsigned long len
  * will be correctly aligned, just use i915_has_memcpy_from_wc().
  */
 #define i915_can_memcpy_from_wc(dst, src, len) \
-	i915_memcpy_from_wc((void *)((unsigned long)(dst) | (unsigned long)(src) | (len)), NULL, 0)
+  i915_memcpy_from_wc((void *)((unsigned long)(dst) | (unsigned long)(src) | (len)), NULL, 0)
 
 #define i915_has_memcpy_from_wc() \
-	i915_memcpy_from_wc(NULL, NULL, 0)
+  i915_memcpy_from_wc(NULL, NULL, 0)
 
 #endif /* __I915_MEMCPY_H__ */

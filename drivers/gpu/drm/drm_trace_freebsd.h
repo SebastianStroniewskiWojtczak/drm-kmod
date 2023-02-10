@@ -41,8 +41,8 @@ struct drm_file;
 static inline void
 trace_drm_vblank_event(int crtc, unsigned int seq, ktime_t time, bool high_prec)
 {
-	CTR4(KTR_DRM, "drm_vblank_event crtc %d, seq %u, time %lld, "
-	    "high-prec %s", crtc, seq, time, high_prec ? "true" : "false");
+  CTR4(KTR_DRM, "drm_vblank_event crtc %d, seq %u, time %lld, "
+      "high-prec %s", crtc, seq, time, high_prec ? "true" : "false");
 }
 
 /* TRACE_EVENT(drm_vblank_event_queued, */
@@ -50,8 +50,8 @@ trace_drm_vblank_event(int crtc, unsigned int seq, ktime_t time, bool high_prec)
 static inline void
 trace_drm_vblank_event_queued(struct drm_file *file, int crtc, unsigned int seq)
 {
-	CTR3(KTR_DRM, "drm_vblank_event_queued drm_file %p, crtc %d, seq %u",
-	    file, crtc, seq);
+  CTR3(KTR_DRM, "drm_vblank_event_queued drm_file %p, crtc %d, seq %u",
+      file, crtc, seq);
 }
 
 /* TRACE_EVENT(drm_vblank_event_delivered, */
@@ -59,7 +59,7 @@ trace_drm_vblank_event_queued(struct drm_file *file, int crtc, unsigned int seq)
 static inline void
 trace_drm_vblank_event_delivered(struct drm_file *file, int crtc, unsigned int seq)
 {
-	CTR3(KTR_DRM, "drm_vblank_event_delivered drm_file %p, crtc %d, seq %u", file, crtc, seq);
+  CTR3(KTR_DRM, "drm_vblank_event_delivered drm_file %p, crtc %d, seq %u", file, crtc, seq);
 }
 
 #endif

@@ -44,27 +44,27 @@ struct SMIO_Table
 typedef struct SMIO_Table SMIO_Table;
 
 struct SMU73_Discrete_GraphicsLevel {
-	uint32_t    MinVoltage;
+  uint32_t    MinVoltage;
 
-	uint32_t    SclkFrequency;
+  uint32_t    SclkFrequency;
 
-	uint8_t     pcieDpmLevel;
-	uint8_t     DeepSleepDivId;
-	uint16_t    ActivityLevel;
-	uint32_t    CgSpllFuncCntl3;
-	uint32_t    CgSpllFuncCntl4;
-	uint32_t    SpllSpreadSpectrum;
-	uint32_t    SpllSpreadSpectrum2;
-	uint32_t    CcPwrDynRm;
-	uint32_t    CcPwrDynRm1;
-	uint8_t     SclkDid;
-	uint8_t     DisplayWatermark;
-	uint8_t     EnabledForActivity;
-	uint8_t     EnabledForThrottle;
-	uint8_t     UpHyst;
-	uint8_t     DownHyst;
-	uint8_t     VoltageDownHyst;
-	uint8_t     PowerThrottle;
+  uint8_t     pcieDpmLevel;
+  uint8_t     DeepSleepDivId;
+  uint16_t    ActivityLevel;
+  uint32_t    CgSpllFuncCntl3;
+  uint32_t    CgSpllFuncCntl4;
+  uint32_t    SpllSpreadSpectrum;
+  uint32_t    SpllSpreadSpectrum2;
+  uint32_t    CcPwrDynRm;
+  uint32_t    CcPwrDynRm1;
+  uint8_t     SclkDid;
+  uint8_t     DisplayWatermark;
+  uint8_t     EnabledForActivity;
+  uint8_t     EnabledForThrottle;
+  uint8_t     UpHyst;
+  uint8_t     DownHyst;
+  uint8_t     VoltageDownHyst;
+  uint8_t     PowerThrottle;
 };
 
 typedef struct SMU73_Discrete_GraphicsLevel SMU73_Discrete_GraphicsLevel;
@@ -90,12 +90,12 @@ struct SMU73_Discrete_ACPILevel {
 typedef struct SMU73_Discrete_ACPILevel SMU73_Discrete_ACPILevel;
 
 struct SMU73_Discrete_Ulv {
-	uint32_t    CcPwrDynRm;
-	uint32_t    CcPwrDynRm1;
-	uint16_t    VddcOffset;
-	uint8_t     VddcOffsetVid;
-	uint8_t     VddcPhase;
-	uint32_t    Reserved;
+  uint32_t    CcPwrDynRm;
+  uint32_t    CcPwrDynRm1;
+  uint16_t    VddcOffset;
+  uint8_t     VddcOffsetVid;
+  uint8_t     VddcPhase;
+  uint32_t    Reserved;
 };
 
 typedef struct SMU73_Discrete_Ulv SMU73_Discrete_Ulv;

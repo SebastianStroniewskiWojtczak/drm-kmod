@@ -32,9 +32,9 @@
 
 
 void dce120_timing_generator_construct(
-	struct dce110_timing_generator *tg110,
-	struct dc_context *ctx,
-	uint32_t instance,
-	const struct dce110_timing_generator_offsets *offsets);
+  struct dce110_timing_generator *tg110,
+  struct dc_context *ctx,
+  uint32_t instance,
+  const struct dce110_timing_generator_offsets *offsets);
 
 #endif /* __DC_TIMING_GENERATOR_DCE120_H__ */

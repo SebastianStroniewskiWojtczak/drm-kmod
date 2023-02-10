@@ -41,9 +41,9 @@ struct display_mode_lib;
 //  rq_regs - struct that holds all the RQ registers field value.
 //            See also: <display_rq_regs_st>
 void dml20_rq_dlg_get_rq_reg(
-		struct display_mode_lib *mode_lib,
-		display_rq_regs_st *rq_regs,
-		const display_pipe_params_st pipe_param);
+    struct display_mode_lib *mode_lib,
+    display_rq_regs_st *rq_regs,
+    const display_pipe_params_st pipe_param);
 
 
 // Function: dml_rq_dlg_get_dlg_reg
@@ -58,16 +58,16 @@ void dml20_rq_dlg_get_rq_reg(
 //  cstate - 0: when calculate min_ttu_vblank it is assumed cstate is not required. 1: Normal mode, cstate is considered.
 //           Added for legacy or unrealistic timing tests.
 void dml20_rq_dlg_get_dlg_reg(
-		struct display_mode_lib *mode_lib,
-		display_dlg_regs_st *dlg_regs,
-		display_ttu_regs_st *ttu_regs,
-		display_e2e_pipe_params_st *e2e_pipe_param,
-		const unsigned int num_pipes,
-		const unsigned int pipe_idx,
-		const bool cstate_en,
-		const bool pstate_en,
-		const bool vm_en,
-		const bool ignore_viewport_pos,
-		const bool immediate_flip_support);
+    struct display_mode_lib *mode_lib,
+    display_dlg_regs_st *dlg_regs,
+    display_ttu_regs_st *ttu_regs,
+    display_e2e_pipe_params_st *e2e_pipe_param,
+    const unsigned int num_pipes,
+    const unsigned int pipe_idx,
+    const bool cstate_en,
+    const bool pstate_en,
+    const bool vm_en,
+    const bool ignore_viewport_pos,
+    const bool immediate_flip_support);
 
 #endif

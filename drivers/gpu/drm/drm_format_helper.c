@@ -18,9 +18,9 @@
 #include <drm/drm_rect.h>
 
 static unsigned int clip_offset(struct drm_rect *clip,
-				unsigned int pitch, unsigned int cpp)
+        unsigned int pitch, unsigned int cpp)
 {
-	return clip->y1 * pitch + clip->x1 * cpp;
+  return clip->y1 * pitch + clip->x1 * cpp;
 }
 
 /**
@@ -34,18 +34,18 @@ static unsigned int clip_offset(struct drm_rect *clip,
  * is a small buffer containing the clip rect only.
  */
 void drm_fb_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
-		   struct drm_rect *clip)
+       struct drm_rect *clip)
 {
-	unsigned int cpp = fb->format->cpp[0];
-	size_t len = (clip->x2 - clip->x1) * cpp;
-	unsigned int y, lines = clip->y2 - clip->y1;
+  unsigned int cpp = fb->format->cpp[0];
+  size_t len = (clip->x2 - clip->x1) * cpp;
+  unsigned int y, lines = clip->y2 - clip->y1;
 
-	vaddr += clip_offset(clip, fb->pitches[0], cpp);
-	for (y = 0; y < lines; y++) {
-		memcpy(dst, vaddr, len);
-		vaddr += fb->pitches[0];
-		dst += len;
-	}
+  vaddr += clip_offset(clip, fb->pitches[0], cpp);
+  for (y = 0; y < lines; y++) {
+    memcpy(dst, vaddr, len);
+    vaddr += fb->pitches[0];
+    dst += len;
+  }
 }
 EXPORT_SYMBOL(drm_fb_memcpy);
 
@@ -61,21 +61,21 @@ EXPORT_SYMBOL(drm_fb_memcpy);
  * full (iomem) framebuffer but only the clip rect content is copied over.
  */
 void drm_fb_memcpy_dstclip(void __iomem *dst, unsigned int dst_pitch,
-			   void *vaddr, struct drm_framebuffer *fb,
-			   struct drm_rect *clip)
+         void *vaddr, struct drm_framebuffer *fb,
+         struct drm_rect *clip)
 {
-	unsigned int cpp = fb->format->cpp[0];
-	unsigned int offset = clip_offset(clip, dst_pitch, cpp);
-	size_t len = (clip->x2 - clip->x1) * cpp;
-	unsigned int y, lines = clip->y2 - clip->y1;
+  unsigned int cpp = fb->format->cpp[0];
+  unsigned int offset = clip_offset(clip, dst_pitch, cpp);
+  size_t len = (clip->x2 - clip->x1) * cpp;
+  unsigned int y, lines = clip->y2 - clip->y1;
 
-	vaddr += offset;
-	dst += offset;
-	for (y = 0; y < lines; y++) {
-		memcpy_toio(dst, vaddr, len);
-		vaddr += fb->pitches[0];
-		dst += dst_pitch;
-	}
+  vaddr += offset;
+  dst += offset;
+  for (y = 0; y < lines; y++) {
+    memcpy_toio(dst, vaddr, len);
+    vaddr += fb->pitches[0];
+    dst += dst_pitch;
+  }
 }
 EXPORT_SYMBOL(drm_fb_memcpy_dstclip);
 
@@ -94,63 +94,63 @@ EXPORT_SYMBOL(drm_fb_memcpy_dstclip);
  * is a small buffer containing the clip rect only.
  */
 void drm_fb_swab(void *dst, void *src, struct drm_framebuffer *fb,
-		 struct drm_rect *clip, bool cached)
+     struct drm_rect *clip, bool cached)
 {
-	u8 cpp = fb->format->cpp[0];
-	size_t len = drm_rect_width(clip) * cpp;
-	u16 *src16, *dst16 = dst;
-	u32 *src32, *dst32 = dst;
-	unsigned int x, y;
-	void *buf = NULL;
+  u8 cpp = fb->format->cpp[0];
+  size_t len = drm_rect_width(clip) * cpp;
+  u16 *src16, *dst16 = dst;
+  u32 *src32, *dst32 = dst;
+  unsigned int x, y;
+  void *buf = NULL;
 
-	if (WARN_ON_ONCE(cpp != 2 && cpp != 4))
-		return;
+  if (WARN_ON_ONCE(cpp != 2 && cpp != 4))
+    return;
 
-	if (!cached)
-		buf = kmalloc(len, GFP_KERNEL);
+  if (!cached)
+    buf = kmalloc(len, GFP_KERNEL);
 
-	src += clip_offset(clip, fb->pitches[0], cpp);
+  src += clip_offset(clip, fb->pitches[0], cpp);
 
-	for (y = clip->y1; y < clip->y2; y++) {
-		if (buf) {
-			memcpy(buf, src, len);
-			src16 = buf;
-			src32 = buf;
-		} else {
-			src16 = src;
-			src32 = src;
-		}
+  for (y = clip->y1; y < clip->y2; y++) {
+    if (buf) {
+      memcpy(buf, src, len);
+      src16 = buf;
+      src32 = buf;
+    } else {
+      src16 = src;
+      src32 = src;
+    }
 
-		for (x = clip->x1; x < clip->x2; x++) {
-			if (cpp == 4)
-				*dst32++ = swab32(*src32++);
-			else
-				*dst16++ = swab16(*src16++);
-		}
+    for (x = clip->x1; x < clip->x2; x++) {
+      if (cpp == 4)
+        *dst32++ = swab32(*src32++);
+      else
+        *dst16++ = swab16(*src16++);
+    }
 
-		src += fb->pitches[0];
-	}
+    src += fb->pitches[0];
+  }
 
-	kfree(buf);
+  kfree(buf);
 }
 EXPORT_SYMBOL(drm_fb_swab);
 
 static void drm_fb_xrgb8888_to_rgb565_line(u16 *dbuf, u32 *sbuf,
-					   unsigned int pixels,
-					   bool swab)
+             unsigned int pixels,
+             bool swab)
 {
-	unsigned int x;
-	u16 val16;
+  unsigned int x;
+  u16 val16;
 
-	for (x = 0; x < pixels; x++) {
-		val16 = ((sbuf[x] & 0x00F80000) >> 8) |
-			((sbuf[x] & 0x0000FC00) >> 5) |
-			((sbuf[x] & 0x000000F8) >> 3);
-		if (swab)
-			dbuf[x] = swab16(val16);
-		else
-			dbuf[x] = val16;
-	}
+  for (x = 0; x < pixels; x++) {
+    val16 = ((sbuf[x] & 0x00F80000) >> 8) |
+      ((sbuf[x] & 0x0000FC00) >> 5) |
+      ((sbuf[x] & 0x000000F8) >> 3);
+    if (swab)
+      dbuf[x] = swab16(val16);
+    else
+      dbuf[x] = val16;
+  }
 }
 
 /**
@@ -168,32 +168,32 @@ static void drm_fb_xrgb8888_to_rgb565_line(u16 *dbuf, u32 *sbuf,
  * is a small buffer containing the clip rect only.
  */
 void drm_fb_xrgb8888_to_rgb565(void *dst, void *vaddr,
-			       struct drm_framebuffer *fb,
-			       struct drm_rect *clip, bool swab)
+             struct drm_framebuffer *fb,
+             struct drm_rect *clip, bool swab)
 {
-	size_t linepixels = clip->x2 - clip->x1;
-	size_t src_len = linepixels * sizeof(u32);
-	size_t dst_len = linepixels * sizeof(u16);
-	unsigned y, lines = clip->y2 - clip->y1;
-	void *sbuf;
+  size_t linepixels = clip->x2 - clip->x1;
+  size_t src_len = linepixels * sizeof(u32);
+  size_t dst_len = linepixels * sizeof(u16);
+  unsigned y, lines = clip->y2 - clip->y1;
+  void *sbuf;
 
-	/*
-	 * The cma memory is write-combined so reads are uncached.
-	 * Speed up by fetching one line at a time.
-	 */
-	sbuf = kmalloc(src_len, GFP_KERNEL);
-	if (!sbuf)
-		return;
+  /*
+   * The cma memory is write-combined so reads are uncached.
+   * Speed up by fetching one line at a time.
+   */
+  sbuf = kmalloc(src_len, GFP_KERNEL);
+  if (!sbuf)
+    return;
 
-	vaddr += clip_offset(clip, fb->pitches[0], sizeof(u32));
-	for (y = 0; y < lines; y++) {
-		memcpy(sbuf, vaddr, src_len);
-		drm_fb_xrgb8888_to_rgb565_line(dst, sbuf, linepixels, swab);
-		vaddr += fb->pitches[0];
-		dst += dst_len;
-	}
+  vaddr += clip_offset(clip, fb->pitches[0], sizeof(u32));
+  for (y = 0; y < lines; y++) {
+    memcpy(sbuf, vaddr, src_len);
+    drm_fb_xrgb8888_to_rgb565_line(dst, sbuf, linepixels, swab);
+    vaddr += fb->pitches[0];
+    dst += dst_len;
+  }
 
-	kfree(sbuf);
+  kfree(sbuf);
 }
 EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb565);
 
@@ -213,41 +213,41 @@ EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb565);
  * full (iomem) framebuffer but only the clip rect content is copied over.
  */
 void drm_fb_xrgb8888_to_rgb565_dstclip(void __iomem *dst, unsigned int dst_pitch,
-				       void *vaddr, struct drm_framebuffer *fb,
-				       struct drm_rect *clip, bool swab)
+               void *vaddr, struct drm_framebuffer *fb,
+               struct drm_rect *clip, bool swab)
 {
-	size_t linepixels = clip->x2 - clip->x1;
-	size_t dst_len = linepixels * sizeof(u16);
-	unsigned y, lines = clip->y2 - clip->y1;
-	void *dbuf;
+  size_t linepixels = clip->x2 - clip->x1;
+  size_t dst_len = linepixels * sizeof(u16);
+  unsigned y, lines = clip->y2 - clip->y1;
+  void *dbuf;
 
-	dbuf = kmalloc(dst_len, GFP_KERNEL);
-	if (!dbuf)
-		return;
+  dbuf = kmalloc(dst_len, GFP_KERNEL);
+  if (!dbuf)
+    return;
 
-	vaddr += clip_offset(clip, fb->pitches[0], sizeof(u32));
-	dst += clip_offset(clip, dst_pitch, sizeof(u16));
-	for (y = 0; y < lines; y++) {
-		drm_fb_xrgb8888_to_rgb565_line(dbuf, vaddr, linepixels, swab);
-		memcpy_toio(dst, dbuf, dst_len);
-		vaddr += fb->pitches[0];
-		dst += dst_len;
-	}
+  vaddr += clip_offset(clip, fb->pitches[0], sizeof(u32));
+  dst += clip_offset(clip, dst_pitch, sizeof(u16));
+  for (y = 0; y < lines; y++) {
+    drm_fb_xrgb8888_to_rgb565_line(dbuf, vaddr, linepixels, swab);
+    memcpy_toio(dst, dbuf, dst_len);
+    vaddr += fb->pitches[0];
+    dst += dst_len;
+  }
 
-	kfree(dbuf);
+  kfree(dbuf);
 }
 EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb565_dstclip);
 
 static void drm_fb_xrgb8888_to_rgb888_line(u8 *dbuf, u32 *sbuf,
-					   unsigned int pixels)
+             unsigned int pixels)
 {
-	unsigned int x;
+  unsigned int x;
 
-	for (x = 0; x < pixels; x++) {
-		*dbuf++ = (sbuf[x] & 0x000000FF) >>  0;
-		*dbuf++ = (sbuf[x] & 0x0000FF00) >>  8;
-		*dbuf++ = (sbuf[x] & 0x00FF0000) >> 16;
-	}
+  for (x = 0; x < pixels; x++) {
+    *dbuf++ = (sbuf[x] & 0x000000FF) >>  0;
+    *dbuf++ = (sbuf[x] & 0x0000FF00) >>  8;
+    *dbuf++ = (sbuf[x] & 0x00FF0000) >> 16;
+  }
 }
 
 /**
@@ -265,28 +265,28 @@ static void drm_fb_xrgb8888_to_rgb888_line(u8 *dbuf, u32 *sbuf,
  * full (iomem) framebuffer but only the clip rect content is copied over.
  */
 void drm_fb_xrgb8888_to_rgb888_dstclip(void __iomem *dst, unsigned int dst_pitch,
-				       void *vaddr, struct drm_framebuffer *fb,
-				       struct drm_rect *clip)
+               void *vaddr, struct drm_framebuffer *fb,
+               struct drm_rect *clip)
 {
-	size_t linepixels = clip->x2 - clip->x1;
-	size_t dst_len = linepixels * 3;
-	unsigned y, lines = clip->y2 - clip->y1;
-	void *dbuf;
+  size_t linepixels = clip->x2 - clip->x1;
+  size_t dst_len = linepixels * 3;
+  unsigned y, lines = clip->y2 - clip->y1;
+  void *dbuf;
 
-	dbuf = kmalloc(dst_len, GFP_KERNEL);
-	if (!dbuf)
-		return;
+  dbuf = kmalloc(dst_len, GFP_KERNEL);
+  if (!dbuf)
+    return;
 
-	vaddr += clip_offset(clip, fb->pitches[0], sizeof(u32));
-	dst += clip_offset(clip, dst_pitch, sizeof(u16));
-	for (y = 0; y < lines; y++) {
-		drm_fb_xrgb8888_to_rgb888_line(dbuf, vaddr, linepixels);
-		memcpy_toio(dst, dbuf, dst_len);
-		vaddr += fb->pitches[0];
-		dst += dst_len;
-	}
+  vaddr += clip_offset(clip, fb->pitches[0], sizeof(u32));
+  dst += clip_offset(clip, dst_pitch, sizeof(u16));
+  for (y = 0; y < lines; y++) {
+    drm_fb_xrgb8888_to_rgb888_line(dbuf, vaddr, linepixels);
+    memcpy_toio(dst, dbuf, dst_len);
+    vaddr += fb->pitches[0];
+    dst += dst_len;
+  }
 
-	kfree(dbuf);
+  kfree(dbuf);
 }
 EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb888_dstclip);
 
@@ -307,51 +307,51 @@ EXPORT_SYMBOL(drm_fb_xrgb8888_to_rgb888_dstclip);
  * ITU BT.601 is used for the RGB -> luma (brightness) conversion.
  */
 void drm_fb_xrgb8888_to_gray8(u8 *dst, void *vaddr, struct drm_framebuffer *fb,
-			       struct drm_rect *clip)
+             struct drm_rect *clip)
 {
-	unsigned int len = (clip->x2 - clip->x1) * sizeof(u32);
-	unsigned int x, y;
-	void *buf;
-	u32 *src;
+  unsigned int len = (clip->x2 - clip->x1) * sizeof(u32);
+  unsigned int x, y;
+  void *buf;
+  u32 *src;
 
-	if (WARN_ON(fb->format->format != DRM_FORMAT_XRGB8888))
-		return;
-	/*
-	 * The cma memory is write-combined so reads are uncached.
-	 * Speed up by fetching one line at a time.
-	 */
-	buf = kmalloc(len, GFP_KERNEL);
-	if (!buf)
-		return;
+  if (WARN_ON(fb->format->format != DRM_FORMAT_XRGB8888))
+    return;
+  /*
+   * The cma memory is write-combined so reads are uncached.
+   * Speed up by fetching one line at a time.
+   */
+  buf = kmalloc(len, GFP_KERNEL);
+  if (!buf)
+    return;
 
-	for (y = clip->y1; y < clip->y2; y++) {
-		src = vaddr + (y * fb->pitches[0]);
-		src += clip->x1;
-		memcpy(buf, src, len);
-		src = buf;
-		for (x = clip->x1; x < clip->x2; x++) {
-			u8 r = (*src & 0x00ff0000) >> 16;
-			u8 g = (*src & 0x0000ff00) >> 8;
-			u8 b =  *src & 0x000000ff;
+  for (y = clip->y1; y < clip->y2; y++) {
+    src = vaddr + (y * fb->pitches[0]);
+    src += clip->x1;
+    memcpy(buf, src, len);
+    src = buf;
+    for (x = clip->x1; x < clip->x2; x++) {
+      u8 r = (*src & 0x00ff0000) >> 16;
+      u8 g = (*src & 0x0000ff00) >> 8;
+      u8 b =  *src & 0x000000ff;
 
-			/* ITU BT.601: Y = 0.299 R + 0.587 G + 0.114 B */
-			*dst++ = (3 * r + 6 * g + b) / 10;
-			src++;
-		}
-	}
+      /* ITU BT.601: Y = 0.299 R + 0.587 G + 0.114 B */
+      *dst++ = (3 * r + 6 * g + b) / 10;
+      src++;
+    }
+  }
 
-	kfree(buf);
+  kfree(buf);
 }
 EXPORT_SYMBOL(drm_fb_xrgb8888_to_gray8);
 
 /**
  * drm_fb_blit_rect_dstclip - Copy parts of a framebuffer to display memory
- * @dst:	The display memory to copy to
- * @dst_pitch:	Number of bytes between two consecutive scanlines within dst
- * @dst_format:	FOURCC code of the display's color format
- * @vmap:	The framebuffer memory to copy from
- * @fb:		The framebuffer to copy from
- * @clip:	Clip rectangle area to copy
+ * @dst:  The display memory to copy to
+ * @dst_pitch:  Number of bytes between two consecutive scanlines within dst
+ * @dst_format:  FOURCC code of the display's color format
+ * @vmap:  The framebuffer memory to copy from
+ * @fb:    The framebuffer to copy from
+ * @clip:  Clip rectangle area to copy
  *
  * This function copies parts of a framebuffer to display memory. If the
  * formats of the display and the framebuffer mismatch, the blit function
@@ -365,48 +365,48 @@ EXPORT_SYMBOL(drm_fb_xrgb8888_to_gray8);
  * a negative error code otherwise.
  */
 int drm_fb_blit_rect_dstclip(void __iomem *dst, unsigned int dst_pitch,
-			     uint32_t dst_format, void *vmap,
-			     struct drm_framebuffer *fb,
-			     struct drm_rect *clip)
+           uint32_t dst_format, void *vmap,
+           struct drm_framebuffer *fb,
+           struct drm_rect *clip)
 {
-	uint32_t fb_format = fb->format->format;
+  uint32_t fb_format = fb->format->format;
 
-	/* treat alpha channel like filler bits */
-	if (fb_format == DRM_FORMAT_ARGB8888)
-		fb_format = DRM_FORMAT_XRGB8888;
-	if (dst_format == DRM_FORMAT_ARGB8888)
-		dst_format = DRM_FORMAT_XRGB8888;
+  /* treat alpha channel like filler bits */
+  if (fb_format == DRM_FORMAT_ARGB8888)
+    fb_format = DRM_FORMAT_XRGB8888;
+  if (dst_format == DRM_FORMAT_ARGB8888)
+    dst_format = DRM_FORMAT_XRGB8888;
 
-	if (dst_format == fb_format) {
-		drm_fb_memcpy_dstclip(dst, dst_pitch, vmap, fb, clip);
-		return 0;
+  if (dst_format == fb_format) {
+    drm_fb_memcpy_dstclip(dst, dst_pitch, vmap, fb, clip);
+    return 0;
 
-	} else if (dst_format == DRM_FORMAT_RGB565) {
-		if (fb_format == DRM_FORMAT_XRGB8888) {
-			drm_fb_xrgb8888_to_rgb565_dstclip(dst, dst_pitch,
-							  vmap, fb, clip,
-							  false);
-			return 0;
-		}
-	} else if (dst_format == DRM_FORMAT_RGB888) {
-		if (fb_format == DRM_FORMAT_XRGB8888) {
-			drm_fb_xrgb8888_to_rgb888_dstclip(dst, dst_pitch,
-							  vmap, fb, clip);
-			return 0;
-		}
-	}
+  } else if (dst_format == DRM_FORMAT_RGB565) {
+    if (fb_format == DRM_FORMAT_XRGB8888) {
+      drm_fb_xrgb8888_to_rgb565_dstclip(dst, dst_pitch,
+                vmap, fb, clip,
+                false);
+      return 0;
+    }
+  } else if (dst_format == DRM_FORMAT_RGB888) {
+    if (fb_format == DRM_FORMAT_XRGB8888) {
+      drm_fb_xrgb8888_to_rgb888_dstclip(dst, dst_pitch,
+                vmap, fb, clip);
+      return 0;
+    }
+  }
 
-	return -EINVAL;
+  return -EINVAL;
 }
 EXPORT_SYMBOL(drm_fb_blit_rect_dstclip);
 
 /**
  * drm_fb_blit_dstclip - Copy framebuffer to display memory
- * @dst:	The display memory to copy to
- * @dst_pitch:	Number of bytes between two consecutive scanlines within dst
- * @dst_format:	FOURCC code of the display's color format
- * @vmap:	The framebuffer memory to copy from
- * @fb:		The framebuffer to copy from
+ * @dst:  The display memory to copy to
+ * @dst_pitch:  Number of bytes between two consecutive scanlines within dst
+ * @dst_format:  FOURCC code of the display's color format
+ * @vmap:  The framebuffer memory to copy from
+ * @fb:    The framebuffer to copy from
  *
  * This function copies a full framebuffer to display memory. If the formats
  * of the display and the framebuffer mismatch, the copy function will
@@ -418,16 +418,16 @@ EXPORT_SYMBOL(drm_fb_blit_rect_dstclip);
  * 0 on success, or a negative error code otherwise.
  */
 int drm_fb_blit_dstclip(void __iomem *dst, unsigned int dst_pitch,
-			uint32_t dst_format, void *vmap,
-			struct drm_framebuffer *fb)
+      uint32_t dst_format, void *vmap,
+      struct drm_framebuffer *fb)
 {
-	struct drm_rect fullscreen = {
-		.x1 = 0,
-		.x2 = fb->width,
-		.y1 = 0,
-		.y2 = fb->height,
-	};
-	return drm_fb_blit_rect_dstclip(dst, dst_pitch, dst_format, vmap, fb,
-					&fullscreen);
+  struct drm_rect fullscreen = {
+    .x1 = 0,
+    .x2 = fb->width,
+    .y1 = 0,
+    .y2 = fb->height,
+  };
+  return drm_fb_blit_rect_dstclip(dst, dst_pitch, dst_format, vmap, fb,
+          &fullscreen);
 }
 EXPORT_SYMBOL(drm_fb_blit_dstclip);

@@ -31,127 +31,127 @@
 
 static inline double dml_min(double a, double b)
 {
-	return (double) dcn_bw_min2(a, b);
+  return (double) dcn_bw_min2(a, b);
 }
 
 static inline double dml_min3(double a, double b, double c)
 {
-	return dml_min(dml_min(a, b), c);
+  return dml_min(dml_min(a, b), c);
 }
 
 static inline double dml_min4(double a, double b, double c, double d)
 {
-	return dml_min(dml_min(a, b), dml_min(c, d));
+  return dml_min(dml_min(a, b), dml_min(c, d));
 }
 
 static inline double dml_max(double a, double b)
 {
-	return (double) dcn_bw_max2(a, b);
+  return (double) dcn_bw_max2(a, b);
 }
 
 static inline double dml_max3(double a, double b, double c)
 {
-	return dml_max(dml_max(a, b), c);
+  return dml_max(dml_max(a, b), c);
 }
 
 static inline double dml_max4(double a, double b, double c, double d)
 {
-	return dml_max(dml_max(a, b), dml_max(c, d));
+  return dml_max(dml_max(a, b), dml_max(c, d));
 }
 
 static inline double dml_max5(double a, double b, double c, double d, double e)
 {
-	return dml_max(dml_max4(a, b, c, d), e);
+  return dml_max(dml_max4(a, b, c, d), e);
 }
 
 static inline double dml_ceil(double a, double granularity)
 {
-	return (double) dcn_bw_ceil2(a, granularity);
+  return (double) dcn_bw_ceil2(a, granularity);
 }
 
 static inline double dml_floor(double a, double granularity)
 {
-	return (double) dcn_bw_floor2(a, granularity);
+  return (double) dcn_bw_floor2(a, granularity);
 }
 
 static inline double dml_round(double a)
 {
-	double round_pt = 0.5;
-	double ceil = dml_ceil(a, 1);
-	double floor = dml_floor(a, 1);
+  double round_pt = 0.5;
+  double ceil = dml_ceil(a, 1);
+  double floor = dml_floor(a, 1);
 
-	if (a - floor >= round_pt)
-		return ceil;
-	else
-		return floor;
+  if (a - floor >= round_pt)
+    return ceil;
+  else
+    return floor;
 }
 
 /* float
 static inline int dml_log2(float x)
 {
-	unsigned int ix = *((unsigned int *)&x);
+  unsigned int ix = *((unsigned int *)&x);
 
-	return (int)((ix >> 23) & 0xff) - 127;
+  return (int)((ix >> 23) & 0xff) - 127;
 }*/
 
 /* double */
 static inline int dml_log2(double x)
 {
-	unsigned long long ix = *((unsigned long long *)&x);
+  unsigned long long ix = *((unsigned long long *)&x);
 
-	return (int)((ix >> 52) & 0x7ff) - 1023;
+  return (int)((ix >> 52) & 0x7ff) - 1023;
 }
 
 static inline double dml_pow(double a, int exp)
 {
-	return (double) dcn_bw_pow(a, exp);
+  return (double) dcn_bw_pow(a, exp);
 }
 
 static inline double dml_fmod(double f, int val)
 {
-	return (double) dcn_bw_mod(f, val);
+  return (double) dcn_bw_mod(f, val);
 }
 
 static inline double dml_ceil_2(double f)
 {
-	return (double) dcn_bw_ceil2(f, 2);
+  return (double) dcn_bw_ceil2(f, 2);
 }
 
 static inline double dml_ceil_ex(double x, double granularity)
 {
-	return (double) dcn_bw_ceil2(x, granularity);
+  return (double) dcn_bw_ceil2(x, granularity);
 }
 
 static inline double dml_floor_ex(double x, double granularity)
 {
-	return (double) dcn_bw_floor2(x, granularity);
+  return (double) dcn_bw_floor2(x, granularity);
 }
 
 static inline unsigned int dml_round_to_multiple(unsigned int num,
-						 unsigned int multiple,
-						 unsigned char up)
+             unsigned int multiple,
+             unsigned char up)
 {
-	unsigned int remainder;
+  unsigned int remainder;
 
-	if (multiple == 0)
-		return num;
+  if (multiple == 0)
+    return num;
 
-	remainder = num % multiple;
+  remainder = num % multiple;
 
-	if (remainder == 0)
-		return num;
+  if (remainder == 0)
+    return num;
 
-	if (up)
-		return (num + multiple - remainder);
-	else
-		return (num - remainder);
+  if (up)
+    return (num + multiple - remainder);
+  else
+    return (num - remainder);
 }
 static inline double dml_abs(double a)
 {
-	if (a > 0)
-		return a;
-	else
-		return (a*(-1));
+  if (a > 0)
+    return a;
+  else
+    return (a*(-1));
 }
 
 #endif

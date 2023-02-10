@@ -216,7 +216,7 @@
 #define CG_CG_VOLTAGE_CNTL                              0x770
 #       define EN                                       (1 << 9)
 
-#define HW_REV   					0x5564
+#define HW_REV             0x5564
 #       define ATI_REV_ID_MASK                          (0xf << 28)
 #       define ATI_REV_ID_SHIFT                         28
 /* 0 = A0, 1 = A1, 2 = B0, 3 = C0, etc. */

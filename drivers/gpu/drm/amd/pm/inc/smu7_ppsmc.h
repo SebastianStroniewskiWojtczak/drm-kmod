@@ -75,8 +75,8 @@
 #define FDO_MODE_PIECE_WISE_LINEAR 1
 
 enum FAN_CONTROL {
-	FAN_CONTROL_FUZZY,
-	FAN_CONTROL_TABLE
+  FAN_CONTROL_FUZZY,
+  FAN_CONTROL_TABLE
 };
 
 
@@ -393,7 +393,7 @@ typedef uint16_t PPSMC_Result;
 #define PPSMC_MSG_GetCurrPkgPwr               ((uint16_t) 0x282)
 
 #define PPSMC_MSG_SetGpuPllDfsForSclk         ((uint16_t) 0x300)
-#define PPSMC_MSG_Didt_Block_Function		  ((uint16_t) 0x301)
+#define PPSMC_MSG_Didt_Block_Function      ((uint16_t) 0x301)
 #define PPSMC_MSG_EnableZeroRpm               ((uint16_t) 0x302)
 
 #define PPSMC_MSG_SetVBITimeout               ((uint16_t) 0x306)

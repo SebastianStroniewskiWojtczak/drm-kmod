@@ -66,52 +66,52 @@
  */
 
 struct drm_conn_prop_enum_list {
-	int type;
-	const char *name;
-	struct ida ida;
+  int type;
+  const char *name;
+  struct ida ida;
 };
 
 /*
  * Connector and encoder types.
  */
 static struct drm_conn_prop_enum_list drm_connector_enum_list[] = {
-	{ DRM_MODE_CONNECTOR_Unknown, "Unknown" },
-	{ DRM_MODE_CONNECTOR_VGA, "VGA" },
-	{ DRM_MODE_CONNECTOR_DVII, "DVI-I" },
-	{ DRM_MODE_CONNECTOR_DVID, "DVI-D" },
-	{ DRM_MODE_CONNECTOR_DVIA, "DVI-A" },
-	{ DRM_MODE_CONNECTOR_Composite, "Composite" },
-	{ DRM_MODE_CONNECTOR_SVIDEO, "SVIDEO" },
-	{ DRM_MODE_CONNECTOR_LVDS, "LVDS" },
-	{ DRM_MODE_CONNECTOR_Component, "Component" },
-	{ DRM_MODE_CONNECTOR_9PinDIN, "DIN" },
-	{ DRM_MODE_CONNECTOR_DisplayPort, "DP" },
-	{ DRM_MODE_CONNECTOR_HDMIA, "HDMI-A" },
-	{ DRM_MODE_CONNECTOR_HDMIB, "HDMI-B" },
-	{ DRM_MODE_CONNECTOR_TV, "TV" },
-	{ DRM_MODE_CONNECTOR_eDP, "eDP" },
-	{ DRM_MODE_CONNECTOR_VIRTUAL, "Virtual" },
-	{ DRM_MODE_CONNECTOR_DSI, "DSI" },
-	{ DRM_MODE_CONNECTOR_DPI, "DPI" },
-	{ DRM_MODE_CONNECTOR_WRITEBACK, "Writeback" },
-	{ DRM_MODE_CONNECTOR_SPI, "SPI" },
-	{ DRM_MODE_CONNECTOR_USB, "USB" },
+  { DRM_MODE_CONNECTOR_Unknown, "Unknown" },
+  { DRM_MODE_CONNECTOR_VGA, "VGA" },
+  { DRM_MODE_CONNECTOR_DVII, "DVI-I" },
+  { DRM_MODE_CONNECTOR_DVID, "DVI-D" },
+  { DRM_MODE_CONNECTOR_DVIA, "DVI-A" },
+  { DRM_MODE_CONNECTOR_Composite, "Composite" },
+  { DRM_MODE_CONNECTOR_SVIDEO, "SVIDEO" },
+  { DRM_MODE_CONNECTOR_LVDS, "LVDS" },
+  { DRM_MODE_CONNECTOR_Component, "Component" },
+  { DRM_MODE_CONNECTOR_9PinDIN, "DIN" },
+  { DRM_MODE_CONNECTOR_DisplayPort, "DP" },
+  { DRM_MODE_CONNECTOR_HDMIA, "HDMI-A" },
+  { DRM_MODE_CONNECTOR_HDMIB, "HDMI-B" },
+  { DRM_MODE_CONNECTOR_TV, "TV" },
+  { DRM_MODE_CONNECTOR_eDP, "eDP" },
+  { DRM_MODE_CONNECTOR_VIRTUAL, "Virtual" },
+  { DRM_MODE_CONNECTOR_DSI, "DSI" },
+  { DRM_MODE_CONNECTOR_DPI, "DPI" },
+  { DRM_MODE_CONNECTOR_WRITEBACK, "Writeback" },
+  { DRM_MODE_CONNECTOR_SPI, "SPI" },
+  { DRM_MODE_CONNECTOR_USB, "USB" },
 };
 
 void drm_connector_ida_init(void)
 {
-	int i;
+  int i;
 
-	for (i = 0; i < ARRAY_SIZE(drm_connector_enum_list); i++)
-		ida_init(&drm_connector_enum_list[i].ida);
+  for (i = 0; i < ARRAY_SIZE(drm_connector_enum_list); i++)
+    ida_init(&drm_connector_enum_list[i].ida);
 }
 
 void drm_connector_ida_destroy(void)
 {
-	int i;
+  int i;
 
-	for (i = 0; i < ARRAY_SIZE(drm_connector_enum_list); i++)
-		ida_destroy(&drm_connector_enum_list[i].ida);
+  for (i = 0; i < ARRAY_SIZE(drm_connector_enum_list); i++)
+    ida_destroy(&drm_connector_enum_list[i].ida);
 }
 
 /**
@@ -122,10 +122,10 @@ void drm_connector_ida_destroy(void)
  */
 const char *drm_get_connector_type_name(unsigned int type)
 {
-	if (type < ARRAY_SIZE(drm_connector_enum_list))
-		return drm_connector_enum_list[type].name;
+  if (type < ARRAY_SIZE(drm_connector_enum_list))
+    return drm_connector_enum_list[type].name;
 
-	return NULL;
+  return NULL;
 }
 EXPORT_SYMBOL(drm_get_connector_type_name);
 
@@ -141,66 +141,66 @@ EXPORT_SYMBOL(drm_get_connector_type_name);
  */
 static void drm_connector_get_cmdline_mode(struct drm_connector *connector)
 {
-	struct drm_cmdline_mode *mode = &connector->cmdline_mode;
-	char *option = NULL;
+  struct drm_cmdline_mode *mode = &connector->cmdline_mode;
+  char *option = NULL;
 
-	if (fb_get_options(connector->name, &option))
-		return;
+  if (fb_get_options(connector->name, &option))
+    return;
 
-	if (!drm_mode_parse_command_line_for_connector(option,
-						       connector,
-						       mode))
-		return;
+  if (!drm_mode_parse_command_line_for_connector(option,
+                   connector,
+                   mode))
+    return;
 
-	if (mode->force) {
-		DRM_INFO("forcing %s connector %s\n", connector->name,
-			 drm_get_connector_force_name(mode->force));
-		connector->force = mode->force;
-	}
+  if (mode->force) {
+    DRM_INFO("forcing %s connector %s\n", connector->name,
+       drm_get_connector_force_name(mode->force));
+    connector->force = mode->force;
+  }
 
-	if (mode->panel_orientation != DRM_MODE_PANEL_ORIENTATION_UNKNOWN) {
-		DRM_INFO("cmdline forces connector %s panel_orientation to %d\n",
-			 connector->name, mode->panel_orientation);
-		drm_connector_set_panel_orientation(connector,
-						    mode->panel_orientation);
-	}
+  if (mode->panel_orientation != DRM_MODE_PANEL_ORIENTATION_UNKNOWN) {
+    DRM_INFO("cmdline forces connector %s panel_orientation to %d\n",
+       connector->name, mode->panel_orientation);
+    drm_connector_set_panel_orientation(connector,
+                mode->panel_orientation);
+  }
 
-	DRM_DEBUG_KMS("cmdline mode for connector %s %s %dx%d@%dHz%s%s%s\n",
-		      connector->name, mode->name,
-		      mode->xres, mode->yres,
-		      mode->refresh_specified ? mode->refresh : 60,
-		      mode->rb ? " reduced blanking" : "",
-		      mode->margins ? " with margins" : "",
-		      mode->interlace ?  " interlaced" : "");
+  DRM_DEBUG_KMS("cmdline mode for connector %s %s %dx%d@%dHz%s%s%s\n",
+          connector->name, mode->name,
+          mode->xres, mode->yres,
+          mode->refresh_specified ? mode->refresh : 60,
+          mode->rb ? " reduced blanking" : "",
+          mode->margins ? " with margins" : "",
+          mode->interlace ?  " interlaced" : "");
 }
 
 static void drm_connector_free(struct kref *kref)
 {
-	struct drm_connector *connector =
-		container_of(kref, struct drm_connector, base.refcount);
-	struct drm_device *dev = connector->dev;
+  struct drm_connector *connector =
+    container_of(kref, struct drm_connector, base.refcount);
+  struct drm_device *dev = connector->dev;
 
-	drm_mode_object_unregister(dev, &connector->base);
-	connector->funcs->destroy(connector);
+  drm_mode_object_unregister(dev, &connector->base);
+  connector->funcs->destroy(connector);
 }
 
 void drm_connector_free_work_fn(struct work_struct *work)
 {
-	struct drm_connector *connector, *n;
-	struct drm_device *dev =
-		container_of(work, struct drm_device, mode_config.connector_free_work);
-	struct drm_mode_config *config = &dev->mode_config;
-	unsigned long flags;
-	struct llist_node *freed;
+  struct drm_connector *connector, *n;
+  struct drm_device *dev =
+    container_of(work, struct drm_device, mode_config.connector_free_work);
+  struct drm_mode_config *config = &dev->mode_config;
+  unsigned long flags;
+  struct llist_node *freed;
 
-	spin_lock_irqsave(&config->connector_list_lock, flags);
-	freed = llist_del_all(&config->connector_free_list);
-	spin_unlock_irqrestore(&config->connector_list_lock, flags);
+  spin_lock_irqsave(&config->connector_list_lock, flags);
+  freed = llist_del_all(&config->connector_free_list);
+  spin_unlock_irqrestore(&config->connector_list_lock, flags);
 
-	llist_for_each_entry_safe(connector, n, freed, free_node) {
-		drm_mode_object_unregister(dev, &connector->base);
-		connector->funcs->destroy(connector);
-	}
+  llist_for_each_entry_safe(connector, n, freed, free_node) {
+    drm_mode_object_unregister(dev, &connector->base);
+    connector->funcs->destroy(connector);
+  }
 }
 
 /**
@@ -217,110 +217,110 @@ void drm_connector_free_work_fn(struct work_struct *work)
  * Zero on success, error code on failure.
  */
 int drm_connector_init(struct drm_device *dev,
-		       struct drm_connector *connector,
-		       const struct drm_connector_funcs *funcs,
-		       int connector_type)
+           struct drm_connector *connector,
+           const struct drm_connector_funcs *funcs,
+           int connector_type)
 {
-	struct drm_mode_config *config = &dev->mode_config;
-	int ret;
-	struct ida *connector_ida =
-		&drm_connector_enum_list[connector_type].ida;
+  struct drm_mode_config *config = &dev->mode_config;
+  int ret;
+  struct ida *connector_ida =
+    &drm_connector_enum_list[connector_type].ida;
 
-	WARN_ON(drm_drv_uses_atomic_modeset(dev) &&
-		(!funcs->atomic_destroy_state ||
-		 !funcs->atomic_duplicate_state));
+  WARN_ON(drm_drv_uses_atomic_modeset(dev) &&
+    (!funcs->atomic_destroy_state ||
+     !funcs->atomic_duplicate_state));
 
-	ret = __drm_mode_object_add(dev, &connector->base,
-				    DRM_MODE_OBJECT_CONNECTOR,
-				    false, drm_connector_free);
-	if (ret)
-		return ret;
+  ret = __drm_mode_object_add(dev, &connector->base,
+            DRM_MODE_OBJECT_CONNECTOR,
+            false, drm_connector_free);
+  if (ret)
+    return ret;
 
-	connector->base.properties = &connector->properties;
-	connector->dev = dev;
-	connector->funcs = funcs;
+  connector->base.properties = &connector->properties;
+  connector->dev = dev;
+  connector->funcs = funcs;
 
-	/* connector index is used with 32bit bitmasks */
-	ret = ida_simple_get(&config->connector_ida, 0, 32, GFP_KERNEL);
-	if (ret < 0) {
-		DRM_DEBUG_KMS("Failed to allocate %s connector index: %d\n",
-			      drm_connector_enum_list[connector_type].name,
-			      ret);
-		goto out_put;
-	}
-	connector->index = ret;
-	ret = 0;
+  /* connector index is used with 32bit bitmasks */
+  ret = ida_simple_get(&config->connector_ida, 0, 32, GFP_KERNEL);
+  if (ret < 0) {
+    DRM_DEBUG_KMS("Failed to allocate %s connector index: %d\n",
+            drm_connector_enum_list[connector_type].name,
+            ret);
+    goto out_put;
+  }
+  connector->index = ret;
+  ret = 0;
 
-	connector->connector_type = connector_type;
-	connector->connector_type_id =
-		ida_simple_get(connector_ida, 1, 0, GFP_KERNEL);
-	if (connector->connector_type_id < 0) {
-		ret = connector->connector_type_id;
-		goto out_put_id;
-	}
-	connector->name =
-		kasprintf(GFP_KERNEL, "%s-%d",
-			  drm_connector_enum_list[connector_type].name,
-			  connector->connector_type_id);
-	if (!connector->name) {
-		ret = -ENOMEM;
-		goto out_put_type_id;
-	}
+  connector->connector_type = connector_type;
+  connector->connector_type_id =
+    ida_simple_get(connector_ida, 1, 0, GFP_KERNEL);
+  if (connector->connector_type_id < 0) {
+    ret = connector->connector_type_id;
+    goto out_put_id;
+  }
+  connector->name =
+    kasprintf(GFP_KERNEL, "%s-%d",
+        drm_connector_enum_list[connector_type].name,
+        connector->connector_type_id);
+  if (!connector->name) {
+    ret = -ENOMEM;
+    goto out_put_type_id;
+  }
 
-	INIT_LIST_HEAD(&connector->probed_modes);
-	INIT_LIST_HEAD(&connector->modes);
-	mutex_init(&connector->mutex);
-	connector->edid_blob_ptr = NULL;
-	connector->epoch_counter = 0;
-	connector->tile_blob_ptr = NULL;
-	connector->status = connector_status_unknown;
-	connector->display_info.panel_orientation =
-		DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
+  INIT_LIST_HEAD(&connector->probed_modes);
+  INIT_LIST_HEAD(&connector->modes);
+  mutex_init(&connector->mutex);
+  connector->edid_blob_ptr = NULL;
+  connector->epoch_counter = 0;
+  connector->tile_blob_ptr = NULL;
+  connector->status = connector_status_unknown;
+  connector->display_info.panel_orientation =
+    DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
 
-	drm_connector_get_cmdline_mode(connector);
+  drm_connector_get_cmdline_mode(connector);
 
-	/* We should add connectors at the end to avoid upsetting the connector
-	 * index too much.
-	 */
-	spin_lock_irq(&config->connector_list_lock);
-	list_add_tail(&connector->head, &config->connector_list);
-	config->num_connector++;
-	spin_unlock_irq(&config->connector_list_lock);
+  /* We should add connectors at the end to avoid upsetting the connector
+   * index too much.
+   */
+  spin_lock_irq(&config->connector_list_lock);
+  list_add_tail(&connector->head, &config->connector_list);
+  config->num_connector++;
+  spin_unlock_irq(&config->connector_list_lock);
 
-	if (connector_type != DRM_MODE_CONNECTOR_VIRTUAL &&
-	    connector_type != DRM_MODE_CONNECTOR_WRITEBACK)
-		drm_connector_attach_edid_property(connector);
+  if (connector_type != DRM_MODE_CONNECTOR_VIRTUAL &&
+      connector_type != DRM_MODE_CONNECTOR_WRITEBACK)
+    drm_connector_attach_edid_property(connector);
 
-	drm_object_attach_property(&connector->base,
-				      config->dpms_property, 0);
+  drm_object_attach_property(&connector->base,
+              config->dpms_property, 0);
 
-	drm_object_attach_property(&connector->base,
-				   config->link_status_property,
-				   0);
+  drm_object_attach_property(&connector->base,
+           config->link_status_property,
+           0);
 
-	drm_object_attach_property(&connector->base,
-				   config->non_desktop_property,
-				   0);
-	drm_object_attach_property(&connector->base,
-				   config->tile_property,
-				   0);
+  drm_object_attach_property(&connector->base,
+           config->non_desktop_property,
+           0);
+  drm_object_attach_property(&connector->base,
+           config->tile_property,
+           0);
 
-	if (drm_core_check_feature(dev, DRIVER_ATOMIC)) {
-		drm_object_attach_property(&connector->base, config->prop_crtc_id, 0);
-	}
+  if (drm_core_check_feature(dev, DRIVER_ATOMIC)) {
+    drm_object_attach_property(&connector->base, config->prop_crtc_id, 0);
+  }
 
-	connector->debugfs_entry = NULL;
+  connector->debugfs_entry = NULL;
 out_put_type_id:
-	if (ret)
-		ida_simple_remove(connector_ida, connector->connector_type_id);
+  if (ret)
+    ida_simple_remove(connector_ida, connector->connector_type_id);
 out_put_id:
-	if (ret)
-		ida_simple_remove(&config->connector_ida, connector->index);
+  if (ret)
+    ida_simple_remove(&config->connector_ida, connector->index);
 out_put:
-	if (ret)
-		drm_mode_object_unregister(dev, &connector->base);
+  if (ret)
+    drm_mode_object_unregister(dev, &connector->base);
 
-	return ret;
+  return ret;
 }
 EXPORT_SYMBOL(drm_connector_init);
 
@@ -341,21 +341,21 @@ EXPORT_SYMBOL(drm_connector_init);
  * Zero on success, error code on failure.
  */
 int drm_connector_init_with_ddc(struct drm_device *dev,
-				struct drm_connector *connector,
-				const struct drm_connector_funcs *funcs,
-				int connector_type,
-				struct i2c_adapter *ddc)
+        struct drm_connector *connector,
+        const struct drm_connector_funcs *funcs,
+        int connector_type,
+        struct i2c_adapter *ddc)
 {
-	int ret;
+  int ret;
 
-	ret = drm_connector_init(dev, connector, funcs, connector_type);
-	if (ret)
-		return ret;
+  ret = drm_connector_init(dev, connector, funcs, connector_type);
+  if (ret)
+    return ret;
 
-	/* provide ddc symlink in sysfs */
-	connector->ddc = ddc;
+  /* provide ddc symlink in sysfs */
+  connector->ddc = ddc;
 
-	return ret;
+  return ret;
 }
 EXPORT_SYMBOL(drm_connector_init_with_ddc);
 
@@ -369,11 +369,11 @@ EXPORT_SYMBOL(drm_connector_init_with_ddc);
  */
 void drm_connector_attach_edid_property(struct drm_connector *connector)
 {
-	struct drm_mode_config *config = &connector->dev->mode_config;
+  struct drm_mode_config *config = &connector->dev->mode_config;
 
-	drm_object_attach_property(&connector->base,
-				   config->edid_property,
-				   0);
+  drm_object_attach_property(&connector->base,
+           config->edid_property,
+           0);
 }
 EXPORT_SYMBOL(drm_connector_attach_edid_property);
 
@@ -390,25 +390,25 @@ EXPORT_SYMBOL(drm_connector_attach_edid_property);
  * Zero on success, negative errno on failure.
  */
 int drm_connector_attach_encoder(struct drm_connector *connector,
-				 struct drm_encoder *encoder)
+         struct drm_encoder *encoder)
 {
-	/*
-	 * In the past, drivers have attempted to model the static association
-	 * of connector to encoder in simple connector/encoder devices using a
-	 * direct assignment of connector->encoder = encoder. This connection
-	 * is a logical one and the responsibility of the core, so drivers are
-	 * expected not to mess with this.
-	 *
-	 * Note that the error return should've been enough here, but a large
-	 * majority of drivers ignores the return value, so add in a big WARN
-	 * to get people's attention.
-	 */
-	if (WARN_ON(connector->encoder))
-		return -EINVAL;
+  /*
+   * In the past, drivers have attempted to model the static association
+   * of connector to encoder in simple connector/encoder devices using a
+   * direct assignment of connector->encoder = encoder. This connection
+   * is a logical one and the responsibility of the core, so drivers are
+   * expected not to mess with this.
+   *
+   * Note that the error return should've been enough here, but a large
+   * majority of drivers ignores the return value, so add in a big WARN
+   * to get people's attention.
+   */
+  if (WARN_ON(connector->encoder))
+    return -EINVAL;
 
-	connector->possible_encoders |= drm_encoder_mask(encoder);
+  connector->possible_encoders |= drm_encoder_mask(encoder);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_connector_attach_encoder);
 
@@ -422,17 +422,17 @@ EXPORT_SYMBOL(drm_connector_attach_encoder);
  * True if @encoder is one of the possible encoders for @connector.
  */
 bool drm_connector_has_possible_encoder(struct drm_connector *connector,
-					struct drm_encoder *encoder)
+          struct drm_encoder *encoder)
 {
-	return connector->possible_encoders & drm_encoder_mask(encoder);
+  return connector->possible_encoders & drm_encoder_mask(encoder);
 }
 EXPORT_SYMBOL(drm_connector_has_possible_encoder);
 
 static void drm_mode_remove(struct drm_connector *connector,
-			    struct drm_display_mode *mode)
+          struct drm_display_mode *mode)
 {
-	list_del(&mode->head);
-	drm_mode_destroy(connector->dev, mode);
+  list_del(&mode->head);
+  drm_mode_destroy(connector->dev, mode);
 }
 
 /**
@@ -443,50 +443,50 @@ static void drm_mode_remove(struct drm_connector *connector,
  */
 void drm_connector_cleanup(struct drm_connector *connector)
 {
-	struct drm_device *dev = connector->dev;
-	struct drm_display_mode *mode, *t;
+  struct drm_device *dev = connector->dev;
+  struct drm_display_mode *mode, *t;
 
-	/* The connector should have been removed from userspace long before
-	 * it is finally destroyed.
-	 */
-	if (WARN_ON(connector->registration_state ==
-		    DRM_CONNECTOR_REGISTERED))
-		drm_connector_unregister(connector);
+  /* The connector should have been removed from userspace long before
+   * it is finally destroyed.
+   */
+  if (WARN_ON(connector->registration_state ==
+        DRM_CONNECTOR_REGISTERED))
+    drm_connector_unregister(connector);
 
-	if (connector->tile_group) {
-		drm_mode_put_tile_group(dev, connector->tile_group);
-		connector->tile_group = NULL;
-	}
+  if (connector->tile_group) {
+    drm_mode_put_tile_group(dev, connector->tile_group);
+    connector->tile_group = NULL;
+  }
 
-	list_for_each_entry_safe(mode, t, &connector->probed_modes, head)
-		drm_mode_remove(connector, mode);
+  list_for_each_entry_safe(mode, t, &connector->probed_modes, head)
+    drm_mode_remove(connector, mode);
 
-	list_for_each_entry_safe(mode, t, &connector->modes, head)
-		drm_mode_remove(connector, mode);
+  list_for_each_entry_safe(mode, t, &connector->modes, head)
+    drm_mode_remove(connector, mode);
 
-	ida_simple_remove(&drm_connector_enum_list[connector->connector_type].ida,
-			  connector->connector_type_id);
+  ida_simple_remove(&drm_connector_enum_list[connector->connector_type].ida,
+        connector->connector_type_id);
 
-	ida_simple_remove(&dev->mode_config.connector_ida,
-			  connector->index);
+  ida_simple_remove(&dev->mode_config.connector_ida,
+        connector->index);
 
-	kfree(connector->display_info.bus_formats);
-	drm_mode_object_unregister(dev, &connector->base);
-	kfree(connector->name);
-	connector->name = NULL;
-	spin_lock_irq(&dev->mode_config.connector_list_lock);
-	list_del(&connector->head);
-	dev->mode_config.num_connector--;
-	spin_unlock_irq(&dev->mode_config.connector_list_lock);
+  kfree(connector->display_info.bus_formats);
+  drm_mode_object_unregister(dev, &connector->base);
+  kfree(connector->name);
+  connector->name = NULL;
+  spin_lock_irq(&dev->mode_config.connector_list_lock);
+  list_del(&connector->head);
+  dev->mode_config.num_connector--;
+  spin_unlock_irq(&dev->mode_config.connector_list_lock);
 
-	WARN_ON(connector->state && !connector->funcs->atomic_destroy_state);
-	if (connector->state && connector->funcs->atomic_destroy_state)
-		connector->funcs->atomic_destroy_state(connector,
-						       connector->state);
+  WARN_ON(connector->state && !connector->funcs->atomic_destroy_state);
+  if (connector->state && connector->funcs->atomic_destroy_state)
+    connector->funcs->atomic_destroy_state(connector,
+                   connector->state);
 
-	mutex_destroy(&connector->mutex);
+  mutex_destroy(&connector->mutex);
 
-	memset(connector, 0, sizeof(*connector));
+  memset(connector, 0, sizeof(*connector));
 }
 EXPORT_SYMBOL(drm_connector_cleanup);
 
@@ -504,42 +504,42 @@ EXPORT_SYMBOL(drm_connector_cleanup);
  */
 int drm_connector_register(struct drm_connector *connector)
 {
-	int ret = 0;
+  int ret = 0;
 
-	if (!connector->dev->registered)
-		return 0;
+  if (!connector->dev->registered)
+    return 0;
 
-	mutex_lock(&connector->mutex);
-	if (connector->registration_state != DRM_CONNECTOR_INITIALIZING)
-		goto unlock;
+  mutex_lock(&connector->mutex);
+  if (connector->registration_state != DRM_CONNECTOR_INITIALIZING)
+    goto unlock;
 
-	ret = drm_sysfs_connector_add(connector);
-	if (ret)
-		goto unlock;
+  ret = drm_sysfs_connector_add(connector);
+  if (ret)
+    goto unlock;
 
-	drm_debugfs_connector_add(connector);
+  drm_debugfs_connector_add(connector);
 
-	if (connector->funcs->late_register) {
-		ret = connector->funcs->late_register(connector);
-		if (ret)
-			goto err_debugfs;
-	}
+  if (connector->funcs->late_register) {
+    ret = connector->funcs->late_register(connector);
+    if (ret)
+      goto err_debugfs;
+  }
 
-	drm_mode_object_register(connector->dev, &connector->base);
+  drm_mode_object_register(connector->dev, &connector->base);
 
-	connector->registration_state = DRM_CONNECTOR_REGISTERED;
+  connector->registration_state = DRM_CONNECTOR_REGISTERED;
 
-	/* Let userspace know we have a new connector */
-	drm_sysfs_hotplug_event(connector->dev);
+  /* Let userspace know we have a new connector */
+  drm_sysfs_hotplug_event(connector->dev);
 
-	goto unlock;
+  goto unlock;
 
 err_debugfs:
-	drm_debugfs_connector_remove(connector);
-	drm_sysfs_connector_remove(connector);
+  drm_debugfs_connector_remove(connector);
+  drm_sysfs_connector_remove(connector);
 unlock:
-	mutex_unlock(&connector->mutex);
-	return ret;
+  mutex_unlock(&connector->mutex);
+  return ret;
 }
 EXPORT_SYMBOL(drm_connector_register);
 
@@ -554,51 +554,51 @@ EXPORT_SYMBOL(drm_connector_register);
  */
 void drm_connector_unregister(struct drm_connector *connector)
 {
-	mutex_lock(&connector->mutex);
-	if (connector->registration_state != DRM_CONNECTOR_REGISTERED) {
-		mutex_unlock(&connector->mutex);
-		return;
-	}
+  mutex_lock(&connector->mutex);
+  if (connector->registration_state != DRM_CONNECTOR_REGISTERED) {
+    mutex_unlock(&connector->mutex);
+    return;
+  }
 
-	if (connector->funcs->early_unregister)
-		connector->funcs->early_unregister(connector);
+  if (connector->funcs->early_unregister)
+    connector->funcs->early_unregister(connector);
 
-	drm_sysfs_connector_remove(connector);
-	drm_debugfs_connector_remove(connector);
+  drm_sysfs_connector_remove(connector);
+  drm_debugfs_connector_remove(connector);
 
-	connector->registration_state = DRM_CONNECTOR_UNREGISTERED;
-	mutex_unlock(&connector->mutex);
+  connector->registration_state = DRM_CONNECTOR_UNREGISTERED;
+  mutex_unlock(&connector->mutex);
 }
 EXPORT_SYMBOL(drm_connector_unregister);
 
 void drm_connector_unregister_all(struct drm_device *dev)
 {
-	struct drm_connector *connector;
-	struct drm_connector_list_iter conn_iter;
+  struct drm_connector *connector;
+  struct drm_connector_list_iter conn_iter;
 
-	drm_connector_list_iter_begin(dev, &conn_iter);
-	drm_for_each_connector_iter(connector, &conn_iter)
-		drm_connector_unregister(connector);
-	drm_connector_list_iter_end(&conn_iter);
+  drm_connector_list_iter_begin(dev, &conn_iter);
+  drm_for_each_connector_iter(connector, &conn_iter)
+    drm_connector_unregister(connector);
+  drm_connector_list_iter_end(&conn_iter);
 }
 
 int drm_connector_register_all(struct drm_device *dev)
 {
-	struct drm_connector *connector;
-	struct drm_connector_list_iter conn_iter;
-	int ret = 0;
+  struct drm_connector *connector;
+  struct drm_connector_list_iter conn_iter;
+  int ret = 0;
 
-	drm_connector_list_iter_begin(dev, &conn_iter);
-	drm_for_each_connector_iter(connector, &conn_iter) {
-		ret = drm_connector_register(connector);
-		if (ret)
-			break;
-	}
-	drm_connector_list_iter_end(&conn_iter);
+  drm_connector_list_iter_begin(dev, &conn_iter);
+  drm_for_each_connector_iter(connector, &conn_iter) {
+    ret = drm_connector_register(connector);
+    if (ret)
+      break;
+  }
+  drm_connector_list_iter_end(&conn_iter);
 
-	if (ret)
-		drm_connector_unregister_all(dev);
-	return ret;
+  if (ret)
+    drm_connector_unregister_all(dev);
+  return ret;
 }
 
 /**
@@ -610,12 +610,12 @@ int drm_connector_register_all(struct drm_device *dev)
  */
 const char *drm_get_connector_status_name(enum drm_connector_status status)
 {
-	if (status == connector_status_connected)
-		return "connected";
-	else if (status == connector_status_disconnected)
-		return "disconnected";
-	else
-		return "unknown";
+  if (status == connector_status_connected)
+    return "connected";
+  else if (status == connector_status_disconnected)
+    return "disconnected";
+  else
+    return "unknown";
 }
 EXPORT_SYMBOL(drm_get_connector_status_name);
 
@@ -627,23 +627,23 @@ EXPORT_SYMBOL(drm_get_connector_status_name);
  */
 const char *drm_get_connector_force_name(enum drm_connector_force force)
 {
-	switch (force) {
-	case DRM_FORCE_UNSPECIFIED:
-		return "unspecified";
-	case DRM_FORCE_OFF:
-		return "off";
-	case DRM_FORCE_ON:
-		return "on";
-	case DRM_FORCE_ON_DIGITAL:
-		return "digital";
-	default:
-		return "unknown";
-	}
+  switch (force) {
+  case DRM_FORCE_UNSPECIFIED:
+    return "unspecified";
+  case DRM_FORCE_OFF:
+    return "off";
+  case DRM_FORCE_ON:
+    return "on";
+  case DRM_FORCE_ON_DIGITAL:
+    return "digital";
+  default:
+    return "unknown";
+  }
 }
 
 #ifdef CONFIG_LOCKDEP
 static struct lockdep_map connector_list_iter_dep_map = {
-	.name = "drm_connector_list_iter"
+  .name = "drm_connector_list_iter"
 };
 #endif
 
@@ -658,11 +658,11 @@ static struct lockdep_map connector_list_iter_dep_map = {
  * drm_for_each_connector_iter().
  */
 void drm_connector_list_iter_begin(struct drm_device *dev,
-				   struct drm_connector_list_iter *iter)
+           struct drm_connector_list_iter *iter)
 {
-	iter->dev = dev;
-	iter->conn = NULL;
-	lock_acquire_shared_recursive(&connector_list_iter_dep_map, 0, 1, NULL, _RET_IP_);
+  iter->dev = dev;
+  iter->conn = NULL;
+  lock_acquire_shared_recursive(&connector_list_iter_dep_map, 0, 1, NULL, _RET_IP_);
 }
 EXPORT_SYMBOL(drm_connector_list_iter_begin);
 
@@ -674,15 +674,15 @@ EXPORT_SYMBOL(drm_connector_list_iter_begin);
 static void
 __drm_connector_put_safe(struct drm_connector *conn)
 {
-	struct drm_mode_config *config = &conn->dev->mode_config;
+  struct drm_mode_config *config = &conn->dev->mode_config;
 
-	lockdep_assert_held(&config->connector_list_lock);
+  lockdep_assert_held(&config->connector_list_lock);
 
-	if (!refcount_dec_and_test(&conn->base.refcount.refcount))
-		return;
+  if (!refcount_dec_and_test(&conn->base.refcount.refcount))
+    return;
 
-	llist_add(&conn->free_node, &config->connector_free_list);
-	schedule_work(&config->connector_free_work);
+  llist_add(&conn->free_node, &config->connector_free_list);
+  schedule_work(&config->connector_free_work);
 }
 
 /**
@@ -695,31 +695,31 @@ __drm_connector_put_safe(struct drm_connector *conn)
 struct drm_connector *
 drm_connector_list_iter_next(struct drm_connector_list_iter *iter)
 {
-	struct drm_connector *old_conn = iter->conn;
-	struct drm_mode_config *config = &iter->dev->mode_config;
-	struct list_head *lhead;
-	unsigned long flags;
+  struct drm_connector *old_conn = iter->conn;
+  struct drm_mode_config *config = &iter->dev->mode_config;
+  struct list_head *lhead;
+  unsigned long flags;
 
-	spin_lock_irqsave(&config->connector_list_lock, flags);
-	lhead = old_conn ? &old_conn->head : &config->connector_list;
+  spin_lock_irqsave(&config->connector_list_lock, flags);
+  lhead = old_conn ? &old_conn->head : &config->connector_list;
 
-	do {
-		if (lhead->next == &config->connector_list) {
-			iter->conn = NULL;
-			break;
-		}
+  do {
+    if (lhead->next == &config->connector_list) {
+      iter->conn = NULL;
+      break;
+    }
 
-		lhead = lhead->next;
-		iter->conn = list_entry(lhead, struct drm_connector, head);
+    lhead = lhead->next;
+    iter->conn = list_entry(lhead, struct drm_connector, head);
 
-		/* loop until it's not a zombie connector */
-	} while (!kref_get_unless_zero(&iter->conn->base.refcount));
+    /* loop until it's not a zombie connector */
+  } while (!kref_get_unless_zero(&iter->conn->base.refcount));
 
-	if (old_conn)
-		__drm_connector_put_safe(old_conn);
-	spin_unlock_irqrestore(&config->connector_list_lock, flags);
+  if (old_conn)
+    __drm_connector_put_safe(old_conn);
+  spin_unlock_irqrestore(&config->connector_list_lock, flags);
 
-	return iter->conn;
+  return iter->conn;
 }
 EXPORT_SYMBOL(drm_connector_list_iter_next);
 
@@ -734,26 +734,26 @@ EXPORT_SYMBOL(drm_connector_list_iter_next);
  */
 void drm_connector_list_iter_end(struct drm_connector_list_iter *iter)
 {
-	struct drm_mode_config *config = &iter->dev->mode_config;
-	unsigned long flags;
+  struct drm_mode_config *config = &iter->dev->mode_config;
+  unsigned long flags;
 
-	iter->dev = NULL;
-	if (iter->conn) {
-		spin_lock_irqsave(&config->connector_list_lock, flags);
-		__drm_connector_put_safe(iter->conn);
-		spin_unlock_irqrestore(&config->connector_list_lock, flags);
-	}
-	lock_release(&connector_list_iter_dep_map, _RET_IP_);
+  iter->dev = NULL;
+  if (iter->conn) {
+    spin_lock_irqsave(&config->connector_list_lock, flags);
+    __drm_connector_put_safe(iter->conn);
+    spin_unlock_irqrestore(&config->connector_list_lock, flags);
+  }
+  lock_release(&connector_list_iter_dep_map, _RET_IP_);
 }
 EXPORT_SYMBOL(drm_connector_list_iter_end);
 
 static const struct drm_prop_enum_list drm_subpixel_enum_list[] = {
-	{ SubPixelUnknown, "Unknown" },
-	{ SubPixelHorizontalRGB, "Horizontal RGB" },
-	{ SubPixelHorizontalBGR, "Horizontal BGR" },
-	{ SubPixelVerticalRGB, "Vertical RGB" },
-	{ SubPixelVerticalBGR, "Vertical BGR" },
-	{ SubPixelNone, "None" },
+  { SubPixelUnknown, "Unknown" },
+  { SubPixelHorizontalRGB, "Horizontal RGB" },
+  { SubPixelHorizontalBGR, "Horizontal BGR" },
+  { SubPixelVerticalRGB, "Vertical RGB" },
+  { SubPixelVerticalBGR, "Vertical BGR" },
+  { SubPixelNone, "None" },
 };
 
 /**
@@ -765,21 +765,21 @@ static const struct drm_prop_enum_list drm_subpixel_enum_list[] = {
  */
 const char *drm_get_subpixel_order_name(enum subpixel_order order)
 {
-	return drm_subpixel_enum_list[order].name;
+  return drm_subpixel_enum_list[order].name;
 }
 EXPORT_SYMBOL(drm_get_subpixel_order_name);
 
 static const struct drm_prop_enum_list drm_dpms_enum_list[] = {
-	{ DRM_MODE_DPMS_ON, "On" },
-	{ DRM_MODE_DPMS_STANDBY, "Standby" },
-	{ DRM_MODE_DPMS_SUSPEND, "Suspend" },
-	{ DRM_MODE_DPMS_OFF, "Off" }
+  { DRM_MODE_DPMS_ON, "On" },
+  { DRM_MODE_DPMS_STANDBY, "Standby" },
+  { DRM_MODE_DPMS_SUSPEND, "Suspend" },
+  { DRM_MODE_DPMS_OFF, "Off" }
 };
 DRM_ENUM_NAME_FN(drm_get_dpms_name, drm_dpms_enum_list)
 
 static const struct drm_prop_enum_list drm_link_status_enum_list[] = {
-	{ DRM_MODE_LINK_STATUS_GOOD, "Good" },
-	{ DRM_MODE_LINK_STATUS_BAD, "Bad" },
+  { DRM_MODE_LINK_STATUS_GOOD, "Good" },
+  { DRM_MODE_LINK_STATUS_BAD, "Bad" },
 };
 
 /**
@@ -793,130 +793,130 @@ static const struct drm_prop_enum_list drm_link_status_enum_list[] = {
  * a full list of available formats.
  */
 int drm_display_info_set_bus_formats(struct drm_display_info *info,
-				     const u32 *formats,
-				     unsigned int num_formats)
+             const u32 *formats,
+             unsigned int num_formats)
 {
-	u32 *fmts = NULL;
+  u32 *fmts = NULL;
 
-	if (!formats && num_formats)
-		return -EINVAL;
+  if (!formats && num_formats)
+    return -EINVAL;
 
-	if (formats && num_formats) {
-		fmts = kmemdup(formats, sizeof(*formats) * num_formats,
-			       GFP_KERNEL);
-		if (!fmts)
-			return -ENOMEM;
-	}
+  if (formats && num_formats) {
+    fmts = kmemdup(formats, sizeof(*formats) * num_formats,
+             GFP_KERNEL);
+    if (!fmts)
+      return -ENOMEM;
+  }
 
-	kfree(info->bus_formats);
-	info->bus_formats = fmts;
-	info->num_bus_formats = num_formats;
+  kfree(info->bus_formats);
+  info->bus_formats = fmts;
+  info->num_bus_formats = num_formats;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_display_info_set_bus_formats);
 
 /* Optional connector properties. */
 static const struct drm_prop_enum_list drm_scaling_mode_enum_list[] = {
-	{ DRM_MODE_SCALE_NONE, "None" },
-	{ DRM_MODE_SCALE_FULLSCREEN, "Full" },
-	{ DRM_MODE_SCALE_CENTER, "Center" },
-	{ DRM_MODE_SCALE_ASPECT, "Full aspect" },
+  { DRM_MODE_SCALE_NONE, "None" },
+  { DRM_MODE_SCALE_FULLSCREEN, "Full" },
+  { DRM_MODE_SCALE_CENTER, "Center" },
+  { DRM_MODE_SCALE_ASPECT, "Full aspect" },
 };
 
 static const struct drm_prop_enum_list drm_aspect_ratio_enum_list[] = {
-	{ DRM_MODE_PICTURE_ASPECT_NONE, "Automatic" },
-	{ DRM_MODE_PICTURE_ASPECT_4_3, "4:3" },
-	{ DRM_MODE_PICTURE_ASPECT_16_9, "16:9" },
+  { DRM_MODE_PICTURE_ASPECT_NONE, "Automatic" },
+  { DRM_MODE_PICTURE_ASPECT_4_3, "4:3" },
+  { DRM_MODE_PICTURE_ASPECT_16_9, "16:9" },
 };
 
 static const struct drm_prop_enum_list drm_content_type_enum_list[] = {
-	{ DRM_MODE_CONTENT_TYPE_NO_DATA, "No Data" },
-	{ DRM_MODE_CONTENT_TYPE_GRAPHICS, "Graphics" },
-	{ DRM_MODE_CONTENT_TYPE_PHOTO, "Photo" },
-	{ DRM_MODE_CONTENT_TYPE_CINEMA, "Cinema" },
-	{ DRM_MODE_CONTENT_TYPE_GAME, "Game" },
+  { DRM_MODE_CONTENT_TYPE_NO_DATA, "No Data" },
+  { DRM_MODE_CONTENT_TYPE_GRAPHICS, "Graphics" },
+  { DRM_MODE_CONTENT_TYPE_PHOTO, "Photo" },
+  { DRM_MODE_CONTENT_TYPE_CINEMA, "Cinema" },
+  { DRM_MODE_CONTENT_TYPE_GAME, "Game" },
 };
 
 static const struct drm_prop_enum_list drm_panel_orientation_enum_list[] = {
-	{ DRM_MODE_PANEL_ORIENTATION_NORMAL,	"Normal"	},
-	{ DRM_MODE_PANEL_ORIENTATION_BOTTOM_UP,	"Upside Down"	},
-	{ DRM_MODE_PANEL_ORIENTATION_LEFT_UP,	"Left Side Up"	},
-	{ DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,	"Right Side Up"	},
+  { DRM_MODE_PANEL_ORIENTATION_NORMAL,  "Normal"  },
+  { DRM_MODE_PANEL_ORIENTATION_BOTTOM_UP,  "Upside Down"  },
+  { DRM_MODE_PANEL_ORIENTATION_LEFT_UP,  "Left Side Up"  },
+  { DRM_MODE_PANEL_ORIENTATION_RIGHT_UP,  "Right Side Up"  },
 };
 
 static const struct drm_prop_enum_list drm_dvi_i_select_enum_list[] = {
-	{ DRM_MODE_SUBCONNECTOR_Automatic, "Automatic" }, /* DVI-I and TV-out */
-	{ DRM_MODE_SUBCONNECTOR_DVID,      "DVI-D"     }, /* DVI-I  */
-	{ DRM_MODE_SUBCONNECTOR_DVIA,      "DVI-A"     }, /* DVI-I  */
+  { DRM_MODE_SUBCONNECTOR_Automatic, "Automatic" }, /* DVI-I and TV-out */
+  { DRM_MODE_SUBCONNECTOR_DVID,      "DVI-D"     }, /* DVI-I  */
+  { DRM_MODE_SUBCONNECTOR_DVIA,      "DVI-A"     }, /* DVI-I  */
 };
 DRM_ENUM_NAME_FN(drm_get_dvi_i_select_name, drm_dvi_i_select_enum_list)
 
 static const struct drm_prop_enum_list drm_dvi_i_subconnector_enum_list[] = {
-	{ DRM_MODE_SUBCONNECTOR_Unknown,   "Unknown"   }, /* DVI-I, TV-out and DP */
-	{ DRM_MODE_SUBCONNECTOR_DVID,      "DVI-D"     }, /* DVI-I  */
-	{ DRM_MODE_SUBCONNECTOR_DVIA,      "DVI-A"     }, /* DVI-I  */
+  { DRM_MODE_SUBCONNECTOR_Unknown,   "Unknown"   }, /* DVI-I, TV-out and DP */
+  { DRM_MODE_SUBCONNECTOR_DVID,      "DVI-D"     }, /* DVI-I  */
+  { DRM_MODE_SUBCONNECTOR_DVIA,      "DVI-A"     }, /* DVI-I  */
 };
 DRM_ENUM_NAME_FN(drm_get_dvi_i_subconnector_name,
-		 drm_dvi_i_subconnector_enum_list)
+     drm_dvi_i_subconnector_enum_list)
 
 static const struct drm_prop_enum_list drm_tv_select_enum_list[] = {
-	{ DRM_MODE_SUBCONNECTOR_Automatic, "Automatic" }, /* DVI-I and TV-out */
-	{ DRM_MODE_SUBCONNECTOR_Composite, "Composite" }, /* TV-out */
-	{ DRM_MODE_SUBCONNECTOR_SVIDEO,    "SVIDEO"    }, /* TV-out */
-	{ DRM_MODE_SUBCONNECTOR_Component, "Component" }, /* TV-out */
-	{ DRM_MODE_SUBCONNECTOR_SCART,     "SCART"     }, /* TV-out */
+  { DRM_MODE_SUBCONNECTOR_Automatic, "Automatic" }, /* DVI-I and TV-out */
+  { DRM_MODE_SUBCONNECTOR_Composite, "Composite" }, /* TV-out */
+  { DRM_MODE_SUBCONNECTOR_SVIDEO,    "SVIDEO"    }, /* TV-out */
+  { DRM_MODE_SUBCONNECTOR_Component, "Component" }, /* TV-out */
+  { DRM_MODE_SUBCONNECTOR_SCART,     "SCART"     }, /* TV-out */
 };
 DRM_ENUM_NAME_FN(drm_get_tv_select_name, drm_tv_select_enum_list)
 
 static const struct drm_prop_enum_list drm_tv_subconnector_enum_list[] = {
-	{ DRM_MODE_SUBCONNECTOR_Unknown,   "Unknown"   }, /* DVI-I, TV-out and DP */
-	{ DRM_MODE_SUBCONNECTOR_Composite, "Composite" }, /* TV-out */
-	{ DRM_MODE_SUBCONNECTOR_SVIDEO,    "SVIDEO"    }, /* TV-out */
-	{ DRM_MODE_SUBCONNECTOR_Component, "Component" }, /* TV-out */
-	{ DRM_MODE_SUBCONNECTOR_SCART,     "SCART"     }, /* TV-out */
+  { DRM_MODE_SUBCONNECTOR_Unknown,   "Unknown"   }, /* DVI-I, TV-out and DP */
+  { DRM_MODE_SUBCONNECTOR_Composite, "Composite" }, /* TV-out */
+  { DRM_MODE_SUBCONNECTOR_SVIDEO,    "SVIDEO"    }, /* TV-out */
+  { DRM_MODE_SUBCONNECTOR_Component, "Component" }, /* TV-out */
+  { DRM_MODE_SUBCONNECTOR_SCART,     "SCART"     }, /* TV-out */
 };
 DRM_ENUM_NAME_FN(drm_get_tv_subconnector_name,
-		 drm_tv_subconnector_enum_list)
+     drm_tv_subconnector_enum_list)
 
 static const struct drm_prop_enum_list drm_dp_subconnector_enum_list[] = {
-	{ DRM_MODE_SUBCONNECTOR_Unknown,     "Unknown"   }, /* DVI-I, TV-out and DP */
-	{ DRM_MODE_SUBCONNECTOR_VGA,	     "VGA"       }, /* DP */
-	{ DRM_MODE_SUBCONNECTOR_DVID,	     "DVI-D"     }, /* DP */
-	{ DRM_MODE_SUBCONNECTOR_HDMIA,	     "HDMI"      }, /* DP */
-	{ DRM_MODE_SUBCONNECTOR_DisplayPort, "DP"        }, /* DP */
-	{ DRM_MODE_SUBCONNECTOR_Wireless,    "Wireless"  }, /* DP */
-	{ DRM_MODE_SUBCONNECTOR_Native,	     "Native"    }, /* DP */
+  { DRM_MODE_SUBCONNECTOR_Unknown,     "Unknown"   }, /* DVI-I, TV-out and DP */
+  { DRM_MODE_SUBCONNECTOR_VGA,       "VGA"       }, /* DP */
+  { DRM_MODE_SUBCONNECTOR_DVID,       "DVI-D"     }, /* DP */
+  { DRM_MODE_SUBCONNECTOR_HDMIA,       "HDMI"      }, /* DP */
+  { DRM_MODE_SUBCONNECTOR_DisplayPort, "DP"        }, /* DP */
+  { DRM_MODE_SUBCONNECTOR_Wireless,    "Wireless"  }, /* DP */
+  { DRM_MODE_SUBCONNECTOR_Native,       "Native"    }, /* DP */
 };
 
 DRM_ENUM_NAME_FN(drm_get_dp_subconnector_name,
-		 drm_dp_subconnector_enum_list)
+     drm_dp_subconnector_enum_list)
 
 static const struct drm_prop_enum_list hdmi_colorspaces[] = {
-	/* For Default case, driver will set the colorspace */
-	{ DRM_MODE_COLORIMETRY_DEFAULT, "Default" },
-	/* Standard Definition Colorimetry based on CEA 861 */
-	{ DRM_MODE_COLORIMETRY_SMPTE_170M_YCC, "SMPTE_170M_YCC" },
-	{ DRM_MODE_COLORIMETRY_BT709_YCC, "BT709_YCC" },
-	/* Standard Definition Colorimetry based on IEC 61966-2-4 */
-	{ DRM_MODE_COLORIMETRY_XVYCC_601, "XVYCC_601" },
-	/* High Definition Colorimetry based on IEC 61966-2-4 */
-	{ DRM_MODE_COLORIMETRY_XVYCC_709, "XVYCC_709" },
-	/* Colorimetry based on IEC 61966-2-1/Amendment 1 */
-	{ DRM_MODE_COLORIMETRY_SYCC_601, "SYCC_601" },
-	/* Colorimetry based on IEC 61966-2-5 [33] */
-	{ DRM_MODE_COLORIMETRY_OPYCC_601, "opYCC_601" },
-	/* Colorimetry based on IEC 61966-2-5 */
-	{ DRM_MODE_COLORIMETRY_OPRGB, "opRGB" },
-	/* Colorimetry based on ITU-R BT.2020 */
-	{ DRM_MODE_COLORIMETRY_BT2020_CYCC, "BT2020_CYCC" },
-	/* Colorimetry based on ITU-R BT.2020 */
-	{ DRM_MODE_COLORIMETRY_BT2020_RGB, "BT2020_RGB" },
-	/* Colorimetry based on ITU-R BT.2020 */
-	{ DRM_MODE_COLORIMETRY_BT2020_YCC, "BT2020_YCC" },
-	/* Added as part of Additional Colorimetry Extension in 861.G */
-	{ DRM_MODE_COLORIMETRY_DCI_P3_RGB_D65, "DCI-P3_RGB_D65" },
-	{ DRM_MODE_COLORIMETRY_DCI_P3_RGB_THEATER, "DCI-P3_RGB_Theater" },
+  /* For Default case, driver will set the colorspace */
+  { DRM_MODE_COLORIMETRY_DEFAULT, "Default" },
+  /* Standard Definition Colorimetry based on CEA 861 */
+  { DRM_MODE_COLORIMETRY_SMPTE_170M_YCC, "SMPTE_170M_YCC" },
+  { DRM_MODE_COLORIMETRY_BT709_YCC, "BT709_YCC" },
+  /* Standard Definition Colorimetry based on IEC 61966-2-4 */
+  { DRM_MODE_COLORIMETRY_XVYCC_601, "XVYCC_601" },
+  /* High Definition Colorimetry based on IEC 61966-2-4 */
+  { DRM_MODE_COLORIMETRY_XVYCC_709, "XVYCC_709" },
+  /* Colorimetry based on IEC 61966-2-1/Amendment 1 */
+  { DRM_MODE_COLORIMETRY_SYCC_601, "SYCC_601" },
+  /* Colorimetry based on IEC 61966-2-5 [33] */
+  { DRM_MODE_COLORIMETRY_OPYCC_601, "opYCC_601" },
+  /* Colorimetry based on IEC 61966-2-5 */
+  { DRM_MODE_COLORIMETRY_OPRGB, "opRGB" },
+  /* Colorimetry based on ITU-R BT.2020 */
+  { DRM_MODE_COLORIMETRY_BT2020_CYCC, "BT2020_CYCC" },
+  /* Colorimetry based on ITU-R BT.2020 */
+  { DRM_MODE_COLORIMETRY_BT2020_RGB, "BT2020_RGB" },
+  /* Colorimetry based on ITU-R BT.2020 */
+  { DRM_MODE_COLORIMETRY_BT2020_YCC, "BT2020_YCC" },
+  /* Added as part of Additional Colorimetry Extension in 861.G */
+  { DRM_MODE_COLORIMETRY_DCI_P3_RGB_D65, "DCI-P3_RGB_D65" },
+  { DRM_MODE_COLORIMETRY_DCI_P3_RGB_THEATER, "DCI-P3_RGB_Theater" },
 };
 
 /*
@@ -924,31 +924,31 @@ static const struct drm_prop_enum_list hdmi_colorspaces[] = {
  * Format Table 2-120
  */
 static const struct drm_prop_enum_list dp_colorspaces[] = {
-	/* For Default case, driver will set the colorspace */
-	{ DRM_MODE_COLORIMETRY_DEFAULT, "Default" },
-	{ DRM_MODE_COLORIMETRY_RGB_WIDE_FIXED, "RGB_Wide_Gamut_Fixed_Point" },
-	/* Colorimetry based on scRGB (IEC 61966-2-2) */
-	{ DRM_MODE_COLORIMETRY_RGB_WIDE_FLOAT, "RGB_Wide_Gamut_Floating_Point" },
-	/* Colorimetry based on IEC 61966-2-5 */
-	{ DRM_MODE_COLORIMETRY_OPRGB, "opRGB" },
-	/* Colorimetry based on SMPTE RP 431-2 */
-	{ DRM_MODE_COLORIMETRY_DCI_P3_RGB_D65, "DCI-P3_RGB_D65" },
-	/* Colorimetry based on ITU-R BT.2020 */
-	{ DRM_MODE_COLORIMETRY_BT2020_RGB, "BT2020_RGB" },
-	{ DRM_MODE_COLORIMETRY_BT601_YCC, "BT601_YCC" },
-	{ DRM_MODE_COLORIMETRY_BT709_YCC, "BT709_YCC" },
-	/* Standard Definition Colorimetry based on IEC 61966-2-4 */
-	{ DRM_MODE_COLORIMETRY_XVYCC_601, "XVYCC_601" },
-	/* High Definition Colorimetry based on IEC 61966-2-4 */
-	{ DRM_MODE_COLORIMETRY_XVYCC_709, "XVYCC_709" },
-	/* Colorimetry based on IEC 61966-2-1/Amendment 1 */
-	{ DRM_MODE_COLORIMETRY_SYCC_601, "SYCC_601" },
-	/* Colorimetry based on IEC 61966-2-5 [33] */
-	{ DRM_MODE_COLORIMETRY_OPYCC_601, "opYCC_601" },
-	/* Colorimetry based on ITU-R BT.2020 */
-	{ DRM_MODE_COLORIMETRY_BT2020_CYCC, "BT2020_CYCC" },
-	/* Colorimetry based on ITU-R BT.2020 */
-	{ DRM_MODE_COLORIMETRY_BT2020_YCC, "BT2020_YCC" },
+  /* For Default case, driver will set the colorspace */
+  { DRM_MODE_COLORIMETRY_DEFAULT, "Default" },
+  { DRM_MODE_COLORIMETRY_RGB_WIDE_FIXED, "RGB_Wide_Gamut_Fixed_Point" },
+  /* Colorimetry based on scRGB (IEC 61966-2-2) */
+  { DRM_MODE_COLORIMETRY_RGB_WIDE_FLOAT, "RGB_Wide_Gamut_Floating_Point" },
+  /* Colorimetry based on IEC 61966-2-5 */
+  { DRM_MODE_COLORIMETRY_OPRGB, "opRGB" },
+  /* Colorimetry based on SMPTE RP 431-2 */
+  { DRM_MODE_COLORIMETRY_DCI_P3_RGB_D65, "DCI-P3_RGB_D65" },
+  /* Colorimetry based on ITU-R BT.2020 */
+  { DRM_MODE_COLORIMETRY_BT2020_RGB, "BT2020_RGB" },
+  { DRM_MODE_COLORIMETRY_BT601_YCC, "BT601_YCC" },
+  { DRM_MODE_COLORIMETRY_BT709_YCC, "BT709_YCC" },
+  /* Standard Definition Colorimetry based on IEC 61966-2-4 */
+  { DRM_MODE_COLORIMETRY_XVYCC_601, "XVYCC_601" },
+  /* High Definition Colorimetry based on IEC 61966-2-4 */
+  { DRM_MODE_COLORIMETRY_XVYCC_709, "XVYCC_709" },
+  /* Colorimetry based on IEC 61966-2-1/Amendment 1 */
+  { DRM_MODE_COLORIMETRY_SYCC_601, "SYCC_601" },
+  /* Colorimetry based on IEC 61966-2-5 [33] */
+  { DRM_MODE_COLORIMETRY_OPYCC_601, "opYCC_601" },
+  /* Colorimetry based on ITU-R BT.2020 */
+  { DRM_MODE_COLORIMETRY_BT2020_CYCC, "BT2020_CYCC" },
+  /* Colorimetry based on ITU-R BT.2020 */
+  { DRM_MODE_COLORIMETRY_BT2020_YCC, "BT2020_YCC" },
 };
 
 /**
@@ -957,64 +957,64 @@ static const struct drm_prop_enum_list dp_colorspaces[] = {
  * DRM connectors have a few standardized properties:
  *
  * EDID:
- * 	Blob property which contains the current EDID read from the sink. This
- * 	is useful to parse sink identification information like vendor, model
- * 	and serial. Drivers should update this property by calling
- * 	drm_connector_update_edid_property(), usually after having parsed
- * 	the EDID using drm_add_edid_modes(). Userspace cannot change this
- * 	property.
+ *   Blob property which contains the current EDID read from the sink. This
+ *   is useful to parse sink identification information like vendor, model
+ *   and serial. Drivers should update this property by calling
+ *   drm_connector_update_edid_property(), usually after having parsed
+ *   the EDID using drm_add_edid_modes(). Userspace cannot change this
+ *   property.
  *
- * 	User-space should not parse the EDID to obtain information exposed via
- * 	other KMS properties (because the kernel might apply limits, quirks or
- * 	fixups to the EDID). For instance, user-space should not try to parse
- * 	mode lists from the EDID.
+ *   User-space should not parse the EDID to obtain information exposed via
+ *   other KMS properties (because the kernel might apply limits, quirks or
+ *   fixups to the EDID). For instance, user-space should not try to parse
+ *   mode lists from the EDID.
  * DPMS:
- * 	Legacy property for setting the power state of the connector. For atomic
- * 	drivers this is only provided for backwards compatibility with existing
- * 	drivers, it remaps to controlling the "ACTIVE" property on the CRTC the
- * 	connector is linked to. Drivers should never set this property directly,
- * 	it is handled by the DRM core by calling the &drm_connector_funcs.dpms
- * 	callback. For atomic drivers the remapping to the "ACTIVE" property is
- * 	implemented in the DRM core.
+ *   Legacy property for setting the power state of the connector. For atomic
+ *   drivers this is only provided for backwards compatibility with existing
+ *   drivers, it remaps to controlling the "ACTIVE" property on the CRTC the
+ *   connector is linked to. Drivers should never set this property directly,
+ *   it is handled by the DRM core by calling the &drm_connector_funcs.dpms
+ *   callback. For atomic drivers the remapping to the "ACTIVE" property is
+ *   implemented in the DRM core.
  *
- * 	Note that this property cannot be set through the MODE_ATOMIC ioctl,
- * 	userspace must use "ACTIVE" on the CRTC instead.
+ *   Note that this property cannot be set through the MODE_ATOMIC ioctl,
+ *   userspace must use "ACTIVE" on the CRTC instead.
  *
- * 	WARNING:
+ *   WARNING:
  *
- * 	For userspace also running on legacy drivers the "DPMS" semantics are a
- * 	lot more complicated. First, userspace cannot rely on the "DPMS" value
- * 	returned by the GETCONNECTOR actually reflecting reality, because many
- * 	drivers fail to update it. For atomic drivers this is taken care of in
- * 	drm_atomic_helper_update_legacy_modeset_state().
+ *   For userspace also running on legacy drivers the "DPMS" semantics are a
+ *   lot more complicated. First, userspace cannot rely on the "DPMS" value
+ *   returned by the GETCONNECTOR actually reflecting reality, because many
+ *   drivers fail to update it. For atomic drivers this is taken care of in
+ *   drm_atomic_helper_update_legacy_modeset_state().
  *
- * 	The second issue is that the DPMS state is only well-defined when the
- * 	connector is connected to a CRTC. In atomic the DRM core enforces that
- * 	"ACTIVE" is off in such a case, no such checks exists for "DPMS".
+ *   The second issue is that the DPMS state is only well-defined when the
+ *   connector is connected to a CRTC. In atomic the DRM core enforces that
+ *   "ACTIVE" is off in such a case, no such checks exists for "DPMS".
  *
- * 	Finally, when enabling an output using the legacy SETCONFIG ioctl then
- * 	"DPMS" is forced to ON. But see above, that might not be reflected in
- * 	the software value on legacy drivers.
+ *   Finally, when enabling an output using the legacy SETCONFIG ioctl then
+ *   "DPMS" is forced to ON. But see above, that might not be reflected in
+ *   the software value on legacy drivers.
  *
- * 	Summarizing: Only set "DPMS" when the connector is known to be enabled,
- * 	assume that a successful SETCONFIG call also sets "DPMS" to on, and
- * 	never read back the value of "DPMS" because it can be incorrect.
+ *   Summarizing: Only set "DPMS" when the connector is known to be enabled,
+ *   assume that a successful SETCONFIG call also sets "DPMS" to on, and
+ *   never read back the value of "DPMS" because it can be incorrect.
  * PATH:
- * 	Connector path property to identify how this sink is physically
- * 	connected. Used by DP MST. This should be set by calling
- * 	drm_connector_set_path_property(), in the case of DP MST with the
- * 	path property the MST manager created. Userspace cannot change this
- * 	property.
+ *   Connector path property to identify how this sink is physically
+ *   connected. Used by DP MST. This should be set by calling
+ *   drm_connector_set_path_property(), in the case of DP MST with the
+ *   path property the MST manager created. Userspace cannot change this
+ *   property.
  * TILE:
- * 	Connector tile group property to indicate how a set of DRM connector
- * 	compose together into one logical screen. This is used by both high-res
- * 	external screens (often only using a single cable, but exposing multiple
- * 	DP MST sinks), or high-res integrated panels (like dual-link DSI) which
- * 	are not gen-locked. Note that for tiled panels which are genlocked, like
- * 	dual-link LVDS or dual-link DSI, the driver should try to not expose the
- * 	tiling and virtualise both &drm_crtc and &drm_plane if needed. Drivers
- * 	should update this value using drm_connector_set_tile_property().
- * 	Userspace cannot change this property.
+ *   Connector tile group property to indicate how a set of DRM connector
+ *   compose together into one logical screen. This is used by both high-res
+ *   external screens (often only using a single cable, but exposing multiple
+ *   DP MST sinks), or high-res integrated panels (like dual-link DSI) which
+ *   are not gen-locked. Note that for tiled panels which are genlocked, like
+ *   dual-link LVDS or dual-link DSI, the driver should try to not expose the
+ *   tiling and virtualise both &drm_crtc and &drm_plane if needed. Drivers
+ *   should update this value using drm_connector_set_tile_property().
+ *   Userspace cannot change this property.
  * link-status:
  *      Connector link-status property to indicate the status of link. The
  *      default value of link-status is "GOOD". If something fails during or
@@ -1048,259 +1048,259 @@ static const struct drm_prop_enum_list dp_colorspaces[] = {
  *      to how it might fail if a different screen has been connected in the
  *      interim.
  * non_desktop:
- * 	Indicates the output should be ignored for purposes of displaying a
- * 	standard desktop environment or console. This is most likely because
- * 	the output device is not rectilinear.
+ *   Indicates the output should be ignored for purposes of displaying a
+ *   standard desktop environment or console. This is most likely because
+ *   the output device is not rectilinear.
  * Content Protection:
- *	This property is used by userspace to request the kernel protect future
- *	content communicated over the link. When requested, kernel will apply
- *	the appropriate means of protection (most often HDCP), and use the
- *	property to tell userspace the protection is active.
+ *  This property is used by userspace to request the kernel protect future
+ *  content communicated over the link. When requested, kernel will apply
+ *  the appropriate means of protection (most often HDCP), and use the
+ *  property to tell userspace the protection is active.
  *
- *	Drivers can set this up by calling
- *	drm_connector_attach_content_protection_property() on initialization.
+ *  Drivers can set this up by calling
+ *  drm_connector_attach_content_protection_property() on initialization.
  *
- *	The value of this property can be one of the following:
+ *  The value of this property can be one of the following:
  *
- *	DRM_MODE_CONTENT_PROTECTION_UNDESIRED = 0
- *		The link is not protected, content is transmitted in the clear.
- *	DRM_MODE_CONTENT_PROTECTION_DESIRED = 1
- *		Userspace has requested content protection, but the link is not
- *		currently protected. When in this state, kernel should enable
- *		Content Protection as soon as possible.
- *	DRM_MODE_CONTENT_PROTECTION_ENABLED = 2
- *		Userspace has requested content protection, and the link is
- *		protected. Only the driver can set the property to this value.
- *		If userspace attempts to set to ENABLED, kernel will return
- *		-EINVAL.
+ *  DRM_MODE_CONTENT_PROTECTION_UNDESIRED = 0
+ *    The link is not protected, content is transmitted in the clear.
+ *  DRM_MODE_CONTENT_PROTECTION_DESIRED = 1
+ *    Userspace has requested content protection, but the link is not
+ *    currently protected. When in this state, kernel should enable
+ *    Content Protection as soon as possible.
+ *  DRM_MODE_CONTENT_PROTECTION_ENABLED = 2
+ *    Userspace has requested content protection, and the link is
+ *    protected. Only the driver can set the property to this value.
+ *    If userspace attempts to set to ENABLED, kernel will return
+ *    -EINVAL.
  *
- *	A few guidelines:
+ *  A few guidelines:
  *
- *	- DESIRED state should be preserved until userspace de-asserts it by
- *	  setting the property to UNDESIRED. This means ENABLED should only
- *	  transition to UNDESIRED when the user explicitly requests it.
- *	- If the state is DESIRED, kernel should attempt to re-authenticate the
- *	  link whenever possible. This includes across disable/enable, dpms,
- *	  hotplug, downstream device changes, link status failures, etc..
- *	- Kernel sends uevent with the connector id and property id through
- *	  @drm_hdcp_update_content_protection, upon below kernel triggered
- *	  scenarios:
+ *  - DESIRED state should be preserved until userspace de-asserts it by
+ *    setting the property to UNDESIRED. This means ENABLED should only
+ *    transition to UNDESIRED when the user explicitly requests it.
+ *  - If the state is DESIRED, kernel should attempt to re-authenticate the
+ *    link whenever possible. This includes across disable/enable, dpms,
+ *    hotplug, downstream device changes, link status failures, etc..
+ *  - Kernel sends uevent with the connector id and property id through
+ *    @drm_hdcp_update_content_protection, upon below kernel triggered
+ *    scenarios:
  *
- *		- DESIRED -> ENABLED (authentication success)
- *		- ENABLED -> DESIRED (termination of authentication)
- *	- Please note no uevents for userspace triggered property state changes,
- *	  which can't fail such as
+ *    - DESIRED -> ENABLED (authentication success)
+ *    - ENABLED -> DESIRED (termination of authentication)
+ *  - Please note no uevents for userspace triggered property state changes,
+ *    which can't fail such as
  *
- *		- DESIRED/ENABLED -> UNDESIRED
- *		- UNDESIRED -> DESIRED
- *	- Userspace is responsible for polling the property or listen to uevents
- *	  to determine when the value transitions from ENABLED to DESIRED.
- *	  This signifies the link is no longer protected and userspace should
- *	  take appropriate action (whatever that might be).
+ *    - DESIRED/ENABLED -> UNDESIRED
+ *    - UNDESIRED -> DESIRED
+ *  - Userspace is responsible for polling the property or listen to uevents
+ *    to determine when the value transitions from ENABLED to DESIRED.
+ *    This signifies the link is no longer protected and userspace should
+ *    take appropriate action (whatever that might be).
  *
  * HDCP Content Type:
- *	This Enum property is used by the userspace to declare the content type
- *	of the display stream, to kernel. Here display stream stands for any
- *	display content that userspace intended to display through HDCP
- *	encryption.
+ *  This Enum property is used by the userspace to declare the content type
+ *  of the display stream, to kernel. Here display stream stands for any
+ *  display content that userspace intended to display through HDCP
+ *  encryption.
  *
- *	Content Type of a stream is decided by the owner of the stream, as
- *	"HDCP Type0" or "HDCP Type1".
+ *  Content Type of a stream is decided by the owner of the stream, as
+ *  "HDCP Type0" or "HDCP Type1".
  *
- *	The value of the property can be one of the below:
- *	  - "HDCP Type0": DRM_MODE_HDCP_CONTENT_TYPE0 = 0
- *	  - "HDCP Type1": DRM_MODE_HDCP_CONTENT_TYPE1 = 1
+ *  The value of the property can be one of the below:
+ *    - "HDCP Type0": DRM_MODE_HDCP_CONTENT_TYPE0 = 0
+ *    - "HDCP Type1": DRM_MODE_HDCP_CONTENT_TYPE1 = 1
  *
- *	When kernel starts the HDCP authentication (see "Content Protection"
- *	for details), it uses the content type in "HDCP Content Type"
- *	for performing the HDCP authentication with the display sink.
+ *  When kernel starts the HDCP authentication (see "Content Protection"
+ *  for details), it uses the content type in "HDCP Content Type"
+ *  for performing the HDCP authentication with the display sink.
  *
- *	Please note in HDCP spec versions, a link can be authenticated with
- *	HDCP 2.2 for Content Type 0/Content Type 1. Where as a link can be
- *	authenticated with HDCP1.4 only for Content Type 0(though it is implicit
- *	in nature. As there is no reference for Content Type in HDCP1.4).
+ *  Please note in HDCP spec versions, a link can be authenticated with
+ *  HDCP 2.2 for Content Type 0/Content Type 1. Where as a link can be
+ *  authenticated with HDCP1.4 only for Content Type 0(though it is implicit
+ *  in nature. As there is no reference for Content Type in HDCP1.4).
  *
- *	HDCP2.2 authentication protocol itself takes the "Content Type" as a
- *	parameter, which is a input for the DP HDCP2.2 encryption algo.
+ *  HDCP2.2 authentication protocol itself takes the "Content Type" as a
+ *  parameter, which is a input for the DP HDCP2.2 encryption algo.
  *
- *	In case of Type 0 content protection request, kernel driver can choose
- *	either of HDCP spec versions 1.4 and 2.2. When HDCP2.2 is used for
- *	"HDCP Type 0", a HDCP 2.2 capable repeater in the downstream can send
- *	that content to a HDCP 1.4 authenticated HDCP sink (Type0 link).
- *	But if the content is classified as "HDCP Type 1", above mentioned
- *	HDCP 2.2 repeater wont send the content to the HDCP sink as it can't
- *	authenticate the HDCP1.4 capable sink for "HDCP Type 1".
+ *  In case of Type 0 content protection request, kernel driver can choose
+ *  either of HDCP spec versions 1.4 and 2.2. When HDCP2.2 is used for
+ *  "HDCP Type 0", a HDCP 2.2 capable repeater in the downstream can send
+ *  that content to a HDCP 1.4 authenticated HDCP sink (Type0 link).
+ *  But if the content is classified as "HDCP Type 1", above mentioned
+ *  HDCP 2.2 repeater wont send the content to the HDCP sink as it can't
+ *  authenticate the HDCP1.4 capable sink for "HDCP Type 1".
  *
- *	Please note userspace can be ignorant of the HDCP versions used by the
- *	kernel driver to achieve the "HDCP Content Type".
+ *  Please note userspace can be ignorant of the HDCP versions used by the
+ *  kernel driver to achieve the "HDCP Content Type".
  *
- *	At current scenario, classifying a content as Type 1 ensures that the
- *	content will be displayed only through the HDCP2.2 encrypted link.
+ *  At current scenario, classifying a content as Type 1 ensures that the
+ *  content will be displayed only through the HDCP2.2 encrypted link.
  *
- *	Note that the HDCP Content Type property is introduced at HDCP 2.2, and
- *	defaults to type 0. It is only exposed by drivers supporting HDCP 2.2
- *	(hence supporting Type 0 and Type 1). Based on how next versions of
- *	HDCP specs are defined content Type could be used for higher versions
- *	too.
+ *  Note that the HDCP Content Type property is introduced at HDCP 2.2, and
+ *  defaults to type 0. It is only exposed by drivers supporting HDCP 2.2
+ *  (hence supporting Type 0 and Type 1). Based on how next versions of
+ *  HDCP specs are defined content Type could be used for higher versions
+ *  too.
  *
- *	If content type is changed when "Content Protection" is not UNDESIRED,
- *	then kernel will disable the HDCP and re-enable with new type in the
- *	same atomic commit. And when "Content Protection" is ENABLED, it means
- *	that link is HDCP authenticated and encrypted, for the transmission of
- *	the Type of stream mentioned at "HDCP Content Type".
+ *  If content type is changed when "Content Protection" is not UNDESIRED,
+ *  then kernel will disable the HDCP and re-enable with new type in the
+ *  same atomic commit. And when "Content Protection" is ENABLED, it means
+ *  that link is HDCP authenticated and encrypted, for the transmission of
+ *  the Type of stream mentioned at "HDCP Content Type".
  *
  * HDR_OUTPUT_METADATA:
- *	Connector property to enable userspace to send HDR Metadata to
- *	driver. This metadata is based on the composition and blending
- *	policies decided by user, taking into account the hardware and
- *	sink capabilities. The driver gets this metadata and creates a
- *	Dynamic Range and Mastering Infoframe (DRM) in case of HDMI,
- *	SDP packet (Non-audio INFOFRAME SDP v1.3) for DP. This is then
- *	sent to sink. This notifies the sink of the upcoming frame's Color
- *	Encoding and Luminance parameters.
+ *  Connector property to enable userspace to send HDR Metadata to
+ *  driver. This metadata is based on the composition and blending
+ *  policies decided by user, taking into account the hardware and
+ *  sink capabilities. The driver gets this metadata and creates a
+ *  Dynamic Range and Mastering Infoframe (DRM) in case of HDMI,
+ *  SDP packet (Non-audio INFOFRAME SDP v1.3) for DP. This is then
+ *  sent to sink. This notifies the sink of the upcoming frame's Color
+ *  Encoding and Luminance parameters.
  *
- *	Userspace first need to detect the HDR capabilities of sink by
- *	reading and parsing the EDID. Details of HDR metadata for HDMI
- *	are added in CTA 861.G spec. For DP , its defined in VESA DP
- *	Standard v1.4. It needs to then get the metadata information
- *	of the video/game/app content which are encoded in HDR (basically
- *	using HDR transfer functions). With this information it needs to
- *	decide on a blending policy and compose the relevant
- *	layers/overlays into a common format. Once this blending is done,
- *	userspace will be aware of the metadata of the composed frame to
- *	be send to sink. It then uses this property to communicate this
- *	metadata to driver which then make a Infoframe packet and sends
- *	to sink based on the type of encoder connected.
+ *  Userspace first need to detect the HDR capabilities of sink by
+ *  reading and parsing the EDID. Details of HDR metadata for HDMI
+ *  are added in CTA 861.G spec. For DP , its defined in VESA DP
+ *  Standard v1.4. It needs to then get the metadata information
+ *  of the video/game/app content which are encoded in HDR (basically
+ *  using HDR transfer functions). With this information it needs to
+ *  decide on a blending policy and compose the relevant
+ *  layers/overlays into a common format. Once this blending is done,
+ *  userspace will be aware of the metadata of the composed frame to
+ *  be send to sink. It then uses this property to communicate this
+ *  metadata to driver which then make a Infoframe packet and sends
+ *  to sink based on the type of encoder connected.
  *
- *	Userspace will be responsible to do Tone mapping operation in case:
- *		- Some layers are HDR and others are SDR
- *		- HDR layers luminance is not same as sink
+ *  Userspace will be responsible to do Tone mapping operation in case:
+ *    - Some layers are HDR and others are SDR
+ *    - HDR layers luminance is not same as sink
  *
- *	It will even need to do colorspace conversion and get all layers
- *	to one common colorspace for blending. It can use either GL, Media
- *	or display engine to get this done based on the capabilities of the
- *	associated hardware.
+ *  It will even need to do colorspace conversion and get all layers
+ *  to one common colorspace for blending. It can use either GL, Media
+ *  or display engine to get this done based on the capabilities of the
+ *  associated hardware.
  *
- *	Driver expects metadata to be put in &struct hdr_output_metadata
- *	structure from userspace. This is received as blob and stored in
- *	&drm_connector_state.hdr_output_metadata. It parses EDID and saves the
- *	sink metadata in &struct hdr_sink_metadata, as
- *	&drm_connector.hdr_sink_metadata.  Driver uses
- *	drm_hdmi_infoframe_set_hdr_metadata() helper to set the HDR metadata,
- *	hdmi_drm_infoframe_pack() to pack the infoframe as per spec, in case of
- *	HDMI encoder.
+ *  Driver expects metadata to be put in &struct hdr_output_metadata
+ *  structure from userspace. This is received as blob and stored in
+ *  &drm_connector_state.hdr_output_metadata. It parses EDID and saves the
+ *  sink metadata in &struct hdr_sink_metadata, as
+ *  &drm_connector.hdr_sink_metadata.  Driver uses
+ *  drm_hdmi_infoframe_set_hdr_metadata() helper to set the HDR metadata,
+ *  hdmi_drm_infoframe_pack() to pack the infoframe as per spec, in case of
+ *  HDMI encoder.
  *
  * max bpc:
- *	This range property is used by userspace to limit the bit depth. When
- *	used the driver would limit the bpc in accordance with the valid range
- *	supported by the hardware and sink. Drivers to use the function
- *	drm_connector_attach_max_bpc_property() to create and attach the
- *	property to the connector during initialization.
+ *  This range property is used by userspace to limit the bit depth. When
+ *  used the driver would limit the bpc in accordance with the valid range
+ *  supported by the hardware and sink. Drivers to use the function
+ *  drm_connector_attach_max_bpc_property() to create and attach the
+ *  property to the connector during initialization.
  *
  * Connectors also have one standardized atomic property:
  *
  * CRTC_ID:
- * 	Mode object ID of the &drm_crtc this connector should be connected to.
+ *   Mode object ID of the &drm_crtc this connector should be connected to.
  *
  * Connectors for LCD panels may also have one standardized property:
  *
  * panel orientation:
- *	On some devices the LCD panel is mounted in the casing in such a way
- *	that the up/top side of the panel does not match with the top side of
- *	the device. Userspace can use this property to check for this.
- *	Note that input coordinates from touchscreens (input devices with
- *	INPUT_PROP_DIRECT) will still map 1:1 to the actual LCD panel
- *	coordinates, so if userspace rotates the picture to adjust for
- *	the orientation it must also apply the same transformation to the
- *	touchscreen input coordinates. This property is initialized by calling
- *	drm_connector_set_panel_orientation() or
- *	drm_connector_set_panel_orientation_with_quirk()
+ *  On some devices the LCD panel is mounted in the casing in such a way
+ *  that the up/top side of the panel does not match with the top side of
+ *  the device. Userspace can use this property to check for this.
+ *  Note that input coordinates from touchscreens (input devices with
+ *  INPUT_PROP_DIRECT) will still map 1:1 to the actual LCD panel
+ *  coordinates, so if userspace rotates the picture to adjust for
+ *  the orientation it must also apply the same transformation to the
+ *  touchscreen input coordinates. This property is initialized by calling
+ *  drm_connector_set_panel_orientation() or
+ *  drm_connector_set_panel_orientation_with_quirk()
  *
  * scaling mode:
- *	This property defines how a non-native mode is upscaled to the native
- *	mode of an LCD panel:
+ *  This property defines how a non-native mode is upscaled to the native
+ *  mode of an LCD panel:
  *
- *	None:
- *		No upscaling happens, scaling is left to the panel. Not all
- *		drivers expose this mode.
- *	Full:
- *		The output is upscaled to the full resolution of the panel,
- *		ignoring the aspect ratio.
- *	Center:
- *		No upscaling happens, the output is centered within the native
- *		resolution the panel.
- *	Full aspect:
- *		The output is upscaled to maximize either the width or height
- *		while retaining the aspect ratio.
+ *  None:
+ *    No upscaling happens, scaling is left to the panel. Not all
+ *    drivers expose this mode.
+ *  Full:
+ *    The output is upscaled to the full resolution of the panel,
+ *    ignoring the aspect ratio.
+ *  Center:
+ *    No upscaling happens, the output is centered within the native
+ *    resolution the panel.
+ *  Full aspect:
+ *    The output is upscaled to maximize either the width or height
+ *    while retaining the aspect ratio.
  *
- *	This property should be set up by calling
- *	drm_connector_attach_scaling_mode_property(). Note that drivers
- *	can also expose this property to external outputs, in which case they
- *	must support "None", which should be the default (since external screens
- *	have a built-in scaler).
+ *  This property should be set up by calling
+ *  drm_connector_attach_scaling_mode_property(). Note that drivers
+ *  can also expose this property to external outputs, in which case they
+ *  must support "None", which should be the default (since external screens
+ *  have a built-in scaler).
  *
  * subconnector:
- *	This property is used by DVI-I, TVout and DisplayPort to indicate different
- *	connector subtypes. Enum values more or less match with those from main
- *	connector types.
- *	For DVI-I and TVout there is also a matching property "select subconnector"
- *	allowing to switch between signal types.
- *	DP subconnector corresponds to a downstream port.
+ *  This property is used by DVI-I, TVout and DisplayPort to indicate different
+ *  connector subtypes. Enum values more or less match with those from main
+ *  connector types.
+ *  For DVI-I and TVout there is also a matching property "select subconnector"
+ *  allowing to switch between signal types.
+ *  DP subconnector corresponds to a downstream port.
  */
 
 int drm_connector_create_standard_properties(struct drm_device *dev)
 {
-	struct drm_property *prop;
+  struct drm_property *prop;
 
-	prop = drm_property_create(dev, DRM_MODE_PROP_BLOB |
-				   DRM_MODE_PROP_IMMUTABLE,
-				   "EDID", 0);
-	if (!prop)
-		return -ENOMEM;
-	dev->mode_config.edid_property = prop;
+  prop = drm_property_create(dev, DRM_MODE_PROP_BLOB |
+           DRM_MODE_PROP_IMMUTABLE,
+           "EDID", 0);
+  if (!prop)
+    return -ENOMEM;
+  dev->mode_config.edid_property = prop;
 
-	prop = drm_property_create_enum(dev, 0,
-				   "DPMS", drm_dpms_enum_list,
-				   ARRAY_SIZE(drm_dpms_enum_list));
-	if (!prop)
-		return -ENOMEM;
-	dev->mode_config.dpms_property = prop;
+  prop = drm_property_create_enum(dev, 0,
+           "DPMS", drm_dpms_enum_list,
+           ARRAY_SIZE(drm_dpms_enum_list));
+  if (!prop)
+    return -ENOMEM;
+  dev->mode_config.dpms_property = prop;
 
-	prop = drm_property_create(dev,
-				   DRM_MODE_PROP_BLOB |
-				   DRM_MODE_PROP_IMMUTABLE,
-				   "PATH", 0);
-	if (!prop)
-		return -ENOMEM;
-	dev->mode_config.path_property = prop;
+  prop = drm_property_create(dev,
+           DRM_MODE_PROP_BLOB |
+           DRM_MODE_PROP_IMMUTABLE,
+           "PATH", 0);
+  if (!prop)
+    return -ENOMEM;
+  dev->mode_config.path_property = prop;
 
-	prop = drm_property_create(dev,
-				   DRM_MODE_PROP_BLOB |
-				   DRM_MODE_PROP_IMMUTABLE,
-				   "TILE", 0);
-	if (!prop)
-		return -ENOMEM;
-	dev->mode_config.tile_property = prop;
+  prop = drm_property_create(dev,
+           DRM_MODE_PROP_BLOB |
+           DRM_MODE_PROP_IMMUTABLE,
+           "TILE", 0);
+  if (!prop)
+    return -ENOMEM;
+  dev->mode_config.tile_property = prop;
 
-	prop = drm_property_create_enum(dev, 0, "link-status",
-					drm_link_status_enum_list,
-					ARRAY_SIZE(drm_link_status_enum_list));
-	if (!prop)
-		return -ENOMEM;
-	dev->mode_config.link_status_property = prop;
+  prop = drm_property_create_enum(dev, 0, "link-status",
+          drm_link_status_enum_list,
+          ARRAY_SIZE(drm_link_status_enum_list));
+  if (!prop)
+    return -ENOMEM;
+  dev->mode_config.link_status_property = prop;
 
-	prop = drm_property_create_bool(dev, DRM_MODE_PROP_IMMUTABLE, "non-desktop");
-	if (!prop)
-		return -ENOMEM;
-	dev->mode_config.non_desktop_property = prop;
+  prop = drm_property_create_bool(dev, DRM_MODE_PROP_IMMUTABLE, "non-desktop");
+  if (!prop)
+    return -ENOMEM;
+  dev->mode_config.non_desktop_property = prop;
 
-	prop = drm_property_create(dev, DRM_MODE_PROP_BLOB,
-				   "HDR_OUTPUT_METADATA", 0);
-	if (!prop)
-		return -ENOMEM;
-	dev->mode_config.hdr_output_metadata_property = prop;
+  prop = drm_property_create(dev, DRM_MODE_PROP_BLOB,
+           "HDR_OUTPUT_METADATA", 0);
+  if (!prop)
+    return -ENOMEM;
+  dev->mode_config.hdr_output_metadata_property = prop;
 
-	return 0;
+  return 0;
 }
 
 /**
@@ -1311,26 +1311,26 @@ int drm_connector_create_standard_properties(struct drm_device *dev)
  */
 int drm_mode_create_dvi_i_properties(struct drm_device *dev)
 {
-	struct drm_property *dvi_i_selector;
-	struct drm_property *dvi_i_subconnector;
+  struct drm_property *dvi_i_selector;
+  struct drm_property *dvi_i_subconnector;
 
-	if (dev->mode_config.dvi_i_select_subconnector_property)
-		return 0;
+  if (dev->mode_config.dvi_i_select_subconnector_property)
+    return 0;
 
-	dvi_i_selector =
-		drm_property_create_enum(dev, 0,
-				    "select subconnector",
-				    drm_dvi_i_select_enum_list,
-				    ARRAY_SIZE(drm_dvi_i_select_enum_list));
-	dev->mode_config.dvi_i_select_subconnector_property = dvi_i_selector;
+  dvi_i_selector =
+    drm_property_create_enum(dev, 0,
+            "select subconnector",
+            drm_dvi_i_select_enum_list,
+            ARRAY_SIZE(drm_dvi_i_select_enum_list));
+  dev->mode_config.dvi_i_select_subconnector_property = dvi_i_selector;
 
-	dvi_i_subconnector = drm_property_create_enum(dev, DRM_MODE_PROP_IMMUTABLE,
-				    "subconnector",
-				    drm_dvi_i_subconnector_enum_list,
-				    ARRAY_SIZE(drm_dvi_i_subconnector_enum_list));
-	dev->mode_config.dvi_i_subconnector_property = dvi_i_subconnector;
+  dvi_i_subconnector = drm_property_create_enum(dev, DRM_MODE_PROP_IMMUTABLE,
+            "subconnector",
+            drm_dvi_i_subconnector_enum_list,
+            ARRAY_SIZE(drm_dvi_i_subconnector_enum_list));
+  dev->mode_config.dvi_i_subconnector_property = dvi_i_subconnector;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_mode_create_dvi_i_properties);
 
@@ -1342,19 +1342,19 @@ EXPORT_SYMBOL(drm_mode_create_dvi_i_properties);
  */
 void drm_connector_attach_dp_subconnector_property(struct drm_connector *connector)
 {
-	struct drm_mode_config *mode_config = &connector->dev->mode_config;
+  struct drm_mode_config *mode_config = &connector->dev->mode_config;
 
-	if (!mode_config->dp_subconnector_property)
-		mode_config->dp_subconnector_property =
-			drm_property_create_enum(connector->dev,
-				DRM_MODE_PROP_IMMUTABLE,
-				"subconnector",
-				drm_dp_subconnector_enum_list,
-				ARRAY_SIZE(drm_dp_subconnector_enum_list));
+  if (!mode_config->dp_subconnector_property)
+    mode_config->dp_subconnector_property =
+      drm_property_create_enum(connector->dev,
+        DRM_MODE_PROP_IMMUTABLE,
+        "subconnector",
+        drm_dp_subconnector_enum_list,
+        ARRAY_SIZE(drm_dp_subconnector_enum_list));
 
-	drm_object_attach_property(&connector->base,
-				   mode_config->dp_subconnector_property,
-				   DRM_MODE_SUBCONNECTOR_Unknown);
+  drm_object_attach_property(&connector->base,
+           mode_config->dp_subconnector_property,
+           DRM_MODE_SUBCONNECTOR_Unknown);
 }
 EXPORT_SYMBOL(drm_connector_attach_dp_subconnector_property);
 
@@ -1362,26 +1362,26 @@ EXPORT_SYMBOL(drm_connector_attach_dp_subconnector_property);
  * DOC: HDMI connector properties
  *
  * content type (HDMI specific):
- *	Indicates content type setting to be used in HDMI infoframes to indicate
- *	content type for the external device, so that it adjusts its display
- *	settings accordingly.
+ *  Indicates content type setting to be used in HDMI infoframes to indicate
+ *  content type for the external device, so that it adjusts its display
+ *  settings accordingly.
  *
- *	The value of this property can be one of the following:
+ *  The value of this property can be one of the following:
  *
- *	No Data:
- *		Content type is unknown
- *	Graphics:
- *		Content type is graphics
- *	Photo:
- *		Content type is photo
- *	Cinema:
- *		Content type is cinema
- *	Game:
- *		Content type is game
+ *  No Data:
+ *    Content type is unknown
+ *  Graphics:
+ *    Content type is graphics
+ *  Photo:
+ *    Content type is photo
+ *  Cinema:
+ *    Content type is cinema
+ *  Game:
+ *    Content type is game
  *
- *	Drivers can set up this property by calling
- *	drm_connector_attach_content_type_property(). Decoding to
- *	infoframe values is done through drm_hdmi_avi_infoframe_content_type().
+ *  Drivers can set up this property by calling
+ *  drm_connector_attach_content_type_property(). Decoding to
+ *  infoframe values is done through drm_hdmi_avi_infoframe_content_type().
  */
 
 /**
@@ -1392,11 +1392,11 @@ EXPORT_SYMBOL(drm_connector_attach_dp_subconnector_property);
  */
 int drm_connector_attach_content_type_property(struct drm_connector *connector)
 {
-	if (!drm_mode_create_content_type_property(connector->dev))
-		drm_object_attach_property(&connector->base,
-					   connector->dev->mode_config.content_type_property,
-					   DRM_MODE_CONTENT_TYPE_NO_DATA);
-	return 0;
+  if (!drm_mode_create_content_type_property(connector->dev))
+    drm_object_attach_property(&connector->base,
+             connector->dev->mode_config.content_type_property,
+             DRM_MODE_CONTENT_TYPE_NO_DATA);
+  return 0;
 }
 EXPORT_SYMBOL(drm_connector_attach_content_type_property);
 
@@ -1410,33 +1410,33 @@ EXPORT_SYMBOL(drm_connector_attach_content_type_property);
  *
  */
 void drm_hdmi_avi_infoframe_content_type(struct hdmi_avi_infoframe *frame,
-					 const struct drm_connector_state *conn_state)
+           const struct drm_connector_state *conn_state)
 {
-	switch (conn_state->content_type) {
-	case DRM_MODE_CONTENT_TYPE_GRAPHICS:
-		frame->content_type = HDMI_CONTENT_TYPE_GRAPHICS;
-		break;
-	case DRM_MODE_CONTENT_TYPE_CINEMA:
-		frame->content_type = HDMI_CONTENT_TYPE_CINEMA;
-		break;
-	case DRM_MODE_CONTENT_TYPE_GAME:
-		frame->content_type = HDMI_CONTENT_TYPE_GAME;
-		break;
-	case DRM_MODE_CONTENT_TYPE_PHOTO:
-		frame->content_type = HDMI_CONTENT_TYPE_PHOTO;
-		break;
-	default:
-		/* Graphics is the default(0) */
-		frame->content_type = HDMI_CONTENT_TYPE_GRAPHICS;
-	}
+  switch (conn_state->content_type) {
+  case DRM_MODE_CONTENT_TYPE_GRAPHICS:
+    frame->content_type = HDMI_CONTENT_TYPE_GRAPHICS;
+    break;
+  case DRM_MODE_CONTENT_TYPE_CINEMA:
+    frame->content_type = HDMI_CONTENT_TYPE_CINEMA;
+    break;
+  case DRM_MODE_CONTENT_TYPE_GAME:
+    frame->content_type = HDMI_CONTENT_TYPE_GAME;
+    break;
+  case DRM_MODE_CONTENT_TYPE_PHOTO:
+    frame->content_type = HDMI_CONTENT_TYPE_PHOTO;
+    break;
+  default:
+    /* Graphics is the default(0) */
+    frame->content_type = HDMI_CONTENT_TYPE_GRAPHICS;
+  }
 
-	frame->itc = conn_state->content_type != DRM_MODE_CONTENT_TYPE_NO_DATA;
+  frame->itc = conn_state->content_type != DRM_MODE_CONTENT_TYPE_NO_DATA;
 }
 EXPORT_SYMBOL(drm_hdmi_avi_infoframe_content_type);
 
 /**
  * drm_connector_attach_tv_margin_properties - attach TV connector margin
- * 	properties
+ *   properties
  * @connector: DRM connector
  *
  * Called by a driver when it needs to attach TV margin props to a connector.
@@ -1444,20 +1444,20 @@ EXPORT_SYMBOL(drm_hdmi_avi_infoframe_content_type);
  */
 void drm_connector_attach_tv_margin_properties(struct drm_connector *connector)
 {
-	struct drm_device *dev = connector->dev;
+  struct drm_device *dev = connector->dev;
 
-	drm_object_attach_property(&connector->base,
-				   dev->mode_config.tv_left_margin_property,
-				   0);
-	drm_object_attach_property(&connector->base,
-				   dev->mode_config.tv_right_margin_property,
-				   0);
-	drm_object_attach_property(&connector->base,
-				   dev->mode_config.tv_top_margin_property,
-				   0);
-	drm_object_attach_property(&connector->base,
-				   dev->mode_config.tv_bottom_margin_property,
-				   0);
+  drm_object_attach_property(&connector->base,
+           dev->mode_config.tv_left_margin_property,
+           0);
+  drm_object_attach_property(&connector->base,
+           dev->mode_config.tv_right_margin_property,
+           0);
+  drm_object_attach_property(&connector->base,
+           dev->mode_config.tv_top_margin_property,
+           0);
+  drm_object_attach_property(&connector->base,
+           dev->mode_config.tv_bottom_margin_property,
+           0);
 }
 EXPORT_SYMBOL(drm_connector_attach_tv_margin_properties);
 
@@ -1472,30 +1472,30 @@ EXPORT_SYMBOL(drm_connector_attach_tv_margin_properties);
  */
 int drm_mode_create_tv_margin_properties(struct drm_device *dev)
 {
-	if (dev->mode_config.tv_left_margin_property)
-		return 0;
+  if (dev->mode_config.tv_left_margin_property)
+    return 0;
 
-	dev->mode_config.tv_left_margin_property =
-		drm_property_create_range(dev, 0, "left margin", 0, 100);
-	if (!dev->mode_config.tv_left_margin_property)
-		return -ENOMEM;
+  dev->mode_config.tv_left_margin_property =
+    drm_property_create_range(dev, 0, "left margin", 0, 100);
+  if (!dev->mode_config.tv_left_margin_property)
+    return -ENOMEM;
 
-	dev->mode_config.tv_right_margin_property =
-		drm_property_create_range(dev, 0, "right margin", 0, 100);
-	if (!dev->mode_config.tv_right_margin_property)
-		return -ENOMEM;
+  dev->mode_config.tv_right_margin_property =
+    drm_property_create_range(dev, 0, "right margin", 0, 100);
+  if (!dev->mode_config.tv_right_margin_property)
+    return -ENOMEM;
 
-	dev->mode_config.tv_top_margin_property =
-		drm_property_create_range(dev, 0, "top margin", 0, 100);
-	if (!dev->mode_config.tv_top_margin_property)
-		return -ENOMEM;
+  dev->mode_config.tv_top_margin_property =
+    drm_property_create_range(dev, 0, "top margin", 0, 100);
+  if (!dev->mode_config.tv_top_margin_property)
+    return -ENOMEM;
 
-	dev->mode_config.tv_bottom_margin_property =
-		drm_property_create_range(dev, 0, "bottom margin", 0, 100);
-	if (!dev->mode_config.tv_bottom_margin_property)
-		return -ENOMEM;
+  dev->mode_config.tv_bottom_margin_property =
+    drm_property_create_range(dev, 0, "bottom margin", 0, 100);
+  if (!dev->mode_config.tv_bottom_margin_property)
+    return -ENOMEM;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_mode_create_tv_margin_properties);
 
@@ -1511,86 +1511,86 @@ EXPORT_SYMBOL(drm_mode_create_tv_margin_properties);
  * this routine.
  */
 int drm_mode_create_tv_properties(struct drm_device *dev,
-				  unsigned int num_modes,
-				  const char * const modes[])
+          unsigned int num_modes,
+          const char * const modes[])
 {
-	struct drm_property *tv_selector;
-	struct drm_property *tv_subconnector;
-	unsigned int i;
+  struct drm_property *tv_selector;
+  struct drm_property *tv_subconnector;
+  unsigned int i;
 
-	if (dev->mode_config.tv_select_subconnector_property)
-		return 0;
+  if (dev->mode_config.tv_select_subconnector_property)
+    return 0;
 
-	/*
-	 * Basic connector properties
-	 */
-	tv_selector = drm_property_create_enum(dev, 0,
-					  "select subconnector",
-					  drm_tv_select_enum_list,
-					  ARRAY_SIZE(drm_tv_select_enum_list));
-	if (!tv_selector)
-		goto nomem;
+  /*
+   * Basic connector properties
+   */
+  tv_selector = drm_property_create_enum(dev, 0,
+            "select subconnector",
+            drm_tv_select_enum_list,
+            ARRAY_SIZE(drm_tv_select_enum_list));
+  if (!tv_selector)
+    goto nomem;
 
-	dev->mode_config.tv_select_subconnector_property = tv_selector;
+  dev->mode_config.tv_select_subconnector_property = tv_selector;
 
-	tv_subconnector =
-		drm_property_create_enum(dev, DRM_MODE_PROP_IMMUTABLE,
-				    "subconnector",
-				    drm_tv_subconnector_enum_list,
-				    ARRAY_SIZE(drm_tv_subconnector_enum_list));
-	if (!tv_subconnector)
-		goto nomem;
-	dev->mode_config.tv_subconnector_property = tv_subconnector;
+  tv_subconnector =
+    drm_property_create_enum(dev, DRM_MODE_PROP_IMMUTABLE,
+            "subconnector",
+            drm_tv_subconnector_enum_list,
+            ARRAY_SIZE(drm_tv_subconnector_enum_list));
+  if (!tv_subconnector)
+    goto nomem;
+  dev->mode_config.tv_subconnector_property = tv_subconnector;
 
-	/*
-	 * Other, TV specific properties: margins & TV modes.
-	 */
-	if (drm_mode_create_tv_margin_properties(dev))
-		goto nomem;
+  /*
+   * Other, TV specific properties: margins & TV modes.
+   */
+  if (drm_mode_create_tv_margin_properties(dev))
+    goto nomem;
 
-	dev->mode_config.tv_mode_property =
-		drm_property_create(dev, DRM_MODE_PROP_ENUM,
-				    "mode", num_modes);
-	if (!dev->mode_config.tv_mode_property)
-		goto nomem;
+  dev->mode_config.tv_mode_property =
+    drm_property_create(dev, DRM_MODE_PROP_ENUM,
+            "mode", num_modes);
+  if (!dev->mode_config.tv_mode_property)
+    goto nomem;
 
-	for (i = 0; i < num_modes; i++)
-		drm_property_add_enum(dev->mode_config.tv_mode_property,
-				      i, modes[i]);
+  for (i = 0; i < num_modes; i++)
+    drm_property_add_enum(dev->mode_config.tv_mode_property,
+              i, modes[i]);
 
-	dev->mode_config.tv_brightness_property =
-		drm_property_create_range(dev, 0, "brightness", 0, 100);
-	if (!dev->mode_config.tv_brightness_property)
-		goto nomem;
+  dev->mode_config.tv_brightness_property =
+    drm_property_create_range(dev, 0, "brightness", 0, 100);
+  if (!dev->mode_config.tv_brightness_property)
+    goto nomem;
 
-	dev->mode_config.tv_contrast_property =
-		drm_property_create_range(dev, 0, "contrast", 0, 100);
-	if (!dev->mode_config.tv_contrast_property)
-		goto nomem;
+  dev->mode_config.tv_contrast_property =
+    drm_property_create_range(dev, 0, "contrast", 0, 100);
+  if (!dev->mode_config.tv_contrast_property)
+    goto nomem;
 
-	dev->mode_config.tv_flicker_reduction_property =
-		drm_property_create_range(dev, 0, "flicker reduction", 0, 100);
-	if (!dev->mode_config.tv_flicker_reduction_property)
-		goto nomem;
+  dev->mode_config.tv_flicker_reduction_property =
+    drm_property_create_range(dev, 0, "flicker reduction", 0, 100);
+  if (!dev->mode_config.tv_flicker_reduction_property)
+    goto nomem;
 
-	dev->mode_config.tv_overscan_property =
-		drm_property_create_range(dev, 0, "overscan", 0, 100);
-	if (!dev->mode_config.tv_overscan_property)
-		goto nomem;
+  dev->mode_config.tv_overscan_property =
+    drm_property_create_range(dev, 0, "overscan", 0, 100);
+  if (!dev->mode_config.tv_overscan_property)
+    goto nomem;
 
-	dev->mode_config.tv_saturation_property =
-		drm_property_create_range(dev, 0, "saturation", 0, 100);
-	if (!dev->mode_config.tv_saturation_property)
-		goto nomem;
+  dev->mode_config.tv_saturation_property =
+    drm_property_create_range(dev, 0, "saturation", 0, 100);
+  if (!dev->mode_config.tv_saturation_property)
+    goto nomem;
 
-	dev->mode_config.tv_hue_property =
-		drm_property_create_range(dev, 0, "hue", 0, 100);
-	if (!dev->mode_config.tv_hue_property)
-		goto nomem;
+  dev->mode_config.tv_hue_property =
+    drm_property_create_range(dev, 0, "hue", 0, 100);
+  if (!dev->mode_config.tv_hue_property)
+    goto nomem;
 
-	return 0;
+  return 0;
 nomem:
-	return -ENOMEM;
+  return -ENOMEM;
 }
 EXPORT_SYMBOL(drm_mode_create_tv_properties);
 
@@ -1607,19 +1607,19 @@ EXPORT_SYMBOL(drm_mode_create_tv_properties);
  */
 int drm_mode_create_scaling_mode_property(struct drm_device *dev)
 {
-	struct drm_property *scaling_mode;
+  struct drm_property *scaling_mode;
 
-	if (dev->mode_config.scaling_mode_property)
-		return 0;
+  if (dev->mode_config.scaling_mode_property)
+    return 0;
 
-	scaling_mode =
-		drm_property_create_enum(dev, 0, "scaling mode",
-				drm_scaling_mode_enum_list,
-				    ARRAY_SIZE(drm_scaling_mode_enum_list));
+  scaling_mode =
+    drm_property_create_enum(dev, 0, "scaling mode",
+        drm_scaling_mode_enum_list,
+            ARRAY_SIZE(drm_scaling_mode_enum_list));
 
-	dev->mode_config.scaling_mode_property = scaling_mode;
+  dev->mode_config.scaling_mode_property = scaling_mode;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_mode_create_scaling_mode_property);
 
@@ -1658,31 +1658,31 @@ EXPORT_SYMBOL(drm_mode_create_scaling_mode_property);
  * on the &drm_connector and &drm_crtc objects.
  *
  * "vrr_capable":
- *	Optional &drm_connector boolean property that drivers should attach
- *	with drm_connector_attach_vrr_capable_property() on connectors that
- *	could support variable refresh rates. Drivers should update the
- *	property value by calling drm_connector_set_vrr_capable_property().
+ *  Optional &drm_connector boolean property that drivers should attach
+ *  with drm_connector_attach_vrr_capable_property() on connectors that
+ *  could support variable refresh rates. Drivers should update the
+ *  property value by calling drm_connector_set_vrr_capable_property().
  *
- *	Absence of the property should indicate absence of support.
+ *  Absence of the property should indicate absence of support.
  *
  * "VRR_ENABLED":
- *	Default &drm_crtc boolean property that notifies the driver that the
- *	content on the CRTC is suitable for variable refresh rate presentation.
- *	The driver will take this property as a hint to enable variable
- *	refresh rate support if the receiver supports it, ie. if the
- *	"vrr_capable" property is true on the &drm_connector object. The
- *	vertical front porch duration will be extended until page-flip or
- *	timeout when enabled.
+ *  Default &drm_crtc boolean property that notifies the driver that the
+ *  content on the CRTC is suitable for variable refresh rate presentation.
+ *  The driver will take this property as a hint to enable variable
+ *  refresh rate support if the receiver supports it, ie. if the
+ *  "vrr_capable" property is true on the &drm_connector object. The
+ *  vertical front porch duration will be extended until page-flip or
+ *  timeout when enabled.
  *
- *	The minimum vertical front porch duration is defined as the vertical
- *	front porch duration for the current mode.
+ *  The minimum vertical front porch duration is defined as the vertical
+ *  front porch duration for the current mode.
  *
- *	The maximum vertical front porch duration is greater than or equal to
- *	the minimum vertical front porch duration. The duration is derived
- *	from the minimum supported variable refresh rate for the connector.
+ *  The maximum vertical front porch duration is greater than or equal to
+ *  the minimum vertical front porch duration. The duration is derived
+ *  from the minimum supported variable refresh rate for the connector.
  *
- *	The driver may place further restrictions within these minimum
- *	and maximum bounds.
+ *  The driver may place further restrictions within these minimum
+ *  and maximum bounds.
  */
 
 /**
@@ -1697,22 +1697,22 @@ EXPORT_SYMBOL(drm_mode_create_scaling_mode_property);
  * Zero on success, negative errno on failure.
  */
 int drm_connector_attach_vrr_capable_property(
-	struct drm_connector *connector)
+  struct drm_connector *connector)
 {
-	struct drm_device *dev = connector->dev;
-	struct drm_property *prop;
+  struct drm_device *dev = connector->dev;
+  struct drm_property *prop;
 
-	if (!connector->vrr_capable_property) {
-		prop = drm_property_create_bool(dev, DRM_MODE_PROP_IMMUTABLE,
-			"vrr_capable");
-		if (!prop)
-			return -ENOMEM;
+  if (!connector->vrr_capable_property) {
+    prop = drm_property_create_bool(dev, DRM_MODE_PROP_IMMUTABLE,
+      "vrr_capable");
+    if (!prop)
+      return -ENOMEM;
 
-		connector->vrr_capable_property = prop;
-		drm_object_attach_property(&connector->base, prop, 0);
-	}
+    connector->vrr_capable_property = prop;
+    drm_object_attach_property(&connector->base, prop, 0);
+  }
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_connector_attach_vrr_capable_property);
 
@@ -1731,48 +1731,48 @@ EXPORT_SYMBOL(drm_connector_attach_vrr_capable_property);
  * Zero on success, negative errno on failure.
  */
 int drm_connector_attach_scaling_mode_property(struct drm_connector *connector,
-					       u32 scaling_mode_mask)
+                 u32 scaling_mode_mask)
 {
-	struct drm_device *dev = connector->dev;
-	struct drm_property *scaling_mode_property;
-	int i;
-	const unsigned valid_scaling_mode_mask =
-		(1U << ARRAY_SIZE(drm_scaling_mode_enum_list)) - 1;
+  struct drm_device *dev = connector->dev;
+  struct drm_property *scaling_mode_property;
+  int i;
+  const unsigned valid_scaling_mode_mask =
+    (1U << ARRAY_SIZE(drm_scaling_mode_enum_list)) - 1;
 
-	if (WARN_ON(hweight32(scaling_mode_mask) < 2 ||
-		    scaling_mode_mask & ~valid_scaling_mode_mask))
-		return -EINVAL;
+  if (WARN_ON(hweight32(scaling_mode_mask) < 2 ||
+        scaling_mode_mask & ~valid_scaling_mode_mask))
+    return -EINVAL;
 
-	scaling_mode_property =
-		drm_property_create(dev, DRM_MODE_PROP_ENUM, "scaling mode",
-				    hweight32(scaling_mode_mask));
+  scaling_mode_property =
+    drm_property_create(dev, DRM_MODE_PROP_ENUM, "scaling mode",
+            hweight32(scaling_mode_mask));
 
-	if (!scaling_mode_property)
-		return -ENOMEM;
+  if (!scaling_mode_property)
+    return -ENOMEM;
 
-	for (i = 0; i < ARRAY_SIZE(drm_scaling_mode_enum_list); i++) {
-		int ret;
+  for (i = 0; i < ARRAY_SIZE(drm_scaling_mode_enum_list); i++) {
+    int ret;
 
-		if (!(BIT(i) & scaling_mode_mask))
-			continue;
+    if (!(BIT(i) & scaling_mode_mask))
+      continue;
 
-		ret = drm_property_add_enum(scaling_mode_property,
-					    drm_scaling_mode_enum_list[i].type,
-					    drm_scaling_mode_enum_list[i].name);
+    ret = drm_property_add_enum(scaling_mode_property,
+              drm_scaling_mode_enum_list[i].type,
+              drm_scaling_mode_enum_list[i].name);
 
-		if (ret) {
-			drm_property_destroy(dev, scaling_mode_property);
+    if (ret) {
+      drm_property_destroy(dev, scaling_mode_property);
 
-			return ret;
-		}
-	}
+      return ret;
+    }
+  }
 
-	drm_object_attach_property(&connector->base,
-				   scaling_mode_property, 0);
+  drm_object_attach_property(&connector->base,
+           scaling_mode_property, 0);
 
-	connector->scaling_mode_property = scaling_mode_property;
+  connector->scaling_mode_property = scaling_mode_property;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_connector_attach_scaling_mode_property);
 
@@ -1788,18 +1788,18 @@ EXPORT_SYMBOL(drm_connector_attach_scaling_mode_property);
  */
 int drm_mode_create_aspect_ratio_property(struct drm_device *dev)
 {
-	if (dev->mode_config.aspect_ratio_property)
-		return 0;
+  if (dev->mode_config.aspect_ratio_property)
+    return 0;
 
-	dev->mode_config.aspect_ratio_property =
-		drm_property_create_enum(dev, 0, "aspect ratio",
-				drm_aspect_ratio_enum_list,
-				ARRAY_SIZE(drm_aspect_ratio_enum_list));
+  dev->mode_config.aspect_ratio_property =
+    drm_property_create_enum(dev, 0, "aspect ratio",
+        drm_aspect_ratio_enum_list,
+        ARRAY_SIZE(drm_aspect_ratio_enum_list));
 
-	if (dev->mode_config.aspect_ratio_property == NULL)
-		return -ENOMEM;
+  if (dev->mode_config.aspect_ratio_property == NULL)
+    return -ENOMEM;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_mode_create_aspect_ratio_property);
 
@@ -1843,20 +1843,20 @@ EXPORT_SYMBOL(drm_mode_create_aspect_ratio_property);
  */
 int drm_mode_create_hdmi_colorspace_property(struct drm_connector *connector)
 {
-	struct drm_device *dev = connector->dev;
+  struct drm_device *dev = connector->dev;
 
-	if (connector->colorspace_property)
-		return 0;
+  if (connector->colorspace_property)
+    return 0;
 
-	connector->colorspace_property =
-		drm_property_create_enum(dev, DRM_MODE_PROP_ENUM, "Colorspace",
-					 hdmi_colorspaces,
-					 ARRAY_SIZE(hdmi_colorspaces));
+  connector->colorspace_property =
+    drm_property_create_enum(dev, DRM_MODE_PROP_ENUM, "Colorspace",
+           hdmi_colorspaces,
+           ARRAY_SIZE(hdmi_colorspaces));
 
-	if (!connector->colorspace_property)
-		return -ENOMEM;
+  if (!connector->colorspace_property)
+    return -ENOMEM;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_mode_create_hdmi_colorspace_property);
 
@@ -1872,20 +1872,20 @@ EXPORT_SYMBOL(drm_mode_create_hdmi_colorspace_property);
  */
 int drm_mode_create_dp_colorspace_property(struct drm_connector *connector)
 {
-	struct drm_device *dev = connector->dev;
+  struct drm_device *dev = connector->dev;
 
-	if (connector->colorspace_property)
-		return 0;
+  if (connector->colorspace_property)
+    return 0;
 
-	connector->colorspace_property =
-		drm_property_create_enum(dev, DRM_MODE_PROP_ENUM, "Colorspace",
-					 dp_colorspaces,
-					 ARRAY_SIZE(dp_colorspaces));
+  connector->colorspace_property =
+    drm_property_create_enum(dev, DRM_MODE_PROP_ENUM, "Colorspace",
+           dp_colorspaces,
+           ARRAY_SIZE(dp_colorspaces));
 
-	if (!connector->colorspace_property)
-		return -ENOMEM;
+  if (!connector->colorspace_property)
+    return -ENOMEM;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_mode_create_dp_colorspace_property);
 
@@ -1901,18 +1901,18 @@ EXPORT_SYMBOL(drm_mode_create_dp_colorspace_property);
  */
 int drm_mode_create_content_type_property(struct drm_device *dev)
 {
-	if (dev->mode_config.content_type_property)
-		return 0;
+  if (dev->mode_config.content_type_property)
+    return 0;
 
-	dev->mode_config.content_type_property =
-		drm_property_create_enum(dev, 0, "content type",
-					 drm_content_type_enum_list,
-					 ARRAY_SIZE(drm_content_type_enum_list));
+  dev->mode_config.content_type_property =
+    drm_property_create_enum(dev, 0, "content type",
+           drm_content_type_enum_list,
+           ARRAY_SIZE(drm_content_type_enum_list));
 
-	if (dev->mode_config.content_type_property == NULL)
-		return -ENOMEM;
+  if (dev->mode_config.content_type_property == NULL)
+    return -ENOMEM;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_mode_create_content_type_property);
 
@@ -1924,19 +1924,19 @@ EXPORT_SYMBOL(drm_mode_create_content_type_property);
  */
 int drm_mode_create_suggested_offset_properties(struct drm_device *dev)
 {
-	if (dev->mode_config.suggested_x_property && dev->mode_config.suggested_y_property)
-		return 0;
+  if (dev->mode_config.suggested_x_property && dev->mode_config.suggested_y_property)
+    return 0;
 
-	dev->mode_config.suggested_x_property =
-		drm_property_create_range(dev, DRM_MODE_PROP_IMMUTABLE, "suggested X", 0, 0xffffffff);
+  dev->mode_config.suggested_x_property =
+    drm_property_create_range(dev, DRM_MODE_PROP_IMMUTABLE, "suggested X", 0, 0xffffffff);
 
-	dev->mode_config.suggested_y_property =
-		drm_property_create_range(dev, DRM_MODE_PROP_IMMUTABLE, "suggested Y", 0, 0xffffffff);
+  dev->mode_config.suggested_y_property =
+    drm_property_create_range(dev, DRM_MODE_PROP_IMMUTABLE, "suggested Y", 0, 0xffffffff);
 
-	if (dev->mode_config.suggested_x_property == NULL ||
-	    dev->mode_config.suggested_y_property == NULL)
-		return -ENOMEM;
-	return 0;
+  if (dev->mode_config.suggested_x_property == NULL ||
+      dev->mode_config.suggested_y_property == NULL)
+    return -ENOMEM;
+  return 0;
 }
 EXPORT_SYMBOL(drm_mode_create_suggested_offset_properties);
 
@@ -1954,18 +1954,18 @@ EXPORT_SYMBOL(drm_mode_create_suggested_offset_properties);
  * Zero on success, negative errno on failure.
  */
 int drm_connector_set_path_property(struct drm_connector *connector,
-				    const char *path)
+            const char *path)
 {
-	struct drm_device *dev = connector->dev;
-	int ret;
+  struct drm_device *dev = connector->dev;
+  int ret;
 
-	ret = drm_property_replace_global_blob(dev,
-					       &connector->path_blob_ptr,
-					       strlen(path) + 1,
-					       path,
-					       &connector->base,
-					       dev->mode_config.path_property);
-	return ret;
+  ret = drm_property_replace_global_blob(dev,
+                 &connector->path_blob_ptr,
+                 strlen(path) + 1,
+                 path,
+                 &connector->base,
+                 dev->mode_config.path_property);
+  return ret;
 }
 EXPORT_SYMBOL(drm_connector_set_path_property);
 
@@ -1984,33 +1984,33 @@ EXPORT_SYMBOL(drm_connector_set_path_property);
  */
 int drm_connector_set_tile_property(struct drm_connector *connector)
 {
-	struct drm_device *dev = connector->dev;
-	char tile[256];
-	int ret;
+  struct drm_device *dev = connector->dev;
+  char tile[256];
+  int ret;
 
-	if (!connector->has_tile) {
-		ret  = drm_property_replace_global_blob(dev,
-							&connector->tile_blob_ptr,
-							0,
-							NULL,
-							&connector->base,
-							dev->mode_config.tile_property);
-		return ret;
-	}
+  if (!connector->has_tile) {
+    ret  = drm_property_replace_global_blob(dev,
+              &connector->tile_blob_ptr,
+              0,
+              NULL,
+              &connector->base,
+              dev->mode_config.tile_property);
+    return ret;
+  }
 
-	snprintf(tile, 256, "%d:%d:%d:%d:%d:%d:%d:%d",
-		 connector->tile_group->id, connector->tile_is_single_monitor,
-		 connector->num_h_tile, connector->num_v_tile,
-		 connector->tile_h_loc, connector->tile_v_loc,
-		 connector->tile_h_size, connector->tile_v_size);
+  snprintf(tile, 256, "%d:%d:%d:%d:%d:%d:%d:%d",
+     connector->tile_group->id, connector->tile_is_single_monitor,
+     connector->num_h_tile, connector->num_v_tile,
+     connector->tile_h_loc, connector->tile_v_loc,
+     connector->tile_h_size, connector->tile_v_size);
 
-	ret = drm_property_replace_global_blob(dev,
-					       &connector->tile_blob_ptr,
-					       strlen(tile) + 1,
-					       tile,
-					       &connector->base,
-					       dev->mode_config.tile_property);
-	return ret;
+  ret = drm_property_replace_global_blob(dev,
+                 &connector->tile_blob_ptr,
+                 strlen(tile) + 1,
+                 tile,
+                 &connector->base,
+                 dev->mode_config.tile_property);
+  return ret;
 }
 EXPORT_SYMBOL(drm_connector_set_tile_property);
 
@@ -2029,62 +2029,62 @@ EXPORT_SYMBOL(drm_connector_set_tile_property);
  * Zero on success, negative errno on failure.
  */
 int drm_connector_update_edid_property(struct drm_connector *connector,
-				       const struct edid *edid)
+               const struct edid *edid)
 {
-	struct drm_device *dev = connector->dev;
-	size_t size = 0;
-	int ret;
-	const struct edid *old_edid;
+  struct drm_device *dev = connector->dev;
+  size_t size = 0;
+  int ret;
+  const struct edid *old_edid;
 
-	/* ignore requests to set edid when overridden */
-	if (connector->override_edid)
-		return 0;
+  /* ignore requests to set edid when overridden */
+  if (connector->override_edid)
+    return 0;
 
-	if (edid)
-		size = EDID_LENGTH * (1 + edid->extensions);
+  if (edid)
+    size = EDID_LENGTH * (1 + edid->extensions);
 
-	/* Set the display info, using edid if available, otherwise
-	 * resetting the values to defaults. This duplicates the work
-	 * done in drm_add_edid_modes, but that function is not
-	 * consistently called before this one in all drivers and the
-	 * computation is cheap enough that it seems better to
-	 * duplicate it rather than attempt to ensure some arbitrary
-	 * ordering of calls.
-	 */
-	if (edid)
-		drm_add_display_info(connector, edid);
-	else
-		drm_reset_display_info(connector);
+  /* Set the display info, using edid if available, otherwise
+   * resetting the values to defaults. This duplicates the work
+   * done in drm_add_edid_modes, but that function is not
+   * consistently called before this one in all drivers and the
+   * computation is cheap enough that it seems better to
+   * duplicate it rather than attempt to ensure some arbitrary
+   * ordering of calls.
+   */
+  if (edid)
+    drm_add_display_info(connector, edid);
+  else
+    drm_reset_display_info(connector);
 
-	drm_update_tile_info(connector, edid);
+  drm_update_tile_info(connector, edid);
 
-	if (connector->edid_blob_ptr) {
-		old_edid = (const struct edid *)connector->edid_blob_ptr->data;
-		if (old_edid) {
-			if (!drm_edid_are_equal(edid, old_edid)) {
-				DRM_DEBUG_KMS("[CONNECTOR:%d:%s] Edid was changed.\n",
-					      connector->base.id, connector->name);
+  if (connector->edid_blob_ptr) {
+    old_edid = (const struct edid *)connector->edid_blob_ptr->data;
+    if (old_edid) {
+      if (!drm_edid_are_equal(edid, old_edid)) {
+        DRM_DEBUG_KMS("[CONNECTOR:%d:%s] Edid was changed.\n",
+                connector->base.id, connector->name);
 
-				connector->epoch_counter += 1;
-				DRM_DEBUG_KMS("Updating change counter to %llu\n",
-					      connector->epoch_counter);
-			}
-		}
-	}
+        connector->epoch_counter += 1;
+        DRM_DEBUG_KMS("Updating change counter to %llu\n",
+                connector->epoch_counter);
+      }
+    }
+  }
 
-	drm_object_property_set_value(&connector->base,
-				      dev->mode_config.non_desktop_property,
-				      connector->display_info.non_desktop);
+  drm_object_property_set_value(&connector->base,
+              dev->mode_config.non_desktop_property,
+              connector->display_info.non_desktop);
 
-	ret = drm_property_replace_global_blob(dev,
-					       &connector->edid_blob_ptr,
-					       size,
-					       edid,
-					       &connector->base,
-					       dev->mode_config.edid_property);
-	if (ret)
-		return ret;
-	return drm_connector_set_tile_property(connector);
+  ret = drm_property_replace_global_blob(dev,
+                 &connector->edid_blob_ptr,
+                 size,
+                 edid,
+                 &connector->base,
+                 dev->mode_config.edid_property);
+  if (ret)
+    return ret;
+  return drm_connector_set_tile_property(connector);
 }
 EXPORT_SYMBOL(drm_connector_update_edid_property);
 
@@ -2108,13 +2108,13 @@ EXPORT_SYMBOL(drm_connector_update_edid_property);
  * asynchronous setcrtc, this property can be used to report any failures in that.
  */
 void drm_connector_set_link_status_property(struct drm_connector *connector,
-					    uint64_t link_status)
+              uint64_t link_status)
 {
-	struct drm_device *dev = connector->dev;
+  struct drm_device *dev = connector->dev;
 
-	drm_modeset_lock(&dev->mode_config.connection_mutex, NULL);
-	connector->state->link_status = link_status;
-	drm_modeset_unlock(&dev->mode_config.connection_mutex);
+  drm_modeset_lock(&dev->mode_config.connection_mutex, NULL);
+  connector->state->link_status = link_status;
+  drm_modeset_unlock(&dev->mode_config.connection_mutex);
 }
 EXPORT_SYMBOL(drm_connector_set_link_status_property);
 
@@ -2130,25 +2130,25 @@ EXPORT_SYMBOL(drm_connector_set_link_status_property);
  * Zero on success, negative errno on failure.
  */
 int drm_connector_attach_max_bpc_property(struct drm_connector *connector,
-					  int min, int max)
+            int min, int max)
 {
-	struct drm_device *dev = connector->dev;
-	struct drm_property *prop;
+  struct drm_device *dev = connector->dev;
+  struct drm_property *prop;
 
-	prop = connector->max_bpc_property;
-	if (!prop) {
-		prop = drm_property_create_range(dev, 0, "max bpc", min, max);
-		if (!prop)
-			return -ENOMEM;
+  prop = connector->max_bpc_property;
+  if (!prop) {
+    prop = drm_property_create_range(dev, 0, "max bpc", min, max);
+    if (!prop)
+      return -ENOMEM;
 
-		connector->max_bpc_property = prop;
-	}
+    connector->max_bpc_property = prop;
+  }
 
-	drm_object_attach_property(&connector->base, prop, max);
-	connector->state->max_requested_bpc = max;
-	connector->state->max_bpc = max;
+  drm_object_attach_property(&connector->base, prop, max);
+  connector->state->max_requested_bpc = max;
+  connector->state->max_bpc = max;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_connector_attach_max_bpc_property);
 
@@ -2164,12 +2164,12 @@ EXPORT_SYMBOL(drm_connector_attach_max_bpc_property);
  */
 int drm_connector_attach_hdr_output_metadata_property(struct drm_connector *connector)
 {
-	struct drm_device *dev = connector->dev;
-	struct drm_property *prop = dev->mode_config.hdr_output_metadata_property;
+  struct drm_device *dev = connector->dev;
+  struct drm_property *prop = dev->mode_config.hdr_output_metadata_property;
 
-	drm_object_attach_property(&connector->base, prop, 0);
+  drm_object_attach_property(&connector->base, prop, 0);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_connector_attach_hdr_output_metadata_property);
 
@@ -2185,11 +2185,11 @@ EXPORT_SYMBOL(drm_connector_attach_hdr_output_metadata_property);
  */
 int drm_connector_attach_colorspace_property(struct drm_connector *connector)
 {
-	struct drm_property *prop = connector->colorspace_property;
+  struct drm_property *prop = connector->colorspace_property;
 
-	drm_object_attach_property(&connector->base, prop, DRM_MODE_COLORIMETRY_DEFAULT);
+  drm_object_attach_property(&connector->base, prop, DRM_MODE_COLORIMETRY_DEFAULT);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_connector_attach_colorspace_property);
 
@@ -2206,18 +2206,18 @@ EXPORT_SYMBOL(drm_connector_attach_colorspace_property);
  * True if the metadata are equal, False otherwise
  */
 bool drm_connector_atomic_hdr_metadata_equal(struct drm_connector_state *old_state,
-					     struct drm_connector_state *new_state)
+               struct drm_connector_state *new_state)
 {
-	struct drm_property_blob *old_blob = old_state->hdr_output_metadata;
-	struct drm_property_blob *new_blob = new_state->hdr_output_metadata;
+  struct drm_property_blob *old_blob = old_state->hdr_output_metadata;
+  struct drm_property_blob *new_blob = new_state->hdr_output_metadata;
 
-	if (!old_blob || !new_blob)
-		return old_blob == new_blob;
+  if (!old_blob || !new_blob)
+    return old_blob == new_blob;
 
-	if (old_blob->length != new_blob->length)
-		return false;
+  if (old_blob->length != new_blob->length)
+    return false;
 
-	return !memcmp(old_blob->data, new_blob->data, old_blob->length);
+  return !memcmp(old_blob->data, new_blob->data, old_blob->length);
 }
 EXPORT_SYMBOL(drm_connector_atomic_hdr_metadata_equal);
 
@@ -2231,11 +2231,11 @@ EXPORT_SYMBOL(drm_connector_atomic_hdr_metadata_equal);
  * variable refresh rate over a connector.
  */
 void drm_connector_set_vrr_capable_property(
-		struct drm_connector *connector, bool capable)
+    struct drm_connector *connector, bool capable)
 {
-	drm_object_property_set_value(&connector->base,
-				      connector->vrr_capable_property,
-				      capable);
+  drm_object_property_set_value(&connector->base,
+              connector->vrr_capable_property,
+              capable);
 }
 EXPORT_SYMBOL(drm_connector_set_vrr_capable_property);
 
@@ -2258,44 +2258,44 @@ EXPORT_SYMBOL(drm_connector_set_vrr_capable_property);
  * Zero on success, negative errno on failure.
  */
 int drm_connector_set_panel_orientation(
-	struct drm_connector *connector,
-	enum drm_panel_orientation panel_orientation)
+  struct drm_connector *connector,
+  enum drm_panel_orientation panel_orientation)
 {
-	struct drm_device *dev = connector->dev;
-	struct drm_display_info *info = &connector->display_info;
-	struct drm_property *prop;
+  struct drm_device *dev = connector->dev;
+  struct drm_display_info *info = &connector->display_info;
+  struct drm_property *prop;
 
-	/* Already set? */
-	if (info->panel_orientation != DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
-		return 0;
+  /* Already set? */
+  if (info->panel_orientation != DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
+    return 0;
 
-	/* Don't attach the property if the orientation is unknown */
-	if (panel_orientation == DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
-		return 0;
+  /* Don't attach the property if the orientation is unknown */
+  if (panel_orientation == DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
+    return 0;
 
-	info->panel_orientation = panel_orientation;
+  info->panel_orientation = panel_orientation;
 
-	prop = dev->mode_config.panel_orientation_property;
-	if (!prop) {
-		prop = drm_property_create_enum(dev, DRM_MODE_PROP_IMMUTABLE,
-				"panel orientation",
-				drm_panel_orientation_enum_list,
-				ARRAY_SIZE(drm_panel_orientation_enum_list));
-		if (!prop)
-			return -ENOMEM;
+  prop = dev->mode_config.panel_orientation_property;
+  if (!prop) {
+    prop = drm_property_create_enum(dev, DRM_MODE_PROP_IMMUTABLE,
+        "panel orientation",
+        drm_panel_orientation_enum_list,
+        ARRAY_SIZE(drm_panel_orientation_enum_list));
+    if (!prop)
+      return -ENOMEM;
 
-		dev->mode_config.panel_orientation_property = prop;
-	}
+    dev->mode_config.panel_orientation_property = prop;
+  }
 
-	drm_object_attach_property(&connector->base, prop,
-				   info->panel_orientation);
-	return 0;
+  drm_object_attach_property(&connector->base, prop,
+           info->panel_orientation);
+  return 0;
 }
 EXPORT_SYMBOL(drm_connector_set_panel_orientation);
 
 /**
  * drm_connector_set_panel_orientation_with_quirk -
- *	set the connector's panel_orientation after checking for quirks
+ *  set the connector's panel_orientation after checking for quirks
  * @connector: connector for which to init the panel-orientation property.
  * @panel_orientation: drm_panel_orientation value to set
  * @width: width in pixels of the panel, used for panel quirk detection
@@ -2308,236 +2308,236 @@ EXPORT_SYMBOL(drm_connector_set_panel_orientation);
  * Zero on success, negative errno on failure.
  */
 int drm_connector_set_panel_orientation_with_quirk(
-	struct drm_connector *connector,
-	enum drm_panel_orientation panel_orientation,
-	int width, int height)
+  struct drm_connector *connector,
+  enum drm_panel_orientation panel_orientation,
+  int width, int height)
 {
-	int orientation_quirk;
+  int orientation_quirk;
 
-	orientation_quirk = drm_get_panel_orientation_quirk(width, height);
-	if (orientation_quirk != DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
-		panel_orientation = orientation_quirk;
+  orientation_quirk = drm_get_panel_orientation_quirk(width, height);
+  if (orientation_quirk != DRM_MODE_PANEL_ORIENTATION_UNKNOWN)
+    panel_orientation = orientation_quirk;
 
-	return drm_connector_set_panel_orientation(connector,
-						   panel_orientation);
+  return drm_connector_set_panel_orientation(connector,
+               panel_orientation);
 }
 EXPORT_SYMBOL(drm_connector_set_panel_orientation_with_quirk);
 
 int drm_connector_set_obj_prop(struct drm_mode_object *obj,
-				    struct drm_property *property,
-				    uint64_t value)
+            struct drm_property *property,
+            uint64_t value)
 {
-	int ret = -EINVAL;
-	struct drm_connector *connector = obj_to_connector(obj);
+  int ret = -EINVAL;
+  struct drm_connector *connector = obj_to_connector(obj);
 
-	/* Do DPMS ourselves */
-	if (property == connector->dev->mode_config.dpms_property) {
-		ret = (*connector->funcs->dpms)(connector, (int)value);
-	} else if (connector->funcs->set_property)
-		ret = connector->funcs->set_property(connector, property, value);
+  /* Do DPMS ourselves */
+  if (property == connector->dev->mode_config.dpms_property) {
+    ret = (*connector->funcs->dpms)(connector, (int)value);
+  } else if (connector->funcs->set_property)
+    ret = connector->funcs->set_property(connector, property, value);
 
-	if (!ret)
-		drm_object_property_set_value(&connector->base, property, value);
-	return ret;
+  if (!ret)
+    drm_object_property_set_value(&connector->base, property, value);
+  return ret;
 }
 
 int drm_connector_property_set_ioctl(struct drm_device *dev,
-				     void *data, struct drm_file *file_priv)
+             void *data, struct drm_file *file_priv)
 {
-	struct drm_mode_connector_set_property *conn_set_prop = data;
-	struct drm_mode_obj_set_property obj_set_prop = {
-		.value = conn_set_prop->value,
-		.prop_id = conn_set_prop->prop_id,
-		.obj_id = conn_set_prop->connector_id,
-		.obj_type = DRM_MODE_OBJECT_CONNECTOR
-	};
+  struct drm_mode_connector_set_property *conn_set_prop = data;
+  struct drm_mode_obj_set_property obj_set_prop = {
+    .value = conn_set_prop->value,
+    .prop_id = conn_set_prop->prop_id,
+    .obj_id = conn_set_prop->connector_id,
+    .obj_type = DRM_MODE_OBJECT_CONNECTOR
+  };
 
-	/* It does all the locking and checking we need */
-	return drm_mode_obj_set_property_ioctl(dev, &obj_set_prop, file_priv);
+  /* It does all the locking and checking we need */
+  return drm_mode_obj_set_property_ioctl(dev, &obj_set_prop, file_priv);
 }
 
 static struct drm_encoder *drm_connector_get_encoder(struct drm_connector *connector)
 {
-	/* For atomic drivers only state objects are synchronously updated and
-	 * protected by modeset locks, so check those first.
-	 */
-	if (connector->state)
-		return connector->state->best_encoder;
-	return connector->encoder;
+  /* For atomic drivers only state objects are synchronously updated and
+   * protected by modeset locks, so check those first.
+   */
+  if (connector->state)
+    return connector->state->best_encoder;
+  return connector->encoder;
 }
 
 static bool
 drm_mode_expose_to_userspace(const struct drm_display_mode *mode,
-			     const struct list_head *modes,
-			     const struct drm_file *file_priv)
+           const struct list_head *modes,
+           const struct drm_file *file_priv)
 {
-	/*
-	 * If user-space hasn't configured the driver to expose the stereo 3D
-	 * modes, don't expose them.
-	 */
-	if (!file_priv->stereo_allowed && drm_mode_is_stereo(mode))
-		return false;
-	/*
-	 * If user-space hasn't configured the driver to expose the modes
-	 * with aspect-ratio, don't expose them. However if such a mode
-	 * is unique, let it be exposed, but reset the aspect-ratio flags
-	 * while preparing the list of user-modes.
-	 */
-	if (!file_priv->aspect_ratio_allowed) {
-		const struct drm_display_mode *mode_itr;
+  /*
+   * If user-space hasn't configured the driver to expose the stereo 3D
+   * modes, don't expose them.
+   */
+  if (!file_priv->stereo_allowed && drm_mode_is_stereo(mode))
+    return false;
+  /*
+   * If user-space hasn't configured the driver to expose the modes
+   * with aspect-ratio, don't expose them. However if such a mode
+   * is unique, let it be exposed, but reset the aspect-ratio flags
+   * while preparing the list of user-modes.
+   */
+  if (!file_priv->aspect_ratio_allowed) {
+    const struct drm_display_mode *mode_itr;
 
-		list_for_each_entry(mode_itr, modes, head) {
-			if (mode_itr->expose_to_userspace &&
-			    drm_mode_match(mode_itr, mode,
-					   DRM_MODE_MATCH_TIMINGS |
-					   DRM_MODE_MATCH_CLOCK |
-					   DRM_MODE_MATCH_FLAGS |
-					   DRM_MODE_MATCH_3D_FLAGS))
-				return false;
-		}
-	}
+    list_for_each_entry(mode_itr, modes, head) {
+      if (mode_itr->expose_to_userspace &&
+          drm_mode_match(mode_itr, mode,
+             DRM_MODE_MATCH_TIMINGS |
+             DRM_MODE_MATCH_CLOCK |
+             DRM_MODE_MATCH_FLAGS |
+             DRM_MODE_MATCH_3D_FLAGS))
+        return false;
+    }
+  }
 
-	return true;
+  return true;
 }
 
 int drm_mode_getconnector(struct drm_device *dev, void *data,
-			  struct drm_file *file_priv)
+        struct drm_file *file_priv)
 {
-	struct drm_mode_get_connector *out_resp = data;
-	struct drm_connector *connector;
-	struct drm_encoder *encoder;
-	struct drm_display_mode *mode;
-	int mode_count = 0;
-	int encoders_count = 0;
-	int ret = 0;
-	int copied = 0;
-	struct drm_mode_modeinfo u_mode;
-	struct drm_mode_modeinfo __user *mode_ptr;
-	uint32_t __user *encoder_ptr;
+  struct drm_mode_get_connector *out_resp = data;
+  struct drm_connector *connector;
+  struct drm_encoder *encoder;
+  struct drm_display_mode *mode;
+  int mode_count = 0;
+  int encoders_count = 0;
+  int ret = 0;
+  int copied = 0;
+  struct drm_mode_modeinfo u_mode;
+  struct drm_mode_modeinfo __user *mode_ptr;
+  uint32_t __user *encoder_ptr;
 
-	if (!drm_core_check_feature(dev, DRIVER_MODESET))
-		return -EOPNOTSUPP;
+  if (!drm_core_check_feature(dev, DRIVER_MODESET))
+    return -EOPNOTSUPP;
 
-	memset(&u_mode, 0, sizeof(struct drm_mode_modeinfo));
+  memset(&u_mode, 0, sizeof(struct drm_mode_modeinfo));
 
-	connector = drm_connector_lookup(dev, file_priv, out_resp->connector_id);
-	if (!connector)
-		return -ENOENT;
+  connector = drm_connector_lookup(dev, file_priv, out_resp->connector_id);
+  if (!connector)
+    return -ENOENT;
 
-	encoders_count = hweight32(connector->possible_encoders);
+  encoders_count = hweight32(connector->possible_encoders);
 
-	if ((out_resp->count_encoders >= encoders_count) && encoders_count) {
-		copied = 0;
-		encoder_ptr = (uint32_t __user *)(unsigned long)(out_resp->encoders_ptr);
+  if ((out_resp->count_encoders >= encoders_count) && encoders_count) {
+    copied = 0;
+    encoder_ptr = (uint32_t __user *)(unsigned long)(out_resp->encoders_ptr);
 
-		drm_connector_for_each_possible_encoder(connector, encoder) {
-			if (put_user(encoder->base.id, encoder_ptr + copied)) {
-				ret = -EFAULT;
-				goto out;
-			}
-			copied++;
-		}
-	}
-	out_resp->count_encoders = encoders_count;
+    drm_connector_for_each_possible_encoder(connector, encoder) {
+      if (put_user(encoder->base.id, encoder_ptr + copied)) {
+        ret = -EFAULT;
+        goto out;
+      }
+      copied++;
+    }
+  }
+  out_resp->count_encoders = encoders_count;
 
-	out_resp->connector_id = connector->base.id;
-	out_resp->connector_type = connector->connector_type;
-	out_resp->connector_type_id = connector->connector_type_id;
+  out_resp->connector_id = connector->base.id;
+  out_resp->connector_type = connector->connector_type;
+  out_resp->connector_type_id = connector->connector_type_id;
 
-	mutex_lock(&dev->mode_config.mutex);
-	if (out_resp->count_modes == 0) {
-		if (drm_is_current_master(file_priv))
-			connector->funcs->fill_modes(connector,
-						     dev->mode_config.max_width,
-						     dev->mode_config.max_height);
-		else
-			drm_dbg_kms(dev, "User-space requested a forced probe on [CONNECTOR:%d:%s] but is not the DRM master, demoting to read-only probe",
-				    connector->base.id, connector->name);
-	}
+  mutex_lock(&dev->mode_config.mutex);
+  if (out_resp->count_modes == 0) {
+    if (drm_is_current_master(file_priv))
+      connector->funcs->fill_modes(connector,
+                 dev->mode_config.max_width,
+                 dev->mode_config.max_height);
+    else
+      drm_dbg_kms(dev, "User-space requested a forced probe on [CONNECTOR:%d:%s] but is not the DRM master, demoting to read-only probe",
+            connector->base.id, connector->name);
+  }
 
-	out_resp->mm_width = connector->display_info.width_mm;
-	out_resp->mm_height = connector->display_info.height_mm;
-	out_resp->subpixel = connector->display_info.subpixel_order;
-	out_resp->connection = connector->status;
+  out_resp->mm_width = connector->display_info.width_mm;
+  out_resp->mm_height = connector->display_info.height_mm;
+  out_resp->subpixel = connector->display_info.subpixel_order;
+  out_resp->connection = connector->status;
 
-	/* delayed so we get modes regardless of pre-fill_modes state */
-	list_for_each_entry(mode, &connector->modes, head) {
-		WARN_ON(mode->expose_to_userspace);
+  /* delayed so we get modes regardless of pre-fill_modes state */
+  list_for_each_entry(mode, &connector->modes, head) {
+    WARN_ON(mode->expose_to_userspace);
 
-		if (drm_mode_expose_to_userspace(mode, &connector->modes,
-						 file_priv)) {
-			mode->expose_to_userspace = true;
-			mode_count++;
-		}
-	}
+    if (drm_mode_expose_to_userspace(mode, &connector->modes,
+             file_priv)) {
+      mode->expose_to_userspace = true;
+      mode_count++;
+    }
+  }
 
-	/*
-	 * This ioctl is called twice, once to determine how much space is
-	 * needed, and the 2nd time to fill it.
-	 */
-	if ((out_resp->count_modes >= mode_count) && mode_count) {
-		copied = 0;
-		mode_ptr = (struct drm_mode_modeinfo __user *)(unsigned long)out_resp->modes_ptr;
-		list_for_each_entry(mode, &connector->modes, head) {
-			if (!mode->expose_to_userspace)
-				continue;
+  /*
+   * This ioctl is called twice, once to determine how much space is
+   * needed, and the 2nd time to fill it.
+   */
+  if ((out_resp->count_modes >= mode_count) && mode_count) {
+    copied = 0;
+    mode_ptr = (struct drm_mode_modeinfo __user *)(unsigned long)out_resp->modes_ptr;
+    list_for_each_entry(mode, &connector->modes, head) {
+      if (!mode->expose_to_userspace)
+        continue;
 
-			/* Clear the tag for the next time around */
-			mode->expose_to_userspace = false;
+      /* Clear the tag for the next time around */
+      mode->expose_to_userspace = false;
 
-			drm_mode_convert_to_umode(&u_mode, mode);
-			/*
-			 * Reset aspect ratio flags of user-mode, if modes with
-			 * aspect-ratio are not supported.
-			 */
-			if (!file_priv->aspect_ratio_allowed)
-				u_mode.flags &= ~DRM_MODE_FLAG_PIC_AR_MASK;
-			if (copy_to_user(mode_ptr + copied,
-					 &u_mode, sizeof(u_mode))) {
-				ret = -EFAULT;
+      drm_mode_convert_to_umode(&u_mode, mode);
+      /*
+       * Reset aspect ratio flags of user-mode, if modes with
+       * aspect-ratio are not supported.
+       */
+      if (!file_priv->aspect_ratio_allowed)
+        u_mode.flags &= ~DRM_MODE_FLAG_PIC_AR_MASK;
+      if (copy_to_user(mode_ptr + copied,
+           &u_mode, sizeof(u_mode))) {
+        ret = -EFAULT;
 
-				/*
-				 * Clear the tag for the rest of
-				 * the modes for the next time around.
-				 */
-				list_for_each_entry_continue(mode, &connector->modes, head)
-					mode->expose_to_userspace = false;
+        /*
+         * Clear the tag for the rest of
+         * the modes for the next time around.
+         */
+        list_for_each_entry_continue(mode, &connector->modes, head)
+          mode->expose_to_userspace = false;
 
-				mutex_unlock(&dev->mode_config.mutex);
+        mutex_unlock(&dev->mode_config.mutex);
 
-				goto out;
-			}
-			copied++;
-		}
-	} else {
-		/* Clear the tag for the next time around */
-		list_for_each_entry(mode, &connector->modes, head)
-			mode->expose_to_userspace = false;
-	}
+        goto out;
+      }
+      copied++;
+    }
+  } else {
+    /* Clear the tag for the next time around */
+    list_for_each_entry(mode, &connector->modes, head)
+      mode->expose_to_userspace = false;
+  }
 
-	out_resp->count_modes = mode_count;
-	mutex_unlock(&dev->mode_config.mutex);
+  out_resp->count_modes = mode_count;
+  mutex_unlock(&dev->mode_config.mutex);
 
-	drm_modeset_lock(&dev->mode_config.connection_mutex, NULL);
-	encoder = drm_connector_get_encoder(connector);
-	if (encoder)
-		out_resp->encoder_id = encoder->base.id;
-	else
-		out_resp->encoder_id = 0;
+  drm_modeset_lock(&dev->mode_config.connection_mutex, NULL);
+  encoder = drm_connector_get_encoder(connector);
+  if (encoder)
+    out_resp->encoder_id = encoder->base.id;
+  else
+    out_resp->encoder_id = 0;
 
-	/* Only grab properties after probing, to make sure EDID and other
-	 * properties reflect the latest status.
-	 */
-	ret = drm_mode_object_get_properties(&connector->base, file_priv->atomic,
-			(uint32_t __user *)(unsigned long)(out_resp->props_ptr),
-			(uint64_t __user *)(unsigned long)(out_resp->prop_values_ptr),
-			&out_resp->count_props);
-	drm_modeset_unlock(&dev->mode_config.connection_mutex);
+  /* Only grab properties after probing, to make sure EDID and other
+   * properties reflect the latest status.
+   */
+  ret = drm_mode_object_get_properties(&connector->base, file_priv->atomic,
+      (uint32_t __user *)(unsigned long)(out_resp->props_ptr),
+      (uint64_t __user *)(unsigned long)(out_resp->prop_values_ptr),
+      &out_resp->count_props);
+  drm_modeset_unlock(&dev->mode_config.connection_mutex);
 
 out:
-	drm_connector_put(connector);
+  drm_connector_put(connector);
 
-	return ret;
+  return ret;
 }
 
 
@@ -2555,13 +2555,13 @@ out:
 
 static void drm_tile_group_free(struct kref *kref)
 {
-	struct drm_tile_group *tg = container_of(kref, struct drm_tile_group, refcount);
-	struct drm_device *dev = tg->dev;
+  struct drm_tile_group *tg = container_of(kref, struct drm_tile_group, refcount);
+  struct drm_device *dev = tg->dev;
 
-	mutex_lock(&dev->mode_config.idr_mutex);
-	idr_remove(&dev->mode_config.tile_idr, tg->id);
-	mutex_unlock(&dev->mode_config.idr_mutex);
-	kfree(tg);
+  mutex_lock(&dev->mode_config.idr_mutex);
+  idr_remove(&dev->mode_config.tile_idr, tg->id);
+  mutex_unlock(&dev->mode_config.idr_mutex);
+  kfree(tg);
 }
 
 /**
@@ -2572,9 +2572,9 @@ static void drm_tile_group_free(struct kref *kref)
  * drop reference to tile group and free if 0.
  */
 void drm_mode_put_tile_group(struct drm_device *dev,
-			     struct drm_tile_group *tg)
+           struct drm_tile_group *tg)
 {
-	kref_put(&tg->refcount, drm_tile_group_free);
+  kref_put(&tg->refcount, drm_tile_group_free);
 }
 EXPORT_SYMBOL(drm_mode_put_tile_group);
 
@@ -2589,22 +2589,22 @@ EXPORT_SYMBOL(drm_mode_put_tile_group);
  * tile group or NULL if not found.
  */
 struct drm_tile_group *drm_mode_get_tile_group(struct drm_device *dev,
-					       const char topology[8])
+                 const char topology[8])
 {
-	struct drm_tile_group *tg;
-	int id;
+  struct drm_tile_group *tg;
+  int id;
 
-	mutex_lock(&dev->mode_config.idr_mutex);
-	idr_for_each_entry(&dev->mode_config.tile_idr, tg, id) {
-		if (!memcmp(tg->group_data, topology, 8)) {
-			if (!kref_get_unless_zero(&tg->refcount))
-				tg = NULL;
-			mutex_unlock(&dev->mode_config.idr_mutex);
-			return tg;
-		}
-	}
-	mutex_unlock(&dev->mode_config.idr_mutex);
-	return NULL;
+  mutex_lock(&dev->mode_config.idr_mutex);
+  idr_for_each_entry(&dev->mode_config.tile_idr, tg, id) {
+    if (!memcmp(tg->group_data, topology, 8)) {
+      if (!kref_get_unless_zero(&tg->refcount))
+        tg = NULL;
+      mutex_unlock(&dev->mode_config.idr_mutex);
+      return tg;
+    }
+  }
+  mutex_unlock(&dev->mode_config.idr_mutex);
+  return NULL;
 }
 EXPORT_SYMBOL(drm_mode_get_tile_group);
 
@@ -2620,29 +2620,29 @@ EXPORT_SYMBOL(drm_mode_get_tile_group);
  * new tile group or NULL.
  */
 struct drm_tile_group *drm_mode_create_tile_group(struct drm_device *dev,
-						  const char topology[8])
+              const char topology[8])
 {
-	struct drm_tile_group *tg;
-	int ret;
+  struct drm_tile_group *tg;
+  int ret;
 
-	tg = kzalloc(sizeof(*tg), GFP_KERNEL);
-	if (!tg)
-		return NULL;
+  tg = kzalloc(sizeof(*tg), GFP_KERNEL);
+  if (!tg)
+    return NULL;
 
-	kref_init(&tg->refcount);
-	memcpy(tg->group_data, topology, 8);
-	tg->dev = dev;
+  kref_init(&tg->refcount);
+  memcpy(tg->group_data, topology, 8);
+  tg->dev = dev;
 
-	mutex_lock(&dev->mode_config.idr_mutex);
-	ret = idr_alloc(&dev->mode_config.tile_idr, tg, 1, 0, GFP_KERNEL);
-	if (ret >= 0) {
-		tg->id = ret;
-	} else {
-		kfree(tg);
-		tg = NULL;
-	}
+  mutex_lock(&dev->mode_config.idr_mutex);
+  ret = idr_alloc(&dev->mode_config.tile_idr, tg, 1, 0, GFP_KERNEL);
+  if (ret >= 0) {
+    tg->id = ret;
+  } else {
+    kfree(tg);
+    tg = NULL;
+  }
 
-	mutex_unlock(&dev->mode_config.idr_mutex);
-	return tg;
+  mutex_unlock(&dev->mode_config.idr_mutex);
+  return tg;
 }
 EXPORT_SYMBOL(drm_mode_create_tile_group);

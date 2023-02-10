@@ -33,24 +33,24 @@
 
 
 struct dc_bios *dal_bios_parser_create(
-	struct bp_init_data *init,
-	enum dce_version dce_version)
+  struct bp_init_data *init,
+  enum dce_version dce_version)
 {
-	struct dc_bios *bios = NULL;
+  struct dc_bios *bios = NULL;
 
-	bios = firmware_parser_create(init, dce_version);
+  bios = firmware_parser_create(init, dce_version);
 
-	/* Fall back to old bios parser for older asics */
-	if (bios == NULL)
-		bios = bios_parser_create(init, dce_version);
+  /* Fall back to old bios parser for older asics */
+  if (bios == NULL)
+    bios = bios_parser_create(init, dce_version);
 
-	return bios;
+  return bios;
 }
 
 void dal_bios_parser_destroy(struct dc_bios **dcb)
 {
-	struct dc_bios *bios = *dcb;
+  struct dc_bios *bios = *dcb;
 
-	bios->funcs->bios_parser_destroy(dcb);
+  bios->funcs->bios_parser_destroy(dcb);
 }
 

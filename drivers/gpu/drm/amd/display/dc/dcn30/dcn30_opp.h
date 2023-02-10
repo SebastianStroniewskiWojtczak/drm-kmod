@@ -29,8 +29,8 @@
 
 
 #define OPP_REG_LIST_DCN30(id) \
-	OPP_REG_LIST_DCN10(id), \
-	OPP_DPG_REG_LIST(id), \
-	SRI(FMT_422_CONTROL, FMT, id)
+  OPP_REG_LIST_DCN10(id), \
+  OPP_DPG_REG_LIST(id), \
+  SRI(FMT_422_CONTROL, FMT, id)
 
 #endif

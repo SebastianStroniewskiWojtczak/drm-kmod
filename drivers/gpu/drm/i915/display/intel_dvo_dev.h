@@ -30,104 +30,104 @@
 #include "i915_reg.h"
 
 struct intel_dvo_device {
-	const char *name;
-	int type;
-	/* DVOA/B/C output register */
-	i915_reg_t dvo_reg;
-	i915_reg_t dvo_srcdim_reg;
-	/* GPIO register used for i2c bus to control this device */
-	u32 gpio;
-	int slave_addr;
+  const char *name;
+  int type;
+  /* DVOA/B/C output register */
+  i915_reg_t dvo_reg;
+  i915_reg_t dvo_srcdim_reg;
+  /* GPIO register used for i2c bus to control this device */
+  u32 gpio;
+  int slave_addr;
 
-	const struct intel_dvo_dev_ops *dev_ops;
-	void *dev_priv;
-	struct i2c_adapter *i2c_bus;
+  const struct intel_dvo_dev_ops *dev_ops;
+  void *dev_priv;
+  struct i2c_adapter *i2c_bus;
 };
 
 struct intel_dvo_dev_ops {
-	/*
-	 * Initialize the device at startup time.
-	 * Returns NULL if the device does not exist.
-	 */
-	bool (*init)(struct intel_dvo_device *dvo,
-		     struct i2c_adapter *i2cbus);
+  /*
+   * Initialize the device at startup time.
+   * Returns NULL if the device does not exist.
+   */
+  bool (*init)(struct intel_dvo_device *dvo,
+         struct i2c_adapter *i2cbus);
 
-	/*
-	 * Called to allow the output a chance to create properties after the
-	 * RandR objects have been created.
-	 */
-	void (*create_resources)(struct intel_dvo_device *dvo);
+  /*
+   * Called to allow the output a chance to create properties after the
+   * RandR objects have been created.
+   */
+  void (*create_resources)(struct intel_dvo_device *dvo);
 
-	/*
-	 * Turn on/off output.
-	 *
-	 * Because none of our dvo drivers support an intermediate power levels,
-	 * we don't expose this in the interfac.
-	 */
-	void (*dpms)(struct intel_dvo_device *dvo, bool enable);
+  /*
+   * Turn on/off output.
+   *
+   * Because none of our dvo drivers support an intermediate power levels,
+   * we don't expose this in the interfac.
+   */
+  void (*dpms)(struct intel_dvo_device *dvo, bool enable);
 
-	/*
-	 * Callback for testing a video mode for a given output.
-	 *
-	 * This function should only check for cases where a mode can't
-	 * be supported on the output specifically, and not represent
-	 * generic CRTC limitations.
-	 *
-	 * \return MODE_OK if the mode is valid, or another MODE_* otherwise.
-	 */
-	int (*mode_valid)(struct intel_dvo_device *dvo,
-			  struct drm_display_mode *mode);
+  /*
+   * Callback for testing a video mode for a given output.
+   *
+   * This function should only check for cases where a mode can't
+   * be supported on the output specifically, and not represent
+   * generic CRTC limitations.
+   *
+   * \return MODE_OK if the mode is valid, or another MODE_* otherwise.
+   */
+  int (*mode_valid)(struct intel_dvo_device *dvo,
+        struct drm_display_mode *mode);
 
-	/*
-	 * Callback for preparing mode changes on an output
-	 */
-	void (*prepare)(struct intel_dvo_device *dvo);
+  /*
+   * Callback for preparing mode changes on an output
+   */
+  void (*prepare)(struct intel_dvo_device *dvo);
 
-	/*
-	 * Callback for committing mode changes on an output
-	 */
-	void (*commit)(struct intel_dvo_device *dvo);
+  /*
+   * Callback for committing mode changes on an output
+   */
+  void (*commit)(struct intel_dvo_device *dvo);
 
-	/*
-	 * Callback for setting up a video mode after fixups have been made.
-	 *
-	 * This is only called while the output is disabled.  The dpms callback
-	 * must be all that's necessary for the output, to turn the output on
-	 * after this function is called.
-	 */
-	void (*mode_set)(struct intel_dvo_device *dvo,
-			 const struct drm_display_mode *mode,
-			 const struct drm_display_mode *adjusted_mode);
+  /*
+   * Callback for setting up a video mode after fixups have been made.
+   *
+   * This is only called while the output is disabled.  The dpms callback
+   * must be all that's necessary for the output, to turn the output on
+   * after this function is called.
+   */
+  void (*mode_set)(struct intel_dvo_device *dvo,
+       const struct drm_display_mode *mode,
+       const struct drm_display_mode *adjusted_mode);
 
-	/*
-	 * Probe for a connected output, and return detect_status.
-	 */
-	enum drm_connector_status (*detect)(struct intel_dvo_device *dvo);
+  /*
+   * Probe for a connected output, and return detect_status.
+   */
+  enum drm_connector_status (*detect)(struct intel_dvo_device *dvo);
 
-	/*
-	 * Probe the current hw status, returning true if the connected output
-	 * is active.
-	 */
-	bool (*get_hw_state)(struct intel_dvo_device *dev);
+  /*
+   * Probe the current hw status, returning true if the connected output
+   * is active.
+   */
+  bool (*get_hw_state)(struct intel_dvo_device *dev);
 
-	/**
-	 * Query the device for the modes it provides.
-	 *
-	 * This function may also update MonInfo, mm_width, and mm_height.
-	 *
-	 * \return singly-linked list of modes or NULL if no modes found.
-	 */
-	struct drm_display_mode *(*get_modes)(struct intel_dvo_device *dvo);
+  /**
+   * Query the device for the modes it provides.
+   *
+   * This function may also update MonInfo, mm_width, and mm_height.
+   *
+   * \return singly-linked list of modes or NULL if no modes found.
+   */
+  struct drm_display_mode *(*get_modes)(struct intel_dvo_device *dvo);
 
-	/**
-	 * Clean up driver-specific bits of the output
-	 */
-	void (*destroy) (struct intel_dvo_device *dvo);
+  /**
+   * Clean up driver-specific bits of the output
+   */
+  void (*destroy) (struct intel_dvo_device *dvo);
 
-	/**
-	 * Debugging hook to dump device registers to log file
-	 */
-	void (*dump_regs)(struct intel_dvo_device *dvo);
+  /**
+   * Debugging hook to dump device registers to log file
+   */
+  void (*dump_regs)(struct intel_dvo_device *dvo);
 };
 
 extern const struct intel_dvo_dev_ops sil164_ops;

@@ -1371,21 +1371,21 @@ typedef struct _DIG_TRANSMITTER_CONTROL_PARAMETERS_V3
 typedef struct _ATOM_DP_VS_MODE_V4
 {
   UCHAR ucLaneSel;
- 	union
-	{
- 	  UCHAR ucLaneSet;
- 	  struct {
+   union
+  {
+     UCHAR ucLaneSet;
+     struct {
 #if ATOM_BIG_ENDIAN
- 		  UCHAR ucPOST_CURSOR2:2;         //Bit[7:6] Post Cursor2 Level      <= New in V4
- 		  UCHAR ucPRE_EMPHASIS:3;         //Bit[5:3] Pre-emphasis Level
- 		  UCHAR ucVOLTAGE_SWING:3;        //Bit[2:0] Voltage Swing Level
+       UCHAR ucPOST_CURSOR2:2;         //Bit[7:6] Post Cursor2 Level      <= New in V4
+       UCHAR ucPRE_EMPHASIS:3;         //Bit[5:3] Pre-emphasis Level
+       UCHAR ucVOLTAGE_SWING:3;        //Bit[2:0] Voltage Swing Level
 #else
- 		  UCHAR ucVOLTAGE_SWING:3;        //Bit[2:0] Voltage Swing Level
- 		  UCHAR ucPRE_EMPHASIS:3;         //Bit[5:3] Pre-emphasis Level
- 		  UCHAR ucPOST_CURSOR2:2;         //Bit[7:6] Post Cursor2 Level      <= New in V4
+       UCHAR ucVOLTAGE_SWING:3;        //Bit[2:0] Voltage Swing Level
+       UCHAR ucPRE_EMPHASIS:3;         //Bit[5:3] Pre-emphasis Level
+       UCHAR ucPOST_CURSOR2:2;         //Bit[7:6] Post Cursor2 Level      <= New in V4
 #endif
-		};
-	};
+    };
+  };
 }ATOM_DP_VS_MODE_V4;
 
 typedef struct _ATOM_DIG_TRANSMITTER_CONFIG_V4
@@ -7448,11 +7448,11 @@ typedef struct _ATOM_MEMORY_VENDOR_BLOCK{
 
 typedef struct _ATOM_MEMORY_SETTING_ID_CONFIG{
 #if ATOM_BIG_ENDIAN
-	ULONG												ucMemBlkId:8;
-	ULONG												ulMemClockRange:24;
+  ULONG                        ucMemBlkId:8;
+  ULONG                        ulMemClockRange:24;
 #else
-	ULONG												ulMemClockRange:24;
-	ULONG												ucMemBlkId:8;
+  ULONG                        ulMemClockRange:24;
+  ULONG                        ucMemBlkId:8;
 #endif
 }ATOM_MEMORY_SETTING_ID_CONFIG;
 
@@ -9212,17 +9212,17 @@ typedef struct  _ATOM_POWERPLAY_INFO_V3
 
 typedef struct _ATOM_HOLE_INFO
 {
-	USHORT	usOffset;		// offset of the hole ( from the start of the binary )
-	USHORT	usLength;		// length of the hole ( in bytes )
+  USHORT  usOffset;    // offset of the hole ( from the start of the binary )
+  USHORT  usLength;    // length of the hole ( in bytes )
 }ATOM_HOLE_INFO;
 
 typedef struct _ATOM_SERVICE_DESCRIPTION
 {
    UCHAR   ucRevision;                               // Holes set revision
    UCHAR   ucAlgorithm;                              // Hash algorithm
-   UCHAR   ucSignatureType;							 // Signature type ( 0 - no signature, 1 - test, 2 - production )
+   UCHAR   ucSignatureType;               // Signature type ( 0 - no signature, 1 - test, 2 - production )
    UCHAR   ucReserved;
-   USHORT  usSigOffset;							     // Signature offset ( from the start of the binary )
+   USHORT  usSigOffset;                   // Signature offset ( from the start of the binary )
    USHORT  usSigLength;                              // Signature length
 }ATOM_SERVICE_DESCRIPTION;
 
@@ -9230,9 +9230,9 @@ typedef struct _ATOM_SERVICE_DESCRIPTION
 typedef struct _ATOM_SERVICE_INFO
 {
       ATOM_COMMON_TABLE_HEADER      asHeader;
-      ATOM_SERVICE_DESCRIPTION		asDescr;
-	  UCHAR							ucholesNo;		// number of holes that follow
-	  ATOM_HOLE_INFO				holes[1];       // array of hole descriptions
+      ATOM_SERVICE_DESCRIPTION    asDescr;
+    UCHAR              ucholesNo;    // number of holes that follow
+    ATOM_HOLE_INFO        holes[1];       // array of hole descriptions
 }ATOM_SERVICE_INFO;
 
 

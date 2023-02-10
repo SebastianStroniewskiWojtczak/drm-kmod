@@ -188,8 +188,8 @@ typedef struct RV770_SMC_STATETABLE RV770_SMC_STATETABLE;
 #define RV770_SMC_SOFT_REGISTER_is_asic_lombok          0xA0
 
 int rv770_copy_bytes_to_smc(struct radeon_device *rdev,
-			    u16 smc_start_address, const u8 *src,
-			    u16 byte_count, u16 limit);
+          u16 smc_start_address, const u8 *src,
+          u16 byte_count, u16 limit);
 void rv770_start_smc(struct radeon_device *rdev);
 void rv770_reset_smc(struct radeon_device *rdev);
 void rv770_stop_smc_clock(struct radeon_device *rdev);
@@ -198,10 +198,10 @@ bool rv770_is_smc_running(struct radeon_device *rdev);
 PPSMC_Result rv770_send_msg_to_smc(struct radeon_device *rdev, PPSMC_Msg msg);
 PPSMC_Result rv770_wait_for_smc_inactive(struct radeon_device *rdev);
 int rv770_read_smc_sram_dword(struct radeon_device *rdev,
-			      u16 smc_address, u32 *value, u16 limit);
+            u16 smc_address, u32 *value, u16 limit);
 int rv770_write_smc_sram_dword(struct radeon_device *rdev,
-			       u16 smc_address, u32 value, u16 limit);
+             u16 smc_address, u32 value, u16 limit);
 int rv770_load_smc_ucode(struct radeon_device *rdev,
-			 u16 limit);
+       u16 limit);
 
 #endif

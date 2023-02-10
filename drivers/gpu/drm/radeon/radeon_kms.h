@@ -36,4 +36,4 @@ void radeon_driver_irq_preinstall_kms(struct drm_device *dev);
 int radeon_driver_irq_postinstall_kms(struct drm_device *dev);
 void radeon_driver_irq_uninstall_kms(struct drm_device *dev);
 
-#endif				/* __RADEON_KMS_H__ */
+#endif        /* __RADEON_KMS_H__ */

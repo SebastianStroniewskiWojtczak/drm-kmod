@@ -62,9 +62,9 @@ extern struct ww_class reservation_ww_class;
  * @shared: shared fence table
  */
 struct dma_resv_list {
-	struct rcu_head rcu;
-	u32 shared_count, shared_max;
-	struct dma_fence __rcu *shared[];
+  struct rcu_head rcu;
+  u32 shared_count, shared_max;
+  struct dma_fence __rcu *shared[];
 };
 
 /**
@@ -75,14 +75,14 @@ struct dma_resv_list {
  * @fence: list of current shared fences
  */
 struct dma_resv {
-	struct ww_mutex lock;
-	seqcount_ww_mutex_t seq;
+  struct ww_mutex lock;
+  seqcount_ww_mutex_t seq;
 #ifdef __FreeBSD__
-	struct rwlock rw;
+  struct rwlock rw;
 #endif
 
-	struct dma_fence __rcu *fence_excl;
-	struct dma_resv_list __rcu *fence;
+  struct dma_fence __rcu *fence_excl;
+  struct dma_resv_list __rcu *fence;
 };
 
 #define dma_resv_held(obj) lockdep_is_held(&(obj)->lock.base)
@@ -110,9 +110,9 @@ static inline void dma_resv_reset_shared_max(struct dma_resv *obj) {}
  * object may be locked by itself by passing NULL as @ctx.
  */
 static inline int dma_resv_lock(struct dma_resv *obj,
-				struct ww_acquire_ctx *ctx)
+        struct ww_acquire_ctx *ctx)
 {
-	return ww_mutex_lock(&obj->lock, ctx);
+  return ww_mutex_lock(&obj->lock, ctx);
 }
 
 /**
@@ -131,9 +131,9 @@ static inline int dma_resv_lock(struct dma_resv *obj,
  * object may be locked by itself by passing NULL as @ctx.
  */
 static inline int dma_resv_lock_interruptible(struct dma_resv *obj,
-					      struct ww_acquire_ctx *ctx)
+                struct ww_acquire_ctx *ctx)
 {
-	return ww_mutex_lock_interruptible(&obj->lock, ctx);
+  return ww_mutex_lock_interruptible(&obj->lock, ctx);
 }
 
 /**
@@ -146,9 +146,9 @@ static inline int dma_resv_lock_interruptible(struct dma_resv *obj,
  * well.
  */
 static inline void dma_resv_lock_slow(struct dma_resv *obj,
-				      struct ww_acquire_ctx *ctx)
+              struct ww_acquire_ctx *ctx)
 {
-	ww_mutex_lock_slow(&obj->lock, ctx);
+  ww_mutex_lock_slow(&obj->lock, ctx);
 }
 
 /**
@@ -162,9 +162,9 @@ static inline void dma_resv_lock_slow(struct dma_resv *obj,
  * dma_resv_lock_interruptible() as well.
  */
 static inline int dma_resv_lock_slow_interruptible(struct dma_resv *obj,
-						   struct ww_acquire_ctx *ctx)
+               struct ww_acquire_ctx *ctx)
 {
-	return ww_mutex_lock_slow_interruptible(&obj->lock, ctx);
+  return ww_mutex_lock_slow_interruptible(&obj->lock, ctx);
 }
 
 /**
@@ -183,7 +183,7 @@ static inline int dma_resv_lock_slow_interruptible(struct dma_resv *obj,
  */
 static inline bool __must_check dma_resv_trylock(struct dma_resv *obj)
 {
-	return ww_mutex_trylock(&obj->lock);
+  return ww_mutex_trylock(&obj->lock);
 }
 
 /**
@@ -194,7 +194,7 @@ static inline bool __must_check dma_resv_trylock(struct dma_resv *obj)
  */
 static inline bool dma_resv_is_locked(struct dma_resv *obj)
 {
-	return ww_mutex_is_locked(&obj->lock);
+  return ww_mutex_is_locked(&obj->lock);
 }
 
 /**
@@ -206,7 +206,7 @@ static inline bool dma_resv_is_locked(struct dma_resv *obj)
  */
 static inline struct ww_acquire_ctx *dma_resv_locking_ctx(struct dma_resv *obj)
 {
-	return READ_ONCE(obj->lock.ctx);
+  return READ_ONCE(obj->lock.ctx);
 }
 
 /**
@@ -217,8 +217,8 @@ static inline struct ww_acquire_ctx *dma_resv_locking_ctx(struct dma_resv *obj)
  */
 static inline void dma_resv_unlock(struct dma_resv *obj)
 {
-	dma_resv_reset_shared_max(obj);
-	ww_mutex_unlock(&obj->lock);
+  dma_resv_reset_shared_max(obj);
+  ww_mutex_unlock(&obj->lock);
 }
 
 /**
@@ -235,7 +235,7 @@ static inline void dma_resv_unlock(struct dma_resv *obj)
 static inline struct dma_fence *
 dma_resv_excl_fence(struct dma_resv *obj)
 {
-	return rcu_dereference_check(obj->fence_excl, dma_resv_held(obj));
+  return rcu_dereference_check(obj->fence_excl, dma_resv_held(obj));
 }
 
 /**
@@ -252,16 +252,16 @@ dma_resv_excl_fence(struct dma_resv *obj)
 static inline struct dma_fence *
 dma_resv_get_excl_unlocked(struct dma_resv *obj)
 {
-	struct dma_fence *fence;
+  struct dma_fence *fence;
 
-	if (!rcu_access_pointer(obj->fence_excl))
-		return NULL;
+  if (!rcu_access_pointer(obj->fence_excl))
+    return NULL;
 
-	rcu_read_lock();
-	fence = dma_fence_get_rcu_safe(&obj->fence_excl);
-	rcu_read_unlock();
+  rcu_read_lock();
+  fence = dma_fence_get_rcu_safe(&obj->fence_excl);
+  rcu_read_unlock();
 
-	return fence;
+  return fence;
 }
 
 /**
@@ -274,7 +274,7 @@ dma_resv_get_excl_unlocked(struct dma_resv *obj)
  */
 static inline struct dma_resv_list *dma_resv_shared_list(struct dma_resv *obj)
 {
-	return rcu_dereference_check(obj->fence, dma_resv_held(obj));
+  return rcu_dereference_check(obj->fence, dma_resv_held(obj));
 }
 
 void dma_resv_init(struct dma_resv *obj);
@@ -283,10 +283,10 @@ int dma_resv_reserve_shared(struct dma_resv *obj, unsigned int num_fences);
 void dma_resv_add_shared_fence(struct dma_resv *obj, struct dma_fence *fence);
 void dma_resv_add_excl_fence(struct dma_resv *obj, struct dma_fence *fence);
 int dma_resv_get_fences(struct dma_resv *obj, struct dma_fence **pfence_excl,
-			unsigned *pshared_count, struct dma_fence ***pshared);
+      unsigned *pshared_count, struct dma_fence ***pshared);
 int dma_resv_copy_fences(struct dma_resv *dst, struct dma_resv *src);
 long dma_resv_wait_timeout(struct dma_resv *obj, bool wait_all, bool intr,
-			   unsigned long timeout);
+         unsigned long timeout);
 bool dma_resv_test_signaled(struct dma_resv *obj, bool test_all);
 
 #endif /* _LINUX_RESERVATION_H */

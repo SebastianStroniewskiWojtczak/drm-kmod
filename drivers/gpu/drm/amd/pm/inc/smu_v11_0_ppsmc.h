@@ -60,7 +60,7 @@
 //BACO/BAMACO/BOMACO
 #define PPSMC_MSG_EnterBaco                      0x18
 #define PPSMC_MSG_ExitBaco                       0x19
-#define PPSMC_MSG_ArmD3						            	 0x46
+#define PPSMC_MSG_ArmD3                           0x46
 
 //DPM
 #define PPSMC_MSG_SetSoftMinByFreq               0x1A
@@ -82,10 +82,10 @@
 //Power Gating
 #define PPSMC_MSG_AllowGfxOff                    0x29
 #define PPSMC_MSG_DisallowGfxOff                 0x2A
-#define PPSMC_MSG_PowerUpVcn					           0x2B
-#define PPSMC_MSG_PowerDownVcn					         0x2C	
+#define PPSMC_MSG_PowerUpVcn                     0x2B
+#define PPSMC_MSG_PowerDownVcn                   0x2C  
 #define PPSMC_MSG_PowerUpJpeg                    0x2D
-#define PPSMC_MSG_PowerDownJpeg					         0x2E
+#define PPSMC_MSG_PowerDownJpeg                   0x2E
 //reserve 0x29 to 0x30 for PG harvesting TBD
 
 //Resets

@@ -47,35 +47,35 @@ extern "C" {
 #define NOUVEAU_GEM_TILE_NONCONTIG   0x00000008
 
 struct drm_nouveau_gem_info {
-	__u32 handle;
-	__u32 domain;
-	__u64 size;
-	__u64 offset;
-	__u64 map_handle;
-	__u32 tile_mode;
-	__u32 tile_flags;
+  __u32 handle;
+  __u32 domain;
+  __u64 size;
+  __u64 offset;
+  __u64 map_handle;
+  __u32 tile_mode;
+  __u32 tile_flags;
 };
 
 struct drm_nouveau_gem_new {
-	struct drm_nouveau_gem_info info;
-	__u32 channel_hint;
-	__u32 align;
+  struct drm_nouveau_gem_info info;
+  __u32 channel_hint;
+  __u32 align;
 };
 
 #define NOUVEAU_GEM_MAX_BUFFERS 1024
 struct drm_nouveau_gem_pushbuf_bo_presumed {
-	__u32 valid;
-	__u32 domain;
-	__u64 offset;
+  __u32 valid;
+  __u32 domain;
+  __u64 offset;
 };
 
 struct drm_nouveau_gem_pushbuf_bo {
-	__u64 user_priv;
-	__u32 handle;
-	__u32 read_domains;
-	__u32 write_domains;
-	__u32 valid_domains;
-	struct drm_nouveau_gem_pushbuf_bo_presumed presumed;
+  __u64 user_priv;
+  __u32 handle;
+  __u32 read_domains;
+  __u32 write_domains;
+  __u32 valid_domains;
+  struct drm_nouveau_gem_pushbuf_bo_presumed presumed;
 };
 
 #define NOUVEAU_GEM_RELOC_LOW  (1 << 0)
@@ -83,47 +83,47 @@ struct drm_nouveau_gem_pushbuf_bo {
 #define NOUVEAU_GEM_RELOC_OR   (1 << 2)
 #define NOUVEAU_GEM_MAX_RELOCS 1024
 struct drm_nouveau_gem_pushbuf_reloc {
-	__u32 reloc_bo_index;
-	__u32 reloc_bo_offset;
-	__u32 bo_index;
-	__u32 flags;
-	__u32 data;
-	__u32 vor;
-	__u32 tor;
+  __u32 reloc_bo_index;
+  __u32 reloc_bo_offset;
+  __u32 bo_index;
+  __u32 flags;
+  __u32 data;
+  __u32 vor;
+  __u32 tor;
 };
 
 #define NOUVEAU_GEM_MAX_PUSH 512
 struct drm_nouveau_gem_pushbuf_push {
-	__u32 bo_index;
-	__u32 pad;
-	__u64 offset;
-	__u64 length;
+  __u32 bo_index;
+  __u32 pad;
+  __u64 offset;
+  __u64 length;
 };
 
 struct drm_nouveau_gem_pushbuf {
-	__u32 channel;
-	__u32 nr_buffers;
-	__u64 buffers;
-	__u32 nr_relocs;
-	__u32 nr_push;
-	__u64 relocs;
-	__u64 push;
-	__u32 suffix0;
-	__u32 suffix1;
+  __u32 channel;
+  __u32 nr_buffers;
+  __u64 buffers;
+  __u32 nr_relocs;
+  __u32 nr_push;
+  __u64 relocs;
+  __u64 push;
+  __u32 suffix0;
+  __u32 suffix1;
 #define NOUVEAU_GEM_PUSHBUF_SYNC                                    (1ULL << 0)
-	__u64 vram_available;
-	__u64 gart_available;
+  __u64 vram_available;
+  __u64 gart_available;
 };
 
 #define NOUVEAU_GEM_CPU_PREP_NOWAIT                                  0x00000001
 #define NOUVEAU_GEM_CPU_PREP_WRITE                                   0x00000004
 struct drm_nouveau_gem_cpu_prep {
-	__u32 handle;
-	__u32 flags;
+  __u32 handle;
+  __u32 flags;
 };
 
 struct drm_nouveau_gem_cpu_fini {
-	__u32 handle;
+  __u32 handle;
 };
 
 #define DRM_NOUVEAU_GETPARAM           0x00 /* deprecated */
@@ -143,19 +143,19 @@ struct drm_nouveau_gem_cpu_fini {
 #define DRM_NOUVEAU_GEM_INFO           0x44
 
 struct drm_nouveau_svm_init {
-	__u64 unmanaged_addr;
-	__u64 unmanaged_size;
+  __u64 unmanaged_addr;
+  __u64 unmanaged_size;
 };
 
 struct drm_nouveau_svm_bind {
-	__u64 header;
-	__u64 va_start;
-	__u64 va_end;
-	__u64 npages;
-	__u64 stride;
-	__u64 result;
-	__u64 reserved0;
-	__u64 reserved1;
+  __u64 header;
+  __u64 va_start;
+  __u64 va_end;
+  __u64 npages;
+  __u64 stride;
+  __u64 result;
+  __u64 reserved0;
+  __u64 reserved1;
 };
 
 #define NOUVEAU_SVM_BIND_COMMAND_SHIFT          0

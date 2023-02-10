@@ -22,13 +22,13 @@ int intel_region_ttm_init(struct intel_memory_region *mem);
 void intel_region_ttm_fini(struct intel_memory_region *mem);
 
 struct sg_table *intel_region_ttm_node_to_st(struct intel_memory_region *mem,
-					     struct ttm_resource *res);
+               struct ttm_resource *res);
 
 struct ttm_resource *
 intel_region_ttm_node_alloc(struct intel_memory_region *mem,
-			    resource_size_t size,
-			    unsigned int flags);
+          resource_size_t size,
+          unsigned int flags);
 
 void intel_region_ttm_node_free(struct intel_memory_region *mem,
-				struct ttm_resource *node);
+        struct ttm_resource *node);
 #endif /* _INTEL_REGION_TTM_H_ */

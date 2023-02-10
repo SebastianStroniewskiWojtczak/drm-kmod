@@ -106,8 +106,8 @@
 #define NUM_UCODES               14
 
 typedef struct {
-	uint32_t high;
-	uint32_t low;
+  uint32_t high;
+  uint32_t low;
 } data_64_t;
 
 struct SMU_Task {

@@ -17,8 +17,8 @@ struct intel_gt;
 
 static inline void intel_wa_list_free(struct i915_wa_list *wal)
 {
-	kfree(wal->list);
-	memset(wal, 0, sizeof(*wal));
+  kfree(wal->list);
+  memset(wal, 0, sizeof(*wal));
 }
 
 void intel_engine_init_ctx_wa(struct intel_engine_cs *engine);
@@ -34,6 +34,6 @@ void intel_engine_apply_whitelist(struct intel_engine_cs *engine);
 void intel_engine_init_workarounds(struct intel_engine_cs *engine);
 void intel_engine_apply_workarounds(struct intel_engine_cs *engine);
 int intel_engine_verify_workarounds(struct intel_engine_cs *engine,
-				    const char *from);
+            const char *from);
 
 #endif

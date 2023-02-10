@@ -33,17 +33,17 @@
 #endif
 
 struct dsc_pps_rc_range {
-	int range_min_qp;
-	int range_max_qp;
-	int range_bpg_offset;
+  int range_min_qp;
+  int range_max_qp;
+  int range_bpg_offset;
 };
 
 struct dsc_parameters {
-	struct drm_dsc_config pps;
+  struct drm_dsc_config pps;
 
-	/* Additional parameters for register programming */
-	uint32_t bytes_per_pixel; /* In u3.28 format */
-	uint32_t rc_buffer_model_size;
+  /* Additional parameters for register programming */
+  uint32_t bytes_per_pixel; /* In u3.28 format */
+  uint32_t rc_buffer_model_size;
 };
 
 int dscc_compute_dsc_parameters(const struct drm_dsc_config *pps, struct dsc_parameters *dsc_params);

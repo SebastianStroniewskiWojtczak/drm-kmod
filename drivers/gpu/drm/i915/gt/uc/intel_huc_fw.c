@@ -17,10 +17,10 @@
  * The firmware image should have already been fetched into memory, so only
  * check that fetch succeeded, and then transfer the image to the h/w.
  *
- * Return:	non-zero code on error
+ * Return:  non-zero code on error
  */
 int intel_huc_fw_upload(struct intel_huc *huc)
 {
-	/* HW doesn't look at destination address for HuC, so set it to 0 */
-	return intel_uc_fw_upload(&huc->fw, 0, HUC_UKERNEL);
+  /* HW doesn't look at destination address for HuC, so set it to 0 */
+  return intel_uc_fw_upload(&huc->fw, 0, HUC_UKERNEL);
 }

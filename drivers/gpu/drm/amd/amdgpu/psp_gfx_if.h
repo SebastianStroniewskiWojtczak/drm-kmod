@@ -185,12 +185,12 @@ struct psp_gfx_cmd_setup_tmr
     uint32_t        buf_phy_addr_hi;       /* bits [63:32] of GPU Virtual address of TMR buffer */
     uint32_t        buf_size;              /* buffer size in bytes (must be multiple of 4 KB) */
     union {
-	struct {
-		uint32_t	sriov_enabled:1; /* whether the device runs under SR-IOV*/
-		uint32_t	virt_phy_addr:1; /* driver passes both virtual and physical address to PSP*/
-		uint32_t	reserved:30;
-	} bitfield;
-	uint32_t        tmr_flags;
+  struct {
+    uint32_t  sriov_enabled:1; /* whether the device runs under SR-IOV*/
+    uint32_t  virt_phy_addr:1; /* driver passes both virtual and physical address to PSP*/
+    uint32_t  reserved:30;
+  } bitfield;
+  uint32_t        tmr_flags;
     };
     uint32_t        system_phy_addr_lo;        /* bits [31:0] of system physical address of TMR buffer (must be 4 KB aligned) */
     uint32_t        system_phy_addr_hi;        /* bits [63:32] of system physical address of TMR buffer */
@@ -199,67 +199,67 @@ struct psp_gfx_cmd_setup_tmr
 
 /* FW types for GFX_CMD_ID_LOAD_IP_FW command. Limit 31. */
 enum psp_gfx_fw_type {
-	GFX_FW_TYPE_NONE        = 0,    /* */
-	GFX_FW_TYPE_CP_ME       = 1,    /* CP-ME                    VG + RV */
-	GFX_FW_TYPE_CP_PFP      = 2,    /* CP-PFP                   VG + RV */
-	GFX_FW_TYPE_CP_CE       = 3,    /* CP-CE                    VG + RV */
-	GFX_FW_TYPE_CP_MEC      = 4,    /* CP-MEC FW                VG + RV */
-	GFX_FW_TYPE_CP_MEC_ME1  = 5,    /* CP-MEC Jump Table 1      VG + RV */
-	GFX_FW_TYPE_CP_MEC_ME2  = 6,    /* CP-MEC Jump Table 2      VG      */
-	GFX_FW_TYPE_RLC_V       = 7,    /* RLC-V                    VG      */
-	GFX_FW_TYPE_RLC_G       = 8,    /* RLC-G                    VG + RV */
-	GFX_FW_TYPE_SDMA0       = 9,    /* SDMA0                    VG + RV */
-	GFX_FW_TYPE_SDMA1       = 10,   /* SDMA1                    VG      */
-	GFX_FW_TYPE_DMCU_ERAM   = 11,   /* DMCU-ERAM                VG + RV */
-	GFX_FW_TYPE_DMCU_ISR    = 12,   /* DMCU-ISR                 VG + RV */
-	GFX_FW_TYPE_VCN         = 13,   /* VCN                           RV */
-	GFX_FW_TYPE_UVD         = 14,   /* UVD                      VG      */
-	GFX_FW_TYPE_VCE         = 15,   /* VCE                      VG      */
-	GFX_FW_TYPE_ISP         = 16,   /* ISP                           RV */
-	GFX_FW_TYPE_ACP         = 17,   /* ACP                           RV */
-	GFX_FW_TYPE_SMU         = 18,   /* SMU                      VG      */
-	GFX_FW_TYPE_MMSCH       = 19,   /* MMSCH                    VG      */
-	GFX_FW_TYPE_RLC_RESTORE_LIST_GPM_MEM        = 20,   /* RLC GPM                  VG + RV */
-	GFX_FW_TYPE_RLC_RESTORE_LIST_SRM_MEM        = 21,   /* RLC SRM                  VG + RV */
-	GFX_FW_TYPE_RLC_RESTORE_LIST_SRM_CNTL       = 22,   /* RLC CNTL                 VG + RV */
-	GFX_FW_TYPE_UVD1        = 23,   /* UVD1                     VG-20   */
-	GFX_FW_TYPE_TOC         = 24,   /* TOC                      NV-10   */
-	GFX_FW_TYPE_RLC_P                           = 25,   /* RLC P                    NV      */
-	GFX_FW_TYPE_RLC_IRAM                        = 26,   /* RLC_IRAM                 NV      */
-	GFX_FW_TYPE_GLOBAL_TAP_DELAYS               = 27,   /* GLOBAL TAP DELAYS        NV      */
-	GFX_FW_TYPE_SE0_TAP_DELAYS                  = 28,   /* SE0 TAP DELAYS           NV      */
-	GFX_FW_TYPE_SE1_TAP_DELAYS                  = 29,   /* SE1 TAP DELAYS           NV      */
-	GFX_FW_TYPE_GLOBAL_SE0_SE1_SKEW_DELAYS      = 30,   /* GLOBAL SE0/1 SKEW DELAYS NV      */
-	GFX_FW_TYPE_SDMA0_JT                        = 31,   /* SDMA0 JT                 NV      */
-	GFX_FW_TYPE_SDMA1_JT                        = 32,   /* SDNA1 JT                 NV      */
-	GFX_FW_TYPE_CP_MES                          = 33,   /* CP MES                   NV      */
-	GFX_FW_TYPE_MES_STACK                       = 34,   /* MES STACK                NV      */
-	GFX_FW_TYPE_RLC_SRM_DRAM_SR                 = 35,   /* RLC SRM DRAM             NV      */
-	GFX_FW_TYPE_RLCG_SCRATCH_SR                 = 36,   /* RLCG SCRATCH             NV      */
-	GFX_FW_TYPE_RLCP_SCRATCH_SR                 = 37,   /* RLCP SCRATCH             NV      */
-	GFX_FW_TYPE_RLCV_SCRATCH_SR                 = 38,   /* RLCV SCRATCH             NV      */
-	GFX_FW_TYPE_RLX6_DRAM_SR                    = 39,   /* RLX6 DRAM                NV      */
-	GFX_FW_TYPE_SDMA0_PG_CONTEXT                = 40,   /* SDMA0 PG CONTEXT         NV      */
-	GFX_FW_TYPE_SDMA1_PG_CONTEXT                = 41,   /* SDMA1 PG CONTEXT         NV      */
-	GFX_FW_TYPE_GLOBAL_MUX_SELECT_RAM           = 42,   /* GLOBAL MUX SEL RAM       NV      */
-	GFX_FW_TYPE_SE0_MUX_SELECT_RAM              = 43,   /* SE0 MUX SEL RAM          NV      */
-	GFX_FW_TYPE_SE1_MUX_SELECT_RAM              = 44,   /* SE1 MUX SEL RAM          NV      */
-	GFX_FW_TYPE_ACCUM_CTRL_RAM                  = 45,   /* ACCUM CTRL RAM           NV      */
-	GFX_FW_TYPE_RLCP_CAM                        = 46,   /* RLCP CAM                 NV      */
-	GFX_FW_TYPE_RLC_SPP_CAM_EXT                 = 47,   /* RLC SPP CAM EXT          NV      */
-	GFX_FW_TYPE_RLC_DRAM_BOOT                   = 48,   /* RLC DRAM BOOT            NV      */
-	GFX_FW_TYPE_VCN0_RAM                        = 49,   /* VCN_RAM                  NV + RN */
-	GFX_FW_TYPE_VCN1_RAM                        = 50,   /* VCN_RAM                  NV + RN */
-	GFX_FW_TYPE_DMUB                            = 51,   /* DMUB                          RN */
-	GFX_FW_TYPE_SDMA2                           = 52,   /* SDMA2                    MI      */
-	GFX_FW_TYPE_SDMA3                           = 53,   /* SDMA3                    MI      */
-	GFX_FW_TYPE_SDMA4                           = 54,   /* SDMA4                    MI      */
-	GFX_FW_TYPE_SDMA5                           = 55,   /* SDMA5                    MI      */
-	GFX_FW_TYPE_SDMA6                           = 56,   /* SDMA6                    MI      */
-	GFX_FW_TYPE_SDMA7                           = 57,   /* SDMA7                    MI      */
-	GFX_FW_TYPE_VCN1                            = 58,   /* VCN1                     MI      */
-	GFX_FW_TYPE_REG_LIST                        = 67,   /* REG_LIST                 MI      */
-	GFX_FW_TYPE_MAX
+  GFX_FW_TYPE_NONE        = 0,    /* */
+  GFX_FW_TYPE_CP_ME       = 1,    /* CP-ME                    VG + RV */
+  GFX_FW_TYPE_CP_PFP      = 2,    /* CP-PFP                   VG + RV */
+  GFX_FW_TYPE_CP_CE       = 3,    /* CP-CE                    VG + RV */
+  GFX_FW_TYPE_CP_MEC      = 4,    /* CP-MEC FW                VG + RV */
+  GFX_FW_TYPE_CP_MEC_ME1  = 5,    /* CP-MEC Jump Table 1      VG + RV */
+  GFX_FW_TYPE_CP_MEC_ME2  = 6,    /* CP-MEC Jump Table 2      VG      */
+  GFX_FW_TYPE_RLC_V       = 7,    /* RLC-V                    VG      */
+  GFX_FW_TYPE_RLC_G       = 8,    /* RLC-G                    VG + RV */
+  GFX_FW_TYPE_SDMA0       = 9,    /* SDMA0                    VG + RV */
+  GFX_FW_TYPE_SDMA1       = 10,   /* SDMA1                    VG      */
+  GFX_FW_TYPE_DMCU_ERAM   = 11,   /* DMCU-ERAM                VG + RV */
+  GFX_FW_TYPE_DMCU_ISR    = 12,   /* DMCU-ISR                 VG + RV */
+  GFX_FW_TYPE_VCN         = 13,   /* VCN                           RV */
+  GFX_FW_TYPE_UVD         = 14,   /* UVD                      VG      */
+  GFX_FW_TYPE_VCE         = 15,   /* VCE                      VG      */
+  GFX_FW_TYPE_ISP         = 16,   /* ISP                           RV */
+  GFX_FW_TYPE_ACP         = 17,   /* ACP                           RV */
+  GFX_FW_TYPE_SMU         = 18,   /* SMU                      VG      */
+  GFX_FW_TYPE_MMSCH       = 19,   /* MMSCH                    VG      */
+  GFX_FW_TYPE_RLC_RESTORE_LIST_GPM_MEM        = 20,   /* RLC GPM                  VG + RV */
+  GFX_FW_TYPE_RLC_RESTORE_LIST_SRM_MEM        = 21,   /* RLC SRM                  VG + RV */
+  GFX_FW_TYPE_RLC_RESTORE_LIST_SRM_CNTL       = 22,   /* RLC CNTL                 VG + RV */
+  GFX_FW_TYPE_UVD1        = 23,   /* UVD1                     VG-20   */
+  GFX_FW_TYPE_TOC         = 24,   /* TOC                      NV-10   */
+  GFX_FW_TYPE_RLC_P                           = 25,   /* RLC P                    NV      */
+  GFX_FW_TYPE_RLC_IRAM                        = 26,   /* RLC_IRAM                 NV      */
+  GFX_FW_TYPE_GLOBAL_TAP_DELAYS               = 27,   /* GLOBAL TAP DELAYS        NV      */
+  GFX_FW_TYPE_SE0_TAP_DELAYS                  = 28,   /* SE0 TAP DELAYS           NV      */
+  GFX_FW_TYPE_SE1_TAP_DELAYS                  = 29,   /* SE1 TAP DELAYS           NV      */
+  GFX_FW_TYPE_GLOBAL_SE0_SE1_SKEW_DELAYS      = 30,   /* GLOBAL SE0/1 SKEW DELAYS NV      */
+  GFX_FW_TYPE_SDMA0_JT                        = 31,   /* SDMA0 JT                 NV      */
+  GFX_FW_TYPE_SDMA1_JT                        = 32,   /* SDNA1 JT                 NV      */
+  GFX_FW_TYPE_CP_MES                          = 33,   /* CP MES                   NV      */
+  GFX_FW_TYPE_MES_STACK                       = 34,   /* MES STACK                NV      */
+  GFX_FW_TYPE_RLC_SRM_DRAM_SR                 = 35,   /* RLC SRM DRAM             NV      */
+  GFX_FW_TYPE_RLCG_SCRATCH_SR                 = 36,   /* RLCG SCRATCH             NV      */
+  GFX_FW_TYPE_RLCP_SCRATCH_SR                 = 37,   /* RLCP SCRATCH             NV      */
+  GFX_FW_TYPE_RLCV_SCRATCH_SR                 = 38,   /* RLCV SCRATCH             NV      */
+  GFX_FW_TYPE_RLX6_DRAM_SR                    = 39,   /* RLX6 DRAM                NV      */
+  GFX_FW_TYPE_SDMA0_PG_CONTEXT                = 40,   /* SDMA0 PG CONTEXT         NV      */
+  GFX_FW_TYPE_SDMA1_PG_CONTEXT                = 41,   /* SDMA1 PG CONTEXT         NV      */
+  GFX_FW_TYPE_GLOBAL_MUX_SELECT_RAM           = 42,   /* GLOBAL MUX SEL RAM       NV      */
+  GFX_FW_TYPE_SE0_MUX_SELECT_RAM              = 43,   /* SE0 MUX SEL RAM          NV      */
+  GFX_FW_TYPE_SE1_MUX_SELECT_RAM              = 44,   /* SE1 MUX SEL RAM          NV      */
+  GFX_FW_TYPE_ACCUM_CTRL_RAM                  = 45,   /* ACCUM CTRL RAM           NV      */
+  GFX_FW_TYPE_RLCP_CAM                        = 46,   /* RLCP CAM                 NV      */
+  GFX_FW_TYPE_RLC_SPP_CAM_EXT                 = 47,   /* RLC SPP CAM EXT          NV      */
+  GFX_FW_TYPE_RLC_DRAM_BOOT                   = 48,   /* RLC DRAM BOOT            NV      */
+  GFX_FW_TYPE_VCN0_RAM                        = 49,   /* VCN_RAM                  NV + RN */
+  GFX_FW_TYPE_VCN1_RAM                        = 50,   /* VCN_RAM                  NV + RN */
+  GFX_FW_TYPE_DMUB                            = 51,   /* DMUB                          RN */
+  GFX_FW_TYPE_SDMA2                           = 52,   /* SDMA2                    MI      */
+  GFX_FW_TYPE_SDMA3                           = 53,   /* SDMA3                    MI      */
+  GFX_FW_TYPE_SDMA4                           = 54,   /* SDMA4                    MI      */
+  GFX_FW_TYPE_SDMA5                           = 55,   /* SDMA5                    MI      */
+  GFX_FW_TYPE_SDMA6                           = 56,   /* SDMA6                    MI      */
+  GFX_FW_TYPE_SDMA7                           = 57,   /* SDMA7                    MI      */
+  GFX_FW_TYPE_VCN1                            = 58,   /* VCN1                     MI      */
+  GFX_FW_TYPE_REG_LIST                        = 67,   /* REG_LIST                 MI      */
+  GFX_FW_TYPE_MAX
 };
 
 /* Command to load HW IP FW. */
@@ -284,8 +284,8 @@ struct psp_gfx_cmd_save_restore_ip_fw
 
 /* Command to setup register program */
 struct psp_gfx_cmd_reg_prog {
-	uint32_t	reg_value;
-	uint32_t	reg_id;
+  uint32_t  reg_value;
+  uint32_t  reg_id;
 };
 
 /* Command to load TOC */
@@ -334,14 +334,14 @@ struct psp_gfx_uresp_fwar_db_info
 
 /* Command-specific response for boot config. */
 struct psp_gfx_uresp_bootcfg {
-	uint32_t boot_cfg;	/* boot config data */
+  uint32_t boot_cfg;  /* boot config data */
 };
 
 /* Union of command-specific responses for GPCOM ring. */
 union psp_gfx_uresp {
-	struct psp_gfx_uresp_reserved		reserved;
-	struct psp_gfx_uresp_bootcfg		boot_cfg;
-	struct psp_gfx_uresp_fwar_db_info	fwar_db_info;
+  struct psp_gfx_uresp_reserved    reserved;
+  struct psp_gfx_uresp_bootcfg    boot_cfg;
+  struct psp_gfx_uresp_fwar_db_info  fwar_db_info;
 };
 
 /* Structure of GFX Response buffer.
@@ -350,13 +350,13 @@ union psp_gfx_uresp {
 */
 struct psp_gfx_resp
 {
-    uint32_t	status;		/* +0  status of command execution */
-    uint32_t	session_id;	/* +4  session ID in response to LoadTa command */
-    uint32_t	fw_addr_lo;	/* +8  bits [31:0] of FW address within TMR (in response to cmd_load_ip_fw command) */
-    uint32_t	fw_addr_hi;	/* +12 bits [63:32] of FW address within TMR (in response to cmd_load_ip_fw command) */
-    uint32_t	tmr_size;	/* +16 size of the TMR to be reserved including MM fw and Gfx fw in response to cmd_load_toc command */
+    uint32_t  status;    /* +0  status of command execution */
+    uint32_t  session_id;  /* +4  session ID in response to LoadTa command */
+    uint32_t  fw_addr_lo;  /* +8  bits [31:0] of FW address within TMR (in response to cmd_load_ip_fw command) */
+    uint32_t  fw_addr_hi;  /* +12 bits [63:32] of FW address within TMR (in response to cmd_load_ip_fw command) */
+    uint32_t  tmr_size;  /* +16 size of the TMR to be reserved including MM fw and Gfx fw in response to cmd_load_toc command */
 
-    uint32_t	reserved[11];
+    uint32_t  reserved[11];
 
     union psp_gfx_uresp uresp;      /* +64 response union containing command-specific responses */
 

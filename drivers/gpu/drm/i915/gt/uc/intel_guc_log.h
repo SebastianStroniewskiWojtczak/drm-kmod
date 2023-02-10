@@ -16,13 +16,13 @@
 struct intel_guc;
 
 #ifdef CONFIG_DRM_I915_DEBUG_GUC
-#define CRASH_BUFFER_SIZE	SZ_2M
-#define DPC_BUFFER_SIZE		SZ_8M
-#define ISR_BUFFER_SIZE		SZ_8M
+#define CRASH_BUFFER_SIZE  SZ_2M
+#define DPC_BUFFER_SIZE    SZ_8M
+#define ISR_BUFFER_SIZE    SZ_8M
 #else
-#define CRASH_BUFFER_SIZE	SZ_8K
-#define DPC_BUFFER_SIZE		SZ_32K
-#define ISR_BUFFER_SIZE		SZ_32K
+#define CRASH_BUFFER_SIZE  SZ_8K
+#define DPC_BUFFER_SIZE    SZ_32K
+#define ISR_BUFFER_SIZE    SZ_32K
 #endif
 
 /*
@@ -31,34 +31,34 @@ struct intel_guc;
  * log enabling, and separate bit for default logging - which "conveniently"
  * ignores the enable bit.
  */
-#define GUC_LOG_LEVEL_DISABLED		0
-#define GUC_LOG_LEVEL_NON_VERBOSE	1
-#define GUC_LOG_LEVEL_IS_ENABLED(x)	((x) > GUC_LOG_LEVEL_DISABLED)
-#define GUC_LOG_LEVEL_IS_VERBOSE(x)	((x) > GUC_LOG_LEVEL_NON_VERBOSE)
-#define GUC_LOG_LEVEL_TO_VERBOSITY(x) ({		\
-	typeof(x) _x = (x);				\
-	GUC_LOG_LEVEL_IS_VERBOSE(_x) ? _x - 2 : 0;	\
+#define GUC_LOG_LEVEL_DISABLED    0
+#define GUC_LOG_LEVEL_NON_VERBOSE  1
+#define GUC_LOG_LEVEL_IS_ENABLED(x)  ((x) > GUC_LOG_LEVEL_DISABLED)
+#define GUC_LOG_LEVEL_IS_VERBOSE(x)  ((x) > GUC_LOG_LEVEL_NON_VERBOSE)
+#define GUC_LOG_LEVEL_TO_VERBOSITY(x) ({    \
+  typeof(x) _x = (x);        \
+  GUC_LOG_LEVEL_IS_VERBOSE(_x) ? _x - 2 : 0;  \
 })
-#define GUC_VERBOSITY_TO_LOG_LEVEL(x)	((x) + 2)
+#define GUC_VERBOSITY_TO_LOG_LEVEL(x)  ((x) + 2)
 #define GUC_LOG_LEVEL_MAX GUC_VERBOSITY_TO_LOG_LEVEL(GUC_LOG_VERBOSITY_MAX)
 
 struct intel_guc_log {
-	u32 level;
-	struct i915_vma *vma;
-	struct {
-		void *buf_addr;
-		bool started;
-		struct work_struct flush_work;
-		struct rchan *channel;
-		struct mutex lock;
-		u32 full_count;
-	} relay;
-	/* logging related stats */
-	struct {
-		u32 sampled_overflow;
-		u32 overflow;
-		u32 flush;
-	} stats[GUC_MAX_LOG_BUFFER];
+  u32 level;
+  struct i915_vma *vma;
+  struct {
+    void *buf_addr;
+    bool started;
+    struct work_struct flush_work;
+    struct rchan *channel;
+    struct mutex lock;
+    u32 full_count;
+  } relay;
+  /* logging related stats */
+  struct {
+    u32 sampled_overflow;
+    u32 overflow;
+    u32 flush;
+  } stats[GUC_MAX_LOG_BUFFER];
 };
 
 void intel_guc_log_init_early(struct intel_guc_log *log);
@@ -76,11 +76,11 @@ void intel_guc_log_handle_flush_event(struct intel_guc_log *log);
 
 static inline u32 intel_guc_log_get_level(struct intel_guc_log *log)
 {
-	return log->level;
+  return log->level;
 }
 
 void intel_guc_log_info(struct intel_guc_log *log, struct drm_printer *p);
 int intel_guc_log_dump(struct intel_guc_log *log, struct drm_printer *p,
-		       bool dump_load_err);
+           bool dump_load_err);
 
 #endif

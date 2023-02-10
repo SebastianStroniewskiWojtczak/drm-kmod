@@ -61,51 +61,51 @@ static atomic_t fence_seq = ATOMIC_INIT(0);
  */
 
 struct amdgpu_amdkfd_fence *amdgpu_amdkfd_fence_create(u64 context,
-				struct mm_struct *mm,
-				struct svm_range_bo *svm_bo)
+        struct mm_struct *mm,
+        struct svm_range_bo *svm_bo)
 {
-	struct amdgpu_amdkfd_fence *fence;
+  struct amdgpu_amdkfd_fence *fence;
 
-	fence = kzalloc(sizeof(*fence), GFP_KERNEL);
-	if (fence == NULL)
-		return NULL;
+  fence = kzalloc(sizeof(*fence), GFP_KERNEL);
+  if (fence == NULL)
+    return NULL;
 
-	/* This reference gets released in amdkfd_fence_release */
-	mmgrab(mm);
-	fence->mm = mm;
-	get_task_comm(fence->timeline_name, current);
-	spin_lock_init(&fence->lock);
-	fence->svm_bo = svm_bo;
-	dma_fence_init(&fence->base, &amdkfd_fence_ops, &fence->lock,
-		   context, atomic_inc_return(&fence_seq));
+  /* This reference gets released in amdkfd_fence_release */
+  mmgrab(mm);
+  fence->mm = mm;
+  get_task_comm(fence->timeline_name, current);
+  spin_lock_init(&fence->lock);
+  fence->svm_bo = svm_bo;
+  dma_fence_init(&fence->base, &amdkfd_fence_ops, &fence->lock,
+       context, atomic_inc_return(&fence_seq));
 
-	return fence;
+  return fence;
 }
 
 struct amdgpu_amdkfd_fence *to_amdgpu_amdkfd_fence(struct dma_fence *f)
 {
-	struct amdgpu_amdkfd_fence *fence;
+  struct amdgpu_amdkfd_fence *fence;
 
-	if (!f)
-		return NULL;
+  if (!f)
+    return NULL;
 
-	fence = container_of(f, struct amdgpu_amdkfd_fence, base);
-	if (fence && f->ops == &amdkfd_fence_ops)
-		return fence;
+  fence = container_of(f, struct amdgpu_amdkfd_fence, base);
+  if (fence && f->ops == &amdkfd_fence_ops)
+    return fence;
 
-	return NULL;
+  return NULL;
 }
 
 static const char *amdkfd_fence_get_driver_name(struct dma_fence *f)
 {
-	return "amdgpu_amdkfd_fence";
+  return "amdgpu_amdkfd_fence";
 }
 
 static const char *amdkfd_fence_get_timeline_name(struct dma_fence *f)
 {
-	struct amdgpu_amdkfd_fence *fence = to_amdgpu_amdkfd_fence(f);
+  struct amdgpu_amdkfd_fence *fence = to_amdgpu_amdkfd_fence(f);
 
-	return fence->timeline_name;
+  return fence->timeline_name;
 }
 
 /**
@@ -118,22 +118,22 @@ static const char *amdkfd_fence_get_timeline_name(struct dma_fence *f)
  */
 static bool amdkfd_fence_enable_signaling(struct dma_fence *f)
 {
-	struct amdgpu_amdkfd_fence *fence = to_amdgpu_amdkfd_fence(f);
+  struct amdgpu_amdkfd_fence *fence = to_amdgpu_amdkfd_fence(f);
 
-	if (!fence)
-		return false;
+  if (!fence)
+    return false;
 
-	if (dma_fence_is_signaled(f))
-		return true;
+  if (dma_fence_is_signaled(f))
+    return true;
 
-	if (!fence->svm_bo) {
-		if (!kgd2kfd_schedule_evict_and_restore_process(fence->mm, f))
-			return true;
-	} else {
-		if (!svm_range_schedule_evict_svm_bo(fence))
-			return true;
-	}
-	return false;
+  if (!fence->svm_bo) {
+    if (!kgd2kfd_schedule_evict_and_restore_process(fence->mm, f))
+      return true;
+  } else {
+    if (!svm_range_schedule_evict_svm_bo(fence))
+      return true;
+  }
+  return false;
 }
 
 /**
@@ -146,16 +146,16 @@ static bool amdkfd_fence_enable_signaling(struct dma_fence *f)
  */
 static void amdkfd_fence_release(struct dma_fence *f)
 {
-	struct amdgpu_amdkfd_fence *fence = to_amdgpu_amdkfd_fence(f);
+  struct amdgpu_amdkfd_fence *fence = to_amdgpu_amdkfd_fence(f);
 
-	/* Unconditionally signal the fence. The process is getting
-	 * terminated.
-	 */
-	if (WARN_ON(!fence))
-		return; /* Not an amdgpu_amdkfd_fence */
+  /* Unconditionally signal the fence. The process is getting
+   * terminated.
+   */
+  if (WARN_ON(!fence))
+    return; /* Not an amdgpu_amdkfd_fence */
 
-	mmdrop(fence->mm);
-	kfree_rcu(f, rcu);
+  mmdrop(fence->mm);
+  kfree_rcu(f, rcu);
 }
 
 /**
@@ -167,19 +167,19 @@ static void amdkfd_fence_release(struct dma_fence *f)
  */
 bool amdkfd_fence_check_mm(struct dma_fence *f, struct mm_struct *mm)
 {
-	struct amdgpu_amdkfd_fence *fence = to_amdgpu_amdkfd_fence(f);
+  struct amdgpu_amdkfd_fence *fence = to_amdgpu_amdkfd_fence(f);
 
-	if (!fence)
-		return false;
-	else if (fence->mm == mm)
-		return true;
+  if (!fence)
+    return false;
+  else if (fence->mm == mm)
+    return true;
 
-	return false;
+  return false;
 }
 
 static const struct dma_fence_ops amdkfd_fence_ops = {
-	.get_driver_name = amdkfd_fence_get_driver_name,
-	.get_timeline_name = amdkfd_fence_get_timeline_name,
-	.enable_signaling = amdkfd_fence_enable_signaling,
-	.release = amdkfd_fence_release,
+  .get_driver_name = amdkfd_fence_get_driver_name,
+  .get_timeline_name = amdkfd_fence_get_timeline_name,
+  .enable_signaling = amdkfd_fence_enable_signaling,
+  .release = amdkfd_fence_release,
 };

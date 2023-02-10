@@ -49,4 +49,4 @@ u32 evergreen_gpu_check_soft_reset(struct radeon_device *rdev);
 int evergreen_rlc_resume(struct radeon_device *rdev);
 struct evergreen_power_info *evergreen_get_pi(struct radeon_device *rdev);
 
-#endif				/* __RADEON_EVERGREEN_H__ */
+#endif        /* __RADEON_EVERGREEN_H__ */

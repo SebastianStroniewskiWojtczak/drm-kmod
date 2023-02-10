@@ -30,19 +30,19 @@
 #include "igt_flush_test.h"
 
 struct i915_selftest i915_selftest __read_mostly = {
-	.timeout_ms = 500,
+  .timeout_ms = 500,
 };
 
 int i915_mock_sanitycheck(void)
 {
-	pr_info(DRIVER_NAME ": %s() - ok!\n", __func__);
-	return 0;
+  pr_info(DRIVER_NAME ": %s() - ok!\n", __func__);
+  return 0;
 }
 
 int i915_live_sanitycheck(struct drm_i915_private *i915)
 {
-	pr_info("%s: %s() - ok!\n", i915->drm.driver->name, __func__);
-	return 0;
+  pr_info("%s: %s() - ok!\n", i915->drm.driver->name, __func__);
+  return 0;
 }
 
 enum {
@@ -64,12 +64,12 @@ enum {
 };
 
 struct selftest {
-	bool enabled;
-	const char *name;
-	union {
-		int (*mock)(void);
-		int (*live)(struct drm_i915_private *);
-	};
+  bool enabled;
+  const char *name;
+  union {
+    int (*mock)(void);
+    int (*live)(struct drm_i915_private *);
+  };
 };
 
 #define selftest(n, f) [mock_##n] = { .name = #n, { .mock = f } },
@@ -116,313 +116,313 @@ module_param_named(id, perf_selftests[perf_##n].enabled, bool, 0400);
 
 static void set_default_test_all(struct selftest *st, unsigned int count)
 {
-	unsigned int i;
+  unsigned int i;
 
-	for (i = 0; i < count; i++)
-		if (st[i].enabled)
-			return;
+  for (i = 0; i < count; i++)
+    if (st[i].enabled)
+      return;
 
-	for (i = 0; i < count; i++)
-		st[i].enabled = true;
+  for (i = 0; i < count; i++)
+    st[i].enabled = true;
 }
 
 static int __run_selftests(const char *name,
-			   struct selftest *st,
-			   unsigned int count,
-			   void *data)
+         struct selftest *st,
+         unsigned int count,
+         void *data)
 {
-	int err = 0;
+  int err = 0;
 
-	while (!i915_selftest.random_seed)
-		i915_selftest.random_seed = get_random_int();
+  while (!i915_selftest.random_seed)
+    i915_selftest.random_seed = get_random_int();
 
-	i915_selftest.timeout_jiffies =
-		i915_selftest.timeout_ms ?
-		msecs_to_jiffies_timeout(i915_selftest.timeout_ms) :
-		MAX_SCHEDULE_TIMEOUT;
+  i915_selftest.timeout_jiffies =
+    i915_selftest.timeout_ms ?
+    msecs_to_jiffies_timeout(i915_selftest.timeout_ms) :
+    MAX_SCHEDULE_TIMEOUT;
 
-	set_default_test_all(st, count);
+  set_default_test_all(st, count);
 
-	pr_info(DRIVER_NAME ": Performing %s selftests with st_random_seed=0x%x st_timeout=%u\n",
-		name, i915_selftest.random_seed, i915_selftest.timeout_ms);
+  pr_info(DRIVER_NAME ": Performing %s selftests with st_random_seed=0x%x st_timeout=%u\n",
+    name, i915_selftest.random_seed, i915_selftest.timeout_ms);
 
-	/* Tests are listed in order in i915_*_selftests.h */
-	for (; count--; st++) {
-		if (!st->enabled)
-			continue;
+  /* Tests are listed in order in i915_*_selftests.h */
+  for (; count--; st++) {
+    if (!st->enabled)
+      continue;
 
-		cond_resched();
-		if (signal_pending(current))
-			return -EINTR;
+    cond_resched();
+    if (signal_pending(current))
+      return -EINTR;
 
-		pr_info(DRIVER_NAME ": Running %s\n", st->name);
-		if (data)
-			err = st->live(data);
-		else
-			err = st->mock();
-		if (err == -EINTR && !signal_pending(current))
-			err = 0;
-		if (err)
-			break;
-	}
+    pr_info(DRIVER_NAME ": Running %s\n", st->name);
+    if (data)
+      err = st->live(data);
+    else
+      err = st->mock();
+    if (err == -EINTR && !signal_pending(current))
+      err = 0;
+    if (err)
+      break;
+  }
 
-	if (WARN(err > 0 || err == -ENOTTY,
-		 "%s returned %d, conflicting with selftest's magic values!\n",
-		 st->name, err))
-		err = -1;
+  if (WARN(err > 0 || err == -ENOTTY,
+     "%s returned %d, conflicting with selftest's magic values!\n",
+     st->name, err))
+    err = -1;
 
-	return err;
+  return err;
 }
 
 #define run_selftests(x, data) \
-	__run_selftests(#x, x##_selftests, ARRAY_SIZE(x##_selftests), data)
+  __run_selftests(#x, x##_selftests, ARRAY_SIZE(x##_selftests), data)
 
 int i915_mock_selftests(void)
 {
-	int err;
+  int err;
 
-	if (!i915_selftest.mock)
-		return 0;
+  if (!i915_selftest.mock)
+    return 0;
 
-	err = run_selftests(mock, NULL);
-	if (err) {
-		i915_selftest.mock = err;
-		return err;
-	}
+  err = run_selftests(mock, NULL);
+  if (err) {
+    i915_selftest.mock = err;
+    return err;
+  }
 
-	if (i915_selftest.mock < 0) {
-		i915_selftest.mock = -ENOTTY;
-		return 1;
-	}
+  if (i915_selftest.mock < 0) {
+    i915_selftest.mock = -ENOTTY;
+    return 1;
+  }
 
-	return 0;
+  return 0;
 }
 
 int i915_live_selftests(struct pci_dev *pdev)
 {
-	int err;
+  int err;
 
-	if (!i915_selftest.live)
-		return 0;
+  if (!i915_selftest.live)
+    return 0;
 
-	err = run_selftests(live, pdev_to_i915(pdev));
-	if (err) {
-		i915_selftest.live = err;
-		return err;
-	}
+  err = run_selftests(live, pdev_to_i915(pdev));
+  if (err) {
+    i915_selftest.live = err;
+    return err;
+  }
 
-	if (i915_selftest.live < 0) {
-		i915_selftest.live = -ENOTTY;
-		return 1;
-	}
+  if (i915_selftest.live < 0) {
+    i915_selftest.live = -ENOTTY;
+    return 1;
+  }
 
-	return 0;
+  return 0;
 }
 
 int i915_perf_selftests(struct pci_dev *pdev)
 {
-	int err;
+  int err;
 
-	if (!i915_selftest.perf)
-		return 0;
+  if (!i915_selftest.perf)
+    return 0;
 
-	err = run_selftests(perf, pdev_to_i915(pdev));
-	if (err) {
-		i915_selftest.perf = err;
-		return err;
-	}
+  err = run_selftests(perf, pdev_to_i915(pdev));
+  if (err) {
+    i915_selftest.perf = err;
+    return err;
+  }
 
-	if (i915_selftest.perf < 0) {
-		i915_selftest.perf = -ENOTTY;
-		return 1;
-	}
+  if (i915_selftest.perf < 0) {
+    i915_selftest.perf = -ENOTTY;
+    return 1;
+  }
 
-	return 0;
+  return 0;
 }
 
 static bool apply_subtest_filter(const char *caller, const char *name)
 {
-	char *filter, *sep, *tok;
-	bool result = true;
+  char *filter, *sep, *tok;
+  bool result = true;
 
-	filter = kstrdup(i915_selftest.filter, GFP_KERNEL);
-	for (sep = filter; (tok = strsep(&sep, ","));) {
-		bool allow = true;
-		char *sl;
+  filter = kstrdup(i915_selftest.filter, GFP_KERNEL);
+  for (sep = filter; (tok = strsep(&sep, ","));) {
+    bool allow = true;
+    char *sl;
 
-		if (*tok == '!') {
-			allow = false;
-			tok++;
-		}
+    if (*tok == '!') {
+      allow = false;
+      tok++;
+    }
 
-		if (*tok == '\0')
-			continue;
+    if (*tok == '\0')
+      continue;
 
-		sl = strchr(tok, '/');
-		if (sl) {
-			*sl++ = '\0';
-			if (strcmp(tok, caller)) {
-				if (allow)
-					result = false;
-				continue;
-			}
-			tok = sl;
-		}
+    sl = strchr(tok, '/');
+    if (sl) {
+      *sl++ = '\0';
+      if (strcmp(tok, caller)) {
+        if (allow)
+          result = false;
+        continue;
+      }
+      tok = sl;
+    }
 
-		if (strcmp(tok, name)) {
-			if (allow)
-				result = false;
-			continue;
-		}
+    if (strcmp(tok, name)) {
+      if (allow)
+        result = false;
+      continue;
+    }
 
-		result = allow;
-		break;
-	}
-	kfree(filter);
+    result = allow;
+    break;
+  }
+  kfree(filter);
 
-	return result;
+  return result;
 }
 
 int __i915_nop_setup(void *data)
 {
-	return 0;
+  return 0;
 }
 
 int __i915_nop_teardown(int err, void *data)
 {
-	return err;
+  return err;
 }
 
 int __i915_live_setup(void *data)
 {
-	struct drm_i915_private *i915 = data;
+  struct drm_i915_private *i915 = data;
 
-	/* The selftests expect an idle system */
-	if (intel_gt_pm_wait_for_idle(&i915->gt))
-		return -EIO;
+  /* The selftests expect an idle system */
+  if (intel_gt_pm_wait_for_idle(&i915->gt))
+    return -EIO;
 
-	return intel_gt_terminally_wedged(&i915->gt);
+  return intel_gt_terminally_wedged(&i915->gt);
 }
 
 int __i915_live_teardown(int err, void *data)
 {
-	struct drm_i915_private *i915 = data;
+  struct drm_i915_private *i915 = data;
 
-	if (igt_flush_test(i915))
-		err = -EIO;
+  if (igt_flush_test(i915))
+    err = -EIO;
 
-	i915_gem_drain_freed_objects(i915);
+  i915_gem_drain_freed_objects(i915);
 
-	return err;
+  return err;
 }
 
 int __intel_gt_live_setup(void *data)
 {
-	struct intel_gt *gt = data;
+  struct intel_gt *gt = data;
 
-	/* The selftests expect an idle system */
-	if (intel_gt_pm_wait_for_idle(gt))
-		return -EIO;
+  /* The selftests expect an idle system */
+  if (intel_gt_pm_wait_for_idle(gt))
+    return -EIO;
 
-	return intel_gt_terminally_wedged(gt);
+  return intel_gt_terminally_wedged(gt);
 }
 
 int __intel_gt_live_teardown(int err, void *data)
 {
-	struct intel_gt *gt = data;
+  struct intel_gt *gt = data;
 
-	if (igt_flush_test(gt->i915))
-		err = -EIO;
+  if (igt_flush_test(gt->i915))
+    err = -EIO;
 
-	i915_gem_drain_freed_objects(gt->i915);
+  i915_gem_drain_freed_objects(gt->i915);
 
-	return err;
+  return err;
 }
 
 int __i915_subtests(const char *caller,
-		    int (*setup)(void *data),
-		    int (*teardown)(int err, void *data),
-		    const struct i915_subtest *st,
-		    unsigned int count,
-		    void *data)
+        int (*setup)(void *data),
+        int (*teardown)(int err, void *data),
+        const struct i915_subtest *st,
+        unsigned int count,
+        void *data)
 {
-	int err;
+  int err;
 
-	for (; count--; st++) {
-		cond_resched();
-		if (signal_pending(current))
-			return -EINTR;
+  for (; count--; st++) {
+    cond_resched();
+    if (signal_pending(current))
+      return -EINTR;
 
-		if (!apply_subtest_filter(caller, st->name))
-			continue;
+    if (!apply_subtest_filter(caller, st->name))
+      continue;
 
-		err = setup(data);
-		if (err) {
-			pr_err(DRIVER_NAME "/%s: setup failed for %s\n",
-			       caller, st->name);
-			return err;
-		}
+    err = setup(data);
+    if (err) {
+      pr_err(DRIVER_NAME "/%s: setup failed for %s\n",
+             caller, st->name);
+      return err;
+    }
 
-		pr_info(DRIVER_NAME ": Running %s/%s\n", caller, st->name);
-		GEM_TRACE("Running %s/%s\n", caller, st->name);
+    pr_info(DRIVER_NAME ": Running %s/%s\n", caller, st->name);
+    GEM_TRACE("Running %s/%s\n", caller, st->name);
 
-		err = teardown(st->func(data), data);
-		if (err && err != -EINTR) {
-			pr_err(DRIVER_NAME "/%s: %s failed with error %d\n",
-			       caller, st->name, err);
-			return err;
-		}
-	}
+    err = teardown(st->func(data), data);
+    if (err && err != -EINTR) {
+      pr_err(DRIVER_NAME "/%s: %s failed with error %d\n",
+             caller, st->name, err);
+      return err;
+    }
+  }
 
-	return 0;
+  return 0;
 }
 
 bool __igt_timeout(unsigned long timeout, const char *fmt, ...)
 {
-	va_list va;
+  va_list va;
 
-	if (!signal_pending(current)) {
-		cond_resched();
-		if (time_before(jiffies, timeout))
-			return false;
-	}
+  if (!signal_pending(current)) {
+    cond_resched();
+    if (time_before(jiffies, timeout))
+      return false;
+  }
 
-	if (fmt) {
-		va_start(va, fmt);
-		vprintk(fmt, va);
-		va_end(va);
-	}
+  if (fmt) {
+    va_start(va, fmt);
+    vprintk(fmt, va);
+    va_end(va);
+  }
 
-	return true;
+  return true;
 }
 
 void igt_hexdump(const void *buf, size_t len)
 {
-	const size_t rowsize = 8 * sizeof(u32);
-	const void *prev = NULL;
-	bool skip = false;
-	size_t pos;
+  const size_t rowsize = 8 * sizeof(u32);
+  const void *prev = NULL;
+  bool skip = false;
+  size_t pos;
 
-	for (pos = 0; pos < len; pos += rowsize) {
-		char line[128];
+  for (pos = 0; pos < len; pos += rowsize) {
+    char line[128];
 
-		if (prev && !memcmp(prev, buf + pos, rowsize)) {
-			if (!skip) {
-				pr_info("*\n");
-				skip = true;
-			}
-			continue;
-		}
+    if (prev && !memcmp(prev, buf + pos, rowsize)) {
+      if (!skip) {
+        pr_info("*\n");
+        skip = true;
+      }
+      continue;
+    }
 
-		WARN_ON_ONCE(hex_dump_to_buffer(buf + pos, len - pos,
-						rowsize, sizeof(u32),
-						line, sizeof(line),
-						false) >= sizeof(line));
-		pr_info("[%04zx] %s\n", pos, line);
+    WARN_ON_ONCE(hex_dump_to_buffer(buf + pos, len - pos,
+            rowsize, sizeof(u32),
+            line, sizeof(line),
+            false) >= sizeof(line));
+    pr_info("[%04zx] %s\n", pos, line);
 
-		prev = buf + pos;
-		skip = false;
-	}
+    prev = buf + pos;
+    skip = false;
+  }
 }
 
 module_param_named(st_random_seed, i915_selftest.random_seed, uint, 0400);

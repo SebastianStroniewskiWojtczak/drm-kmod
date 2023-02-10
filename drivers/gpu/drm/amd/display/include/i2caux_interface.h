@@ -34,46 +34,46 @@
 #define AUX_MAX_DEFER_WRITE_RETRY 20
 
 struct aux_payload {
-	/* set following flag to read/write I2C data,
-	 * reset it to read/write DPCD data */
-	bool i2c_over_aux;
-	/* set following flag to write data,
-	 * reset it to read data */
-	bool write;
-	bool mot;
-	uint32_t address;
-	uint32_t length;
-	uint8_t *data;
-	/*
-	 * used to return the reply type of the transaction
-	 * ignored if NULL
-	 */
-	uint8_t *reply;
-	/* expressed in milliseconds
-	 * zero means "use default value"
-	 */
-	uint32_t defer_delay;
+  /* set following flag to read/write I2C data,
+   * reset it to read/write DPCD data */
+  bool i2c_over_aux;
+  /* set following flag to write data,
+   * reset it to read data */
+  bool write;
+  bool mot;
+  uint32_t address;
+  uint32_t length;
+  uint8_t *data;
+  /*
+   * used to return the reply type of the transaction
+   * ignored if NULL
+   */
+  uint8_t *reply;
+  /* expressed in milliseconds
+   * zero means "use default value"
+   */
+  uint32_t defer_delay;
 };
 
 struct aux_command {
-	struct aux_payload *payloads;
-	uint8_t number_of_payloads;
+  struct aux_payload *payloads;
+  uint8_t number_of_payloads;
 
-	/* expressed in milliseconds
-	 * zero means "use default value" */
-	uint32_t defer_delay;
+  /* expressed in milliseconds
+   * zero means "use default value" */
+  uint32_t defer_delay;
 
-	/* zero means "use default value" */
-	uint32_t max_defer_write_retry;
+  /* zero means "use default value" */
+  uint32_t max_defer_write_retry;
 
-	enum i2c_mot_mode mot;
+  enum i2c_mot_mode mot;
 };
 
 union aux_config {
-	struct {
-		uint32_t ALLOW_AUX_WHEN_HPD_LOW:1;
-	} bits;
-	uint32_t raw;
+  struct {
+    uint32_t ALLOW_AUX_WHEN_HPD_LOW:1;
+  } bits;
+  uint32_t raw;
 };
 
 #endif

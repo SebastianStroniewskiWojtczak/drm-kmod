@@ -182,21 +182,21 @@ typedef struct SISLANDS_SMC_HW_PERFORMANCE_LEVEL SISLANDS_SMC_HW_PERFORMANCE_LEV
 
 struct SISLANDS_SMC_SWSTATE
 {
-	uint8_t                             flags;
-	uint8_t                             levelCount;
-	uint8_t                             padding2;
-	uint8_t                             padding3;
-	SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
+  uint8_t                             flags;
+  uint8_t                             levelCount;
+  uint8_t                             padding2;
+  uint8_t                             padding3;
+  SISLANDS_SMC_HW_PERFORMANCE_LEVEL   levels[];
 };
 
 typedef struct SISLANDS_SMC_SWSTATE SISLANDS_SMC_SWSTATE;
 
 struct SISLANDS_SMC_SWSTATE_SINGLE {
-	uint8_t                             flags;
-	uint8_t                             levelCount;
-	uint8_t                             padding2;
-	uint8_t                             padding3;
-	SISLANDS_SMC_HW_PERFORMANCE_LEVEL   level;
+  uint8_t                             flags;
+  uint8_t                             levelCount;
+  uint8_t                             padding2;
+  uint8_t                             padding3;
+  SISLANDS_SMC_HW_PERFORMANCE_LEVEL   level;
 };
 
 #define SISLANDS_SMC_VOLTAGEMASK_VDDC  0
@@ -216,19 +216,19 @@ typedef struct SISLANDS_SMC_VOLTAGEMASKTABLE SISLANDS_SMC_VOLTAGEMASKTABLE;
 
 struct SISLANDS_SMC_STATETABLE
 {
-	uint8_t					thermalProtectType;
-	uint8_t					systemFlags;
-	uint8_t					maxVDDCIndexInPPTable;
-	uint8_t					extraFlags;
-	uint32_t				lowSMIO[SISLANDS_MAX_NO_VREG_STEPS];
-	SISLANDS_SMC_VOLTAGEMASKTABLE		voltageMaskTable;
-	SISLANDS_SMC_VOLTAGEMASKTABLE		phaseMaskTable;
-	PP_SIslands_DPM2Parameters		dpm2Params;
-	struct SISLANDS_SMC_SWSTATE_SINGLE	initialState;
-	struct SISLANDS_SMC_SWSTATE_SINGLE      ACPIState;
-	struct SISLANDS_SMC_SWSTATE_SINGLE      ULVState;
-	SISLANDS_SMC_SWSTATE			driverState;
-	SISLANDS_SMC_HW_PERFORMANCE_LEVEL	dpmLevels[SISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE];
+  uint8_t          thermalProtectType;
+  uint8_t          systemFlags;
+  uint8_t          maxVDDCIndexInPPTable;
+  uint8_t          extraFlags;
+  uint32_t        lowSMIO[SISLANDS_MAX_NO_VREG_STEPS];
+  SISLANDS_SMC_VOLTAGEMASKTABLE    voltageMaskTable;
+  SISLANDS_SMC_VOLTAGEMASKTABLE    phaseMaskTable;
+  PP_SIslands_DPM2Parameters    dpm2Params;
+  struct SISLANDS_SMC_SWSTATE_SINGLE  initialState;
+  struct SISLANDS_SMC_SWSTATE_SINGLE      ACPIState;
+  struct SISLANDS_SMC_SWSTATE_SINGLE      ULVState;
+  SISLANDS_SMC_SWSTATE      driverState;
+  SISLANDS_SMC_HW_PERFORMANCE_LEVEL  dpmLevels[SISLANDS_MAX_SMC_PERFORMANCE_LEVELS_PER_SWSTATE];
 };
 
 typedef struct SISLANDS_SMC_STATETABLE SISLANDS_SMC_STATETABLE;
@@ -256,25 +256,25 @@ typedef struct SISLANDS_SMC_STATETABLE SISLANDS_SMC_STATETABLE;
 
 struct PP_SIslands_FanTable
 {
-	uint8_t  fdo_mode;
-	uint8_t  padding;
-	int16_t  temp_min;
-	int16_t  temp_med;
-	int16_t  temp_max;
-	int16_t  slope1;
-	int16_t  slope2;
-	int16_t  fdo_min;
-	int16_t  hys_up;
-	int16_t  hys_down;
-	int16_t  hys_slope;
-	int16_t  temp_resp_lim;
-	int16_t  temp_curr;
-	int16_t  slope_curr;
-	int16_t  pwm_curr;
-	uint32_t refresh_period;
-	int16_t  fdo_max;
-	uint8_t  temp_src;
-	int8_t  padding2;
+  uint8_t  fdo_mode;
+  uint8_t  padding;
+  int16_t  temp_min;
+  int16_t  temp_med;
+  int16_t  temp_max;
+  int16_t  slope1;
+  int16_t  slope2;
+  int16_t  fdo_min;
+  int16_t  hys_up;
+  int16_t  hys_down;
+  int16_t  hys_slope;
+  int16_t  temp_resp_lim;
+  int16_t  temp_curr;
+  int16_t  slope_curr;
+  int16_t  pwm_curr;
+  uint32_t refresh_period;
+  int16_t  fdo_max;
+  uint8_t  temp_src;
+  int8_t  padding2;
 };
 
 typedef struct PP_SIslands_FanTable PP_SIslands_FanTable;
@@ -412,8 +412,8 @@ typedef struct Smc_SIslands_DTE_Configuration Smc_SIslands_DTE_Configuration;
 #pragma pack(pop)
 
 int si_copy_bytes_to_smc(struct radeon_device *rdev,
-			 u32 smc_start_address,
-			 const u8 *src, u32 byte_count, u32 limit);
+       u32 smc_start_address,
+       const u8 *src, u32 byte_count, u32 limit);
 void si_start_smc(struct radeon_device *rdev);
 void si_reset_smc(struct radeon_device *rdev);
 int si_program_jump_on_start(struct radeon_device *rdev);
@@ -424,9 +424,9 @@ PPSMC_Result si_send_msg_to_smc(struct radeon_device *rdev, PPSMC_Msg msg);
 PPSMC_Result si_wait_for_smc_inactive(struct radeon_device *rdev);
 int si_load_smc_ucode(struct radeon_device *rdev, u32 limit);
 int si_read_smc_sram_dword(struct radeon_device *rdev, u32 smc_address,
-			   u32 *value, u32 limit);
+         u32 *value, u32 limit);
 int si_write_smc_sram_dword(struct radeon_device *rdev, u32 smc_address,
-			    u32 value, u32 limit);
+          u32 value, u32 limit);
 
 #endif
 

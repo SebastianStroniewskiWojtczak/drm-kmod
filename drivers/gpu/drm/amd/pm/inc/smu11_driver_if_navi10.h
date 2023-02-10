@@ -1011,10 +1011,10 @@ typedef struct {
 } SmuMetrics_NV12_t;
 
 typedef union SmuMetrics {
-	SmuMetrics_legacy_t		nv10_legacy_metrics;
-	SmuMetrics_t			nv10_metrics;
-	SmuMetrics_NV12_legacy_t	nv12_legacy_metrics;
-	SmuMetrics_NV12_t		nv12_metrics;
+  SmuMetrics_legacy_t    nv10_legacy_metrics;
+  SmuMetrics_t      nv10_metrics;
+  SmuMetrics_NV12_legacy_t  nv12_legacy_metrics;
+  SmuMetrics_NV12_t    nv12_metrics;
 } SmuMetrics_NV1X_t;
 
 typedef struct {

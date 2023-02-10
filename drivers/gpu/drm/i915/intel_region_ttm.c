@@ -31,16 +31,16 @@ static struct ttm_device_funcs i915_ttm_bo_driver;
  */
 int intel_region_ttm_device_init(struct drm_i915_private *dev_priv)
 {
-	struct drm_device *drm = &dev_priv->drm;
+  struct drm_device *drm = &dev_priv->drm;
 
-	return ttm_device_init(&dev_priv->bdev, &i915_ttm_bo_driver,
-			       drm->dev,
+  return ttm_device_init(&dev_priv->bdev, &i915_ttm_bo_driver,
+             drm->dev,
 #ifdef __linux__
-			       drm->anon_inode->i_mapping,
+             drm->anon_inode->i_mapping,
 #elif defined(__FreeBSD__)
-			       NULL, /* Dummy on BSD */
+             NULL, /* Dummy on BSD */
 #endif
-			       drm->vma_offset_manager, false, false);
+             drm->vma_offset_manager, false, false);
 }
 
 /**
@@ -49,7 +49,7 @@ int intel_region_ttm_device_init(struct drm_i915_private *dev_priv)
  */
 void intel_region_ttm_device_fini(struct drm_i915_private *dev_priv)
 {
-	ttm_device_fini(&dev_priv->bdev);
+  ttm_device_fini(&dev_priv->bdev);
 }
 
 /*
@@ -59,47 +59,47 @@ void intel_region_ttm_device_fini(struct drm_i915_private *dev_priv)
  */
 static int intel_region_to_ttm_type(struct intel_memory_region *mem)
 {
-	int type;
+  int type;
 
-	GEM_BUG_ON(mem->type != INTEL_MEMORY_LOCAL &&
-		   mem->type != INTEL_MEMORY_MOCK);
+  GEM_BUG_ON(mem->type != INTEL_MEMORY_LOCAL &&
+       mem->type != INTEL_MEMORY_MOCK);
 
-	type = mem->instance + TTM_PL_PRIV;
-	GEM_BUG_ON(type >= TTM_NUM_MEM_TYPES);
+  type = mem->instance + TTM_PL_PRIV;
+  GEM_BUG_ON(type >= TTM_NUM_MEM_TYPES);
 
-	return type;
+  return type;
 }
 
 static struct ttm_resource *
 intel_region_ttm_node_reserve(struct intel_memory_region *mem,
-			      resource_size_t offset,
-			      resource_size_t size)
+            resource_size_t offset,
+            resource_size_t size)
 {
-	struct ttm_resource_manager *man = mem->region_private;
-	struct ttm_place place = {};
-	struct ttm_buffer_object mock_bo = {};
-	struct ttm_resource *res;
-	int ret;
+  struct ttm_resource_manager *man = mem->region_private;
+  struct ttm_place place = {};
+  struct ttm_buffer_object mock_bo = {};
+  struct ttm_resource *res;
+  int ret;
 
-	/*
-	 * Having to use a mock_bo is unfortunate but stems from some
-	 * drivers having private managers that insist to know what the
-	 * allocate memory is intended for, using it to send private
-	 * data to the manager. Also recently the bo has been used to send
-	 * alignment info to the manager. Assume that apart from the latter,
-	 * none of the managers we use will ever access the buffer object
-	 * members, hoping we can pass the alignment info in the
-	 * struct ttm_place in the future.
-	 */
+  /*
+   * Having to use a mock_bo is unfortunate but stems from some
+   * drivers having private managers that insist to know what the
+   * allocate memory is intended for, using it to send private
+   * data to the manager. Also recently the bo has been used to send
+   * alignment info to the manager. Assume that apart from the latter,
+   * none of the managers we use will ever access the buffer object
+   * members, hoping we can pass the alignment info in the
+   * struct ttm_place in the future.
+   */
 
-	place.fpfn = offset >> PAGE_SHIFT;
-	place.lpfn = place.fpfn + (size >> PAGE_SHIFT);
-	mock_bo.base.size = size;
-	ret = man->func->alloc(man, &mock_bo, &place, &res);
-	if (ret == -ENOSPC)
-		ret = -ENXIO;
+  place.fpfn = offset >> PAGE_SHIFT;
+  place.lpfn = place.fpfn + (size >> PAGE_SHIFT);
+  mock_bo.base.size = size;
+  ret = man->func->alloc(man, &mock_bo, &place, &res);
+  if (ret == -ENOSPC)
+    ret = -ENXIO;
 
-	return ret ? ERR_PTR(ret) : res;
+  return ret ? ERR_PTR(ret) : res;
 }
 
 /**
@@ -108,37 +108,37 @@ intel_region_ttm_node_reserve(struct intel_memory_region *mem,
  * @node: The opaque node representing an allocation.
  */
 void intel_region_ttm_node_free(struct intel_memory_region *mem,
-				struct ttm_resource *res)
+        struct ttm_resource *res)
 {
-	struct ttm_resource_manager *man = mem->region_private;
+  struct ttm_resource_manager *man = mem->region_private;
 
-	man->func->free(man, res);
+  man->func->free(man, res);
 }
 
 static const struct intel_memory_region_private_ops priv_ops = {
-	.reserve = intel_region_ttm_node_reserve,
-	.free = intel_region_ttm_node_free,
+  .reserve = intel_region_ttm_node_reserve,
+  .free = intel_region_ttm_node_free,
 };
 
 int intel_region_ttm_init(struct intel_memory_region *mem)
 {
-	struct ttm_device *bdev = &mem->i915->bdev;
-	int mem_type = intel_region_to_ttm_type(mem);
-	int ret;
+  struct ttm_device *bdev = &mem->i915->bdev;
+  int mem_type = intel_region_to_ttm_type(mem);
+  int ret;
 
-	ret = ttm_range_man_init(bdev, mem_type, false,
-				 resource_size(&mem->region) >> PAGE_SHIFT);
-	if (ret)
-		return ret;
+  ret = ttm_range_man_init(bdev, mem_type, false,
+         resource_size(&mem->region) >> PAGE_SHIFT);
+  if (ret)
+    return ret;
 
-	mem->chunk_size = PAGE_SIZE;
-	mem->max_order =
-		get_order(rounddown_pow_of_two(resource_size(&mem->region)));
-	mem->is_range_manager = true;
-	mem->priv_ops = &priv_ops;
-	mem->region_private = ttm_manager_type(bdev, mem_type);
+  mem->chunk_size = PAGE_SIZE;
+  mem->max_order =
+    get_order(rounddown_pow_of_two(resource_size(&mem->region)));
+  mem->is_range_manager = true;
+  mem->priv_ops = &priv_ops;
+  mem->region_private = ttm_manager_type(bdev, mem_type);
 
-	return 0;
+  return 0;
 }
 
 /**
@@ -151,12 +151,12 @@ int intel_region_ttm_init(struct intel_memory_region *mem)
  */
 void intel_region_ttm_fini(struct intel_memory_region *mem)
 {
-	int ret;
+  int ret;
 
-	ret = ttm_range_man_fini(&mem->i915->bdev,
-				 intel_region_to_ttm_type(mem));
-	GEM_WARN_ON(ret);
-	mem->region_private = NULL;
+  ret = ttm_range_man_fini(&mem->i915->bdev,
+         intel_region_to_ttm_type(mem));
+  GEM_WARN_ON(ret);
+  mem->region_private = NULL;
 }
 
 /**
@@ -172,14 +172,14 @@ void intel_region_ttm_fini(struct intel_memory_region *mem)
  * Return: A malloced sg_table on success, an error pointer on failure.
  */
 struct sg_table *intel_region_ttm_node_to_st(struct intel_memory_region *mem,
-					     struct ttm_resource *res)
+               struct ttm_resource *res)
 {
-	struct ttm_range_mgr_node *range_node =
-		container_of(res, typeof(*range_node), base);
+  struct ttm_range_mgr_node *range_node =
+    container_of(res, typeof(*range_node), base);
 
-	GEM_WARN_ON(!mem->is_range_manager);
-	return i915_sg_from_mm_node(&range_node->mm_nodes[0],
-				    mem->region.start);
+  GEM_WARN_ON(!mem->is_range_manager);
+  return i915_sg_from_mm_node(&range_node->mm_nodes[0],
+            mem->region.start);
 }
 
 /**
@@ -199,33 +199,33 @@ struct sg_table *intel_region_ttm_node_to_st(struct intel_memory_region *mem,
  */
 struct ttm_resource *
 intel_region_ttm_node_alloc(struct intel_memory_region *mem,
-			    resource_size_t size,
-			    unsigned int flags)
+          resource_size_t size,
+          unsigned int flags)
 {
-	struct ttm_resource_manager *man = mem->region_private;
-	struct ttm_place place = {};
-	struct ttm_buffer_object mock_bo = {};
-	struct ttm_resource *res;
-	int ret;
+  struct ttm_resource_manager *man = mem->region_private;
+  struct ttm_place place = {};
+  struct ttm_buffer_object mock_bo = {};
+  struct ttm_resource *res;
+  int ret;
 
-	/*
-	 * We ignore the flags for now since we're using the range
-	 * manager and contigous and min page size would be fulfilled
-	 * by default if size is min page size aligned.
-	 */
-	mock_bo.base.size = size;
+  /*
+   * We ignore the flags for now since we're using the range
+   * manager and contigous and min page size would be fulfilled
+   * by default if size is min page size aligned.
+   */
+  mock_bo.base.size = size;
 
-	if (mem->is_range_manager) {
-		if (size >= SZ_1G)
-			mock_bo.page_alignment = SZ_1G >> PAGE_SHIFT;
-		else if (size >= SZ_2M)
-			mock_bo.page_alignment = SZ_2M >> PAGE_SHIFT;
-		else if (size >= SZ_64K)
-			mock_bo.page_alignment = SZ_64K >> PAGE_SHIFT;
-	}
+  if (mem->is_range_manager) {
+    if (size >= SZ_1G)
+      mock_bo.page_alignment = SZ_1G >> PAGE_SHIFT;
+    else if (size >= SZ_2M)
+      mock_bo.page_alignment = SZ_2M >> PAGE_SHIFT;
+    else if (size >= SZ_64K)
+      mock_bo.page_alignment = SZ_64K >> PAGE_SHIFT;
+  }
 
-	ret = man->func->alloc(man, &mock_bo, &place, &res);
-	if (ret == -ENOSPC)
-		ret = -ENXIO;
-	return ret ? ERR_PTR(ret) : res;
+  ret = man->func->alloc(man, &mock_bo, &place, &res);
+  if (ret == -ENOSPC)
+    ret = -ENXIO;
+  return ret ? ERR_PTR(ret) : res;
 }

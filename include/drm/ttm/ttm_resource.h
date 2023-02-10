@@ -33,7 +33,7 @@
 #include <drm/ttm/ttm_caching.h>
 #include <drm/ttm/ttm_kmap_iter.h>
 
-#define TTM_MAX_BO_PRIORITY	4U
+#define TTM_MAX_BO_PRIORITY  4U
 
 struct ttm_device;
 struct ttm_resource_manager;
@@ -46,56 +46,56 @@ struct sg_table;
 struct scatterlist;
 
 struct ttm_resource_manager_func {
-	/**
-	 * struct ttm_resource_manager_func member alloc
-	 *
-	 * @man: Pointer to a memory type manager.
-	 * @bo: Pointer to the buffer object we're allocating space for.
-	 * @place: Placement details.
-	 * @res: Resulting pointer to the ttm_resource.
-	 *
-	 * This function should allocate space in the memory type managed
-	 * by @man. Placement details if applicable are given by @place. If
-	 * successful, a filled in ttm_resource object should be returned in
-	 * @res. @res::start should be set to a value identifying the beginning
-	 * of the range allocated, and the function should return zero.
-	 * If the manager can't fulfill the request -ENOSPC should be returned.
-	 * If a system error occurred, preventing the request to be fulfilled,
-	 * the function should return a negative error code.
-	 *
-	 * This function may not be called from within atomic context and needs
-	 * to take care of its own locking to protect any data structures
-	 * managing the space.
-	 */
-	int  (*alloc)(struct ttm_resource_manager *man,
-		      struct ttm_buffer_object *bo,
-		      const struct ttm_place *place,
-		      struct ttm_resource **res);
+  /**
+   * struct ttm_resource_manager_func member alloc
+   *
+   * @man: Pointer to a memory type manager.
+   * @bo: Pointer to the buffer object we're allocating space for.
+   * @place: Placement details.
+   * @res: Resulting pointer to the ttm_resource.
+   *
+   * This function should allocate space in the memory type managed
+   * by @man. Placement details if applicable are given by @place. If
+   * successful, a filled in ttm_resource object should be returned in
+   * @res. @res::start should be set to a value identifying the beginning
+   * of the range allocated, and the function should return zero.
+   * If the manager can't fulfill the request -ENOSPC should be returned.
+   * If a system error occurred, preventing the request to be fulfilled,
+   * the function should return a negative error code.
+   *
+   * This function may not be called from within atomic context and needs
+   * to take care of its own locking to protect any data structures
+   * managing the space.
+   */
+  int  (*alloc)(struct ttm_resource_manager *man,
+          struct ttm_buffer_object *bo,
+          const struct ttm_place *place,
+          struct ttm_resource **res);
 
-	/**
-	 * struct ttm_resource_manager_func member free
-	 *
-	 * @man: Pointer to a memory type manager.
-	 * @res: Pointer to a struct ttm_resource to be freed.
-	 *
-	 * This function frees memory type resources previously allocated.
-	 * May not be called from within atomic context.
-	 */
-	void (*free)(struct ttm_resource_manager *man,
-		     struct ttm_resource *res);
+  /**
+   * struct ttm_resource_manager_func member free
+   *
+   * @man: Pointer to a memory type manager.
+   * @res: Pointer to a struct ttm_resource to be freed.
+   *
+   * This function frees memory type resources previously allocated.
+   * May not be called from within atomic context.
+   */
+  void (*free)(struct ttm_resource_manager *man,
+         struct ttm_resource *res);
 
-	/**
-	 * struct ttm_resource_manager_func member debug
-	 *
-	 * @man: Pointer to a memory type manager.
-	 * @printer: Prefix to be used in printout to identify the caller.
-	 *
-	 * This function is called to print out the state of the memory
-	 * type manager to aid debugging of out-of-memory conditions.
-	 * It may not be called from within atomic context.
-	 */
-	void (*debug)(struct ttm_resource_manager *man,
-		      struct drm_printer *printer);
+  /**
+   * struct ttm_resource_manager_func member debug
+   *
+   * @man: Pointer to a memory type manager.
+   * @printer: Prefix to be used in printout to identify the caller.
+   *
+   * This function is called to print out the state of the memory
+   * type manager to aid debugging of out-of-memory conditions.
+   * It may not be called from within atomic context.
+   */
+  void (*debug)(struct ttm_resource_manager *man,
+          struct drm_printer *printer);
 };
 
 /**
@@ -116,41 +116,41 @@ struct ttm_resource_manager_func {
  * This structure is used to identify and manage memory types for a device.
  */
 struct ttm_resource_manager {
-	/*
-	 * No protection. Constant from start.
-	 */
-	bool use_type;
-	bool use_tt;
-	uint64_t size;
-	const struct ttm_resource_manager_func *func;
-	spinlock_t move_lock;
+  /*
+   * No protection. Constant from start.
+   */
+  bool use_type;
+  bool use_tt;
+  uint64_t size;
+  const struct ttm_resource_manager_func *func;
+  spinlock_t move_lock;
 
-	/*
-	 * Protected by the global->lru_lock.
-	 */
+  /*
+   * Protected by the global->lru_lock.
+   */
 
-	struct list_head lru[TTM_MAX_BO_PRIORITY];
+  struct list_head lru[TTM_MAX_BO_PRIORITY];
 
-	/*
-	 * Protected by @move_lock.
-	 */
-	struct dma_fence *move;
+  /*
+   * Protected by @move_lock.
+   */
+  struct dma_fence *move;
 };
 
 /**
  * struct ttm_bus_placement
  *
- * @addr:		mapped virtual address
- * @offset:		physical addr
- * @is_iomem:		is this io memory ?
+ * @addr:    mapped virtual address
+ * @offset:    physical addr
+ * @is_iomem:    is this io memory ?
  *
  * Structure indicating the bus placement of an object.
  */
 struct ttm_bus_placement {
-	void			*addr;
-	phys_addr_t		offset;
-	bool			is_iomem;
-	enum ttm_caching	caching;
+  void      *addr;
+  phys_addr_t    offset;
+  bool      is_iomem;
+  enum ttm_caching  caching;
 };
 
 /**
@@ -166,11 +166,11 @@ struct ttm_bus_placement {
  * buffer object.
  */
 struct ttm_resource {
-	unsigned long start;
-	unsigned long num_pages;
-	uint32_t mem_type;
-	uint32_t placement;
-	struct ttm_bus_placement bus;
+  unsigned long start;
+  unsigned long num_pages;
+  uint32_t mem_type;
+  uint32_t placement;
+  struct ttm_bus_placement bus;
 };
 
 /**
@@ -188,16 +188,16 @@ struct ttm_resource {
  * @cache.offs: First offset into @iomap of @sg. PAGE_SIZE granularity.
  */
 struct ttm_kmap_iter_iomap {
-	struct ttm_kmap_iter base;
-	struct io_mapping *iomap;
-	struct sg_table *st;
-	resource_size_t start;
-	struct {
-		struct scatterlist *sg;
-		pgoff_t i;
-		pgoff_t end;
-		pgoff_t offs;
-	} cache;
+  struct ttm_kmap_iter base;
+  struct io_mapping *iomap;
+  struct sg_table *st;
+  resource_size_t start;
+  struct {
+    struct scatterlist *sg;
+    pgoff_t i;
+    pgoff_t end;
+    pgoff_t offs;
+  } cache;
 };
 
 /**
@@ -207,9 +207,9 @@ struct ttm_kmap_iter_iomap {
  * @needs_unmap: Whether we need to unmap on fini
  */
 struct ttm_kmap_iter_linear_io {
-	struct ttm_kmap_iter base;
-	struct dma_buf_map dmap;
-	bool needs_unmap;
+  struct ttm_kmap_iter base;
+  struct dma_buf_map dmap;
+  bool needs_unmap;
 };
 
 /**
@@ -224,11 +224,11 @@ struct ttm_kmap_iter_linear_io {
 static inline void
 ttm_resource_manager_set_used(struct ttm_resource_manager *man, bool used)
 {
-	int i;
+  int i;
 
-	for (i = 0; i < TTM_MAX_BO_PRIORITY; i++)
-		WARN_ON(!list_empty(&man->lru[i]));
-	man->use_type = used;
+  for (i = 0; i < TTM_MAX_BO_PRIORITY; i++)
+    WARN_ON(!list_empty(&man->lru[i]));
+  man->use_type = used;
 }
 
 /**
@@ -242,7 +242,7 @@ ttm_resource_manager_set_used(struct ttm_resource_manager *man, bool used)
  */
 static inline bool ttm_resource_manager_used(struct ttm_resource_manager *man)
 {
-	return man->use_type;
+  return man->use_type;
 }
 
 /**
@@ -255,41 +255,41 @@ static inline bool ttm_resource_manager_used(struct ttm_resource_manager *man)
 static inline void
 ttm_resource_manager_cleanup(struct ttm_resource_manager *man)
 {
-	dma_fence_put(man->move);
-	man->move = NULL;
+  dma_fence_put(man->move);
+  man->move = NULL;
 }
 
 void ttm_resource_init(struct ttm_buffer_object *bo,
                        const struct ttm_place *place,
                        struct ttm_resource *res);
 int ttm_resource_alloc(struct ttm_buffer_object *bo,
-		       const struct ttm_place *place,
-		       struct ttm_resource **res);
+           const struct ttm_place *place,
+           struct ttm_resource **res);
 void ttm_resource_free(struct ttm_buffer_object *bo, struct ttm_resource **res);
 
 void ttm_resource_manager_init(struct ttm_resource_manager *man,
-			       unsigned long p_size);
+             unsigned long p_size);
 
 int ttm_resource_manager_evict_all(struct ttm_device *bdev,
-				   struct ttm_resource_manager *man);
+           struct ttm_resource_manager *man);
 
 void ttm_resource_manager_debug(struct ttm_resource_manager *man,
-				struct drm_printer *p);
+        struct drm_printer *p);
 
 struct ttm_kmap_iter *
 ttm_kmap_iter_iomap_init(struct ttm_kmap_iter_iomap *iter_io,
-			 struct io_mapping *iomap,
-			 struct sg_table *st,
-			 resource_size_t start);
+       struct io_mapping *iomap,
+       struct sg_table *st,
+       resource_size_t start);
 
 struct ttm_kmap_iter_linear_io;
 
 struct ttm_kmap_iter *
 ttm_kmap_iter_linear_io_init(struct ttm_kmap_iter_linear_io *iter_io,
-			     struct ttm_device *bdev,
-			     struct ttm_resource *mem);
+           struct ttm_device *bdev,
+           struct ttm_resource *mem);
 
 void ttm_kmap_iter_linear_io_fini(struct ttm_kmap_iter_linear_io *iter_io,
-				  struct ttm_device *bdev,
-				  struct ttm_resource *mem);
+          struct ttm_device *bdev,
+          struct ttm_resource *mem);
 #endif

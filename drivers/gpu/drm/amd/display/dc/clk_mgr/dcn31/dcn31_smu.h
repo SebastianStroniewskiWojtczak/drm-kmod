@@ -234,21 +234,21 @@ struct dcn31_watermarks {
 };
 
 struct dcn31_smu_dpm_clks {
-	DpmClocks_t *dpm_clks;
-	union large_integer mc_address;
+  DpmClocks_t *dpm_clks;
+  union large_integer mc_address;
 };
 
 /* TODO: taken from vgh, may not be correct */
 struct display_idle_optimization {
-	unsigned int df_request_disabled : 1;
-	unsigned int phy_ref_clk_off     : 1;
-	unsigned int s0i2_rdy            : 1;
-	unsigned int reserved            : 29;
+  unsigned int df_request_disabled : 1;
+  unsigned int phy_ref_clk_off     : 1;
+  unsigned int s0i2_rdy            : 1;
+  unsigned int reserved            : 29;
 };
 
 union display_idle_optimization_u {
-	struct display_idle_optimization idle_info;
-	uint32_t data;
+  struct display_idle_optimization idle_info;
+  uint32_t data;
 };
 
 int dcn31_smu_get_smu_version(struct clk_mgr_internal *clk_mgr);

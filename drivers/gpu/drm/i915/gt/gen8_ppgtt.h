@@ -14,7 +14,7 @@ enum i915_cache_level;
 
 struct i915_ppgtt *gen8_ppgtt_create(struct intel_gt *gt);
 u64 gen8_ggtt_pte_encode(dma_addr_t addr,
-			 enum i915_cache_level level,
-			 u32 flags);
+       enum i915_cache_level level,
+       u32 flags);
 
 #endif

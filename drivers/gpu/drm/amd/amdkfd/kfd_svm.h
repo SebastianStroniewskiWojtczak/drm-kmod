@@ -37,31 +37,31 @@
 
 #define SVM_RANGE_VRAM_DOMAIN (1UL << 0)
 #define SVM_ADEV_PGMAP_OWNER(adev)\
-			((adev)->hive ? (void *)(adev)->hive : (void *)(adev))
+      ((adev)->hive ? (void *)(adev)->hive : (void *)(adev))
 
 struct svm_range_bo {
-	struct amdgpu_bo		*bo;
-	struct kref			kref;
-	struct list_head		range_list; /* all svm ranges shared this bo */
-	spinlock_t			list_lock;
-	struct amdgpu_amdkfd_fence	*eviction_fence;
-	struct work_struct		eviction_work;
-	struct svm_range_list		*svms;
-	uint32_t			evicting;
+  struct amdgpu_bo    *bo;
+  struct kref      kref;
+  struct list_head    range_list; /* all svm ranges shared this bo */
+  spinlock_t      list_lock;
+  struct amdgpu_amdkfd_fence  *eviction_fence;
+  struct work_struct    eviction_work;
+  struct svm_range_list    *svms;
+  uint32_t      evicting;
 };
 
 enum svm_work_list_ops {
-	SVM_OP_NULL,
-	SVM_OP_UNMAP_RANGE,
-	SVM_OP_UPDATE_RANGE_NOTIFIER,
-	SVM_OP_UPDATE_RANGE_NOTIFIER_AND_MAP,
-	SVM_OP_ADD_RANGE,
-	SVM_OP_ADD_RANGE_AND_MAP
+  SVM_OP_NULL,
+  SVM_OP_UNMAP_RANGE,
+  SVM_OP_UPDATE_RANGE_NOTIFIER,
+  SVM_OP_UPDATE_RANGE_NOTIFIER_AND_MAP,
+  SVM_OP_ADD_RANGE,
+  SVM_OP_ADD_RANGE_AND_MAP
 };
 
 struct svm_work_list_item {
-	enum svm_work_list_ops op;
-	struct mm_struct *mm;
+  enum svm_work_list_ops op;
+  struct mm_struct *mm;
 };
 
 /**
@@ -105,87 +105,87 @@ struct svm_work_list_item {
  * or from vram to ram.
  */
 struct svm_range {
-	struct svm_range_list		*svms;
-	struct mutex			migrate_mutex;
-	unsigned long			start;
-	unsigned long			last;
-	struct interval_tree_node	it_node;
-	struct list_head		list;
-	struct list_head		update_list;
-	struct list_head		remove_list;
-	struct list_head		insert_list;
-	uint64_t			npages;
-	dma_addr_t			*dma_addr[MAX_GPU_INSTANCE];
-	struct ttm_resource		*ttm_res;
-	uint64_t			offset;
-	struct svm_range_bo		*svm_bo;
-	struct list_head		svm_bo_list;
-	struct mutex                    lock;
-	unsigned int                    saved_flags;
-	uint32_t			flags;
-	uint32_t			preferred_loc;
-	uint32_t			prefetch_loc;
-	uint32_t			actual_loc;
-	uint8_t				granularity;
-	atomic_t			invalid;
-	uint64_t			validate_timestamp;
-	struct mmu_interval_notifier	notifier;
-	struct svm_work_list_item	work_item;
-	struct list_head		deferred_list;
-	struct list_head		child_list;
-	DECLARE_BITMAP(bitmap_access, MAX_GPU_INSTANCE);
-	DECLARE_BITMAP(bitmap_aip, MAX_GPU_INSTANCE);
-	bool				validated_once;
+  struct svm_range_list    *svms;
+  struct mutex      migrate_mutex;
+  unsigned long      start;
+  unsigned long      last;
+  struct interval_tree_node  it_node;
+  struct list_head    list;
+  struct list_head    update_list;
+  struct list_head    remove_list;
+  struct list_head    insert_list;
+  uint64_t      npages;
+  dma_addr_t      *dma_addr[MAX_GPU_INSTANCE];
+  struct ttm_resource    *ttm_res;
+  uint64_t      offset;
+  struct svm_range_bo    *svm_bo;
+  struct list_head    svm_bo_list;
+  struct mutex                    lock;
+  unsigned int                    saved_flags;
+  uint32_t      flags;
+  uint32_t      preferred_loc;
+  uint32_t      prefetch_loc;
+  uint32_t      actual_loc;
+  uint8_t        granularity;
+  atomic_t      invalid;
+  uint64_t      validate_timestamp;
+  struct mmu_interval_notifier  notifier;
+  struct svm_work_list_item  work_item;
+  struct list_head    deferred_list;
+  struct list_head    child_list;
+  DECLARE_BITMAP(bitmap_access, MAX_GPU_INSTANCE);
+  DECLARE_BITMAP(bitmap_aip, MAX_GPU_INSTANCE);
+  bool        validated_once;
 };
 
 static inline void svm_range_lock(struct svm_range *prange)
 {
-	mutex_lock(&prange->lock);
-	prange->saved_flags = memalloc_noreclaim_save();
+  mutex_lock(&prange->lock);
+  prange->saved_flags = memalloc_noreclaim_save();
 
 }
 static inline void svm_range_unlock(struct svm_range *prange)
 {
-	memalloc_noreclaim_restore(prange->saved_flags);
-	mutex_unlock(&prange->lock);
+  memalloc_noreclaim_restore(prange->saved_flags);
+  mutex_unlock(&prange->lock);
 }
 
 static inline struct svm_range_bo *svm_range_bo_ref(struct svm_range_bo *svm_bo)
 {
-	if (svm_bo)
-		kref_get(&svm_bo->kref);
+  if (svm_bo)
+    kref_get(&svm_bo->kref);
 
-	return svm_bo;
+  return svm_bo;
 }
 
 int svm_range_list_init(struct kfd_process *p);
 void svm_range_list_fini(struct kfd_process *p);
 int svm_ioctl(struct kfd_process *p, enum kfd_ioctl_svm_op op, uint64_t start,
-	      uint64_t size, uint32_t nattrs,
-	      struct kfd_ioctl_svm_attribute *attrs);
+        uint64_t size, uint32_t nattrs,
+        struct kfd_ioctl_svm_attribute *attrs);
 struct svm_range *svm_range_from_addr(struct svm_range_list *svms,
-				      unsigned long addr,
-				      struct svm_range **parent);
+              unsigned long addr,
+              struct svm_range **parent);
 struct amdgpu_device *svm_range_get_adev_by_id(struct svm_range *prange,
-					       uint32_t id);
+                 uint32_t id);
 int svm_range_vram_node_new(struct amdgpu_device *adev,
-			    struct svm_range *prange, bool clear);
+          struct svm_range *prange, bool clear);
 void svm_range_vram_node_free(struct svm_range *prange);
 int svm_range_split_by_granularity(struct kfd_process *p, struct mm_struct *mm,
-			       unsigned long addr, struct svm_range *parent,
-			       struct svm_range *prange);
+             unsigned long addr, struct svm_range *parent,
+             struct svm_range *prange);
 int svm_range_restore_pages(struct amdgpu_device *adev,
-			    unsigned int pasid, uint64_t addr);
+          unsigned int pasid, uint64_t addr);
 int svm_range_schedule_evict_svm_bo(struct amdgpu_amdkfd_fence *fence);
 void svm_range_add_list_work(struct svm_range_list *svms,
-			     struct svm_range *prange, struct mm_struct *mm,
-			     enum svm_work_list_ops op);
+           struct svm_range *prange, struct mm_struct *mm,
+           enum svm_work_list_ops op);
 void schedule_deferred_list_work(struct svm_range_list *svms);
 void svm_range_dma_unmap(struct device *dev, dma_addr_t *dma_addr,
-			 unsigned long offset, unsigned long npages);
+       unsigned long offset, unsigned long npages);
 void svm_range_free_dma_mappings(struct svm_range *prange);
 void svm_range_prefault(struct svm_range *prange, struct mm_struct *mm,
-			void *owner);
+      void *owner);
 struct kfd_process_device *
 svm_range_get_pdd_by_adev(struct svm_range *prange, struct amdgpu_device *adev);
 
@@ -201,24 +201,24 @@ struct kfd_process;
 
 static inline int svm_range_list_init(struct kfd_process *p)
 {
-	return 0;
+  return 0;
 }
 static inline void svm_range_list_fini(struct kfd_process *p)
 {
-	/* empty */
+  /* empty */
 }
 
 static inline int svm_range_restore_pages(struct amdgpu_device *adev,
-					  unsigned int pasid, uint64_t addr)
+            unsigned int pasid, uint64_t addr)
 {
-	return -EFAULT;
+  return -EFAULT;
 }
 
 static inline int svm_range_schedule_evict_svm_bo(
-		struct amdgpu_amdkfd_fence *fence)
+    struct amdgpu_amdkfd_fence *fence)
 {
-	WARN_ONCE(1, "SVM eviction fence triggered, but SVM is disabled");
-	return -EINVAL;
+  WARN_ONCE(1, "SVM eviction fence triggered, but SVM is disabled");
+  return -EINVAL;
 }
 
 #define KFD_IS_SVM_API_SUPPORTED(dev) false

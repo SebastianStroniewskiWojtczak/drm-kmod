@@ -37,7 +37,7 @@
 
 /**
  * drm_helper_move_panel_connectors_to_head() - move panels to the front in the
- * 						connector list
+ *             connector list
  * @dev: drm device to operate on
  *
  * Some userspace presumes that the first connected connector is the main
@@ -48,22 +48,22 @@
  */
 void drm_helper_move_panel_connectors_to_head(struct drm_device *dev)
 {
-	struct drm_connector *connector, *tmp;
-	struct list_head panel_list;
+  struct drm_connector *connector, *tmp;
+  struct list_head panel_list;
 
-	INIT_LIST_HEAD(&panel_list);
+  INIT_LIST_HEAD(&panel_list);
 
-	spin_lock_irq(&dev->mode_config.connector_list_lock);
-	list_for_each_entry_safe(connector, tmp,
-				 &dev->mode_config.connector_list, head) {
-		if (connector->connector_type == DRM_MODE_CONNECTOR_LVDS ||
-		    connector->connector_type == DRM_MODE_CONNECTOR_eDP ||
-		    connector->connector_type == DRM_MODE_CONNECTOR_DSI)
-			list_move_tail(&connector->head, &panel_list);
-	}
+  spin_lock_irq(&dev->mode_config.connector_list_lock);
+  list_for_each_entry_safe(connector, tmp,
+         &dev->mode_config.connector_list, head) {
+    if (connector->connector_type == DRM_MODE_CONNECTOR_LVDS ||
+        connector->connector_type == DRM_MODE_CONNECTOR_eDP ||
+        connector->connector_type == DRM_MODE_CONNECTOR_DSI)
+      list_move_tail(&connector->head, &panel_list);
+  }
 
-	list_splice(&panel_list, &dev->mode_config.connector_list);
-	spin_unlock_irq(&dev->mode_config.connector_list_lock);
+  list_splice(&panel_list, &dev->mode_config.connector_list);
+  spin_unlock_irq(&dev->mode_config.connector_list_lock);
 }
 EXPORT_SYMBOL(drm_helper_move_panel_connectors_to_head);
 
@@ -77,21 +77,21 @@ EXPORT_SYMBOL(drm_helper_move_panel_connectors_to_head);
  * metadata fields.
  */
 void drm_helper_mode_fill_fb_struct(struct drm_device *dev,
-				    struct drm_framebuffer *fb,
-				    const struct drm_mode_fb_cmd2 *mode_cmd)
+            struct drm_framebuffer *fb,
+            const struct drm_mode_fb_cmd2 *mode_cmd)
 {
-	int i;
+  int i;
 
-	fb->dev = dev;
-	fb->format = drm_get_format_info(dev, mode_cmd);
-	fb->width = mode_cmd->width;
-	fb->height = mode_cmd->height;
-	for (i = 0; i < 4; i++) {
-		fb->pitches[i] = mode_cmd->pitches[i];
-		fb->offsets[i] = mode_cmd->offsets[i];
-	}
-	fb->modifier = mode_cmd->modifier[0];
-	fb->flags = mode_cmd->flags;
+  fb->dev = dev;
+  fb->format = drm_get_format_info(dev, mode_cmd);
+  fb->width = mode_cmd->width;
+  fb->height = mode_cmd->height;
+  for (i = 0; i < 4; i++) {
+    fb->pitches[i] = mode_cmd->pitches[i];
+    fb->offsets[i] = mode_cmd->offsets[i];
+  }
+  fb->modifier = mode_cmd->modifier[0];
+  fb->flags = mode_cmd->flags;
 }
 EXPORT_SYMBOL(drm_helper_mode_fill_fb_struct);
 
@@ -103,40 +103,40 @@ EXPORT_SYMBOL(drm_helper_mode_fill_fb_struct);
  * drm_plane_init() will use this minimal format list as the default.
  */
 static const uint32_t safe_modeset_formats[] = {
-	DRM_FORMAT_XRGB8888,
-	DRM_FORMAT_ARGB8888,
+  DRM_FORMAT_XRGB8888,
+  DRM_FORMAT_ARGB8888,
 };
 
 static struct drm_plane *create_primary_plane(struct drm_device *dev)
 {
-	struct drm_plane *primary;
-	int ret;
+  struct drm_plane *primary;
+  int ret;
 
-	primary = kzalloc(sizeof(*primary), GFP_KERNEL);
-	if (primary == NULL) {
-		DRM_DEBUG_KMS("Failed to allocate primary plane\n");
-		return NULL;
-	}
+  primary = kzalloc(sizeof(*primary), GFP_KERNEL);
+  if (primary == NULL) {
+    DRM_DEBUG_KMS("Failed to allocate primary plane\n");
+    return NULL;
+  }
 
-	/*
-	 * Remove the format_default field from drm_plane when dropping
-	 * this helper.
-	 */
-	primary->format_default = true;
+  /*
+   * Remove the format_default field from drm_plane when dropping
+   * this helper.
+   */
+  primary->format_default = true;
 
-	/* possible_crtc's will be filled in later by crtc_init */
-	ret = drm_universal_plane_init(dev, primary, 0,
-				       &drm_primary_helper_funcs,
-				       safe_modeset_formats,
-				       ARRAY_SIZE(safe_modeset_formats),
-				       NULL,
-				       DRM_PLANE_TYPE_PRIMARY, NULL);
-	if (ret) {
-		kfree(primary);
-		primary = NULL;
-	}
+  /* possible_crtc's will be filled in later by crtc_init */
+  ret = drm_universal_plane_init(dev, primary, 0,
+               &drm_primary_helper_funcs,
+               safe_modeset_formats,
+               ARRAY_SIZE(safe_modeset_formats),
+               NULL,
+               DRM_PLANE_TYPE_PRIMARY, NULL);
+  if (ret) {
+    kfree(primary);
+    primary = NULL;
+  }
 
-	return primary;
+  return primary;
 }
 
 /**
@@ -167,13 +167,13 @@ static struct drm_plane *create_primary_plane(struct drm_device *dev)
  * Zero on success, error code on failure.
  */
 int drm_crtc_init(struct drm_device *dev, struct drm_crtc *crtc,
-		  const struct drm_crtc_funcs *funcs)
+      const struct drm_crtc_funcs *funcs)
 {
-	struct drm_plane *primary;
+  struct drm_plane *primary;
 
-	primary = create_primary_plane(dev);
-	return drm_crtc_init_with_planes(dev, crtc, primary, NULL, funcs,
-					 NULL);
+  primary = create_primary_plane(dev);
+  return drm_crtc_init_with_planes(dev, crtc, primary, NULL, funcs,
+           NULL);
 }
 EXPORT_SYMBOL(drm_crtc_init);
 
@@ -194,23 +194,23 @@ EXPORT_SYMBOL(drm_crtc_init);
  */
 int drm_mode_config_helper_suspend(struct drm_device *dev)
 {
-	struct drm_atomic_state *state;
+  struct drm_atomic_state *state;
 
-	if (!dev)
-		return 0;
+  if (!dev)
+    return 0;
 
-	drm_kms_helper_poll_disable(dev);
-	drm_fb_helper_set_suspend_unlocked(dev->fb_helper, 1);
-	state = drm_atomic_helper_suspend(dev);
-	if (IS_ERR(state)) {
-		drm_fb_helper_set_suspend_unlocked(dev->fb_helper, 0);
-		drm_kms_helper_poll_enable(dev);
-		return PTR_ERR(state);
-	}
+  drm_kms_helper_poll_disable(dev);
+  drm_fb_helper_set_suspend_unlocked(dev->fb_helper, 1);
+  state = drm_atomic_helper_suspend(dev);
+  if (IS_ERR(state)) {
+    drm_fb_helper_set_suspend_unlocked(dev->fb_helper, 0);
+    drm_kms_helper_poll_enable(dev);
+    return PTR_ERR(state);
+  }
 
-	dev->mode_config.suspend_state = state;
+  dev->mode_config.suspend_state = state;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_mode_config_helper_suspend);
 
@@ -230,22 +230,22 @@ EXPORT_SYMBOL(drm_mode_config_helper_suspend);
  */
 int drm_mode_config_helper_resume(struct drm_device *dev)
 {
-	int ret;
+  int ret;
 
-	if (!dev)
-		return 0;
+  if (!dev)
+    return 0;
 
-	if (WARN_ON(!dev->mode_config.suspend_state))
-		return -EINVAL;
+  if (WARN_ON(!dev->mode_config.suspend_state))
+    return -EINVAL;
 
-	ret = drm_atomic_helper_resume(dev, dev->mode_config.suspend_state);
-	if (ret)
-		DRM_ERROR("Failed to resume (%d)\n", ret);
-	dev->mode_config.suspend_state = NULL;
+  ret = drm_atomic_helper_resume(dev, dev->mode_config.suspend_state);
+  if (ret)
+    DRM_ERROR("Failed to resume (%d)\n", ret);
+  dev->mode_config.suspend_state = NULL;
 
-	drm_fb_helper_set_suspend_unlocked(dev->fb_helper, 0);
-	drm_kms_helper_poll_enable(dev);
+  drm_fb_helper_set_suspend_unlocked(dev->fb_helper, 0);
+  drm_kms_helper_poll_enable(dev);
 
-	return ret;
+  return ret;
 }
 EXPORT_SYMBOL(drm_mode_config_helper_resume);

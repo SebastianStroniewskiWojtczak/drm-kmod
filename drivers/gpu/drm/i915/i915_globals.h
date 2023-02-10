@@ -12,10 +12,10 @@
 typedef void (*i915_global_func_t)(void);
 
 struct i915_global {
-	struct list_head link;
+  struct list_head link;
 
-	i915_global_func_t shrink;
-	i915_global_func_t exit;
+  i915_global_func_t shrink;
+  i915_global_func_t exit;
 };
 
 void i915_global_register(struct i915_global *global);

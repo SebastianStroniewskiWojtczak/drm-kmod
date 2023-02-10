@@ -34,12 +34,12 @@
  */
 
 static const struct drm_gem_object_funcs drm_gem_cma_default_funcs = {
-	.free = drm_gem_cma_free_object,
-	.print_info = drm_gem_cma_print_info,
-	.get_sg_table = drm_gem_cma_get_sg_table,
-	.vmap = drm_gem_cma_vmap,
-	.mmap = drm_gem_cma_mmap,
-	.vm_ops = &drm_gem_cma_vm_ops,
+  .free = drm_gem_cma_free_object,
+  .print_info = drm_gem_cma_print_info,
+  .get_sg_table = drm_gem_cma_get_sg_table,
+  .vmap = drm_gem_cma_vmap,
+  .mmap = drm_gem_cma_mmap,
+  .vm_ops = &drm_gem_cma_vm_ops,
 };
 
 /**
@@ -58,44 +58,44 @@ static const struct drm_gem_object_funcs drm_gem_cma_default_funcs = {
 static struct drm_gem_cma_object *
 __drm_gem_cma_create(struct drm_device *drm, size_t size, bool private)
 {
-	struct drm_gem_cma_object *cma_obj;
-	struct drm_gem_object *gem_obj;
-	int ret = 0;
+  struct drm_gem_cma_object *cma_obj;
+  struct drm_gem_object *gem_obj;
+  int ret = 0;
 
-	if (drm->driver->gem_create_object)
-		gem_obj = drm->driver->gem_create_object(drm, size);
-	else
-		gem_obj = kzalloc(sizeof(*cma_obj), GFP_KERNEL);
-	if (!gem_obj)
-		return ERR_PTR(-ENOMEM);
+  if (drm->driver->gem_create_object)
+    gem_obj = drm->driver->gem_create_object(drm, size);
+  else
+    gem_obj = kzalloc(sizeof(*cma_obj), GFP_KERNEL);
+  if (!gem_obj)
+    return ERR_PTR(-ENOMEM);
 
-	if (!gem_obj->funcs)
-		gem_obj->funcs = &drm_gem_cma_default_funcs;
+  if (!gem_obj->funcs)
+    gem_obj->funcs = &drm_gem_cma_default_funcs;
 
-	cma_obj = container_of(gem_obj, struct drm_gem_cma_object, base);
+  cma_obj = container_of(gem_obj, struct drm_gem_cma_object, base);
 
-	if (private) {
-		drm_gem_private_object_init(drm, gem_obj, size);
+  if (private) {
+    drm_gem_private_object_init(drm, gem_obj, size);
 
-		/* Always use writecombine for dma-buf mappings */
-		cma_obj->map_noncoherent = false;
-	} else {
-		ret = drm_gem_object_init(drm, gem_obj, size);
-	}
-	if (ret)
-		goto error;
+    /* Always use writecombine for dma-buf mappings */
+    cma_obj->map_noncoherent = false;
+  } else {
+    ret = drm_gem_object_init(drm, gem_obj, size);
+  }
+  if (ret)
+    goto error;
 
-	ret = drm_gem_create_mmap_offset(gem_obj);
-	if (ret) {
-		drm_gem_object_release(gem_obj);
-		goto error;
-	}
+  ret = drm_gem_create_mmap_offset(gem_obj);
+  if (ret) {
+    drm_gem_object_release(gem_obj);
+    goto error;
+  }
 
-	return cma_obj;
+  return cma_obj;
 
 error:
-	kfree(cma_obj);
-	return ERR_PTR(ret);
+  kfree(cma_obj);
+  return ERR_PTR(ret);
 }
 
 /**
@@ -112,38 +112,38 @@ error:
  * error code on failure.
  */
 struct drm_gem_cma_object *drm_gem_cma_create(struct drm_device *drm,
-					      size_t size)
+                size_t size)
 {
-	struct drm_gem_cma_object *cma_obj;
-	int ret;
+  struct drm_gem_cma_object *cma_obj;
+  int ret;
 
-	size = round_up(size, PAGE_SIZE);
+  size = round_up(size, PAGE_SIZE);
 
-	cma_obj = __drm_gem_cma_create(drm, size, false);
-	if (IS_ERR(cma_obj))
-		return cma_obj;
+  cma_obj = __drm_gem_cma_create(drm, size, false);
+  if (IS_ERR(cma_obj))
+    return cma_obj;
 
-	if (cma_obj->map_noncoherent) {
-		cma_obj->vaddr = dma_alloc_noncoherent(drm->dev, size,
-						       &cma_obj->paddr,
-						       DMA_TO_DEVICE,
-						       GFP_KERNEL | __GFP_NOWARN);
-	} else {
-		cma_obj->vaddr = dma_alloc_wc(drm->dev, size, &cma_obj->paddr,
-					      GFP_KERNEL | __GFP_NOWARN);
-	}
-	if (!cma_obj->vaddr) {
-		drm_dbg(drm, "failed to allocate buffer with size %zu\n",
-			 size);
-		ret = -ENOMEM;
-		goto error;
-	}
+  if (cma_obj->map_noncoherent) {
+    cma_obj->vaddr = dma_alloc_noncoherent(drm->dev, size,
+                   &cma_obj->paddr,
+                   DMA_TO_DEVICE,
+                   GFP_KERNEL | __GFP_NOWARN);
+  } else {
+    cma_obj->vaddr = dma_alloc_wc(drm->dev, size, &cma_obj->paddr,
+                GFP_KERNEL | __GFP_NOWARN);
+  }
+  if (!cma_obj->vaddr) {
+    drm_dbg(drm, "failed to allocate buffer with size %zu\n",
+       size);
+    ret = -ENOMEM;
+    goto error;
+  }
 
-	return cma_obj;
+  return cma_obj;
 
 error:
-	drm_gem_object_put(&cma_obj->base);
-	return ERR_PTR(ret);
+  drm_gem_object_put(&cma_obj->base);
+  return ERR_PTR(ret);
 }
 EXPORT_SYMBOL_GPL(drm_gem_cma_create);
 
@@ -165,30 +165,30 @@ EXPORT_SYMBOL_GPL(drm_gem_cma_create);
  */
 static struct drm_gem_cma_object *
 drm_gem_cma_create_with_handle(struct drm_file *file_priv,
-			       struct drm_device *drm, size_t size,
-			       uint32_t *handle)
+             struct drm_device *drm, size_t size,
+             uint32_t *handle)
 {
-	struct drm_gem_cma_object *cma_obj;
-	struct drm_gem_object *gem_obj;
-	int ret;
+  struct drm_gem_cma_object *cma_obj;
+  struct drm_gem_object *gem_obj;
+  int ret;
 
-	cma_obj = drm_gem_cma_create(drm, size);
-	if (IS_ERR(cma_obj))
-		return cma_obj;
+  cma_obj = drm_gem_cma_create(drm, size);
+  if (IS_ERR(cma_obj))
+    return cma_obj;
 
-	gem_obj = &cma_obj->base;
+  gem_obj = &cma_obj->base;
 
-	/*
-	 * allocate a id of idr table where the obj is registered
-	 * and handle has the id what user can see.
-	 */
-	ret = drm_gem_handle_create(file_priv, gem_obj, handle);
-	/* drop reference from allocate - handle holds it now. */
-	drm_gem_object_put(gem_obj);
-	if (ret)
-		return ERR_PTR(ret);
+  /*
+   * allocate a id of idr table where the obj is registered
+   * and handle has the id what user can see.
+   */
+  ret = drm_gem_handle_create(file_priv, gem_obj, handle);
+  /* drop reference from allocate - handle holds it now. */
+  drm_gem_object_put(gem_obj);
+  if (ret)
+    return ERR_PTR(ret);
 
-	return cma_obj;
+  return cma_obj;
 }
 
 /**
@@ -203,21 +203,21 @@ drm_gem_cma_create_with_handle(struct drm_file *file_priv,
  */
 void drm_gem_cma_free_object(struct drm_gem_object *gem_obj)
 {
-	struct drm_gem_cma_object *cma_obj = to_drm_gem_cma_obj(gem_obj);
-	struct dma_buf_map map = DMA_BUF_MAP_INIT_VADDR(cma_obj->vaddr);
+  struct drm_gem_cma_object *cma_obj = to_drm_gem_cma_obj(gem_obj);
+  struct dma_buf_map map = DMA_BUF_MAP_INIT_VADDR(cma_obj->vaddr);
 
-	if (gem_obj->import_attach) {
-		if (cma_obj->vaddr)
-			dma_buf_vunmap(gem_obj->import_attach->dmabuf, &map);
-		drm_prime_gem_destroy(gem_obj, cma_obj->sgt);
-	} else if (cma_obj->vaddr) {
-		dma_free_wc(gem_obj->dev->dev, cma_obj->base.size,
-			    cma_obj->vaddr, cma_obj->paddr);
-	}
+  if (gem_obj->import_attach) {
+    if (cma_obj->vaddr)
+      dma_buf_vunmap(gem_obj->import_attach->dmabuf, &map);
+    drm_prime_gem_destroy(gem_obj, cma_obj->sgt);
+  } else if (cma_obj->vaddr) {
+    dma_free_wc(gem_obj->dev->dev, cma_obj->base.size,
+          cma_obj->vaddr, cma_obj->paddr);
+  }
 
-	drm_gem_object_release(gem_obj);
+  drm_gem_object_release(gem_obj);
 
-	kfree(cma_obj);
+  kfree(cma_obj);
 }
 EXPORT_SYMBOL_GPL(drm_gem_cma_free_object);
 
@@ -236,21 +236,21 @@ EXPORT_SYMBOL_GPL(drm_gem_cma_free_object);
  * 0 on success or a negative error code on failure.
  */
 int drm_gem_cma_dumb_create_internal(struct drm_file *file_priv,
-				     struct drm_device *drm,
-				     struct drm_mode_create_dumb *args)
+             struct drm_device *drm,
+             struct drm_mode_create_dumb *args)
 {
-	unsigned int min_pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
-	struct drm_gem_cma_object *cma_obj;
+  unsigned int min_pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
+  struct drm_gem_cma_object *cma_obj;
 
-	if (args->pitch < min_pitch)
-		args->pitch = min_pitch;
+  if (args->pitch < min_pitch)
+    args->pitch = min_pitch;
 
-	if (args->size < args->pitch * args->height)
-		args->size = args->pitch * args->height;
+  if (args->size < args->pitch * args->height)
+    args->size = args->pitch * args->height;
 
-	cma_obj = drm_gem_cma_create_with_handle(file_priv, drm, args->size,
-						 &args->handle);
-	return PTR_ERR_OR_ZERO(cma_obj);
+  cma_obj = drm_gem_cma_create_with_handle(file_priv, drm, args->size,
+             &args->handle);
+  return PTR_ERR_OR_ZERO(cma_obj);
 }
 EXPORT_SYMBOL_GPL(drm_gem_cma_dumb_create_internal);
 
@@ -273,23 +273,23 @@ EXPORT_SYMBOL_GPL(drm_gem_cma_dumb_create_internal);
  * 0 on success or a negative error code on failure.
  */
 int drm_gem_cma_dumb_create(struct drm_file *file_priv,
-			    struct drm_device *drm,
-			    struct drm_mode_create_dumb *args)
+          struct drm_device *drm,
+          struct drm_mode_create_dumb *args)
 {
-	struct drm_gem_cma_object *cma_obj;
+  struct drm_gem_cma_object *cma_obj;
 
-	args->pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
-	args->size = args->pitch * args->height;
+  args->pitch = DIV_ROUND_UP(args->width * args->bpp, 8);
+  args->size = args->pitch * args->height;
 
-	cma_obj = drm_gem_cma_create_with_handle(file_priv, drm, args->size,
-						 &args->handle);
-	return PTR_ERR_OR_ZERO(cma_obj);
+  cma_obj = drm_gem_cma_create_with_handle(file_priv, drm, args->size,
+             &args->handle);
+  return PTR_ERR_OR_ZERO(cma_obj);
 }
 EXPORT_SYMBOL_GPL(drm_gem_cma_dumb_create);
 
 const struct vm_operations_struct drm_gem_cma_vm_ops = {
-	.open = drm_gem_vm_open,
-	.close = drm_gem_vm_close,
+  .open = drm_gem_vm_open,
+  .close = drm_gem_vm_close,
 };
 EXPORT_SYMBOL_GPL(drm_gem_cma_vm_ops);
 
@@ -311,55 +311,55 @@ EXPORT_SYMBOL_GPL(drm_gem_cma_vm_ops);
  * mapping address on success or a negative error code on failure.
  */
 unsigned long drm_gem_cma_get_unmapped_area(struct file *filp,
-					    unsigned long addr,
-					    unsigned long len,
-					    unsigned long pgoff,
-					    unsigned long flags)
+              unsigned long addr,
+              unsigned long len,
+              unsigned long pgoff,
+              unsigned long flags)
 {
-	struct drm_gem_cma_object *cma_obj;
-	struct drm_gem_object *obj = NULL;
-	struct drm_file *priv = filp->private_data;
-	struct drm_device *dev = priv->minor->dev;
-	struct drm_vma_offset_node *node;
+  struct drm_gem_cma_object *cma_obj;
+  struct drm_gem_object *obj = NULL;
+  struct drm_file *priv = filp->private_data;
+  struct drm_device *dev = priv->minor->dev;
+  struct drm_vma_offset_node *node;
 
-	if (drm_dev_is_unplugged(dev))
-		return -ENODEV;
+  if (drm_dev_is_unplugged(dev))
+    return -ENODEV;
 
-	drm_vma_offset_lock_lookup(dev->vma_offset_manager);
-	node = drm_vma_offset_exact_lookup_locked(dev->vma_offset_manager,
-						  pgoff,
-						  len >> PAGE_SHIFT);
-	if (likely(node)) {
-		obj = container_of(node, struct drm_gem_object, vma_node);
-		/*
-		 * When the object is being freed, after it hits 0-refcnt it
-		 * proceeds to tear down the object. In the process it will
-		 * attempt to remove the VMA offset and so acquire this
-		 * mgr->vm_lock.  Therefore if we find an object with a 0-refcnt
-		 * that matches our range, we know it is in the process of being
-		 * destroyed and will be freed as soon as we release the lock -
-		 * so we have to check for the 0-refcnted object and treat it as
-		 * invalid.
-		 */
-		if (!kref_get_unless_zero(&obj->refcount))
-			obj = NULL;
-	}
+  drm_vma_offset_lock_lookup(dev->vma_offset_manager);
+  node = drm_vma_offset_exact_lookup_locked(dev->vma_offset_manager,
+              pgoff,
+              len >> PAGE_SHIFT);
+  if (likely(node)) {
+    obj = container_of(node, struct drm_gem_object, vma_node);
+    /*
+     * When the object is being freed, after it hits 0-refcnt it
+     * proceeds to tear down the object. In the process it will
+     * attempt to remove the VMA offset and so acquire this
+     * mgr->vm_lock.  Therefore if we find an object with a 0-refcnt
+     * that matches our range, we know it is in the process of being
+     * destroyed and will be freed as soon as we release the lock -
+     * so we have to check for the 0-refcnted object and treat it as
+     * invalid.
+     */
+    if (!kref_get_unless_zero(&obj->refcount))
+      obj = NULL;
+  }
 
-	drm_vma_offset_unlock_lookup(dev->vma_offset_manager);
+  drm_vma_offset_unlock_lookup(dev->vma_offset_manager);
 
-	if (!obj)
-		return -EINVAL;
+  if (!obj)
+    return -EINVAL;
 
-	if (!drm_vma_node_is_allowed(node, priv)) {
-		drm_gem_object_put(obj);
-		return -EACCES;
-	}
+  if (!drm_vma_node_is_allowed(node, priv)) {
+    drm_gem_object_put(obj);
+    return -EACCES;
+  }
 
-	cma_obj = to_drm_gem_cma_obj(obj);
+  cma_obj = to_drm_gem_cma_obj(obj);
 
-	drm_gem_object_put(obj);
+  drm_gem_object_put(obj);
 
-	return cma_obj->vaddr ? (unsigned long)cma_obj->vaddr : -EINVAL;
+  return cma_obj->vaddr ? (unsigned long)cma_obj->vaddr : -EINVAL;
 }
 EXPORT_SYMBOL_GPL(drm_gem_cma_get_unmapped_area);
 #endif
@@ -374,12 +374,12 @@ EXPORT_SYMBOL_GPL(drm_gem_cma_get_unmapped_area);
  * It prints paddr and vaddr for use in e.g. debugfs output.
  */
 void drm_gem_cma_print_info(struct drm_printer *p, unsigned int indent,
-			    const struct drm_gem_object *obj)
+          const struct drm_gem_object *obj)
 {
-	const struct drm_gem_cma_object *cma_obj = to_drm_gem_cma_obj(obj);
+  const struct drm_gem_cma_object *cma_obj = to_drm_gem_cma_obj(obj);
 
-	drm_printf_indent(p, indent, "paddr=%pad\n", &cma_obj->paddr);
-	drm_printf_indent(p, indent, "vaddr=%p\n", cma_obj->vaddr);
+  drm_printf_indent(p, indent, "paddr=%pad\n", &cma_obj->paddr);
+  drm_printf_indent(p, indent, "vaddr=%p\n", cma_obj->vaddr);
 }
 EXPORT_SYMBOL(drm_gem_cma_print_info);
 
@@ -397,24 +397,24 @@ EXPORT_SYMBOL(drm_gem_cma_print_info);
  */
 struct sg_table *drm_gem_cma_get_sg_table(struct drm_gem_object *obj)
 {
-	struct drm_gem_cma_object *cma_obj = to_drm_gem_cma_obj(obj);
-	struct sg_table *sgt;
-	int ret;
+  struct drm_gem_cma_object *cma_obj = to_drm_gem_cma_obj(obj);
+  struct sg_table *sgt;
+  int ret;
 
-	sgt = kzalloc(sizeof(*sgt), GFP_KERNEL);
-	if (!sgt)
-		return ERR_PTR(-ENOMEM);
+  sgt = kzalloc(sizeof(*sgt), GFP_KERNEL);
+  if (!sgt)
+    return ERR_PTR(-ENOMEM);
 
-	ret = dma_get_sgtable(obj->dev->dev, sgt, cma_obj->vaddr,
-			      cma_obj->paddr, obj->size);
-	if (ret < 0)
-		goto out;
+  ret = dma_get_sgtable(obj->dev->dev, sgt, cma_obj->vaddr,
+            cma_obj->paddr, obj->size);
+  if (ret < 0)
+    goto out;
 
-	return sgt;
+  return sgt;
 
 out:
-	kfree(sgt);
-	return ERR_PTR(ret);
+  kfree(sgt);
+  return ERR_PTR(ret);
 }
 EXPORT_SYMBOL_GPL(drm_gem_cma_get_sg_table);
 
@@ -437,26 +437,26 @@ EXPORT_SYMBOL_GPL(drm_gem_cma_get_sg_table);
  */
 struct drm_gem_object *
 drm_gem_cma_prime_import_sg_table(struct drm_device *dev,
-				  struct dma_buf_attachment *attach,
-				  struct sg_table *sgt)
+          struct dma_buf_attachment *attach,
+          struct sg_table *sgt)
 {
-	struct drm_gem_cma_object *cma_obj;
+  struct drm_gem_cma_object *cma_obj;
 
-	/* check if the entries in the sg_table are contiguous */
-	if (drm_prime_get_contiguous_size(sgt) < attach->dmabuf->size)
-		return ERR_PTR(-EINVAL);
+  /* check if the entries in the sg_table are contiguous */
+  if (drm_prime_get_contiguous_size(sgt) < attach->dmabuf->size)
+    return ERR_PTR(-EINVAL);
 
-	/* Create a CMA GEM buffer. */
-	cma_obj = __drm_gem_cma_create(dev, attach->dmabuf->size, true);
-	if (IS_ERR(cma_obj))
-		return ERR_CAST(cma_obj);
+  /* Create a CMA GEM buffer. */
+  cma_obj = __drm_gem_cma_create(dev, attach->dmabuf->size, true);
+  if (IS_ERR(cma_obj))
+    return ERR_CAST(cma_obj);
 
-	cma_obj->paddr = sg_dma_address(sgt->sgl);
-	cma_obj->sgt = sgt;
+  cma_obj->paddr = sg_dma_address(sgt->sgl);
+  cma_obj->sgt = sgt;
 
-	DRM_DEBUG_PRIME("dma_addr = %pad, size = %zu\n", &cma_obj->paddr, attach->dmabuf->size);
+  DRM_DEBUG_PRIME("dma_addr = %pad, size = %zu\n", &cma_obj->paddr, attach->dmabuf->size);
 
-	return &cma_obj->base;
+  return &cma_obj->base;
 }
 EXPORT_SYMBOL_GPL(drm_gem_cma_prime_import_sg_table);
 
@@ -478,11 +478,11 @@ EXPORT_SYMBOL_GPL(drm_gem_cma_prime_import_sg_table);
  */
 int drm_gem_cma_vmap(struct drm_gem_object *obj, struct dma_buf_map *map)
 {
-	struct drm_gem_cma_object *cma_obj = to_drm_gem_cma_obj(obj);
+  struct drm_gem_cma_object *cma_obj = to_drm_gem_cma_obj(obj);
 
-	dma_buf_map_set_vaddr(map, cma_obj->vaddr);
+  dma_buf_map_set_vaddr(map, cma_obj->vaddr);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL_GPL(drm_gem_cma_vmap);
 
@@ -501,36 +501,36 @@ EXPORT_SYMBOL_GPL(drm_gem_cma_vmap);
  */
 int drm_gem_cma_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma)
 {
-	struct drm_gem_cma_object *cma_obj;
-	int ret;
+  struct drm_gem_cma_object *cma_obj;
+  int ret;
 
-	/*
-	 * Clear the VM_PFNMAP flag that was set by drm_gem_mmap(), and set the
-	 * vm_pgoff (used as a fake buffer offset by DRM) to 0 as we want to map
-	 * the whole buffer.
-	 */
-	vma->vm_pgoff -= drm_vma_node_start(&obj->vma_node);
-	vma->vm_flags &= ~VM_PFNMAP;
+  /*
+   * Clear the VM_PFNMAP flag that was set by drm_gem_mmap(), and set the
+   * vm_pgoff (used as a fake buffer offset by DRM) to 0 as we want to map
+   * the whole buffer.
+   */
+  vma->vm_pgoff -= drm_vma_node_start(&obj->vma_node);
+  vma->vm_flags &= ~VM_PFNMAP;
 
-	cma_obj = to_drm_gem_cma_obj(obj);
+  cma_obj = to_drm_gem_cma_obj(obj);
 
-	vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
-	if (!cma_obj->map_noncoherent)
-		vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
+  vma->vm_page_prot = vm_get_page_prot(vma->vm_flags);
+  if (!cma_obj->map_noncoherent)
+    vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
 
-	ret = dma_mmap_pages(cma_obj->base.dev->dev,
-			     vma, vma->vm_end - vma->vm_start,
-			     virt_to_page(cma_obj->vaddr));
-	if (ret)
-		drm_gem_vm_close(vma);
+  ret = dma_mmap_pages(cma_obj->base.dev->dev,
+           vma, vma->vm_end - vma->vm_start,
+           virt_to_page(cma_obj->vaddr));
+  if (ret)
+    drm_gem_vm_close(vma);
 
-	return ret;
+  return ret;
 }
 EXPORT_SYMBOL_GPL(drm_gem_cma_mmap);
 
 /**
  * drm_gem_cma_prime_import_sg_table_vmap - PRIME import another driver's
- *	scatter/gather table and get the virtual address of the buffer
+ *  scatter/gather table and get the virtual address of the buffer
  * @dev: DRM device
  * @attach: DMA-BUF attachment
  * @sgt: Scatter/gather table of pinned pages
@@ -550,29 +550,29 @@ EXPORT_SYMBOL_GPL(drm_gem_cma_mmap);
  */
 struct drm_gem_object *
 drm_gem_cma_prime_import_sg_table_vmap(struct drm_device *dev,
-				       struct dma_buf_attachment *attach,
-				       struct sg_table *sgt)
+               struct dma_buf_attachment *attach,
+               struct sg_table *sgt)
 {
-	struct drm_gem_cma_object *cma_obj;
-	struct drm_gem_object *obj;
-	struct dma_buf_map map;
-	int ret;
+  struct drm_gem_cma_object *cma_obj;
+  struct drm_gem_object *obj;
+  struct dma_buf_map map;
+  int ret;
 
-	ret = dma_buf_vmap(attach->dmabuf, &map);
-	if (ret) {
-		DRM_ERROR("Failed to vmap PRIME buffer\n");
-		return ERR_PTR(ret);
-	}
+  ret = dma_buf_vmap(attach->dmabuf, &map);
+  if (ret) {
+    DRM_ERROR("Failed to vmap PRIME buffer\n");
+    return ERR_PTR(ret);
+  }
 
-	obj = drm_gem_cma_prime_import_sg_table(dev, attach, sgt);
-	if (IS_ERR(obj)) {
-		dma_buf_vunmap(attach->dmabuf, &map);
-		return obj;
-	}
+  obj = drm_gem_cma_prime_import_sg_table(dev, attach, sgt);
+  if (IS_ERR(obj)) {
+    dma_buf_vunmap(attach->dmabuf, &map);
+    return obj;
+  }
 
-	cma_obj = to_drm_gem_cma_obj(obj);
-	cma_obj->vaddr = map.vaddr;
+  cma_obj = to_drm_gem_cma_obj(obj);
+  cma_obj->vaddr = map.vaddr;
 
-	return obj;
+  return obj;
 }
 EXPORT_SYMBOL(drm_gem_cma_prime_import_sg_table_vmap);

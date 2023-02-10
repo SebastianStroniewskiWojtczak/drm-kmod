@@ -24,30 +24,30 @@
 #ifndef __AMDGPU_JPEG_H__
 #define __AMDGPU_JPEG_H__
 
-#define AMDGPU_MAX_JPEG_INSTANCES	2
+#define AMDGPU_MAX_JPEG_INSTANCES  2
 
 #define AMDGPU_JPEG_HARVEST_JPEG0 (1 << 0)
 #define AMDGPU_JPEG_HARVEST_JPEG1 (1 << 1)
 
 struct amdgpu_jpeg_reg{
-	unsigned jpeg_pitch;
+  unsigned jpeg_pitch;
 };
 
 struct amdgpu_jpeg_inst {
-	struct amdgpu_ring ring_dec;
-	struct amdgpu_irq_src irq;
-	struct amdgpu_jpeg_reg external;
+  struct amdgpu_ring ring_dec;
+  struct amdgpu_irq_src irq;
+  struct amdgpu_jpeg_reg external;
 };
 
 struct amdgpu_jpeg {
-	uint8_t	num_jpeg_inst;
-	struct amdgpu_jpeg_inst inst[AMDGPU_MAX_JPEG_INSTANCES];
-	struct amdgpu_jpeg_reg internal;
-	unsigned harvest_config;
-	struct delayed_work idle_work;
-	enum amd_powergating_state cur_state;
-	struct mutex jpeg_pg_lock;
-	atomic_t total_submission_cnt;
+  uint8_t  num_jpeg_inst;
+  struct amdgpu_jpeg_inst inst[AMDGPU_MAX_JPEG_INSTANCES];
+  struct amdgpu_jpeg_reg internal;
+  unsigned harvest_config;
+  struct delayed_work idle_work;
+  enum amd_powergating_state cur_state;
+  struct mutex jpeg_pg_lock;
+  atomic_t total_submission_cnt;
 };
 
 int amdgpu_jpeg_sw_init(struct amdgpu_device *adev);

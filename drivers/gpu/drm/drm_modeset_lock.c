@@ -94,46 +94,46 @@ static DEFINE_WW_CLASS(crtc_ww_class);
  */
 void drm_modeset_lock_all(struct drm_device *dev)
 {
-	struct drm_mode_config *config = &dev->mode_config;
-	struct drm_modeset_acquire_ctx *ctx;
-	int ret;
+  struct drm_mode_config *config = &dev->mode_config;
+  struct drm_modeset_acquire_ctx *ctx;
+  int ret;
 
 #ifdef __FreeBSD__
-	if (oops_in_progress)
-		return;
+  if (oops_in_progress)
+    return;
 #endif
 
-	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL | __GFP_NOFAIL);
-	if (WARN_ON(!ctx))
-		return;
+  ctx = kzalloc(sizeof(*ctx), GFP_KERNEL | __GFP_NOFAIL);
+  if (WARN_ON(!ctx))
+    return;
 
-	mutex_lock(&config->mutex);
+  mutex_lock(&config->mutex);
 
-	drm_modeset_acquire_init(ctx, 0);
+  drm_modeset_acquire_init(ctx, 0);
 
 retry:
-	ret = drm_modeset_lock_all_ctx(dev, ctx);
-	if (ret < 0) {
-		if (ret == -EDEADLK) {
-			drm_modeset_backoff(ctx);
-			goto retry;
-		}
+  ret = drm_modeset_lock_all_ctx(dev, ctx);
+  if (ret < 0) {
+    if (ret == -EDEADLK) {
+      drm_modeset_backoff(ctx);
+      goto retry;
+    }
 
-		drm_modeset_acquire_fini(ctx);
-		kfree(ctx);
-		return;
-	}
-	ww_acquire_done(&ctx->ww_ctx);
+    drm_modeset_acquire_fini(ctx);
+    kfree(ctx);
+    return;
+  }
+  ww_acquire_done(&ctx->ww_ctx);
 
-	WARN_ON(config->acquire_ctx);
+  WARN_ON(config->acquire_ctx);
 
-	/*
-	 * We hold the locks now, so it is safe to stash the acquisition
-	 * context for drm_modeset_unlock_all().
-	 */
-	config->acquire_ctx = ctx;
+  /*
+   * We hold the locks now, so it is safe to stash the acquisition
+   * context for drm_modeset_unlock_all().
+   */
+  config->acquire_ctx = ctx;
 
-	drm_warn_on_modeset_not_all_locked(dev);
+  drm_warn_on_modeset_not_all_locked(dev);
 }
 EXPORT_SYMBOL(drm_modeset_lock_all);
 
@@ -153,24 +153,24 @@ EXPORT_SYMBOL(drm_modeset_lock_all);
  */
 void drm_modeset_unlock_all(struct drm_device *dev)
 {
-	struct drm_mode_config *config = &dev->mode_config;
-	struct drm_modeset_acquire_ctx *ctx = config->acquire_ctx;
+  struct drm_mode_config *config = &dev->mode_config;
+  struct drm_modeset_acquire_ctx *ctx = config->acquire_ctx;
 
 #ifdef __FreeBSD__
-	if (oops_in_progress)
-		return;
+  if (oops_in_progress)
+    return;
 #endif
 
-	if (WARN_ON(!ctx))
-		return;
+  if (WARN_ON(!ctx))
+    return;
 
-	config->acquire_ctx = NULL;
-	drm_modeset_drop_locks(ctx);
-	drm_modeset_acquire_fini(ctx);
+  config->acquire_ctx = NULL;
+  drm_modeset_drop_locks(ctx);
+  drm_modeset_acquire_fini(ctx);
 
-	kfree(ctx);
+  kfree(ctx);
 
-	mutex_unlock(&dev->mode_config.mutex);
+  mutex_unlock(&dev->mode_config.mutex);
 }
 EXPORT_SYMBOL(drm_modeset_unlock_all);
 
@@ -182,19 +182,19 @@ EXPORT_SYMBOL(drm_modeset_unlock_all);
  */
 void drm_warn_on_modeset_not_all_locked(struct drm_device *dev)
 {
-	struct drm_crtc *crtc;
+  struct drm_crtc *crtc;
 
-	/* Locking is currently fubar in the panic handler. */
+  /* Locking is currently fubar in the panic handler. */
 #ifdef __FreeBSD__
-	if (oops_in_progress)
-		return;
+  if (oops_in_progress)
+    return;
 #endif
 
-	drm_for_each_crtc(crtc, dev)
-		WARN_ON(!drm_modeset_is_locked(&crtc->mutex));
+  drm_for_each_crtc(crtc, dev)
+    WARN_ON(!drm_modeset_is_locked(&crtc->mutex));
 
-	WARN_ON(!drm_modeset_is_locked(&dev->mode_config.connection_mutex));
-	WARN_ON(!mutex_is_locked(&dev->mode_config.mutex));
+  WARN_ON(!drm_modeset_is_locked(&dev->mode_config.connection_mutex));
+  WARN_ON(!mutex_is_locked(&dev->mode_config.mutex));
 }
 EXPORT_SYMBOL(drm_warn_on_modeset_not_all_locked);
 
@@ -208,19 +208,19 @@ EXPORT_SYMBOL(drm_warn_on_modeset_not_all_locked);
  * wait.
  */
 void drm_modeset_acquire_init(struct drm_modeset_acquire_ctx *ctx,
-		uint32_t flags)
+    uint32_t flags)
 {
 #ifdef __FreeBSD__
-	if (oops_in_progress)
-		return;
+  if (oops_in_progress)
+    return;
 #endif
 
-	memset(ctx, 0, sizeof(*ctx));
-	ww_acquire_init(&ctx->ww_ctx, &crtc_ww_class);
-	INIT_LIST_HEAD(&ctx->locked);
+  memset(ctx, 0, sizeof(*ctx));
+  ww_acquire_init(&ctx->ww_ctx, &crtc_ww_class);
+  INIT_LIST_HEAD(&ctx->locked);
 
-	if (flags & DRM_MODESET_ACQUIRE_INTERRUPTIBLE)
-		ctx->interruptible = true;
+  if (flags & DRM_MODESET_ACQUIRE_INTERRUPTIBLE)
+    ctx->interruptible = true;
 }
 EXPORT_SYMBOL(drm_modeset_acquire_init);
 
@@ -231,11 +231,11 @@ EXPORT_SYMBOL(drm_modeset_acquire_init);
 void drm_modeset_acquire_fini(struct drm_modeset_acquire_ctx *ctx)
 {
 #ifdef __FreeBSD__
-	if (oops_in_progress)
-		return;
+  if (oops_in_progress)
+    return;
 #endif
 
-	ww_acquire_fini(&ctx->ww_ctx);
+  ww_acquire_fini(&ctx->ww_ctx);
 }
 EXPORT_SYMBOL(drm_modeset_acquire_fini);
 
@@ -248,67 +248,67 @@ EXPORT_SYMBOL(drm_modeset_acquire_fini);
 void drm_modeset_drop_locks(struct drm_modeset_acquire_ctx *ctx)
 {
 #ifdef __FreeBSD__
-	if (oops_in_progress)
-		return;
+  if (oops_in_progress)
+    return;
 #endif
 
-	WARN_ON(ctx->contended);
-	while (!list_empty(&ctx->locked)) {
-		struct drm_modeset_lock *lock;
+  WARN_ON(ctx->contended);
+  while (!list_empty(&ctx->locked)) {
+    struct drm_modeset_lock *lock;
 
-		lock = list_first_entry(&ctx->locked,
-				struct drm_modeset_lock, head);
+    lock = list_first_entry(&ctx->locked,
+        struct drm_modeset_lock, head);
 
-		drm_modeset_unlock(lock);
-	}
+    drm_modeset_unlock(lock);
+  }
 }
 EXPORT_SYMBOL(drm_modeset_drop_locks);
 
 static inline int modeset_lock(struct drm_modeset_lock *lock,
-		struct drm_modeset_acquire_ctx *ctx,
-		bool interruptible, bool slow)
+    struct drm_modeset_acquire_ctx *ctx,
+    bool interruptible, bool slow)
 {
-	int ret;
+  int ret;
 
 #ifdef __FreeBSD__
-	if (oops_in_progress)
-		return 0;
+  if (oops_in_progress)
+    return 0;
 #endif
 
-	WARN_ON(ctx->contended);
+  WARN_ON(ctx->contended);
 
-	if (ctx->trylock_only) {
-		lockdep_assert_held(&ctx->ww_ctx);
+  if (ctx->trylock_only) {
+    lockdep_assert_held(&ctx->ww_ctx);
 
-		if (!ww_mutex_trylock(&lock->mutex))
-			return -EBUSY;
-		else
-			return 0;
-	} else if (interruptible && slow) {
-		ret = ww_mutex_lock_slow_interruptible(&lock->mutex, &ctx->ww_ctx);
-	} else if (interruptible) {
-		ret = ww_mutex_lock_interruptible(&lock->mutex, &ctx->ww_ctx);
-	} else if (slow) {
-		ww_mutex_lock_slow(&lock->mutex, &ctx->ww_ctx);
-		ret = 0;
-	} else {
-		ret = ww_mutex_lock(&lock->mutex, &ctx->ww_ctx);
-	}
-	if (!ret) {
-		WARN_ON(!list_empty(&lock->head));
-		list_add(&lock->head, &ctx->locked);
-	} else if (ret == -EALREADY) {
-		/* we already hold the lock.. this is fine.  For atomic
-		 * we will need to be able to drm_modeset_lock() things
-		 * without having to keep track of what is already locked
-		 * or not.
-		 */
-		ret = 0;
-	} else if (ret == -EDEADLK) {
-		ctx->contended = lock;
-	}
+    if (!ww_mutex_trylock(&lock->mutex))
+      return -EBUSY;
+    else
+      return 0;
+  } else if (interruptible && slow) {
+    ret = ww_mutex_lock_slow_interruptible(&lock->mutex, &ctx->ww_ctx);
+  } else if (interruptible) {
+    ret = ww_mutex_lock_interruptible(&lock->mutex, &ctx->ww_ctx);
+  } else if (slow) {
+    ww_mutex_lock_slow(&lock->mutex, &ctx->ww_ctx);
+    ret = 0;
+  } else {
+    ret = ww_mutex_lock(&lock->mutex, &ctx->ww_ctx);
+  }
+  if (!ret) {
+    WARN_ON(!list_empty(&lock->head));
+    list_add(&lock->head, &ctx->locked);
+  } else if (ret == -EALREADY) {
+    /* we already hold the lock.. this is fine.  For atomic
+     * we will need to be able to drm_modeset_lock() things
+     * without having to keep track of what is already locked
+     * or not.
+     */
+    ret = 0;
+  } else if (ret == -EDEADLK) {
+    ctx->contended = lock;
+  }
 
-	return ret;
+  return ret;
 }
 
 /**
@@ -325,21 +325,21 @@ static inline int modeset_lock(struct drm_modeset_lock *lock,
  */
 int drm_modeset_backoff(struct drm_modeset_acquire_ctx *ctx)
 {
-	struct drm_modeset_lock *contended = ctx->contended;
+  struct drm_modeset_lock *contended = ctx->contended;
 
 #ifdef __FreeBSD__
-	if (oops_in_progress)
-		return 0;
+  if (oops_in_progress)
+    return 0;
 #endif
 
-	ctx->contended = NULL;
+  ctx->contended = NULL;
 
-	if (WARN_ON(!contended))
-		return 0;
+  if (WARN_ON(!contended))
+    return 0;
 
-	drm_modeset_drop_locks(ctx);
+  drm_modeset_drop_locks(ctx);
 
-	return modeset_lock(contended, ctx, ctx->interruptible, true);
+  return modeset_lock(contended, ctx, ctx->interruptible, true);
 }
 EXPORT_SYMBOL(drm_modeset_backoff);
 
@@ -349,8 +349,8 @@ EXPORT_SYMBOL(drm_modeset_backoff);
  */
 void drm_modeset_lock_init(struct drm_modeset_lock *lock)
 {
-	ww_mutex_init(&lock->mutex, &crtc_ww_class);
-	INIT_LIST_HEAD(&lock->head);
+  ww_mutex_init(&lock->mutex, &crtc_ww_class);
+  INIT_LIST_HEAD(&lock->head);
 }
 EXPORT_SYMBOL(drm_modeset_lock_init);
 
@@ -373,18 +373,18 @@ EXPORT_SYMBOL(drm_modeset_lock_init);
  * uninterruptible non-nesting mutex_lock() call.
  */
 int drm_modeset_lock(struct drm_modeset_lock *lock,
-		struct drm_modeset_acquire_ctx *ctx)
+    struct drm_modeset_acquire_ctx *ctx)
 {
 #ifdef __FreeBSD__
-	if (oops_in_progress)
-		return 0;
+  if (oops_in_progress)
+    return 0;
 #endif
 
-	if (ctx)
-		return modeset_lock(lock, ctx, ctx->interruptible, false);
+  if (ctx)
+    return modeset_lock(lock, ctx, ctx->interruptible, false);
 
-	ww_mutex_lock(&lock->mutex, NULL);
-	return 0;
+  ww_mutex_lock(&lock->mutex, NULL);
+  return 0;
 }
 EXPORT_SYMBOL(drm_modeset_lock);
 
@@ -400,10 +400,10 @@ EXPORT_SYMBOL(drm_modeset_lock);
 int drm_modeset_lock_single_interruptible(struct drm_modeset_lock *lock)
 {
 #ifdef __FreeBSD__
-	if (oops_in_progress)
-		return 0;
+  if (oops_in_progress)
+    return 0;
 #endif
-	return ww_mutex_lock_interruptible(&lock->mutex, NULL);
+  return ww_mutex_lock_interruptible(&lock->mutex, NULL);
 }
 EXPORT_SYMBOL(drm_modeset_lock_single_interruptible);
 
@@ -414,12 +414,12 @@ EXPORT_SYMBOL(drm_modeset_lock_single_interruptible);
 void drm_modeset_unlock(struct drm_modeset_lock *lock)
 {
 #ifdef __FreeBSD__
-	if (oops_in_progress)
-		return;
+  if (oops_in_progress)
+    return;
 #endif
 
-	list_del_init(&lock->head);
-	ww_mutex_unlock(&lock->mutex);
+  list_del_init(&lock->head);
+  ww_mutex_unlock(&lock->mutex);
 }
 EXPORT_SYMBOL(drm_modeset_unlock);
 
@@ -444,40 +444,40 @@ EXPORT_SYMBOL(drm_modeset_unlock);
  * Returns: 0 on success or a negative error-code on failure.
  */
 int drm_modeset_lock_all_ctx(struct drm_device *dev,
-			     struct drm_modeset_acquire_ctx *ctx)
+           struct drm_modeset_acquire_ctx *ctx)
 {
-	struct drm_private_obj *privobj;
-	struct drm_crtc *crtc;
-	struct drm_plane *plane;
-	int ret;
+  struct drm_private_obj *privobj;
+  struct drm_crtc *crtc;
+  struct drm_plane *plane;
+  int ret;
 
 #ifdef __FreeBSD__
-	if (oops_in_progress)
-		return 0;
+  if (oops_in_progress)
+    return 0;
 #endif
 
-	ret = drm_modeset_lock(&dev->mode_config.connection_mutex, ctx);
-	if (ret)
-		return ret;
+  ret = drm_modeset_lock(&dev->mode_config.connection_mutex, ctx);
+  if (ret)
+    return ret;
 
-	drm_for_each_crtc(crtc, dev) {
-		ret = drm_modeset_lock(&crtc->mutex, ctx);
-		if (ret)
-			return ret;
-	}
+  drm_for_each_crtc(crtc, dev) {
+    ret = drm_modeset_lock(&crtc->mutex, ctx);
+    if (ret)
+      return ret;
+  }
 
-	drm_for_each_plane(plane, dev) {
-		ret = drm_modeset_lock(&plane->mutex, ctx);
-		if (ret)
-			return ret;
-	}
+  drm_for_each_plane(plane, dev) {
+    ret = drm_modeset_lock(&plane->mutex, ctx);
+    if (ret)
+      return ret;
+  }
 
-	drm_for_each_privobj(privobj, dev) {
-		ret = drm_modeset_lock(&privobj->lock, ctx);
-		if (ret)
-			return ret;
-	}
+  drm_for_each_privobj(privobj, dev) {
+    ret = drm_modeset_lock(&privobj->lock, ctx);
+    if (ret)
+      return ret;
+  }
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_modeset_lock_all_ctx);

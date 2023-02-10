@@ -32,8 +32,8 @@
 /* bit set means IB is preempted */
 #define AMDGPU_IB_PREEMPTED                 (1 << 3)
 
-#define to_amdgpu_job(sched_job)		\
-		container_of((sched_job), struct amdgpu_job, base)
+#define to_amdgpu_job(sched_job)    \
+    container_of((sched_job), struct amdgpu_job, base)
 
 #define AMDGPU_JOB_GET_VMID(job) ((job) ? (job)->vmid : 0)
 
@@ -41,39 +41,39 @@ struct amdgpu_fence;
 enum amdgpu_ib_pool_type;
 
 struct amdgpu_job {
-	struct drm_sched_job    base;
-	struct amdgpu_vm	*vm;
-	struct amdgpu_sync	sync;
-	struct amdgpu_sync	sched_sync;
-	struct amdgpu_ib	*ibs;
-	struct dma_fence	*fence; /* the hw fence */
-	uint32_t		preamble_status;
-	uint32_t                preemption_status;
-	uint32_t		num_ibs;
-	bool                    vm_needs_flush;
-	uint64_t		vm_pd_addr;
-	unsigned		vmid;
-	unsigned		pasid;
-	uint32_t		gds_base, gds_size;
-	uint32_t		gws_base, gws_size;
-	uint32_t		oa_base, oa_size;
-	uint32_t		vram_lost_counter;
+  struct drm_sched_job    base;
+  struct amdgpu_vm  *vm;
+  struct amdgpu_sync  sync;
+  struct amdgpu_sync  sched_sync;
+  struct amdgpu_ib  *ibs;
+  struct dma_fence  *fence; /* the hw fence */
+  uint32_t    preamble_status;
+  uint32_t                preemption_status;
+  uint32_t    num_ibs;
+  bool                    vm_needs_flush;
+  uint64_t    vm_pd_addr;
+  unsigned    vmid;
+  unsigned    pasid;
+  uint32_t    gds_base, gds_size;
+  uint32_t    gws_base, gws_size;
+  uint32_t    oa_base, oa_size;
+  uint32_t    vram_lost_counter;
 
-	/* user fence handling */
-	uint64_t		uf_addr;
-	uint64_t		uf_sequence;
+  /* user fence handling */
+  uint64_t    uf_addr;
+  uint64_t    uf_sequence;
 };
 
 int amdgpu_job_alloc(struct amdgpu_device *adev, unsigned num_ibs,
-		     struct amdgpu_job **job, struct amdgpu_vm *vm);
+         struct amdgpu_job **job, struct amdgpu_vm *vm);
 int amdgpu_job_alloc_with_ib(struct amdgpu_device *adev, unsigned size,
-		enum amdgpu_ib_pool_type pool, struct amdgpu_job **job);
+    enum amdgpu_ib_pool_type pool, struct amdgpu_job **job);
 void amdgpu_job_free_resources(struct amdgpu_job *job);
 void amdgpu_job_free(struct amdgpu_job *job);
 int amdgpu_job_submit(struct amdgpu_job *job, struct drm_sched_entity *entity,
-		      void *owner, struct dma_fence **f);
+          void *owner, struct dma_fence **f);
 int amdgpu_job_submit_direct(struct amdgpu_job *job, struct amdgpu_ring *ring,
-			     struct dma_fence **fence);
+           struct dma_fence **fence);
 
 void amdgpu_job_stop_all_jobs_on_sched(struct drm_gpu_scheduler *sched);
 

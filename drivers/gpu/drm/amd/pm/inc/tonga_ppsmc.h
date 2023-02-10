@@ -26,10 +26,10 @@
 
 #pragma pack(push, 1)
 
-#define PPSMC_SWSTATE_FLAG_DC				0x01
-#define PPSMC_SWSTATE_FLAG_UVD				0x02
-#define PPSMC_SWSTATE_FLAG_VCE				0x04
-#define PPSMC_SWSTATE_FLAG_PCIE_X1			0x08
+#define PPSMC_SWSTATE_FLAG_DC        0x01
+#define PPSMC_SWSTATE_FLAG_UVD        0x02
+#define PPSMC_SWSTATE_FLAG_VCE        0x04
+#define PPSMC_SWSTATE_FLAG_PCIE_X1      0x08
 
 #define PPSMC_THERMAL_PROTECT_TYPE_INTERNAL             0x00
 #define PPSMC_THERMAL_PROTECT_TYPE_EXTERNAL             0x01
@@ -80,8 +80,8 @@
 #define FDO_MODE_PIECE_WISE_LINEAR 1
 
 enum FAN_CONTROL {
-	FAN_CONTROL_FUZZY,
-	FAN_CONTROL_TABLE
+  FAN_CONTROL_FUZZY,
+  FAN_CONTROL_TABLE
 };
 
 /* Return codes for driver to SMC communication.*/
@@ -185,7 +185,7 @@ typedef uint16_t PPSMC_Result;
 #define PPSMC_MSG_CancelDisableOVRDSCLKDS   ((uint16_t)0x95)
 #define PPSMC_MSG_ThrottleOVRDSCLKDS        ((uint16_t)0x96)
 #define PPSMC_MSG_CancelThrottleOVRDSCLKDS  ((uint16_t)0x97)
-#define PPSMC_MSG_GPIO17					((uint16_t)0x98)
+#define PPSMC_MSG_GPIO17          ((uint16_t)0x98)
 
 #define PPSMC_MSG_API_SetSvi2Volt_Vddc      ((uint16_t)0x99)
 #define PPSMC_MSG_API_SetSvi2Volt_Vddci     ((uint16_t)0x9A)
@@ -354,11 +354,11 @@ typedef uint16_t PPSMC_Result;
 #define PPSMC_MSG_GetVidOffset_1              ((uint16_t) 0x196)
 #define PPSMC_MSG_GetVidOffset_2              ((uint16_t) 0x208)
 #define PPSMC_MSG_THERMAL_OVERDRIVE_Enable    ((uint16_t) 0x197)
-#define PPSMC_MSG_THERMAL_OVERDRIVE_Disable	  ((uint16_t) 0x198)
+#define PPSMC_MSG_THERMAL_OVERDRIVE_Disable    ((uint16_t) 0x198)
 #define PPSMC_MSG_SetTjMax                    ((uint16_t) 0x199)
 #define PPSMC_MSG_SetFanPwmMax                ((uint16_t) 0x19A)
 
-#define PPSMC_MSG_WaitForMclkSwitchFinish	  ((uint16_t) 0x19B)
+#define PPSMC_MSG_WaitForMclkSwitchFinish    ((uint16_t) 0x19B)
 #define PPSMC_MSG_ENABLE_THERMAL_DPM          ((uint16_t) 0x19C)
 #define PPSMC_MSG_DISABLE_THERMAL_DPM         ((uint16_t) 0x19D)
 #define PPSMC_MSG_Enable_PCC                  ((uint16_t) 0x19E)
@@ -382,7 +382,7 @@ typedef uint16_t PPSMC_Result;
 #define PPSMC_MSG_UcodeAddressHigh            ((uint16_t) 0x245)
 #define PPSMC_MSG_UcodeLoadStatus             ((uint16_t) 0x246)
 
-#define PPSMC_MSG_DRV_DRAM_ADDR_HI			  ((uint16_t) 0x250)
+#define PPSMC_MSG_DRV_DRAM_ADDR_HI        ((uint16_t) 0x250)
 #define PPSMC_MSG_DRV_DRAM_ADDR_LO            ((uint16_t) 0x251)
 #define PPSMC_MSG_SMU_DRAM_ADDR_HI            ((uint16_t) 0x252)
 #define PPSMC_MSG_SMU_DRAM_ADDR_LO            ((uint16_t) 0x253)

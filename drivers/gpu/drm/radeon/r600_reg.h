@@ -37,49 +37,49 @@
 #define R600_UVD_CTX_INDEX                  0xf4a0
 #define R600_UVD_CTX_DATA                   0xf4a4
 
-#define R600_MC_VM_FB_LOCATION			0x2180
-#define		R600_MC_FB_BASE_MASK			0x0000FFFF
-#define		R600_MC_FB_BASE_SHIFT			0
-#define		R600_MC_FB_TOP_MASK			0xFFFF0000
-#define		R600_MC_FB_TOP_SHIFT			16
-#define R600_MC_VM_AGP_TOP			0x2184
-#define		R600_MC_AGP_TOP_MASK			0x0003FFFF
-#define		R600_MC_AGP_TOP_SHIFT			0
-#define R600_MC_VM_AGP_BOT			0x2188
-#define		R600_MC_AGP_BOT_MASK			0x0003FFFF
-#define		R600_MC_AGP_BOT_SHIFT			0
-#define R600_MC_VM_AGP_BASE			0x218c
-#define R600_MC_VM_SYSTEM_APERTURE_LOW_ADDR	0x2190
-#define		R600_LOGICAL_PAGE_NUMBER_MASK		0x000FFFFF
-#define		R600_LOGICAL_PAGE_NUMBER_SHIFT		0
-#define R600_MC_VM_SYSTEM_APERTURE_HIGH_ADDR	0x2194
-#define R600_MC_VM_SYSTEM_APERTURE_DEFAULT_ADDR	0x2198
+#define R600_MC_VM_FB_LOCATION      0x2180
+#define    R600_MC_FB_BASE_MASK      0x0000FFFF
+#define    R600_MC_FB_BASE_SHIFT      0
+#define    R600_MC_FB_TOP_MASK      0xFFFF0000
+#define    R600_MC_FB_TOP_SHIFT      16
+#define R600_MC_VM_AGP_TOP      0x2184
+#define    R600_MC_AGP_TOP_MASK      0x0003FFFF
+#define    R600_MC_AGP_TOP_SHIFT      0
+#define R600_MC_VM_AGP_BOT      0x2188
+#define    R600_MC_AGP_BOT_MASK      0x0003FFFF
+#define    R600_MC_AGP_BOT_SHIFT      0
+#define R600_MC_VM_AGP_BASE      0x218c
+#define R600_MC_VM_SYSTEM_APERTURE_LOW_ADDR  0x2190
+#define    R600_LOGICAL_PAGE_NUMBER_MASK    0x000FFFFF
+#define    R600_LOGICAL_PAGE_NUMBER_SHIFT    0
+#define R600_MC_VM_SYSTEM_APERTURE_HIGH_ADDR  0x2194
+#define R600_MC_VM_SYSTEM_APERTURE_DEFAULT_ADDR  0x2198
 
-#define R700_MC_VM_FB_LOCATION			0x2024
-#define		R700_MC_FB_BASE_MASK			0x0000FFFF
-#define		R700_MC_FB_BASE_SHIFT			0
-#define		R700_MC_FB_TOP_MASK			0xFFFF0000
-#define		R700_MC_FB_TOP_SHIFT			16
-#define R700_MC_VM_AGP_TOP			0x2028
-#define		R700_MC_AGP_TOP_MASK			0x0003FFFF
-#define		R700_MC_AGP_TOP_SHIFT			0
-#define R700_MC_VM_AGP_BOT			0x202c
-#define		R700_MC_AGP_BOT_MASK			0x0003FFFF
-#define		R700_MC_AGP_BOT_SHIFT			0
-#define R700_MC_VM_AGP_BASE			0x2030
-#define R700_MC_VM_SYSTEM_APERTURE_LOW_ADDR	0x2034
-#define		R700_LOGICAL_PAGE_NUMBER_MASK		0x000FFFFF
-#define		R700_LOGICAL_PAGE_NUMBER_SHIFT		0
-#define R700_MC_VM_SYSTEM_APERTURE_HIGH_ADDR	0x2038
-#define R700_MC_VM_SYSTEM_APERTURE_DEFAULT_ADDR	0x203c
+#define R700_MC_VM_FB_LOCATION      0x2024
+#define    R700_MC_FB_BASE_MASK      0x0000FFFF
+#define    R700_MC_FB_BASE_SHIFT      0
+#define    R700_MC_FB_TOP_MASK      0xFFFF0000
+#define    R700_MC_FB_TOP_SHIFT      16
+#define R700_MC_VM_AGP_TOP      0x2028
+#define    R700_MC_AGP_TOP_MASK      0x0003FFFF
+#define    R700_MC_AGP_TOP_SHIFT      0
+#define R700_MC_VM_AGP_BOT      0x202c
+#define    R700_MC_AGP_BOT_MASK      0x0003FFFF
+#define    R700_MC_AGP_BOT_SHIFT      0
+#define R700_MC_VM_AGP_BASE      0x2030
+#define R700_MC_VM_SYSTEM_APERTURE_LOW_ADDR  0x2034
+#define    R700_LOGICAL_PAGE_NUMBER_MASK    0x000FFFFF
+#define    R700_LOGICAL_PAGE_NUMBER_SHIFT    0
+#define R700_MC_VM_SYSTEM_APERTURE_HIGH_ADDR  0x2038
+#define R700_MC_VM_SYSTEM_APERTURE_DEFAULT_ADDR  0x203c
 
-#define R600_RAMCFG				       0x2408
+#define R600_RAMCFG               0x2408
 #       define R600_CHANSIZE                           (1 << 7)
 #       define R600_CHANSIZE_OVERRIDE                  (1 << 10)
 
 
 #define R600_GENERAL_PWRMGT                                        0x618
-#	define R600_OPEN_DRAIN_PADS				   (1 << 11)
+#  define R600_OPEN_DRAIN_PADS           (1 << 11)
 
 #define R600_LOWER_GPIO_ENABLE                                     0x710
 #define R600_CTXSW_VID_LOWER_GPIO_CNTL                             0x718
@@ -123,14 +123,14 @@
 #define R600_CONFIG_F0_BASE                                     0x542C
 #define R600_CONFIG_APER_SIZE                                   0x5430
 
-#define	R600_BIF_FB_EN						0x5490
-#define		R600_FB_READ_EN					(1 << 0)
-#define		R600_FB_WRITE_EN				(1 << 1)
+#define  R600_BIF_FB_EN            0x5490
+#define    R600_FB_READ_EN          (1 << 0)
+#define    R600_FB_WRITE_EN        (1 << 1)
 
-#define R600_CITF_CNTL           				0x200c
-#define		R600_BLACKOUT_MASK				0x00000003
+#define R600_CITF_CNTL                   0x200c
+#define    R600_BLACKOUT_MASK        0x00000003
 
-#define R700_MC_CITF_CNTL           				0x25c0
+#define R700_MC_CITF_CNTL                   0x25c0
 
 #define R600_ROM_CNTL                              0x1600
 #       define R600_SCK_OVERWRITE                  (1 << 1)
@@ -192,10 +192,10 @@
 #define R600_AUDIO_PIN_WIDGET_CNTL        0x73d4
 #define R600_AUDIO_STATUS_BITS            0x73d8
 
-#define DCE2_HDMI_OFFSET0		(0x7400 - 0x7400)
-#define DCE2_HDMI_OFFSET1		(0x7700 - 0x7400)
+#define DCE2_HDMI_OFFSET0    (0x7400 - 0x7400)
+#define DCE2_HDMI_OFFSET1    (0x7700 - 0x7400)
 /* DCE3.2 second instance starts at 0x7800 */
-#define DCE3_HDMI_OFFSET0		(0x7400 - 0x7400)
-#define DCE3_HDMI_OFFSET1		(0x7800 - 0x7400)
+#define DCE3_HDMI_OFFSET0    (0x7400 - 0x7400)
+#define DCE3_HDMI_OFFSET1    (0x7800 - 0x7400)
 
 #endif

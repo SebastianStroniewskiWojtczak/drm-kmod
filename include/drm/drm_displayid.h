@@ -57,61 +57,61 @@ struct edid;
 #define PRODUCT_TYPE_DIRECT_DRIVE 6
 
 struct displayid_header {
-	u8 rev;
-	u8 bytes;
-	u8 prod_id;
-	u8 ext_count;
+  u8 rev;
+  u8 bytes;
+  u8 prod_id;
+  u8 ext_count;
 } __packed;
 
 struct displayid_block {
-	u8 tag;
-	u8 rev;
-	u8 num_bytes;
+  u8 tag;
+  u8 rev;
+  u8 num_bytes;
 } __packed;
 
 struct displayid_tiled_block {
-	struct displayid_block base;
-	u8 tile_cap;
-	u8 topo[3];
-	u8 tile_size[4];
-	u8 tile_pixel_bezel[5];
-	u8 topology_id[8];
+  struct displayid_block base;
+  u8 tile_cap;
+  u8 topo[3];
+  u8 tile_size[4];
+  u8 tile_pixel_bezel[5];
+  u8 topology_id[8];
 } __packed;
 
 struct displayid_detailed_timings_1 {
-	u8 pixel_clock[3];
-	u8 flags;
-	u8 hactive[2];
-	u8 hblank[2];
-	u8 hsync[2];
-	u8 hsw[2];
-	u8 vactive[2];
-	u8 vblank[2];
-	u8 vsync[2];
-	u8 vsw[2];
+  u8 pixel_clock[3];
+  u8 flags;
+  u8 hactive[2];
+  u8 hblank[2];
+  u8 hsync[2];
+  u8 hsw[2];
+  u8 vactive[2];
+  u8 vblank[2];
+  u8 vsync[2];
+  u8 vsw[2];
 } __packed;
 
 struct displayid_detailed_timing_block {
-	struct displayid_block base;
-	struct displayid_detailed_timings_1 timings[];
+  struct displayid_block base;
+  struct displayid_detailed_timings_1 timings[];
 };
 
 /* DisplayID iteration */
 struct displayid_iter {
-	const struct edid *edid;
+  const struct edid *edid;
 
-	const u8 *section;
-	int length;
-	int idx;
-	int ext_index;
+  const u8 *section;
+  int length;
+  int idx;
+  int ext_index;
 };
 
 void displayid_iter_edid_begin(const struct edid *edid,
-			       struct displayid_iter *iter);
+             struct displayid_iter *iter);
 const struct displayid_block *
 __displayid_iter_next(struct displayid_iter *iter);
 #define displayid_iter_for_each(__block, __iter) \
-	while (((__block) = __displayid_iter_next(__iter)))
+  while (((__block) = __displayid_iter_next(__iter)))
 void displayid_iter_end(struct displayid_iter *iter);
 
 #endif

@@ -84,7 +84,7 @@
 static void
 drm_gem_init_release(struct drm_device *dev, void *ptr)
 {
-	drm_vma_offset_manager_destroy(dev->vma_offset_manager);
+  drm_vma_offset_manager_destroy(dev->vma_offset_manager);
 }
 
 /**
@@ -94,28 +94,28 @@ drm_gem_init_release(struct drm_device *dev, void *ptr)
 int
 drm_gem_init(struct drm_device *dev)
 {
-	struct drm_vma_offset_manager *vma_offset_manager;
+  struct drm_vma_offset_manager *vma_offset_manager;
 
-	mutex_init(&dev->object_name_lock);
+  mutex_init(&dev->object_name_lock);
 #ifdef __linux__
-	idr_init_base(&dev->object_name_idr, 1);
+  idr_init_base(&dev->object_name_idr, 1);
 #elif defined(__FreeBSD__)
-	idr_init(&dev->object_name_idr);
+  idr_init(&dev->object_name_idr);
 #endif
 
-	vma_offset_manager = drmm_kzalloc(dev, sizeof(*vma_offset_manager),
-					  GFP_KERNEL);
-	if (!vma_offset_manager) {
-		DRM_ERROR("out of memory\n");
-		return -ENOMEM;
-	}
+  vma_offset_manager = drmm_kzalloc(dev, sizeof(*vma_offset_manager),
+            GFP_KERNEL);
+  if (!vma_offset_manager) {
+    DRM_ERROR("out of memory\n");
+    return -ENOMEM;
+  }
 
-	dev->vma_offset_manager = vma_offset_manager;
-	drm_vma_offset_manager_init(vma_offset_manager,
-				    DRM_FILE_PAGE_OFFSET_START,
-				    DRM_FILE_PAGE_OFFSET_SIZE);
+  dev->vma_offset_manager = vma_offset_manager;
+  drm_vma_offset_manager_init(vma_offset_manager,
+            DRM_FILE_PAGE_OFFSET_START,
+            DRM_FILE_PAGE_OFFSET_SIZE);
 
-	return drmm_add_action(dev, drm_gem_init_release, NULL);
+  return drmm_add_action(dev, drm_gem_init_release, NULL);
 }
 
 /**
@@ -128,19 +128,19 @@ drm_gem_init(struct drm_device *dev)
  * shmfs backing store.
  */
 int drm_gem_object_init(struct drm_device *dev,
-			struct drm_gem_object *obj, size_t size)
+      struct drm_gem_object *obj, size_t size)
 {
-	struct file *filp;
+  struct file *filp;
 
-	drm_gem_private_object_init(dev, obj, size);
+  drm_gem_private_object_init(dev, obj, size);
 
-	filp = shmem_file_setup("drm mm object", size, VM_NORESERVE);
-	if (IS_ERR(filp))
-		return PTR_ERR(filp);
+  filp = shmem_file_setup("drm mm object", size, VM_NORESERVE);
+  if (IS_ERR(filp))
+    return PTR_ERR(filp);
 
-	obj->filp = filp;
+  obj->filp = filp;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_gem_object_init);
 
@@ -155,37 +155,37 @@ EXPORT_SYMBOL(drm_gem_object_init);
  * backing the object and handling it.
  */
 void drm_gem_private_object_init(struct drm_device *dev,
-				 struct drm_gem_object *obj, size_t size)
+         struct drm_gem_object *obj, size_t size)
 {
-	BUG_ON((size & (PAGE_SIZE - 1)) != 0);
+  BUG_ON((size & (PAGE_SIZE - 1)) != 0);
 
-	obj->dev = dev;
-	obj->filp = NULL;
+  obj->dev = dev;
+  obj->filp = NULL;
 
-	kref_init(&obj->refcount);
-	obj->handle_count = 0;
-	obj->size = size;
-	dma_resv_init(&obj->_resv);
-	if (!obj->resv)
-		obj->resv = &obj->_resv;
+  kref_init(&obj->refcount);
+  obj->handle_count = 0;
+  obj->size = size;
+  dma_resv_init(&obj->_resv);
+  if (!obj->resv)
+    obj->resv = &obj->_resv;
 
-	drm_vma_node_reset(&obj->vma_node);
+  drm_vma_node_reset(&obj->vma_node);
 }
 EXPORT_SYMBOL(drm_gem_private_object_init);
 
 static void
 drm_gem_remove_prime_handles(struct drm_gem_object *obj, struct drm_file *filp)
 {
-	/*
-	 * Note: obj->dma_buf can't disappear as long as we still hold a
-	 * handle reference in obj->handle_count.
-	 */
-	mutex_lock(&filp->prime.lock);
-	if (obj->dma_buf) {
-		drm_prime_remove_buf_handle_locked(&filp->prime,
-						   obj->dma_buf);
-	}
-	mutex_unlock(&filp->prime.lock);
+  /*
+   * Note: obj->dma_buf can't disappear as long as we still hold a
+   * handle reference in obj->handle_count.
+   */
+  mutex_lock(&filp->prime.lock);
+  if (obj->dma_buf) {
+    drm_prime_remove_buf_handle_locked(&filp->prime,
+               obj->dma_buf);
+  }
+  mutex_unlock(&filp->prime.lock);
 }
 
 /**
@@ -200,49 +200,49 @@ drm_gem_remove_prime_handles(struct drm_gem_object *obj, struct drm_file *filp)
  */
 static void drm_gem_object_handle_free(struct drm_gem_object *obj)
 {
-	struct drm_device *dev = obj->dev;
+  struct drm_device *dev = obj->dev;
 
-	/* Remove any name for this object */
-	if (obj->name) {
-		idr_remove(&dev->object_name_idr, obj->name);
-		obj->name = 0;
-	}
+  /* Remove any name for this object */
+  if (obj->name) {
+    idr_remove(&dev->object_name_idr, obj->name);
+    obj->name = 0;
+  }
 }
 
 static void drm_gem_object_exported_dma_buf_free(struct drm_gem_object *obj)
 {
-	/* Unbreak the reference cycle if we have an exported dma_buf. */
-	if (obj->dma_buf) {
-		dma_buf_put(obj->dma_buf);
-		obj->dma_buf = NULL;
-	}
+  /* Unbreak the reference cycle if we have an exported dma_buf. */
+  if (obj->dma_buf) {
+    dma_buf_put(obj->dma_buf);
+    obj->dma_buf = NULL;
+  }
 }
 
 static void
 drm_gem_object_handle_put_unlocked(struct drm_gem_object *obj)
 {
-	struct drm_device *dev = obj->dev;
-	bool final = false;
+  struct drm_device *dev = obj->dev;
+  bool final = false;
 
-	if (WARN_ON(READ_ONCE(obj->handle_count) == 0))
-		return;
+  if (WARN_ON(READ_ONCE(obj->handle_count) == 0))
+    return;
 
-	/*
-	* Must bump handle count first as this may be the last
-	* ref, in which case the object would disappear before we
-	* checked for a name
-	*/
+  /*
+  * Must bump handle count first as this may be the last
+  * ref, in which case the object would disappear before we
+  * checked for a name
+  */
 
-	mutex_lock(&dev->object_name_lock);
-	if (--obj->handle_count == 0) {
-		drm_gem_object_handle_free(obj);
-		drm_gem_object_exported_dma_buf_free(obj);
-		final = true;
-	}
-	mutex_unlock(&dev->object_name_lock);
+  mutex_lock(&dev->object_name_lock);
+  if (--obj->handle_count == 0) {
+    drm_gem_object_handle_free(obj);
+    drm_gem_object_exported_dma_buf_free(obj);
+    final = true;
+  }
+  mutex_unlock(&dev->object_name_lock);
 
-	if (final)
-		drm_gem_object_put(obj);
+  if (final)
+    drm_gem_object_put(obj);
 }
 
 /*
@@ -252,18 +252,18 @@ drm_gem_object_handle_put_unlocked(struct drm_gem_object *obj)
 static int
 drm_gem_object_release_handle(int id, void *ptr, void *data)
 {
-	struct drm_file *file_priv = data;
-	struct drm_gem_object *obj = ptr;
+  struct drm_file *file_priv = data;
+  struct drm_gem_object *obj = ptr;
 
-	if (obj->funcs->close)
-		obj->funcs->close(obj, file_priv);
+  if (obj->funcs->close)
+    obj->funcs->close(obj, file_priv);
 
-	drm_gem_remove_prime_handles(obj, file_priv);
-	drm_vma_node_revoke(&obj->vma_node, file_priv);
+  drm_gem_remove_prime_handles(obj, file_priv);
+  drm_vma_node_revoke(&obj->vma_node, file_priv);
 
-	drm_gem_object_handle_put_unlocked(obj);
+  drm_gem_object_handle_put_unlocked(obj);
 
-	return 0;
+  return 0;
 }
 
 /**
@@ -278,25 +278,25 @@ drm_gem_object_release_handle(int id, void *ptr, void *data)
 int
 drm_gem_handle_delete(struct drm_file *filp, u32 handle)
 {
-	struct drm_gem_object *obj;
+  struct drm_gem_object *obj;
 
-	spin_lock(&filp->table_lock);
+  spin_lock(&filp->table_lock);
 
-	/* Check if we currently have a reference on the object */
-	obj = idr_replace(&filp->object_idr, NULL, handle);
-	spin_unlock(&filp->table_lock);
-	if (IS_ERR_OR_NULL(obj))
-		return -EINVAL;
+  /* Check if we currently have a reference on the object */
+  obj = idr_replace(&filp->object_idr, NULL, handle);
+  spin_unlock(&filp->table_lock);
+  if (IS_ERR_OR_NULL(obj))
+    return -EINVAL;
 
-	/* Release driver's reference and decrement refcount. */
-	drm_gem_object_release_handle(handle, obj, filp);
+  /* Release driver's reference and decrement refcount. */
+  drm_gem_object_release_handle(handle, obj, filp);
 
-	/* And finally make the handle available for future allocations. */
-	spin_lock(&filp->table_lock);
-	idr_remove(&filp->object_idr, handle);
-	spin_unlock(&filp->table_lock);
+  /* And finally make the handle available for future allocations. */
+  spin_lock(&filp->table_lock);
+  idr_remove(&filp->object_idr, handle);
+  spin_unlock(&filp->table_lock);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_gem_handle_delete);
 
@@ -314,38 +314,38 @@ EXPORT_SYMBOL(drm_gem_handle_delete);
  * 0 on success or a negative error code on failure.
  */
 int drm_gem_dumb_map_offset(struct drm_file *file, struct drm_device *dev,
-			    u32 handle, u64 *offset)
+          u32 handle, u64 *offset)
 {
-	struct drm_gem_object *obj;
-	int ret;
+  struct drm_gem_object *obj;
+  int ret;
 
-	obj = drm_gem_object_lookup(file, handle);
-	if (!obj)
-		return -ENOENT;
+  obj = drm_gem_object_lookup(file, handle);
+  if (!obj)
+    return -ENOENT;
 
-	/* Don't allow imported objects to be mapped */
-	if (obj->import_attach) {
-		ret = -EINVAL;
-		goto out;
-	}
+  /* Don't allow imported objects to be mapped */
+  if (obj->import_attach) {
+    ret = -EINVAL;
+    goto out;
+  }
 
-	ret = drm_gem_create_mmap_offset(obj);
-	if (ret)
-		goto out;
+  ret = drm_gem_create_mmap_offset(obj);
+  if (ret)
+    goto out;
 
-	*offset = drm_vma_node_offset_addr(&obj->vma_node);
+  *offset = drm_vma_node_offset_addr(&obj->vma_node);
 out:
-	drm_gem_object_put(obj);
+  drm_gem_object_put(obj);
 
-	return ret;
+  return ret;
 }
 EXPORT_SYMBOL_GPL(drm_gem_dumb_map_offset);
 
 int drm_gem_dumb_destroy(struct drm_file *file,
-			 struct drm_device *dev,
-			 u32 handle)
+       struct drm_device *dev,
+       u32 handle)
 {
-	return drm_gem_handle_delete(file, handle);
+  return drm_gem_handle_delete(file, handle);
 }
 
 /**
@@ -364,57 +364,57 @@ int drm_gem_dumb_destroy(struct drm_file *file,
  */
 int
 drm_gem_handle_create_tail(struct drm_file *file_priv,
-			   struct drm_gem_object *obj,
-			   u32 *handlep)
+         struct drm_gem_object *obj,
+         u32 *handlep)
 {
-	struct drm_device *dev = obj->dev;
-	u32 handle;
-	int ret;
+  struct drm_device *dev = obj->dev;
+  u32 handle;
+  int ret;
 
-	WARN_ON(!mutex_is_locked(&dev->object_name_lock));
-	if (obj->handle_count++ == 0)
-		drm_gem_object_get(obj);
+  WARN_ON(!mutex_is_locked(&dev->object_name_lock));
+  if (obj->handle_count++ == 0)
+    drm_gem_object_get(obj);
 
-	/*
-	 * Get the user-visible handle using idr.  Preload and perform
-	 * allocation under our spinlock.
-	 */
-	idr_preload(GFP_KERNEL);
-	spin_lock(&file_priv->table_lock);
+  /*
+   * Get the user-visible handle using idr.  Preload and perform
+   * allocation under our spinlock.
+   */
+  idr_preload(GFP_KERNEL);
+  spin_lock(&file_priv->table_lock);
 
-	ret = idr_alloc(&file_priv->object_idr, obj, 1, 0, GFP_NOWAIT);
+  ret = idr_alloc(&file_priv->object_idr, obj, 1, 0, GFP_NOWAIT);
 
-	spin_unlock(&file_priv->table_lock);
-	idr_preload_end();
+  spin_unlock(&file_priv->table_lock);
+  idr_preload_end();
 
-	mutex_unlock(&dev->object_name_lock);
-	if (ret < 0)
-		goto err_unref;
+  mutex_unlock(&dev->object_name_lock);
+  if (ret < 0)
+    goto err_unref;
 
-	handle = ret;
+  handle = ret;
 
-	ret = drm_vma_node_allow(&obj->vma_node, file_priv);
-	if (ret)
-		goto err_remove;
+  ret = drm_vma_node_allow(&obj->vma_node, file_priv);
+  if (ret)
+    goto err_remove;
 
-	if (obj->funcs->open) {
-		ret = obj->funcs->open(obj, file_priv);
-		if (ret)
-			goto err_revoke;
-	}
+  if (obj->funcs->open) {
+    ret = obj->funcs->open(obj, file_priv);
+    if (ret)
+      goto err_revoke;
+  }
 
-	*handlep = handle;
-	return 0;
+  *handlep = handle;
+  return 0;
 
 err_revoke:
-	drm_vma_node_revoke(&obj->vma_node, file_priv);
+  drm_vma_node_revoke(&obj->vma_node, file_priv);
 err_remove:
-	spin_lock(&file_priv->table_lock);
-	idr_remove(&file_priv->object_idr, handle);
-	spin_unlock(&file_priv->table_lock);
+  spin_lock(&file_priv->table_lock);
+  idr_remove(&file_priv->object_idr, handle);
+  spin_unlock(&file_priv->table_lock);
 err_unref:
-	drm_gem_object_handle_put_unlocked(obj);
-	return ret;
+  drm_gem_object_handle_put_unlocked(obj);
+  return ret;
 }
 
 /**
@@ -431,12 +431,12 @@ err_unref:
  * drivers must call this last in their buffer object creation callbacks.
  */
 int drm_gem_handle_create(struct drm_file *file_priv,
-			  struct drm_gem_object *obj,
-			  u32 *handlep)
+        struct drm_gem_object *obj,
+        u32 *handlep)
 {
-	mutex_lock(&obj->dev->object_name_lock);
+  mutex_lock(&obj->dev->object_name_lock);
 
-	return drm_gem_handle_create_tail(file_priv, obj, handlep);
+  return drm_gem_handle_create_tail(file_priv, obj, handlep);
 }
 EXPORT_SYMBOL(drm_gem_handle_create);
 
@@ -454,9 +454,9 @@ EXPORT_SYMBOL(drm_gem_handle_create);
 void
 drm_gem_free_mmap_offset(struct drm_gem_object *obj)
 {
-	struct drm_device *dev = obj->dev;
+  struct drm_device *dev = obj->dev;
 
-	drm_vma_offset_remove(dev->vma_offset_manager, &obj->vma_node);
+  drm_vma_offset_remove(dev->vma_offset_manager, &obj->vma_node);
 }
 EXPORT_SYMBOL(drm_gem_free_mmap_offset);
 
@@ -480,10 +480,10 @@ EXPORT_SYMBOL(drm_gem_free_mmap_offset);
 int
 drm_gem_create_mmap_offset_size(struct drm_gem_object *obj, size_t size)
 {
-	struct drm_device *dev = obj->dev;
+  struct drm_device *dev = obj->dev;
 
-	return drm_vma_offset_add(dev->vma_offset_manager, &obj->vma_node,
-				  size / PAGE_SIZE);
+  return drm_vma_offset_add(dev->vma_offset_manager, &obj->vma_node,
+          size / PAGE_SIZE);
 }
 EXPORT_SYMBOL(drm_gem_create_mmap_offset_size);
 
@@ -503,7 +503,7 @@ EXPORT_SYMBOL(drm_gem_create_mmap_offset_size);
  */
 int drm_gem_create_mmap_offset(struct drm_gem_object *obj)
 {
-	return drm_gem_create_mmap_offset_size(obj, obj->size);
+  return drm_gem_create_mmap_offset_size(obj, obj->size);
 }
 EXPORT_SYMBOL(drm_gem_create_mmap_offset);
 
@@ -514,9 +514,9 @@ EXPORT_SYMBOL(drm_gem_create_mmap_offset);
  */
 static void drm_gem_check_release_pagevec(struct pagevec *pvec)
 {
-	check_move_unevictable_pages(pvec);
-	__pagevec_release(pvec);
-	cond_resched();
+  check_move_unevictable_pages(pvec);
+  __pagevec_release(pvec);
+  cond_resched();
 }
 
 /**
@@ -546,61 +546,61 @@ static void drm_gem_check_release_pagevec(struct pagevec *pvec)
  */
 struct page **drm_gem_get_pages(struct drm_gem_object *obj)
 {
-	struct address_space *mapping;
-	struct page *p, **pages;
-	struct pagevec pvec;
-	int i, npages;
+  struct address_space *mapping;
+  struct page *p, **pages;
+  struct pagevec pvec;
+  int i, npages;
 
 
-	if (WARN_ON(!obj->filp))
-		return ERR_PTR(-EINVAL);
+  if (WARN_ON(!obj->filp))
+    return ERR_PTR(-EINVAL);
 
-	/* This is the shared memory object that backs the GEM resource */
-	mapping = obj->filp->f_mapping;
+  /* This is the shared memory object that backs the GEM resource */
+  mapping = obj->filp->f_mapping;
 
-	/* We already BUG_ON() for non-page-aligned sizes in
-	 * drm_gem_object_init(), so we should never hit this unless
-	 * driver author is doing something really wrong:
-	 */
-	WARN_ON((obj->size & (PAGE_SIZE - 1)) != 0);
+  /* We already BUG_ON() for non-page-aligned sizes in
+   * drm_gem_object_init(), so we should never hit this unless
+   * driver author is doing something really wrong:
+   */
+  WARN_ON((obj->size & (PAGE_SIZE - 1)) != 0);
 
-	npages = obj->size >> PAGE_SHIFT;
+  npages = obj->size >> PAGE_SHIFT;
 
-	pages = kvmalloc_array(npages, sizeof(struct page *), GFP_KERNEL);
-	if (pages == NULL)
-		return ERR_PTR(-ENOMEM);
+  pages = kvmalloc_array(npages, sizeof(struct page *), GFP_KERNEL);
+  if (pages == NULL)
+    return ERR_PTR(-ENOMEM);
 
-	mapping_set_unevictable(mapping);
+  mapping_set_unevictable(mapping);
 
-	for (i = 0; i < npages; i++) {
-		p = shmem_read_mapping_page(mapping, i);
-		if (IS_ERR(p))
-			goto fail;
-		pages[i] = p;
+  for (i = 0; i < npages; i++) {
+    p = shmem_read_mapping_page(mapping, i);
+    if (IS_ERR(p))
+      goto fail;
+    pages[i] = p;
 
-		/* Make sure shmem keeps __GFP_DMA32 allocated pages in the
-		 * correct region during swapin. Note that this requires
-		 * __GFP_DMA32 to be set in mapping_gfp_mask(inode->i_mapping)
-		 * so shmem can relocate pages during swapin if required.
-		 */
-		BUG_ON(mapping_gfp_constraint(mapping, __GFP_DMA32) &&
-				(page_to_pfn(p) >= 0x00100000UL));
-	}
+    /* Make sure shmem keeps __GFP_DMA32 allocated pages in the
+     * correct region during swapin. Note that this requires
+     * __GFP_DMA32 to be set in mapping_gfp_mask(inode->i_mapping)
+     * so shmem can relocate pages during swapin if required.
+     */
+    BUG_ON(mapping_gfp_constraint(mapping, __GFP_DMA32) &&
+        (page_to_pfn(p) >= 0x00100000UL));
+  }
 
-	return pages;
+  return pages;
 
 fail:
-	mapping_clear_unevictable(mapping);
-	pagevec_init(&pvec);
-	while (i--) {
-		if (!pagevec_add(&pvec, pages[i]))
-			drm_gem_check_release_pagevec(&pvec);
-	}
-	if (pagevec_count(&pvec))
-		drm_gem_check_release_pagevec(&pvec);
+  mapping_clear_unevictable(mapping);
+  pagevec_init(&pvec);
+  while (i--) {
+    if (!pagevec_add(&pvec, pages[i]))
+      drm_gem_check_release_pagevec(&pvec);
+  }
+  if (pagevec_count(&pvec))
+    drm_gem_check_release_pagevec(&pvec);
 
-	kvfree(pages);
-	return ERR_CAST(p);
+  kvfree(pages);
+  return ERR_CAST(p);
 }
 EXPORT_SYMBOL(drm_gem_get_pages);
 
@@ -612,67 +612,67 @@ EXPORT_SYMBOL(drm_gem_get_pages);
  * @accessed: if true, the pages will be marked as accessed
  */
 void drm_gem_put_pages(struct drm_gem_object *obj, struct page **pages,
-		bool dirty, bool accessed)
+    bool dirty, bool accessed)
 {
-	int i, npages;
-	struct address_space *mapping;
-	struct pagevec pvec;
+  int i, npages;
+  struct address_space *mapping;
+  struct pagevec pvec;
 
-	mapping = file_inode(obj->filp)->i_mapping;
-	mapping_clear_unevictable(mapping);
+  mapping = file_inode(obj->filp)->i_mapping;
+  mapping_clear_unevictable(mapping);
 
-	/* We already BUG_ON() for non-page-aligned sizes in
-	 * drm_gem_object_init(), so we should never hit this unless
-	 * driver author is doing something really wrong:
-	 */
-	WARN_ON((obj->size & (PAGE_SIZE - 1)) != 0);
+  /* We already BUG_ON() for non-page-aligned sizes in
+   * drm_gem_object_init(), so we should never hit this unless
+   * driver author is doing something really wrong:
+   */
+  WARN_ON((obj->size & (PAGE_SIZE - 1)) != 0);
 
-	npages = obj->size >> PAGE_SHIFT;
+  npages = obj->size >> PAGE_SHIFT;
 
-	pagevec_init(&pvec);
-	for (i = 0; i < npages; i++) {
-		if (!pages[i])
-			continue;
+  pagevec_init(&pvec);
+  for (i = 0; i < npages; i++) {
+    if (!pages[i])
+      continue;
 
-		if (dirty)
-			set_page_dirty(pages[i]);
+    if (dirty)
+      set_page_dirty(pages[i]);
 
-		if (accessed)
-			mark_page_accessed(pages[i]);
+    if (accessed)
+      mark_page_accessed(pages[i]);
 
-		/* Undo the reference we took when populating the table */
-		if (!pagevec_add(&pvec, pages[i]))
-			drm_gem_check_release_pagevec(&pvec);
-	}
-	if (pagevec_count(&pvec))
-		drm_gem_check_release_pagevec(&pvec);
+    /* Undo the reference we took when populating the table */
+    if (!pagevec_add(&pvec, pages[i]))
+      drm_gem_check_release_pagevec(&pvec);
+  }
+  if (pagevec_count(&pvec))
+    drm_gem_check_release_pagevec(&pvec);
 
-	kvfree(pages);
+  kvfree(pages);
 }
 EXPORT_SYMBOL(drm_gem_put_pages);
 #endif
 
 static int objects_lookup(struct drm_file *filp, u32 *handle, int count,
-			  struct drm_gem_object **objs)
+        struct drm_gem_object **objs)
 {
-	int i, ret = 0;
-	struct drm_gem_object *obj;
+  int i, ret = 0;
+  struct drm_gem_object *obj;
 
-	spin_lock(&filp->table_lock);
+  spin_lock(&filp->table_lock);
 
-	for (i = 0; i < count; i++) {
-		/* Check if we currently have a reference on the object */
-		obj = idr_find(&filp->object_idr, handle[i]);
-		if (!obj) {
-			ret = -ENOENT;
-			break;
-		}
-		drm_gem_object_get(obj);
-		objs[i] = obj;
-	}
-	spin_unlock(&filp->table_lock);
+  for (i = 0; i < count; i++) {
+    /* Check if we currently have a reference on the object */
+    obj = idr_find(&filp->object_idr, handle[i]);
+    if (!obj) {
+      ret = -ENOENT;
+      break;
+    }
+    drm_gem_object_get(obj);
+    objs[i] = obj;
+  }
+  spin_unlock(&filp->table_lock);
 
-	return ret;
+  return ret;
 }
 
 /**
@@ -695,38 +695,38 @@ static int objects_lookup(struct drm_file *filp, u32 *handle, int count,
  *
  */
 int drm_gem_objects_lookup(struct drm_file *filp, void __user *bo_handles,
-			   int count, struct drm_gem_object ***objs_out)
+         int count, struct drm_gem_object ***objs_out)
 {
-	int ret;
-	u32 *handles;
-	struct drm_gem_object **objs;
+  int ret;
+  u32 *handles;
+  struct drm_gem_object **objs;
 
-	if (!count)
-		return 0;
+  if (!count)
+    return 0;
 
-	objs = kvmalloc_array(count, sizeof(struct drm_gem_object *),
-			     GFP_KERNEL | __GFP_ZERO);
-	if (!objs)
-		return -ENOMEM;
+  objs = kvmalloc_array(count, sizeof(struct drm_gem_object *),
+           GFP_KERNEL | __GFP_ZERO);
+  if (!objs)
+    return -ENOMEM;
 
-	*objs_out = objs;
+  *objs_out = objs;
 
-	handles = kvmalloc_array(count, sizeof(u32), GFP_KERNEL);
-	if (!handles) {
-		ret = -ENOMEM;
-		goto out;
-	}
+  handles = kvmalloc_array(count, sizeof(u32), GFP_KERNEL);
+  if (!handles) {
+    ret = -ENOMEM;
+    goto out;
+  }
 
-	if (copy_from_user(handles, bo_handles, count * sizeof(u32))) {
-		ret = -EFAULT;
-		DRM_DEBUG("Failed to copy in GEM handles\n");
-		goto out;
-	}
+  if (copy_from_user(handles, bo_handles, count * sizeof(u32))) {
+    ret = -EFAULT;
+    DRM_DEBUG("Failed to copy in GEM handles\n");
+    goto out;
+  }
 
-	ret = objects_lookup(filp, handles, count, objs);
+  ret = objects_lookup(filp, handles, count, objs);
 out:
-	kvfree(handles);
-	return ret;
+  kvfree(handles);
+  return ret;
 
 }
 EXPORT_SYMBOL(drm_gem_objects_lookup);
@@ -746,10 +746,10 @@ EXPORT_SYMBOL(drm_gem_objects_lookup);
 struct drm_gem_object *
 drm_gem_object_lookup(struct drm_file *filp, u32 handle)
 {
-	struct drm_gem_object *obj = NULL;
+  struct drm_gem_object *obj = NULL;
 
-	objects_lookup(filp, &handle, 1, &obj);
-	return obj;
+  objects_lookup(filp, &handle, 1, &obj);
+  return obj;
 }
 EXPORT_SYMBOL(drm_gem_object_lookup);
 
@@ -767,26 +767,26 @@ EXPORT_SYMBOL(drm_gem_object_lookup);
  * greater than 0 on success.
  */
 long drm_gem_dma_resv_wait(struct drm_file *filep, u32 handle,
-				    bool wait_all, unsigned long timeout)
+            bool wait_all, unsigned long timeout)
 {
-	long ret;
-	struct drm_gem_object *obj;
+  long ret;
+  struct drm_gem_object *obj;
 
-	obj = drm_gem_object_lookup(filep, handle);
-	if (!obj) {
-		DRM_DEBUG("Failed to look up GEM BO %d\n", handle);
-		return -EINVAL;
-	}
+  obj = drm_gem_object_lookup(filep, handle);
+  if (!obj) {
+    DRM_DEBUG("Failed to look up GEM BO %d\n", handle);
+    return -EINVAL;
+  }
 
-	ret = dma_resv_wait_timeout(obj->resv, wait_all, true, timeout);
-	if (ret == 0)
-		ret = -ETIME;
-	else if (ret > 0)
-		ret = 0;
+  ret = dma_resv_wait_timeout(obj->resv, wait_all, true, timeout);
+  if (ret == 0)
+    ret = -ETIME;
+  else if (ret > 0)
+    ret = 0;
 
-	drm_gem_object_put(obj);
+  drm_gem_object_put(obj);
 
-	return ret;
+  return ret;
 }
 EXPORT_SYMBOL(drm_gem_dma_resv_wait);
 
@@ -800,17 +800,17 @@ EXPORT_SYMBOL(drm_gem_dma_resv_wait);
  */
 int
 drm_gem_close_ioctl(struct drm_device *dev, void *data,
-		    struct drm_file *file_priv)
+        struct drm_file *file_priv)
 {
-	struct drm_gem_close *args = data;
-	int ret;
+  struct drm_gem_close *args = data;
+  int ret;
 
-	if (!drm_core_check_feature(dev, DRIVER_GEM))
-		return -EOPNOTSUPP;
+  if (!drm_core_check_feature(dev, DRIVER_GEM))
+    return -EOPNOTSUPP;
 
-	ret = drm_gem_handle_delete(file_priv, args->handle);
+  ret = drm_gem_handle_delete(file_priv, args->handle);
 
-	return ret;
+  return ret;
 }
 
 /**
@@ -826,41 +826,41 @@ drm_gem_close_ioctl(struct drm_device *dev, void *data,
  */
 int
 drm_gem_flink_ioctl(struct drm_device *dev, void *data,
-		    struct drm_file *file_priv)
+        struct drm_file *file_priv)
 {
-	struct drm_gem_flink *args = data;
-	struct drm_gem_object *obj;
-	int ret;
+  struct drm_gem_flink *args = data;
+  struct drm_gem_object *obj;
+  int ret;
 
-	if (!drm_core_check_feature(dev, DRIVER_GEM))
-		return -EOPNOTSUPP;
+  if (!drm_core_check_feature(dev, DRIVER_GEM))
+    return -EOPNOTSUPP;
 
-	obj = drm_gem_object_lookup(file_priv, args->handle);
-	if (obj == NULL)
-		return -ENOENT;
+  obj = drm_gem_object_lookup(file_priv, args->handle);
+  if (obj == NULL)
+    return -ENOENT;
 
-	mutex_lock(&dev->object_name_lock);
-	/* prevent races with concurrent gem_close. */
-	if (obj->handle_count == 0) {
-		ret = -ENOENT;
-		goto err;
-	}
+  mutex_lock(&dev->object_name_lock);
+  /* prevent races with concurrent gem_close. */
+  if (obj->handle_count == 0) {
+    ret = -ENOENT;
+    goto err;
+  }
 
-	if (!obj->name) {
-		ret = idr_alloc(&dev->object_name_idr, obj, 1, 0, GFP_KERNEL);
-		if (ret < 0)
-			goto err;
+  if (!obj->name) {
+    ret = idr_alloc(&dev->object_name_idr, obj, 1, 0, GFP_KERNEL);
+    if (ret < 0)
+      goto err;
 
-		obj->name = ret;
-	}
+    obj->name = ret;
+  }
 
-	args->name = (uint64_t) obj->name;
-	ret = 0;
+  args->name = (uint64_t) obj->name;
+  ret = 0;
 
 err:
-	mutex_unlock(&dev->object_name_lock);
-	drm_gem_object_put(obj);
-	return ret;
+  mutex_unlock(&dev->object_name_lock);
+  drm_gem_object_put(obj);
+  return ret;
 }
 
 /**
@@ -876,36 +876,36 @@ err:
  */
 int
 drm_gem_open_ioctl(struct drm_device *dev, void *data,
-		   struct drm_file *file_priv)
+       struct drm_file *file_priv)
 {
-	struct drm_gem_open *args = data;
-	struct drm_gem_object *obj;
-	int ret;
-	u32 handle;
+  struct drm_gem_open *args = data;
+  struct drm_gem_object *obj;
+  int ret;
+  u32 handle;
 
-	if (!drm_core_check_feature(dev, DRIVER_GEM))
-		return -EOPNOTSUPP;
+  if (!drm_core_check_feature(dev, DRIVER_GEM))
+    return -EOPNOTSUPP;
 
-	mutex_lock(&dev->object_name_lock);
-	obj = idr_find(&dev->object_name_idr, (int) args->name);
-	if (obj) {
-		drm_gem_object_get(obj);
-	} else {
-		mutex_unlock(&dev->object_name_lock);
-		return -ENOENT;
-	}
+  mutex_lock(&dev->object_name_lock);
+  obj = idr_find(&dev->object_name_idr, (int) args->name);
+  if (obj) {
+    drm_gem_object_get(obj);
+  } else {
+    mutex_unlock(&dev->object_name_lock);
+    return -ENOENT;
+  }
 
-	/* drm_gem_handle_create_tail unlocks dev->object_name_lock. */
-	ret = drm_gem_handle_create_tail(file_priv, obj, &handle);
-	if (ret)
-		goto err;
+  /* drm_gem_handle_create_tail unlocks dev->object_name_lock. */
+  ret = drm_gem_handle_create_tail(file_priv, obj, &handle);
+  if (ret)
+    goto err;
 
-	args->handle = handle;
-	args->size = obj->size;
+  args->handle = handle;
+  args->size = obj->size;
 
 err:
-	drm_gem_object_put(obj);
-	return ret;
+  drm_gem_object_put(obj);
+  return ret;
 }
 
 /**
@@ -920,11 +920,11 @@ void
 drm_gem_open(struct drm_device *dev, struct drm_file *file_private)
 {
 #ifdef __linux__
-	idr_init_base(&file_private->object_idr, 1);
+  idr_init_base(&file_private->object_idr, 1);
 #elif defined(__FreeBSD__)
-	idr_init(&file_private->object_idr);
+  idr_init(&file_private->object_idr);
 #endif
-	spin_lock_init(&file_private->table_lock);
+  spin_lock_init(&file_private->table_lock);
 }
 
 /**
@@ -939,9 +939,9 @@ drm_gem_open(struct drm_device *dev, struct drm_file *file_private)
 void
 drm_gem_release(struct drm_device *dev, struct drm_file *file_private)
 {
-	idr_for_each(&file_private->object_idr,
-		     &drm_gem_object_release_handle, file_private);
-	idr_destroy(&file_private->object_idr);
+  idr_for_each(&file_private->object_idr,
+         &drm_gem_object_release_handle, file_private);
+  idr_destroy(&file_private->object_idr);
 }
 
 /**
@@ -954,13 +954,13 @@ drm_gem_release(struct drm_device *dev, struct drm_file *file_private)
 void
 drm_gem_object_release(struct drm_gem_object *obj)
 {
-	WARN_ON(obj->dma_buf);
+  WARN_ON(obj->dma_buf);
 
-	if (obj->filp)
-		fput(obj->filp);
+  if (obj->filp)
+    fput(obj->filp);
 
-	dma_resv_fini(&obj->_resv);
-	drm_gem_free_mmap_offset(obj);
+  dma_resv_fini(&obj->_resv);
+  drm_gem_free_mmap_offset(obj);
 }
 EXPORT_SYMBOL(drm_gem_object_release);
 
@@ -975,13 +975,13 @@ EXPORT_SYMBOL(drm_gem_object_release);
 void
 drm_gem_object_free(struct kref *kref)
 {
-	struct drm_gem_object *obj =
-		container_of(kref, struct drm_gem_object, refcount);
+  struct drm_gem_object *obj =
+    container_of(kref, struct drm_gem_object, refcount);
 
-	if (WARN_ON(!obj->funcs->free))
-		return;
+  if (WARN_ON(!obj->funcs->free))
+    return;
 
-	obj->funcs->free(obj);
+  obj->funcs->free(obj);
 }
 EXPORT_SYMBOL(drm_gem_object_free);
 
@@ -999,11 +999,11 @@ EXPORT_SYMBOL(drm_gem_object_free);
 void
 drm_gem_object_put_locked(struct drm_gem_object *obj)
 {
-	if (obj) {
-		WARN_ON(!mutex_is_locked(&obj->dev->struct_mutex));
+  if (obj) {
+    WARN_ON(!mutex_is_locked(&obj->dev->struct_mutex));
 
-		kref_put(&obj->refcount, drm_gem_object_free);
-	}
+    kref_put(&obj->refcount, drm_gem_object_free);
+  }
 }
 EXPORT_SYMBOL(drm_gem_object_put_locked);
 
@@ -1016,9 +1016,9 @@ EXPORT_SYMBOL(drm_gem_object_put_locked);
  */
 void drm_gem_vm_open(struct vm_area_struct *vma)
 {
-	struct drm_gem_object *obj = vma->vm_private_data;
+  struct drm_gem_object *obj = vma->vm_private_data;
 
-	drm_gem_object_get(obj);
+  drm_gem_object_get(obj);
 }
 EXPORT_SYMBOL(drm_gem_vm_open);
 
@@ -1031,9 +1031,9 @@ EXPORT_SYMBOL(drm_gem_vm_open);
  */
 void drm_gem_vm_close(struct vm_area_struct *vma)
 {
-	struct drm_gem_object *obj = vma->vm_private_data;
+  struct drm_gem_object *obj = vma->vm_private_data;
 
-	drm_gem_object_put(obj);
+  drm_gem_object_put(obj);
 }
 EXPORT_SYMBOL(drm_gem_vm_close);
 
@@ -1062,46 +1062,46 @@ EXPORT_SYMBOL(drm_gem_vm_close);
  * size, or if no vm_ops are provided.
  */
 int drm_gem_mmap_obj(struct drm_gem_object *obj, unsigned long obj_size,
-		     struct vm_area_struct *vma)
+         struct vm_area_struct *vma)
 {
-	int ret;
+  int ret;
 
-	/* Check for valid size. */
-	if (obj_size < vma->vm_end - vma->vm_start)
-		return -EINVAL;
+  /* Check for valid size. */
+  if (obj_size < vma->vm_end - vma->vm_start)
+    return -EINVAL;
 
-	/* Take a ref for this mapping of the object, so that the fault
-	 * handler can dereference the mmap offset's pointer to the object.
-	 * This reference is cleaned up by the corresponding vm_close
-	 * (which should happen whether the vma was created by this call, or
-	 * by a vm_open due to mremap or partial unmap or whatever).
-	 */
-	drm_gem_object_get(obj);
+  /* Take a ref for this mapping of the object, so that the fault
+   * handler can dereference the mmap offset's pointer to the object.
+   * This reference is cleaned up by the corresponding vm_close
+   * (which should happen whether the vma was created by this call, or
+   * by a vm_open due to mremap or partial unmap or whatever).
+   */
+  drm_gem_object_get(obj);
 
-	vma->vm_private_data = obj;
-	vma->vm_ops = obj->funcs->vm_ops;
+  vma->vm_private_data = obj;
+  vma->vm_ops = obj->funcs->vm_ops;
 
-	if (obj->funcs->mmap) {
-		ret = obj->funcs->mmap(obj, vma);
-		if (ret)
-			goto err_drm_gem_object_put;
-		WARN_ON(!(vma->vm_flags & VM_DONTEXPAND));
-	} else {
-		if (!vma->vm_ops) {
-			ret = -EINVAL;
-			goto err_drm_gem_object_put;
-		}
+  if (obj->funcs->mmap) {
+    ret = obj->funcs->mmap(obj, vma);
+    if (ret)
+      goto err_drm_gem_object_put;
+    WARN_ON(!(vma->vm_flags & VM_DONTEXPAND));
+  } else {
+    if (!vma->vm_ops) {
+      ret = -EINVAL;
+      goto err_drm_gem_object_put;
+    }
 
-		vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
-		vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
-		vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
-	}
+    vma->vm_flags |= VM_IO | VM_PFNMAP | VM_DONTEXPAND | VM_DONTDUMP;
+    vma->vm_page_prot = pgprot_writecombine(vm_get_page_prot(vma->vm_flags));
+    vma->vm_page_prot = pgprot_decrypted(vma->vm_page_prot);
+  }
 
-	return 0;
+  return 0;
 
 err_drm_gem_object_put:
-	drm_gem_object_put(obj);
-	return ret;
+  drm_gem_object_put(obj);
+  return ret;
 }
 EXPORT_SYMBOL(drm_gem_mmap_obj);
 
@@ -1122,119 +1122,119 @@ EXPORT_SYMBOL(drm_gem_mmap_obj);
  */
 int drm_gem_mmap(struct file *filp, struct vm_area_struct *vma)
 {
-	struct drm_file *priv = filp->private_data;
-	struct drm_device *dev = priv->minor->dev;
-	struct drm_gem_object *obj = NULL;
-	struct drm_vma_offset_node *node;
-	int ret;
+  struct drm_file *priv = filp->private_data;
+  struct drm_device *dev = priv->minor->dev;
+  struct drm_gem_object *obj = NULL;
+  struct drm_vma_offset_node *node;
+  int ret;
 
-	if (drm_dev_is_unplugged(dev))
-		return -ENODEV;
+  if (drm_dev_is_unplugged(dev))
+    return -ENODEV;
 
-	drm_vma_offset_lock_lookup(dev->vma_offset_manager);
-	node = drm_vma_offset_exact_lookup_locked(dev->vma_offset_manager,
-						  vma->vm_pgoff,
-						  vma_pages(vma));
-	if (likely(node)) {
-		obj = container_of(node, struct drm_gem_object, vma_node);
-		/*
-		 * When the object is being freed, after it hits 0-refcnt it
-		 * proceeds to tear down the object. In the process it will
-		 * attempt to remove the VMA offset and so acquire this
-		 * mgr->vm_lock.  Therefore if we find an object with a 0-refcnt
-		 * that matches our range, we know it is in the process of being
-		 * destroyed and will be freed as soon as we release the lock -
-		 * so we have to check for the 0-refcnted object and treat it as
-		 * invalid.
-		 */
-		if (!kref_get_unless_zero(&obj->refcount))
-			obj = NULL;
-	}
-	drm_vma_offset_unlock_lookup(dev->vma_offset_manager);
+  drm_vma_offset_lock_lookup(dev->vma_offset_manager);
+  node = drm_vma_offset_exact_lookup_locked(dev->vma_offset_manager,
+              vma->vm_pgoff,
+              vma_pages(vma));
+  if (likely(node)) {
+    obj = container_of(node, struct drm_gem_object, vma_node);
+    /*
+     * When the object is being freed, after it hits 0-refcnt it
+     * proceeds to tear down the object. In the process it will
+     * attempt to remove the VMA offset and so acquire this
+     * mgr->vm_lock.  Therefore if we find an object with a 0-refcnt
+     * that matches our range, we know it is in the process of being
+     * destroyed and will be freed as soon as we release the lock -
+     * so we have to check for the 0-refcnted object and treat it as
+     * invalid.
+     */
+    if (!kref_get_unless_zero(&obj->refcount))
+      obj = NULL;
+  }
+  drm_vma_offset_unlock_lookup(dev->vma_offset_manager);
 
-	if (!obj)
-		return -EINVAL;
+  if (!obj)
+    return -EINVAL;
 
-	if (!drm_vma_node_is_allowed(node, priv)) {
-		drm_gem_object_put(obj);
-		return -EACCES;
-	}
+  if (!drm_vma_node_is_allowed(node, priv)) {
+    drm_gem_object_put(obj);
+    return -EACCES;
+  }
 
-	if (node->readonly) {
-		if (vma->vm_flags & VM_WRITE) {
-			drm_gem_object_put(obj);
-			return -EINVAL;
-		}
+  if (node->readonly) {
+    if (vma->vm_flags & VM_WRITE) {
+      drm_gem_object_put(obj);
+      return -EINVAL;
+    }
 
-		vma->vm_flags &= ~VM_MAYWRITE;
-	}
+    vma->vm_flags &= ~VM_MAYWRITE;
+  }
 
-	ret = drm_gem_mmap_obj(obj, drm_vma_node_size(node) << PAGE_SHIFT,
-			       vma);
+  ret = drm_gem_mmap_obj(obj, drm_vma_node_size(node) << PAGE_SHIFT,
+             vma);
 
-	drm_gem_object_put(obj);
+  drm_gem_object_put(obj);
 
-	return ret;
+  return ret;
 }
 EXPORT_SYMBOL(drm_gem_mmap);
 
 void drm_gem_print_info(struct drm_printer *p, unsigned int indent,
-			const struct drm_gem_object *obj)
+      const struct drm_gem_object *obj)
 {
-	drm_printf_indent(p, indent, "name=%d\n", obj->name);
-	drm_printf_indent(p, indent, "refcount=%u\n",
-			  kref_read(&obj->refcount));
-	drm_printf_indent(p, indent, "start=%08lx\n",
-			  drm_vma_node_start(&obj->vma_node));
-	drm_printf_indent(p, indent, "size=%zu\n", obj->size);
-	drm_printf_indent(p, indent, "imported=%s\n",
-			  obj->import_attach ? "yes" : "no");
+  drm_printf_indent(p, indent, "name=%d\n", obj->name);
+  drm_printf_indent(p, indent, "refcount=%u\n",
+        kref_read(&obj->refcount));
+  drm_printf_indent(p, indent, "start=%08lx\n",
+        drm_vma_node_start(&obj->vma_node));
+  drm_printf_indent(p, indent, "size=%zu\n", obj->size);
+  drm_printf_indent(p, indent, "imported=%s\n",
+        obj->import_attach ? "yes" : "no");
 
-	if (obj->funcs->print_info)
-		obj->funcs->print_info(p, indent, obj);
+  if (obj->funcs->print_info)
+    obj->funcs->print_info(p, indent, obj);
 }
 
 int drm_gem_pin(struct drm_gem_object *obj)
 {
-	if (obj->funcs->pin)
-		return obj->funcs->pin(obj);
-	else
-		return 0;
+  if (obj->funcs->pin)
+    return obj->funcs->pin(obj);
+  else
+    return 0;
 }
 
 void drm_gem_unpin(struct drm_gem_object *obj)
 {
-	if (obj->funcs->unpin)
-		obj->funcs->unpin(obj);
+  if (obj->funcs->unpin)
+    obj->funcs->unpin(obj);
 }
 
 int drm_gem_vmap(struct drm_gem_object *obj, struct dma_buf_map *map)
 {
-	int ret;
+  int ret;
 
-	if (!obj->funcs->vmap)
-		return -EOPNOTSUPP;
+  if (!obj->funcs->vmap)
+    return -EOPNOTSUPP;
 
-	ret = obj->funcs->vmap(obj, map);
-	if (ret)
-		return ret;
-	else if (dma_buf_map_is_null(map))
-		return -ENOMEM;
+  ret = obj->funcs->vmap(obj, map);
+  if (ret)
+    return ret;
+  else if (dma_buf_map_is_null(map))
+    return -ENOMEM;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_gem_vmap);
 
 void drm_gem_vunmap(struct drm_gem_object *obj, struct dma_buf_map *map)
 {
-	if (dma_buf_map_is_null(map))
-		return;
+  if (dma_buf_map_is_null(map))
+    return;
 
-	if (obj->funcs->vunmap)
-		obj->funcs->vunmap(obj, map);
+  if (obj->funcs->vunmap)
+    obj->funcs->vunmap(obj, map);
 
-	/* Always set the mapping to NULL. Callers may rely on this. */
-	dma_buf_map_clear(map);
+  /* Always set the mapping to NULL. Callers may rely on this. */
+  dma_buf_map_clear(map);
 }
 EXPORT_SYMBOL(drm_gem_vunmap);
 
@@ -1253,66 +1253,66 @@ EXPORT_SYMBOL(drm_gem_vunmap);
  */
 int
 drm_gem_lock_reservations(struct drm_gem_object **objs, int count,
-			  struct ww_acquire_ctx *acquire_ctx)
+        struct ww_acquire_ctx *acquire_ctx)
 {
-	int contended = -1;
-	int i, ret;
+  int contended = -1;
+  int i, ret;
 
-	ww_acquire_init(acquire_ctx, &reservation_ww_class);
+  ww_acquire_init(acquire_ctx, &reservation_ww_class);
 
 retry:
-	if (contended != -1) {
-		struct drm_gem_object *obj = objs[contended];
+  if (contended != -1) {
+    struct drm_gem_object *obj = objs[contended];
 
-		ret = dma_resv_lock_slow_interruptible(obj->resv,
-								 acquire_ctx);
-		if (ret) {
-			ww_acquire_done(acquire_ctx);
-			return ret;
-		}
-	}
+    ret = dma_resv_lock_slow_interruptible(obj->resv,
+                 acquire_ctx);
+    if (ret) {
+      ww_acquire_done(acquire_ctx);
+      return ret;
+    }
+  }
 
-	for (i = 0; i < count; i++) {
-		if (i == contended)
-			continue;
+  for (i = 0; i < count; i++) {
+    if (i == contended)
+      continue;
 
-		ret = dma_resv_lock_interruptible(objs[i]->resv,
-							    acquire_ctx);
-		if (ret) {
-			int j;
+    ret = dma_resv_lock_interruptible(objs[i]->resv,
+                  acquire_ctx);
+    if (ret) {
+      int j;
 
-			for (j = 0; j < i; j++)
-				dma_resv_unlock(objs[j]->resv);
+      for (j = 0; j < i; j++)
+        dma_resv_unlock(objs[j]->resv);
 
-			if (contended != -1 && contended >= i)
-				dma_resv_unlock(objs[contended]->resv);
+      if (contended != -1 && contended >= i)
+        dma_resv_unlock(objs[contended]->resv);
 
-			if (ret == -EDEADLK) {
-				contended = i;
-				goto retry;
-			}
+      if (ret == -EDEADLK) {
+        contended = i;
+        goto retry;
+      }
 
-			ww_acquire_done(acquire_ctx);
-			return ret;
-		}
-	}
+      ww_acquire_done(acquire_ctx);
+      return ret;
+    }
+  }
 
-	ww_acquire_done(acquire_ctx);
+  ww_acquire_done(acquire_ctx);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_gem_lock_reservations);
 
 void
 drm_gem_unlock_reservations(struct drm_gem_object **objs, int count,
-			    struct ww_acquire_ctx *acquire_ctx)
+          struct ww_acquire_ctx *acquire_ctx)
 {
-	int i;
+  int i;
 
-	for (i = 0; i < count; i++)
-		dma_resv_unlock(objs[i]->resv);
+  for (i = 0; i < count; i++)
+    dma_resv_unlock(objs[i]->resv);
 
-	ww_acquire_fini(acquire_ctx);
+  ww_acquire_fini(acquire_ctx);
 }
 EXPORT_SYMBOL(drm_gem_unlock_reservations);
 
@@ -1327,38 +1327,38 @@ EXPORT_SYMBOL(drm_gem_unlock_reservations);
  * 0 on success, or an error on failing to expand the array.
  */
 int drm_gem_fence_array_add(struct xarray *fence_array,
-			    struct dma_fence *fence)
+          struct dma_fence *fence)
 {
-	struct dma_fence *entry;
-	unsigned long index;
-	u32 id = 0;
-	int ret;
+  struct dma_fence *entry;
+  unsigned long index;
+  u32 id = 0;
+  int ret;
 
-	if (!fence)
-		return 0;
+  if (!fence)
+    return 0;
 
-	/* Deduplicate if we already depend on a fence from the same context.
-	 * This lets the size of the array of deps scale with the number of
-	 * engines involved, rather than the number of BOs.
-	 */
-	xa_for_each(fence_array, index, entry) {
-		if (entry->context != fence->context)
-			continue;
+  /* Deduplicate if we already depend on a fence from the same context.
+   * This lets the size of the array of deps scale with the number of
+   * engines involved, rather than the number of BOs.
+   */
+  xa_for_each(fence_array, index, entry) {
+    if (entry->context != fence->context)
+      continue;
 
-		if (dma_fence_is_later(fence, entry)) {
-			dma_fence_put(entry);
-			xa_store(fence_array, index, fence, GFP_KERNEL);
-		} else {
-			dma_fence_put(fence);
-		}
-		return 0;
-	}
+    if (dma_fence_is_later(fence, entry)) {
+      dma_fence_put(entry);
+      xa_store(fence_array, index, fence, GFP_KERNEL);
+    } else {
+      dma_fence_put(fence);
+    }
+    return 0;
+  }
 
-	ret = xa_alloc(fence_array, &id, fence, xa_limit_32b, GFP_KERNEL);
-	if (ret != 0)
-		dma_fence_put(fence);
+  ret = xa_alloc(fence_array, &id, fence, xa_limit_32b, GFP_KERNEL);
+  if (ret != 0)
+    dma_fence_put(fence);
 
-	return ret;
+  return ret;
 }
 EXPORT_SYMBOL(drm_gem_fence_array_add);
 
@@ -1377,34 +1377,34 @@ EXPORT_SYMBOL(drm_gem_fence_array_add);
  * shared fences in the reservation object).
  */
 int drm_gem_fence_array_add_implicit(struct xarray *fence_array,
-				     struct drm_gem_object *obj,
-				     bool write)
+             struct drm_gem_object *obj,
+             bool write)
 {
-	int ret;
-	struct dma_fence **fences;
-	unsigned int i, fence_count;
+  int ret;
+  struct dma_fence **fences;
+  unsigned int i, fence_count;
 
-	if (!write) {
-		struct dma_fence *fence =
-			dma_resv_get_excl_unlocked(obj->resv);
+  if (!write) {
+    struct dma_fence *fence =
+      dma_resv_get_excl_unlocked(obj->resv);
 
-		return drm_gem_fence_array_add(fence_array, fence);
-	}
+    return drm_gem_fence_array_add(fence_array, fence);
+  }
 
-	ret = dma_resv_get_fences(obj->resv, NULL,
-						&fence_count, &fences);
-	if (ret || !fence_count)
-		return ret;
+  ret = dma_resv_get_fences(obj->resv, NULL,
+            &fence_count, &fences);
+  if (ret || !fence_count)
+    return ret;
 
-	for (i = 0; i < fence_count; i++) {
-		ret = drm_gem_fence_array_add(fence_array, fences[i]);
-		if (ret)
-			break;
-	}
+  for (i = 0; i < fence_count; i++) {
+    ret = drm_gem_fence_array_add(fence_array, fences[i]);
+    if (ret)
+      break;
+  }
 
-	for (; i < fence_count; i++)
-		dma_fence_put(fences[i]);
-	kfree(fences);
-	return ret;
+  for (; i < fence_count; i++)
+    dma_fence_put(fences[i]);
+  kfree(fences);
+  return ret;
 }
 EXPORT_SYMBOL(drm_gem_fence_array_add_implicit);

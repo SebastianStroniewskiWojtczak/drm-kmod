@@ -66,14 +66,14 @@
  */
 static void radeon_fence_write(struct radeon_device *rdev, u32 seq, int ring)
 {
-	struct radeon_fence_driver *drv = &rdev->fence_drv[ring];
-	if (likely(rdev->wb.enabled || !drv->scratch_reg)) {
-		if (drv->cpu_addr) {
-			*drv->cpu_addr = cpu_to_le32(seq);
-		}
-	} else {
-		WREG32(drv->scratch_reg, seq);
-	}
+  struct radeon_fence_driver *drv = &rdev->fence_drv[ring];
+  if (likely(rdev->wb.enabled || !drv->scratch_reg)) {
+    if (drv->cpu_addr) {
+      *drv->cpu_addr = cpu_to_le32(seq);
+    }
+  } else {
+    WREG32(drv->scratch_reg, seq);
+  }
 }
 
 /**
@@ -87,19 +87,19 @@ static void radeon_fence_write(struct radeon_device *rdev, u32 seq, int ring)
  */
 static u32 radeon_fence_read(struct radeon_device *rdev, int ring)
 {
-	struct radeon_fence_driver *drv = &rdev->fence_drv[ring];
-	u32 seq = 0;
+  struct radeon_fence_driver *drv = &rdev->fence_drv[ring];
+  u32 seq = 0;
 
-	if (likely(rdev->wb.enabled || !drv->scratch_reg)) {
-		if (drv->cpu_addr) {
-			seq = le32_to_cpu(*drv->cpu_addr);
-		} else {
-			seq = lower_32_bits(atomic64_read(&drv->last_seq));
-		}
-	} else {
-		seq = RREG32(drv->scratch_reg);
-	}
-	return seq;
+  if (likely(rdev->wb.enabled || !drv->scratch_reg)) {
+    if (drv->cpu_addr) {
+      seq = le32_to_cpu(*drv->cpu_addr);
+    } else {
+      seq = lower_32_bits(atomic64_read(&drv->last_seq));
+    }
+  } else {
+    seq = RREG32(drv->scratch_reg);
+  }
+  return seq;
 }
 
 /**
@@ -112,13 +112,13 @@ static u32 radeon_fence_read(struct radeon_device *rdev, int ring)
  */
 static void radeon_fence_schedule_check(struct radeon_device *rdev, int ring)
 {
-	/*
-	 * Do not reset the timer here with mod_delayed_work,
-	 * this can livelock in an interaction with TTM delayed destroy.
-	 */
-	queue_delayed_work(system_power_efficient_wq,
-			   &rdev->fence_drv[ring].lockup_work,
-			   RADEON_FENCE_JIFFIES_TIMEOUT);
+  /*
+   * Do not reset the timer here with mod_delayed_work,
+   * this can livelock in an interaction with TTM delayed destroy.
+   */
+  queue_delayed_work(system_power_efficient_wq,
+         &rdev->fence_drv[ring].lockup_work,
+         RADEON_FENCE_JIFFIES_TIMEOUT);
 }
 
 /**
@@ -132,28 +132,28 @@ static void radeon_fence_schedule_check(struct radeon_device *rdev, int ring)
  * Returns 0 on success, -ENOMEM on failure.
  */
 int radeon_fence_emit(struct radeon_device *rdev,
-		      struct radeon_fence **fence,
-		      int ring)
+          struct radeon_fence **fence,
+          int ring)
 {
-	u64 seq;
+  u64 seq;
 
-	/* we are protected by the ring emission mutex */
-	*fence = kmalloc(sizeof(struct radeon_fence), GFP_KERNEL);
-	if ((*fence) == NULL) {
-		return -ENOMEM;
-	}
-	(*fence)->rdev = rdev;
-	(*fence)->seq = seq = ++rdev->fence_drv[ring].sync_seq[ring];
-	(*fence)->ring = ring;
-	(*fence)->is_vm_update = false;
-	dma_fence_init(&(*fence)->base, &radeon_fence_ops,
-		       &rdev->fence_queue.lock,
-		       rdev->fence_context + ring,
-		       seq);
-	radeon_fence_ring_emit(rdev, ring, *fence);
-	trace_radeon_fence_emit(rdev->ddev, ring, (*fence)->seq);
-	radeon_fence_schedule_check(rdev, ring);
-	return 0;
+  /* we are protected by the ring emission mutex */
+  *fence = kmalloc(sizeof(struct radeon_fence), GFP_KERNEL);
+  if ((*fence) == NULL) {
+    return -ENOMEM;
+  }
+  (*fence)->rdev = rdev;
+  (*fence)->seq = seq = ++rdev->fence_drv[ring].sync_seq[ring];
+  (*fence)->ring = ring;
+  (*fence)->is_vm_update = false;
+  dma_fence_init(&(*fence)->base, &radeon_fence_ops,
+           &rdev->fence_queue.lock,
+           rdev->fence_context + ring,
+           seq);
+  radeon_fence_ring_emit(rdev, ring, *fence);
+  trace_radeon_fence_emit(rdev->ddev, ring, (*fence)->seq);
+  radeon_fence_schedule_check(rdev, ring);
+  return 0;
 }
 
 /*
@@ -165,30 +165,30 @@ int radeon_fence_emit(struct radeon_device *rdev,
  */
 static int radeon_fence_check_signaled(wait_queue_entry_t *wait, unsigned mode, int flags, void *key)
 {
-	struct radeon_fence *fence;
-	u64 seq;
+  struct radeon_fence *fence;
+  u64 seq;
 
-	fence = container_of(wait, struct radeon_fence, fence_wake);
+  fence = container_of(wait, struct radeon_fence, fence_wake);
 
-	/*
-	 * We cannot use radeon_fence_process here because we're already
-	 * in the waitqueue, in a call from wake_up_all.
-	 */
-	seq = atomic64_read(&fence->rdev->fence_drv[fence->ring].last_seq);
-	if (seq >= fence->seq) {
-		int ret = dma_fence_signal_locked(&fence->base);
+  /*
+   * We cannot use radeon_fence_process here because we're already
+   * in the waitqueue, in a call from wake_up_all.
+   */
+  seq = atomic64_read(&fence->rdev->fence_drv[fence->ring].last_seq);
+  if (seq >= fence->seq) {
+    int ret = dma_fence_signal_locked(&fence->base);
 
-		if (!ret)
-			DMA_FENCE_TRACE(&fence->base, "signaled from irq context\n");
-		else
-			DMA_FENCE_TRACE(&fence->base, "was already signaled\n");
+    if (!ret)
+      DMA_FENCE_TRACE(&fence->base, "signaled from irq context\n");
+    else
+      DMA_FENCE_TRACE(&fence->base, "was already signaled\n");
 
-		radeon_irq_kms_sw_irq_put(fence->rdev, fence->ring);
-		__remove_wait_queue(&fence->rdev->fence_queue, &fence->fence_wake);
-		dma_fence_put(&fence->base);
-	} else
-		DMA_FENCE_TRACE(&fence->base, "pending\n");
-	return 0;
+    radeon_irq_kms_sw_irq_put(fence->rdev, fence->ring);
+    __remove_wait_queue(&fence->rdev->fence_queue, &fence->fence_wake);
+    dma_fence_put(&fence->base);
+  } else
+    DMA_FENCE_TRACE(&fence->base, "pending\n");
+  return 0;
 }
 
 /**
@@ -203,64 +203,64 @@ static int radeon_fence_check_signaled(wait_queue_entry_t *wait, unsigned mode, 
  */
 static bool radeon_fence_activity(struct radeon_device *rdev, int ring)
 {
-	uint64_t seq, last_seq, last_emitted;
-	unsigned count_loop = 0;
-	bool wake = false;
+  uint64_t seq, last_seq, last_emitted;
+  unsigned count_loop = 0;
+  bool wake = false;
 
-	/* Note there is a scenario here for an infinite loop but it's
-	 * very unlikely to happen. For it to happen, the current polling
-	 * process need to be interrupted by another process and another
-	 * process needs to update the last_seq btw the atomic read and
-	 * xchg of the current process.
-	 *
-	 * More over for this to go in infinite loop there need to be
-	 * continuously new fence signaled ie radeon_fence_read needs
-	 * to return a different value each time for both the currently
-	 * polling process and the other process that xchg the last_seq
-	 * btw atomic read and xchg of the current process. And the
-	 * value the other process set as last seq must be higher than
-	 * the seq value we just read. Which means that current process
-	 * need to be interrupted after radeon_fence_read and before
-	 * atomic xchg.
-	 *
-	 * To be even more safe we count the number of time we loop and
-	 * we bail after 10 loop just accepting the fact that we might
-	 * have temporarly set the last_seq not to the true real last
-	 * seq but to an older one.
-	 */
-	last_seq = atomic64_read(&rdev->fence_drv[ring].last_seq);
-	do {
-		last_emitted = rdev->fence_drv[ring].sync_seq[ring];
-		seq = radeon_fence_read(rdev, ring);
-		seq |= last_seq & 0xffffffff00000000LL;
-		if (seq < last_seq) {
-			seq &= 0xffffffff;
-			seq |= last_emitted & 0xffffffff00000000LL;
-		}
+  /* Note there is a scenario here for an infinite loop but it's
+   * very unlikely to happen. For it to happen, the current polling
+   * process need to be interrupted by another process and another
+   * process needs to update the last_seq btw the atomic read and
+   * xchg of the current process.
+   *
+   * More over for this to go in infinite loop there need to be
+   * continuously new fence signaled ie radeon_fence_read needs
+   * to return a different value each time for both the currently
+   * polling process and the other process that xchg the last_seq
+   * btw atomic read and xchg of the current process. And the
+   * value the other process set as last seq must be higher than
+   * the seq value we just read. Which means that current process
+   * need to be interrupted after radeon_fence_read and before
+   * atomic xchg.
+   *
+   * To be even more safe we count the number of time we loop and
+   * we bail after 10 loop just accepting the fact that we might
+   * have temporarly set the last_seq not to the true real last
+   * seq but to an older one.
+   */
+  last_seq = atomic64_read(&rdev->fence_drv[ring].last_seq);
+  do {
+    last_emitted = rdev->fence_drv[ring].sync_seq[ring];
+    seq = radeon_fence_read(rdev, ring);
+    seq |= last_seq & 0xffffffff00000000LL;
+    if (seq < last_seq) {
+      seq &= 0xffffffff;
+      seq |= last_emitted & 0xffffffff00000000LL;
+    }
 
-		if (seq <= last_seq || seq > last_emitted) {
-			break;
-		}
-		/* If we loop over we don't want to return without
-		 * checking if a fence is signaled as it means that the
-		 * seq we just read is different from the previous on.
-		 */
-		wake = true;
-		last_seq = seq;
-		if ((count_loop++) > 10) {
-			/* We looped over too many time leave with the
-			 * fact that we might have set an older fence
-			 * seq then the current real last seq as signaled
-			 * by the hw.
-			 */
-			break;
-		}
-	} while (atomic64_xchg(&rdev->fence_drv[ring].last_seq, seq) > seq);
+    if (seq <= last_seq || seq > last_emitted) {
+      break;
+    }
+    /* If we loop over we don't want to return without
+     * checking if a fence is signaled as it means that the
+     * seq we just read is different from the previous on.
+     */
+    wake = true;
+    last_seq = seq;
+    if ((count_loop++) > 10) {
+      /* We looped over too many time leave with the
+       * fact that we might have set an older fence
+       * seq then the current real last seq as signaled
+       * by the hw.
+       */
+      break;
+    }
+  } while (atomic64_xchg(&rdev->fence_drv[ring].last_seq, seq) > seq);
 
-	if (seq < last_emitted)
-		radeon_fence_schedule_check(rdev, ring);
+  if (seq < last_emitted)
+    radeon_fence_schedule_check(rdev, ring);
 
-	return wake;
+  return wake;
 }
 
 /**
@@ -273,46 +273,46 @@ static bool radeon_fence_activity(struct radeon_device *rdev, int ring)
  */
 static void radeon_fence_check_lockup(struct work_struct *work)
 {
-	struct radeon_fence_driver *fence_drv;
-	struct radeon_device *rdev;
-	int ring;
+  struct radeon_fence_driver *fence_drv;
+  struct radeon_device *rdev;
+  int ring;
 
-	fence_drv = container_of(work, struct radeon_fence_driver,
-				 lockup_work.work);
-	rdev = fence_drv->rdev;
-	ring = fence_drv - &rdev->fence_drv[0];
+  fence_drv = container_of(work, struct radeon_fence_driver,
+         lockup_work.work);
+  rdev = fence_drv->rdev;
+  ring = fence_drv - &rdev->fence_drv[0];
 
-	if (!down_read_trylock(&rdev->exclusive_lock)) {
-		/* just reschedule the check if a reset is going on */
-		radeon_fence_schedule_check(rdev, ring);
-		return;
-	}
+  if (!down_read_trylock(&rdev->exclusive_lock)) {
+    /* just reschedule the check if a reset is going on */
+    radeon_fence_schedule_check(rdev, ring);
+    return;
+  }
 
-	if (fence_drv->delayed_irq && rdev->ddev->irq_enabled) {
-		unsigned long irqflags;
+  if (fence_drv->delayed_irq && rdev->ddev->irq_enabled) {
+    unsigned long irqflags;
 
-		fence_drv->delayed_irq = false;
-		spin_lock_irqsave(&rdev->irq.lock, irqflags);
-		radeon_irq_set(rdev);
-		spin_unlock_irqrestore(&rdev->irq.lock, irqflags);
-	}
+    fence_drv->delayed_irq = false;
+    spin_lock_irqsave(&rdev->irq.lock, irqflags);
+    radeon_irq_set(rdev);
+    spin_unlock_irqrestore(&rdev->irq.lock, irqflags);
+  }
 
-	if (radeon_fence_activity(rdev, ring))
-		wake_up_all(&rdev->fence_queue);
+  if (radeon_fence_activity(rdev, ring))
+    wake_up_all(&rdev->fence_queue);
 
-	else if (radeon_ring_is_lockup(rdev, ring, &rdev->ring[ring])) {
+  else if (radeon_ring_is_lockup(rdev, ring, &rdev->ring[ring])) {
 
-		/* good news we believe it's a lockup */
-		dev_warn(rdev->dev, "GPU lockup (current fence id "
-			 "0x%016llx last fence id 0x%016llx on ring %d)\n",
-			 (uint64_t)atomic64_read(&fence_drv->last_seq),
-			 fence_drv->sync_seq[ring], ring);
+    /* good news we believe it's a lockup */
+    dev_warn(rdev->dev, "GPU lockup (current fence id "
+       "0x%016llx last fence id 0x%016llx on ring %d)\n",
+       (uint64_t)atomic64_read(&fence_drv->last_seq),
+       fence_drv->sync_seq[ring], ring);
 
-		/* remember that we need an reset */
-		rdev->needs_reset = true;
-		wake_up_all(&rdev->fence_queue);
-	}
-	up_read(&rdev->exclusive_lock);
+    /* remember that we need an reset */
+    rdev->needs_reset = true;
+    wake_up_all(&rdev->fence_queue);
+  }
+  up_read(&rdev->exclusive_lock);
 }
 
 /**
@@ -326,8 +326,8 @@ static void radeon_fence_check_lockup(struct work_struct *work)
  */
 void radeon_fence_process(struct radeon_device *rdev, int ring)
 {
-	if (radeon_fence_activity(rdev, ring))
-		wake_up_all(&rdev->fence_queue);
+  if (radeon_fence_activity(rdev, ring))
+    wake_up_all(&rdev->fence_queue);
 }
 
 /**
@@ -345,39 +345,39 @@ void radeon_fence_process(struct radeon_device *rdev, int ring)
  * radeon_fence_signaled().
  */
 static bool radeon_fence_seq_signaled(struct radeon_device *rdev,
-				      u64 seq, unsigned ring)
+              u64 seq, unsigned ring)
 {
-	if (atomic64_read(&rdev->fence_drv[ring].last_seq) >= seq) {
-		return true;
-	}
-	/* poll new last sequence at least once */
-	radeon_fence_process(rdev, ring);
-	if (atomic64_read(&rdev->fence_drv[ring].last_seq) >= seq) {
-		return true;
-	}
-	return false;
+  if (atomic64_read(&rdev->fence_drv[ring].last_seq) >= seq) {
+    return true;
+  }
+  /* poll new last sequence at least once */
+  radeon_fence_process(rdev, ring);
+  if (atomic64_read(&rdev->fence_drv[ring].last_seq) >= seq) {
+    return true;
+  }
+  return false;
 }
 
 static bool radeon_fence_is_signaled(struct dma_fence *f)
 {
-	struct radeon_fence *fence = to_radeon_fence(f);
-	struct radeon_device *rdev = fence->rdev;
-	unsigned ring = fence->ring;
-	u64 seq = fence->seq;
+  struct radeon_fence *fence = to_radeon_fence(f);
+  struct radeon_device *rdev = fence->rdev;
+  unsigned ring = fence->ring;
+  u64 seq = fence->seq;
 
-	if (atomic64_read(&rdev->fence_drv[ring].last_seq) >= seq) {
-		return true;
-	}
+  if (atomic64_read(&rdev->fence_drv[ring].last_seq) >= seq) {
+    return true;
+  }
 
-	if (down_read_trylock(&rdev->exclusive_lock)) {
-		radeon_fence_process(rdev, ring);
-		up_read(&rdev->exclusive_lock);
+  if (down_read_trylock(&rdev->exclusive_lock)) {
+    radeon_fence_process(rdev, ring);
+    up_read(&rdev->exclusive_lock);
 
-		if (atomic64_read(&rdev->fence_drv[ring].last_seq) >= seq) {
-			return true;
-		}
-	}
-	return false;
+    if (atomic64_read(&rdev->fence_drv[ring].last_seq) >= seq) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -390,41 +390,41 @@ static bool radeon_fence_is_signaled(struct dma_fence *f)
  */
 static bool radeon_fence_enable_signaling(struct dma_fence *f)
 {
-	struct radeon_fence *fence = to_radeon_fence(f);
-	struct radeon_device *rdev = fence->rdev;
+  struct radeon_fence *fence = to_radeon_fence(f);
+  struct radeon_device *rdev = fence->rdev;
 
-	if (atomic64_read(&rdev->fence_drv[fence->ring].last_seq) >= fence->seq)
-		return false;
+  if (atomic64_read(&rdev->fence_drv[fence->ring].last_seq) >= fence->seq)
+    return false;
 
-	if (down_read_trylock(&rdev->exclusive_lock)) {
-		radeon_irq_kms_sw_irq_get(rdev, fence->ring);
+  if (down_read_trylock(&rdev->exclusive_lock)) {
+    radeon_irq_kms_sw_irq_get(rdev, fence->ring);
 
-		if (radeon_fence_activity(rdev, fence->ring))
-			wake_up_all_locked(&rdev->fence_queue);
+    if (radeon_fence_activity(rdev, fence->ring))
+      wake_up_all_locked(&rdev->fence_queue);
 
-		/* did fence get signaled after we enabled the sw irq? */
-		if (atomic64_read(&rdev->fence_drv[fence->ring].last_seq) >= fence->seq) {
-			radeon_irq_kms_sw_irq_put(rdev, fence->ring);
-			up_read(&rdev->exclusive_lock);
-			return false;
-		}
+    /* did fence get signaled after we enabled the sw irq? */
+    if (atomic64_read(&rdev->fence_drv[fence->ring].last_seq) >= fence->seq) {
+      radeon_irq_kms_sw_irq_put(rdev, fence->ring);
+      up_read(&rdev->exclusive_lock);
+      return false;
+    }
 
-		up_read(&rdev->exclusive_lock);
-	} else {
-		/* we're probably in a lockup, lets not fiddle too much */
-		if (radeon_irq_kms_sw_irq_get_delayed(rdev, fence->ring))
-			rdev->fence_drv[fence->ring].delayed_irq = true;
-		radeon_fence_schedule_check(rdev, fence->ring);
-	}
+    up_read(&rdev->exclusive_lock);
+  } else {
+    /* we're probably in a lockup, lets not fiddle too much */
+    if (radeon_irq_kms_sw_irq_get_delayed(rdev, fence->ring))
+      rdev->fence_drv[fence->ring].delayed_irq = true;
+    radeon_fence_schedule_check(rdev, fence->ring);
+  }
 
-	fence->fence_wake.flags = 0;
-	fence->fence_wake.private = NULL;
-	fence->fence_wake.func = radeon_fence_check_signaled;
-	__add_wait_queue(&rdev->fence_queue, &fence->fence_wake);
-	dma_fence_get(f);
+  fence->fence_wake.flags = 0;
+  fence->fence_wake.private = NULL;
+  fence->fence_wake.func = radeon_fence_check_signaled;
+  __add_wait_queue(&rdev->fence_queue, &fence->fence_wake);
+  dma_fence_get(f);
 
-	DMA_FENCE_TRACE(&fence->base, "armed on ring %i!\n", fence->ring);
-	return true;
+  DMA_FENCE_TRACE(&fence->base, "armed on ring %i!\n", fence->ring);
+  return true;
 }
 
 /**
@@ -437,18 +437,18 @@ static bool radeon_fence_enable_signaling(struct dma_fence *f)
  */
 bool radeon_fence_signaled(struct radeon_fence *fence)
 {
-	if (!fence)
-		return true;
+  if (!fence)
+    return true;
 
-	if (radeon_fence_seq_signaled(fence->rdev, fence->seq, fence->ring)) {
-		int ret;
+  if (radeon_fence_seq_signaled(fence->rdev, fence->seq, fence->ring)) {
+    int ret;
 
-		ret = dma_fence_signal(&fence->base);
-		if (!ret)
-			DMA_FENCE_TRACE(&fence->base, "signaled from radeon_fence_signaled\n");
-		return true;
-	}
-	return false;
+    ret = dma_fence_signal(&fence->base);
+    if (!ret)
+      DMA_FENCE_TRACE(&fence->base, "signaled from radeon_fence_signaled\n");
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -464,13 +464,13 @@ bool radeon_fence_signaled(struct radeon_fence *fence)
  */
 static bool radeon_fence_any_seq_signaled(struct radeon_device *rdev, u64 *seq)
 {
-	unsigned i;
+  unsigned i;
 
-	for (i = 0; i < RADEON_NUM_RINGS; ++i) {
-		if (seq[i] && radeon_fence_seq_signaled(rdev, seq[i], i))
-			return true;
-	}
-	return false;
+  for (i = 0; i < RADEON_NUM_RINGS; ++i) {
+    if (seq[i] && radeon_fence_seq_signaled(rdev, seq[i], i))
+      return true;
+  }
+  return false;
 }
 
 /**
@@ -491,46 +491,46 @@ static bool radeon_fence_any_seq_signaled(struct radeon_device *rdev, u64 *seq)
  * -EDEADLK is returned when a GPU lockup has been detected.
  */
 static long radeon_fence_wait_seq_timeout(struct radeon_device *rdev,
-					  u64 *target_seq, bool intr,
-					  long timeout)
+            u64 *target_seq, bool intr,
+            long timeout)
 {
-	long r;
-	int i;
+  long r;
+  int i;
 
-	if (radeon_fence_any_seq_signaled(rdev, target_seq))
-		return timeout;
+  if (radeon_fence_any_seq_signaled(rdev, target_seq))
+    return timeout;
 
-	/* enable IRQs and tracing */
-	for (i = 0; i < RADEON_NUM_RINGS; ++i) {
-		if (!target_seq[i])
-			continue;
+  /* enable IRQs and tracing */
+  for (i = 0; i < RADEON_NUM_RINGS; ++i) {
+    if (!target_seq[i])
+      continue;
 
-		trace_radeon_fence_wait_begin(rdev->ddev, i, target_seq[i]);
-		radeon_irq_kms_sw_irq_get(rdev, i);
-	}
+    trace_radeon_fence_wait_begin(rdev->ddev, i, target_seq[i]);
+    radeon_irq_kms_sw_irq_get(rdev, i);
+  }
 
-	if (intr) {
-		r = wait_event_interruptible_timeout(rdev->fence_queue, (
-			radeon_fence_any_seq_signaled(rdev, target_seq)
-			 || rdev->needs_reset), timeout);
-	} else {
-		r = wait_event_timeout(rdev->fence_queue, (
-			radeon_fence_any_seq_signaled(rdev, target_seq)
-			 || rdev->needs_reset), timeout);
-	}
+  if (intr) {
+    r = wait_event_interruptible_timeout(rdev->fence_queue, (
+      radeon_fence_any_seq_signaled(rdev, target_seq)
+       || rdev->needs_reset), timeout);
+  } else {
+    r = wait_event_timeout(rdev->fence_queue, (
+      radeon_fence_any_seq_signaled(rdev, target_seq)
+       || rdev->needs_reset), timeout);
+  }
 
-	if (rdev->needs_reset)
-		r = -EDEADLK;
+  if (rdev->needs_reset)
+    r = -EDEADLK;
 
-	for (i = 0; i < RADEON_NUM_RINGS; ++i) {
-		if (!target_seq[i])
-			continue;
+  for (i = 0; i < RADEON_NUM_RINGS; ++i) {
+    if (!target_seq[i])
+      continue;
 
-		radeon_irq_kms_sw_irq_put(rdev, i);
-		trace_radeon_fence_wait_end(rdev->ddev, i, target_seq[i]);
-	}
+    radeon_irq_kms_sw_irq_put(rdev, i);
+    trace_radeon_fence_wait_end(rdev->ddev, i, target_seq[i]);
+  }
 
-	return r;
+  return r;
 }
 
 /**
@@ -548,29 +548,29 @@ static long radeon_fence_wait_seq_timeout(struct radeon_device *rdev,
  */
 long radeon_fence_wait_timeout(struct radeon_fence *fence, bool intr, long timeout)
 {
-	uint64_t seq[RADEON_NUM_RINGS] = {};
-	long r;
-	int r_sig;
+  uint64_t seq[RADEON_NUM_RINGS] = {};
+  long r;
+  int r_sig;
 
-	/*
-	 * This function should not be called on !radeon fences.
-	 * If this is the case, it would mean this function can
-	 * also be called on radeon fences belonging to another card.
-	 * exclusive_lock is not held in that case.
-	 */
-	if (WARN_ON_ONCE(!to_radeon_fence(&fence->base)))
-		return dma_fence_wait(&fence->base, intr);
+  /*
+   * This function should not be called on !radeon fences.
+   * If this is the case, it would mean this function can
+   * also be called on radeon fences belonging to another card.
+   * exclusive_lock is not held in that case.
+   */
+  if (WARN_ON_ONCE(!to_radeon_fence(&fence->base)))
+    return dma_fence_wait(&fence->base, intr);
 
-	seq[fence->ring] = fence->seq;
-	r = radeon_fence_wait_seq_timeout(fence->rdev, seq, intr, timeout);
-	if (r <= 0) {
-		return r;
-	}
+  seq[fence->ring] = fence->seq;
+  r = radeon_fence_wait_seq_timeout(fence->rdev, seq, intr, timeout);
+  if (r <= 0) {
+    return r;
+  }
 
-	r_sig = dma_fence_signal(&fence->base);
-	if (!r_sig)
-		DMA_FENCE_TRACE(&fence->base, "signaled from fence_wait\n");
-	return r;
+  r_sig = dma_fence_signal(&fence->base);
+  if (!r_sig)
+    DMA_FENCE_TRACE(&fence->base, "signaled from fence_wait\n");
+  return r;
 }
 
 /**
@@ -586,12 +586,12 @@ long radeon_fence_wait_timeout(struct radeon_fence *fence, bool intr, long timeo
  */
 int radeon_fence_wait(struct radeon_fence *fence, bool intr)
 {
-	long r = radeon_fence_wait_timeout(fence, intr, MAX_SCHEDULE_TIMEOUT);
-	if (r > 0) {
-		return 0;
-	} else {
-		return r;
-	}
+  long r = radeon_fence_wait_timeout(fence, intr, MAX_SCHEDULE_TIMEOUT);
+  if (r > 0) {
+    return 0;
+  } else {
+    return r;
+  }
 }
 
 /**
@@ -608,33 +608,33 @@ int radeon_fence_wait(struct radeon_fence *fence, bool intr)
  * Returns 0 if any fence has passed, error for all other cases.
  */
 int radeon_fence_wait_any(struct radeon_device *rdev,
-			  struct radeon_fence **fences,
-			  bool intr)
+        struct radeon_fence **fences,
+        bool intr)
 {
-	uint64_t seq[RADEON_NUM_RINGS];
-	unsigned i, num_rings = 0;
-	long r;
+  uint64_t seq[RADEON_NUM_RINGS];
+  unsigned i, num_rings = 0;
+  long r;
 
-	for (i = 0; i < RADEON_NUM_RINGS; ++i) {
-		seq[i] = 0;
+  for (i = 0; i < RADEON_NUM_RINGS; ++i) {
+    seq[i] = 0;
 
-		if (!fences[i]) {
-			continue;
-		}
+    if (!fences[i]) {
+      continue;
+    }
 
-		seq[i] = fences[i]->seq;
-		++num_rings;
-	}
+    seq[i] = fences[i]->seq;
+    ++num_rings;
+  }
 
-	/* nothing to wait for ? */
-	if (num_rings == 0)
-		return -ENOENT;
+  /* nothing to wait for ? */
+  if (num_rings == 0)
+    return -ENOENT;
 
-	r = radeon_fence_wait_seq_timeout(rdev, seq, intr, MAX_SCHEDULE_TIMEOUT);
-	if (r < 0) {
-		return r;
-	}
-	return 0;
+  r = radeon_fence_wait_seq_timeout(rdev, seq, intr, MAX_SCHEDULE_TIMEOUT);
+  if (r < 0) {
+    return r;
+  }
+  return 0;
 }
 
 /**
@@ -649,19 +649,19 @@ int radeon_fence_wait_any(struct radeon_device *rdev,
  */
 int radeon_fence_wait_next(struct radeon_device *rdev, int ring)
 {
-	uint64_t seq[RADEON_NUM_RINGS] = {};
-	long r;
+  uint64_t seq[RADEON_NUM_RINGS] = {};
+  long r;
 
-	seq[ring] = atomic64_read(&rdev->fence_drv[ring].last_seq) + 1ULL;
-	if (seq[ring] >= rdev->fence_drv[ring].sync_seq[ring]) {
-		/* nothing to wait for, last_seq is
-		   already the last emited fence */
-		return -ENOENT;
-	}
-	r = radeon_fence_wait_seq_timeout(rdev, seq, false, MAX_SCHEDULE_TIMEOUT);
-	if (r < 0)
-		return r;
-	return 0;
+  seq[ring] = atomic64_read(&rdev->fence_drv[ring].last_seq) + 1ULL;
+  if (seq[ring] >= rdev->fence_drv[ring].sync_seq[ring]) {
+    /* nothing to wait for, last_seq is
+       already the last emited fence */
+    return -ENOENT;
+  }
+  r = radeon_fence_wait_seq_timeout(rdev, seq, false, MAX_SCHEDULE_TIMEOUT);
+  if (r < 0)
+    return r;
+  return 0;
 }
 
 /**
@@ -676,22 +676,22 @@ int radeon_fence_wait_next(struct radeon_device *rdev, int ring)
  */
 int radeon_fence_wait_empty(struct radeon_device *rdev, int ring)
 {
-	uint64_t seq[RADEON_NUM_RINGS] = {};
-	long r;
+  uint64_t seq[RADEON_NUM_RINGS] = {};
+  long r;
 
-	seq[ring] = rdev->fence_drv[ring].sync_seq[ring];
-	if (!seq[ring])
-		return 0;
+  seq[ring] = rdev->fence_drv[ring].sync_seq[ring];
+  if (!seq[ring])
+    return 0;
 
-	r = radeon_fence_wait_seq_timeout(rdev, seq, false, MAX_SCHEDULE_TIMEOUT);
-	if (r < 0) {
-		if (r == -EDEADLK)
-			return -EDEADLK;
+  r = radeon_fence_wait_seq_timeout(rdev, seq, false, MAX_SCHEDULE_TIMEOUT);
+  if (r < 0) {
+    if (r == -EDEADLK)
+      return -EDEADLK;
 
-		dev_err(rdev->dev, "error waiting for ring[%d] to become idle (%ld)\n",
-			ring, r);
-	}
-	return 0;
+    dev_err(rdev->dev, "error waiting for ring[%d] to become idle (%ld)\n",
+      ring, r);
+  }
+  return 0;
 }
 
 /**
@@ -704,8 +704,8 @@ int radeon_fence_wait_empty(struct radeon_device *rdev, int ring)
  */
 struct radeon_fence *radeon_fence_ref(struct radeon_fence *fence)
 {
-	dma_fence_get(&fence->base);
-	return fence;
+  dma_fence_get(&fence->base);
+  return fence;
 }
 
 /**
@@ -717,12 +717,12 @@ struct radeon_fence *radeon_fence_ref(struct radeon_fence *fence)
  */
 void radeon_fence_unref(struct radeon_fence **fence)
 {
-	struct radeon_fence *tmp = *fence;
+  struct radeon_fence *tmp = *fence;
 
-	*fence = NULL;
-	if (tmp) {
-		dma_fence_put(&tmp->base);
-	}
+  *fence = NULL;
+  if (tmp) {
+    dma_fence_put(&tmp->base);
+  }
 }
 
 /**
@@ -737,19 +737,19 @@ void radeon_fence_unref(struct radeon_fence **fence)
  */
 unsigned radeon_fence_count_emitted(struct radeon_device *rdev, int ring)
 {
-	uint64_t emitted;
+  uint64_t emitted;
 
-	/* We are not protected by ring lock when reading the last sequence
-	 * but it's ok to report slightly wrong fence count here.
-	 */
-	radeon_fence_process(rdev, ring);
-	emitted = rdev->fence_drv[ring].sync_seq[ring]
-		- atomic64_read(&rdev->fence_drv[ring].last_seq);
-	/* to avoid 32bits warp around */
-	if (emitted > 0x10000000) {
-		emitted = 0x10000000;
-	}
-	return (unsigned)emitted;
+  /* We are not protected by ring lock when reading the last sequence
+   * but it's ok to report slightly wrong fence count here.
+   */
+  radeon_fence_process(rdev, ring);
+  emitted = rdev->fence_drv[ring].sync_seq[ring]
+    - atomic64_read(&rdev->fence_drv[ring].last_seq);
+  /* to avoid 32bits warp around */
+  if (emitted > 0x10000000) {
+    emitted = 0x10000000;
+  }
+  return (unsigned)emitted;
 }
 
 /**
@@ -765,23 +765,23 @@ unsigned radeon_fence_count_emitted(struct radeon_device *rdev, int ring)
  */
 bool radeon_fence_need_sync(struct radeon_fence *fence, int dst_ring)
 {
-	struct radeon_fence_driver *fdrv;
+  struct radeon_fence_driver *fdrv;
 
-	if (!fence) {
-		return false;
-	}
+  if (!fence) {
+    return false;
+  }
 
-	if (fence->ring == dst_ring) {
-		return false;
-	}
+  if (fence->ring == dst_ring) {
+    return false;
+  }
 
-	/* we are protected by the ring mutex */
-	fdrv = &fence->rdev->fence_drv[dst_ring];
-	if (fence->seq <= fdrv->sync_seq[fence->ring]) {
-		return false;
-	}
+  /* we are protected by the ring mutex */
+  fdrv = &fence->rdev->fence_drv[dst_ring];
+  if (fence->seq <= fdrv->sync_seq[fence->ring]) {
+    return false;
+  }
 
-	return true;
+  return true;
 }
 
 /**
@@ -795,26 +795,26 @@ bool radeon_fence_need_sync(struct radeon_fence *fence, int dst_ring)
  */
 void radeon_fence_note_sync(struct radeon_fence *fence, int dst_ring)
 {
-	struct radeon_fence_driver *dst, *src;
-	unsigned i;
+  struct radeon_fence_driver *dst, *src;
+  unsigned i;
 
-	if (!fence) {
-		return;
-	}
+  if (!fence) {
+    return;
+  }
 
-	if (fence->ring == dst_ring) {
-		return;
-	}
+  if (fence->ring == dst_ring) {
+    return;
+  }
 
-	/* we are protected by the ring mutex */
-	src = &fence->rdev->fence_drv[fence->ring];
-	dst = &fence->rdev->fence_drv[dst_ring];
-	for (i = 0; i < RADEON_NUM_RINGS; ++i) {
-		if (i == dst_ring) {
-			continue;
-		}
-		dst->sync_seq[i] = max(dst->sync_seq[i], src->sync_seq[i]);
-	}
+  /* we are protected by the ring mutex */
+  src = &fence->rdev->fence_drv[fence->ring];
+  dst = &fence->rdev->fence_drv[dst_ring];
+  for (i = 0; i < RADEON_NUM_RINGS; ++i) {
+    if (i == dst_ring) {
+      continue;
+    }
+    dst->sync_seq[i] = max(dst->sync_seq[i], src->sync_seq[i]);
+  }
 }
 
 /**
@@ -831,42 +831,42 @@ void radeon_fence_note_sync(struct radeon_fence *fence, int dst_ring)
  */
 int radeon_fence_driver_start_ring(struct radeon_device *rdev, int ring)
 {
-	uint64_t index;
-	int r;
+  uint64_t index;
+  int r;
 
-	radeon_scratch_free(rdev, rdev->fence_drv[ring].scratch_reg);
-	if (rdev->wb.use_event || !radeon_ring_supports_scratch_reg(rdev, &rdev->ring[ring])) {
-		rdev->fence_drv[ring].scratch_reg = 0;
-		if (ring != R600_RING_TYPE_UVD_INDEX) {
-			index = R600_WB_EVENT_OFFSET + ring * 4;
-			rdev->fence_drv[ring].cpu_addr = &rdev->wb.wb[index/4];
-			rdev->fence_drv[ring].gpu_addr = rdev->wb.gpu_addr +
-							 index;
+  radeon_scratch_free(rdev, rdev->fence_drv[ring].scratch_reg);
+  if (rdev->wb.use_event || !radeon_ring_supports_scratch_reg(rdev, &rdev->ring[ring])) {
+    rdev->fence_drv[ring].scratch_reg = 0;
+    if (ring != R600_RING_TYPE_UVD_INDEX) {
+      index = R600_WB_EVENT_OFFSET + ring * 4;
+      rdev->fence_drv[ring].cpu_addr = &rdev->wb.wb[index/4];
+      rdev->fence_drv[ring].gpu_addr = rdev->wb.gpu_addr +
+               index;
 
-		} else {
-			/* put fence directly behind firmware */
-			index = ALIGN(rdev->uvd_fw->size, 8);
-			rdev->fence_drv[ring].cpu_addr = rdev->uvd.cpu_addr + index;
-			rdev->fence_drv[ring].gpu_addr = rdev->uvd.gpu_addr + index;
-		}
+    } else {
+      /* put fence directly behind firmware */
+      index = ALIGN(rdev->uvd_fw->size, 8);
+      rdev->fence_drv[ring].cpu_addr = rdev->uvd.cpu_addr + index;
+      rdev->fence_drv[ring].gpu_addr = rdev->uvd.gpu_addr + index;
+    }
 
-	} else {
-		r = radeon_scratch_get(rdev, &rdev->fence_drv[ring].scratch_reg);
-		if (r) {
-			dev_err(rdev->dev, "fence failed to get scratch register\n");
-			return r;
-		}
-		index = RADEON_WB_SCRATCH_OFFSET +
-			rdev->fence_drv[ring].scratch_reg -
-			rdev->scratch.reg_base;
-		rdev->fence_drv[ring].cpu_addr = &rdev->wb.wb[index/4];
-		rdev->fence_drv[ring].gpu_addr = rdev->wb.gpu_addr + index;
-	}
-	radeon_fence_write(rdev, atomic64_read(&rdev->fence_drv[ring].last_seq), ring);
-	rdev->fence_drv[ring].initialized = true;
-	dev_info(rdev->dev, "fence driver on ring %d use gpu addr 0x%016llx\n",
-		 ring, rdev->fence_drv[ring].gpu_addr);
-	return 0;
+  } else {
+    r = radeon_scratch_get(rdev, &rdev->fence_drv[ring].scratch_reg);
+    if (r) {
+      dev_err(rdev->dev, "fence failed to get scratch register\n");
+      return r;
+    }
+    index = RADEON_WB_SCRATCH_OFFSET +
+      rdev->fence_drv[ring].scratch_reg -
+      rdev->scratch.reg_base;
+    rdev->fence_drv[ring].cpu_addr = &rdev->wb.wb[index/4];
+    rdev->fence_drv[ring].gpu_addr = rdev->wb.gpu_addr + index;
+  }
+  radeon_fence_write(rdev, atomic64_read(&rdev->fence_drv[ring].last_seq), ring);
+  rdev->fence_drv[ring].initialized = true;
+  dev_info(rdev->dev, "fence driver on ring %d use gpu addr 0x%016llx\n",
+     ring, rdev->fence_drv[ring].gpu_addr);
+  return 0;
 }
 
 /**
@@ -881,18 +881,18 @@ int radeon_fence_driver_start_ring(struct radeon_device *rdev, int ring)
  */
 static void radeon_fence_driver_init_ring(struct radeon_device *rdev, int ring)
 {
-	int i;
+  int i;
 
-	rdev->fence_drv[ring].scratch_reg = -1;
-	rdev->fence_drv[ring].cpu_addr = NULL;
-	rdev->fence_drv[ring].gpu_addr = 0;
-	for (i = 0; i < RADEON_NUM_RINGS; ++i)
-		rdev->fence_drv[ring].sync_seq[i] = 0;
-	atomic64_set(&rdev->fence_drv[ring].last_seq, 0);
-	rdev->fence_drv[ring].initialized = false;
-	INIT_DELAYED_WORK(&rdev->fence_drv[ring].lockup_work,
-			  radeon_fence_check_lockup);
-	rdev->fence_drv[ring].rdev = rdev;
+  rdev->fence_drv[ring].scratch_reg = -1;
+  rdev->fence_drv[ring].cpu_addr = NULL;
+  rdev->fence_drv[ring].gpu_addr = 0;
+  for (i = 0; i < RADEON_NUM_RINGS; ++i)
+    rdev->fence_drv[ring].sync_seq[i] = 0;
+  atomic64_set(&rdev->fence_drv[ring].last_seq, 0);
+  rdev->fence_drv[ring].initialized = false;
+  INIT_DELAYED_WORK(&rdev->fence_drv[ring].lockup_work,
+        radeon_fence_check_lockup);
+  rdev->fence_drv[ring].rdev = rdev;
 }
 
 /**
@@ -908,14 +908,14 @@ static void radeon_fence_driver_init_ring(struct radeon_device *rdev, int ring)
  */
 void radeon_fence_driver_init(struct radeon_device *rdev)
 {
-	int ring;
+  int ring;
 
-	init_waitqueue_head(&rdev->fence_queue);
-	for (ring = 0; ring < RADEON_NUM_RINGS; ring++) {
-		radeon_fence_driver_init_ring(rdev, ring);
-	}
+  init_waitqueue_head(&rdev->fence_queue);
+  for (ring = 0; ring < RADEON_NUM_RINGS; ring++) {
+    radeon_fence_driver_init_ring(rdev, ring);
+  }
 
-	radeon_debugfs_fence_init(rdev);
+  radeon_debugfs_fence_init(rdev);
 }
 
 /**
@@ -928,23 +928,23 @@ void radeon_fence_driver_init(struct radeon_device *rdev)
  */
 void radeon_fence_driver_fini(struct radeon_device *rdev)
 {
-	int ring, r;
+  int ring, r;
 
-	mutex_lock(&rdev->ring_lock);
-	for (ring = 0; ring < RADEON_NUM_RINGS; ring++) {
-		if (!rdev->fence_drv[ring].initialized)
-			continue;
-		r = radeon_fence_wait_empty(rdev, ring);
-		if (r) {
-			/* no need to trigger GPU reset as we are unloading */
-			radeon_fence_driver_force_completion(rdev, ring);
-		}
-		cancel_delayed_work_sync(&rdev->fence_drv[ring].lockup_work);
-		wake_up_all(&rdev->fence_queue);
-		radeon_scratch_free(rdev, rdev->fence_drv[ring].scratch_reg);
-		rdev->fence_drv[ring].initialized = false;
-	}
-	mutex_unlock(&rdev->ring_lock);
+  mutex_lock(&rdev->ring_lock);
+  for (ring = 0; ring < RADEON_NUM_RINGS; ring++) {
+    if (!rdev->fence_drv[ring].initialized)
+      continue;
+    r = radeon_fence_wait_empty(rdev, ring);
+    if (r) {
+      /* no need to trigger GPU reset as we are unloading */
+      radeon_fence_driver_force_completion(rdev, ring);
+    }
+    cancel_delayed_work_sync(&rdev->fence_drv[ring].lockup_work);
+    wake_up_all(&rdev->fence_queue);
+    radeon_scratch_free(rdev, rdev->fence_drv[ring].scratch_reg);
+    rdev->fence_drv[ring].initialized = false;
+  }
+  mutex_unlock(&rdev->ring_lock);
 }
 
 /**
@@ -958,10 +958,10 @@ void radeon_fence_driver_fini(struct radeon_device *rdev)
  */
 void radeon_fence_driver_force_completion(struct radeon_device *rdev, int ring)
 {
-	if (rdev->fence_drv[ring].initialized) {
-		radeon_fence_write(rdev, rdev->fence_drv[ring].sync_seq[ring], ring);
-		cancel_delayed_work_sync(&rdev->fence_drv[ring].lockup_work);
-	}
+  if (rdev->fence_drv[ring].initialized) {
+    radeon_fence_write(rdev, rdev->fence_drv[ring].sync_seq[ring], ring);
+    cancel_delayed_work_sync(&rdev->fence_drv[ring].lockup_work);
+  }
 }
 
 
@@ -971,28 +971,28 @@ void radeon_fence_driver_force_completion(struct radeon_device *rdev, int ring)
 #if defined(CONFIG_DEBUG_FS)
 static int radeon_debugfs_fence_info_show(struct seq_file *m, void *data)
 {
-	struct radeon_device *rdev = (struct radeon_device *)m->private;
-	int i, j;
+  struct radeon_device *rdev = (struct radeon_device *)m->private;
+  int i, j;
 
-	for (i = 0; i < RADEON_NUM_RINGS; ++i) {
-		if (!rdev->fence_drv[i].initialized)
-			continue;
+  for (i = 0; i < RADEON_NUM_RINGS; ++i) {
+    if (!rdev->fence_drv[i].initialized)
+      continue;
 
-		radeon_fence_process(rdev, i);
+    radeon_fence_process(rdev, i);
 
-		seq_printf(m, "--- ring %d ---\n", i);
-		seq_printf(m, "Last signaled fence 0x%016llx\n",
-			   (unsigned long long)atomic64_read(&rdev->fence_drv[i].last_seq));
-		seq_printf(m, "Last emitted        0x%016llx\n",
-			   rdev->fence_drv[i].sync_seq[i]);
+    seq_printf(m, "--- ring %d ---\n", i);
+    seq_printf(m, "Last signaled fence 0x%016llx\n",
+         (unsigned long long)atomic64_read(&rdev->fence_drv[i].last_seq));
+    seq_printf(m, "Last emitted        0x%016llx\n",
+         rdev->fence_drv[i].sync_seq[i]);
 
-		for (j = 0; j < RADEON_NUM_RINGS; ++j) {
-			if (i != j && rdev->fence_drv[j].initialized)
-				seq_printf(m, "Last sync to ring %d 0x%016llx\n",
-					   j, rdev->fence_drv[i].sync_seq[j]);
-		}
-	}
-	return 0;
+    for (j = 0; j < RADEON_NUM_RINGS; ++j) {
+      if (i != j && rdev->fence_drv[j].initialized)
+        seq_printf(m, "Last sync to ring %d 0x%016llx\n",
+             j, rdev->fence_drv[i].sync_seq[j]);
+    }
+  }
+  return 0;
 }
 
 /*
@@ -1002,30 +1002,30 @@ static int radeon_debugfs_fence_info_show(struct seq_file *m, void *data)
  */
 static int radeon_debugfs_gpu_reset(void *data, u64 *val)
 {
-	struct radeon_device *rdev = (struct radeon_device *)data;
+  struct radeon_device *rdev = (struct radeon_device *)data;
 
-	down_read(&rdev->exclusive_lock);
-	*val = rdev->needs_reset;
-	rdev->needs_reset = true;
-	wake_up_all(&rdev->fence_queue);
-	up_read(&rdev->exclusive_lock);
+  down_read(&rdev->exclusive_lock);
+  *val = rdev->needs_reset;
+  rdev->needs_reset = true;
+  wake_up_all(&rdev->fence_queue);
+  up_read(&rdev->exclusive_lock);
 
-	return 0;
+  return 0;
 }
 DEFINE_SHOW_ATTRIBUTE(radeon_debugfs_fence_info);
 DEFINE_DEBUGFS_ATTRIBUTE(radeon_debugfs_gpu_reset_fops,
-			 radeon_debugfs_gpu_reset, NULL, "%lld\n");
+       radeon_debugfs_gpu_reset, NULL, "%lld\n");
 #endif
 
 void radeon_debugfs_fence_init(struct radeon_device *rdev)
 {
 #if defined(CONFIG_DEBUG_FS)
-	struct dentry *root = rdev->ddev->primary->debugfs_root;
+  struct dentry *root = rdev->ddev->primary->debugfs_root;
 
-	debugfs_create_file("radeon_gpu_reset", 0444, root, rdev,
-			    &radeon_debugfs_gpu_reset_fops);
-	debugfs_create_file("radeon_fence_info", 0444, root, rdev,
-			    &radeon_debugfs_fence_info_fops);
+  debugfs_create_file("radeon_gpu_reset", 0444, root, rdev,
+          &radeon_debugfs_gpu_reset_fops);
+  debugfs_create_file("radeon_fence_info", 0444, root, rdev,
+          &radeon_debugfs_fence_info_fops);
 
 
 #endif
@@ -1033,91 +1033,91 @@ void radeon_debugfs_fence_init(struct radeon_device *rdev)
 
 static const char *radeon_fence_get_driver_name(struct dma_fence *fence)
 {
-	return "radeon";
+  return "radeon";
 }
 
 static const char *radeon_fence_get_timeline_name(struct dma_fence *f)
 {
-	struct radeon_fence *fence = to_radeon_fence(f);
-	switch (fence->ring) {
-	case RADEON_RING_TYPE_GFX_INDEX: return "radeon.gfx";
-	case CAYMAN_RING_TYPE_CP1_INDEX: return "radeon.cp1";
-	case CAYMAN_RING_TYPE_CP2_INDEX: return "radeon.cp2";
-	case R600_RING_TYPE_DMA_INDEX: return "radeon.dma";
-	case CAYMAN_RING_TYPE_DMA1_INDEX: return "radeon.dma1";
-	case R600_RING_TYPE_UVD_INDEX: return "radeon.uvd";
-	case TN_RING_TYPE_VCE1_INDEX: return "radeon.vce1";
-	case TN_RING_TYPE_VCE2_INDEX: return "radeon.vce2";
-	default: WARN_ON_ONCE(1); return "radeon.unk";
-	}
+  struct radeon_fence *fence = to_radeon_fence(f);
+  switch (fence->ring) {
+  case RADEON_RING_TYPE_GFX_INDEX: return "radeon.gfx";
+  case CAYMAN_RING_TYPE_CP1_INDEX: return "radeon.cp1";
+  case CAYMAN_RING_TYPE_CP2_INDEX: return "radeon.cp2";
+  case R600_RING_TYPE_DMA_INDEX: return "radeon.dma";
+  case CAYMAN_RING_TYPE_DMA1_INDEX: return "radeon.dma1";
+  case R600_RING_TYPE_UVD_INDEX: return "radeon.uvd";
+  case TN_RING_TYPE_VCE1_INDEX: return "radeon.vce1";
+  case TN_RING_TYPE_VCE2_INDEX: return "radeon.vce2";
+  default: WARN_ON_ONCE(1); return "radeon.unk";
+  }
 }
 
 static inline bool radeon_test_signaled(struct radeon_fence *fence)
 {
-	return test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence->base.flags);
+  return test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence->base.flags);
 }
 
 struct radeon_wait_cb {
-	struct dma_fence_cb base;
-	struct task_struct *task;
+  struct dma_fence_cb base;
+  struct task_struct *task;
 };
 
 static void
 radeon_fence_wait_cb(struct dma_fence *fence, struct dma_fence_cb *cb)
 {
-	struct radeon_wait_cb *wait =
-		container_of(cb, struct radeon_wait_cb, base);
+  struct radeon_wait_cb *wait =
+    container_of(cb, struct radeon_wait_cb, base);
 
-	wake_up_process(wait->task);
+  wake_up_process(wait->task);
 }
 
 static signed long radeon_fence_default_wait(struct dma_fence *f, bool intr,
-					     signed long t)
+               signed long t)
 {
-	struct radeon_fence *fence = to_radeon_fence(f);
-	struct radeon_device *rdev = fence->rdev;
-	struct radeon_wait_cb cb;
+  struct radeon_fence *fence = to_radeon_fence(f);
+  struct radeon_device *rdev = fence->rdev;
+  struct radeon_wait_cb cb;
 
-	cb.task = current;
+  cb.task = current;
 
-	if (dma_fence_add_callback(f, &cb.base, radeon_fence_wait_cb))
-		return t;
+  if (dma_fence_add_callback(f, &cb.base, radeon_fence_wait_cb))
+    return t;
 
-	while (t > 0) {
-		if (intr)
-			set_current_state(TASK_INTERRUPTIBLE);
-		else
-			set_current_state(TASK_UNINTERRUPTIBLE);
+  while (t > 0) {
+    if (intr)
+      set_current_state(TASK_INTERRUPTIBLE);
+    else
+      set_current_state(TASK_UNINTERRUPTIBLE);
 
-		/*
-		 * radeon_test_signaled must be called after
-		 * set_current_state to prevent a race with wake_up_process
-		 */
-		if (radeon_test_signaled(fence))
-			break;
+    /*
+     * radeon_test_signaled must be called after
+     * set_current_state to prevent a race with wake_up_process
+     */
+    if (radeon_test_signaled(fence))
+      break;
 
-		if (rdev->needs_reset) {
-			t = -EDEADLK;
-			break;
-		}
+    if (rdev->needs_reset) {
+      t = -EDEADLK;
+      break;
+    }
 
-		t = schedule_timeout(t);
+    t = schedule_timeout(t);
 
-		if (t > 0 && intr && signal_pending(current))
-			t = -ERESTARTSYS;
-	}
+    if (t > 0 && intr && signal_pending(current))
+      t = -ERESTARTSYS;
+  }
 
-	__set_current_state(TASK_RUNNING);
-	dma_fence_remove_callback(f, &cb.base);
+  __set_current_state(TASK_RUNNING);
+  dma_fence_remove_callback(f, &cb.base);
 
-	return t;
+  return t;
 }
 
 const struct dma_fence_ops radeon_fence_ops = {
-	.get_driver_name = radeon_fence_get_driver_name,
-	.get_timeline_name = radeon_fence_get_timeline_name,
-	.enable_signaling = radeon_fence_enable_signaling,
-	.signaled = radeon_fence_is_signaled,
-	.wait = radeon_fence_default_wait,
-	.release = NULL,
+  .get_driver_name = radeon_fence_get_driver_name,
+  .get_timeline_name = radeon_fence_get_timeline_name,
+  .enable_signaling = radeon_fence_enable_signaling,
+  .signaled = radeon_fence_is_signaled,
+  .wait = radeon_fence_default_wait,
+  .release = NULL,
 };

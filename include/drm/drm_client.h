@@ -23,93 +23,93 @@ struct module;
  * struct drm_client_funcs - DRM client callbacks
  */
 struct drm_client_funcs {
-	/**
-	 * @owner: The module owner
-	 */
-	struct module *owner;
+  /**
+   * @owner: The module owner
+   */
+  struct module *owner;
 
-	/**
-	 * @unregister:
-	 *
-	 * Called when &drm_device is unregistered. The client should respond by
-	 * releasing its resources using drm_client_release().
-	 *
-	 * This callback is optional.
-	 */
-	void (*unregister)(struct drm_client_dev *client);
+  /**
+   * @unregister:
+   *
+   * Called when &drm_device is unregistered. The client should respond by
+   * releasing its resources using drm_client_release().
+   *
+   * This callback is optional.
+   */
+  void (*unregister)(struct drm_client_dev *client);
 
-	/**
-	 * @restore:
-	 *
-	 * Called on drm_lastclose(). The first client instance in the list that
-	 * returns zero gets the privilege to restore and no more clients are
-	 * called. This callback is not called after @unregister has been called.
-	 *
-	 * Note that the core does not guarantee exclusion against concurrent
-	 * drm_open(). Clients need to ensure this themselves, for example by
-	 * using drm_master_internal_acquire() and
-	 * drm_master_internal_release().
-	 *
-	 * This callback is optional.
-	 */
-	int (*restore)(struct drm_client_dev *client);
+  /**
+   * @restore:
+   *
+   * Called on drm_lastclose(). The first client instance in the list that
+   * returns zero gets the privilege to restore and no more clients are
+   * called. This callback is not called after @unregister has been called.
+   *
+   * Note that the core does not guarantee exclusion against concurrent
+   * drm_open(). Clients need to ensure this themselves, for example by
+   * using drm_master_internal_acquire() and
+   * drm_master_internal_release().
+   *
+   * This callback is optional.
+   */
+  int (*restore)(struct drm_client_dev *client);
 
-	/**
-	 * @hotplug:
-	 *
-	 * Called on drm_kms_helper_hotplug_event().
-	 * This callback is not called after @unregister has been called.
-	 *
-	 * This callback is optional.
-	 */
-	int (*hotplug)(struct drm_client_dev *client);
+  /**
+   * @hotplug:
+   *
+   * Called on drm_kms_helper_hotplug_event().
+   * This callback is not called after @unregister has been called.
+   *
+   * This callback is optional.
+   */
+  int (*hotplug)(struct drm_client_dev *client);
 };
 
 /**
  * struct drm_client_dev - DRM client instance
  */
 struct drm_client_dev {
-	/**
-	 * @dev: DRM device
-	 */
-	struct drm_device *dev;
+  /**
+   * @dev: DRM device
+   */
+  struct drm_device *dev;
 
-	/**
-	 * @name: Name of the client.
-	 */
-	const char *name;
+  /**
+   * @name: Name of the client.
+   */
+  const char *name;
 
-	/**
-	 * @list:
-	 *
-	 * List of all clients of a DRM device, linked into
-	 * &drm_device.clientlist. Protected by &drm_device.clientlist_mutex.
-	 */
-	struct list_head list;
+  /**
+   * @list:
+   *
+   * List of all clients of a DRM device, linked into
+   * &drm_device.clientlist. Protected by &drm_device.clientlist_mutex.
+   */
+  struct list_head list;
 
-	/**
-	 * @funcs: DRM client functions (optional)
-	 */
-	const struct drm_client_funcs *funcs;
+  /**
+   * @funcs: DRM client functions (optional)
+   */
+  const struct drm_client_funcs *funcs;
 
-	/**
-	 * @file: DRM file
-	 */
-	struct drm_file *file;
+  /**
+   * @file: DRM file
+   */
+  struct drm_file *file;
 
-	/**
-	 * @modeset_mutex: Protects @modesets.
-	 */
-	struct mutex modeset_mutex;
+  /**
+   * @modeset_mutex: Protects @modesets.
+   */
+  struct mutex modeset_mutex;
 
-	/**
-	 * @modesets: CRTC configurations
-	 */
-	struct drm_mode_set *modesets;
+  /**
+   * @modesets: CRTC configurations
+   */
+  struct drm_mode_set *modesets;
 };
 
 int drm_client_init(struct drm_device *dev, struct drm_client_dev *client,
-		    const char *name, const struct drm_client_funcs *funcs);
+        const char *name, const struct drm_client_funcs *funcs);
 void drm_client_release(struct drm_client_dev *client);
 void drm_client_register(struct drm_client_dev *client);
 
@@ -121,35 +121,35 @@ void drm_client_dev_restore(struct drm_device *dev);
  * struct drm_client_buffer - DRM client buffer
  */
 struct drm_client_buffer {
-	/**
-	 * @client: DRM client
-	 */
-	struct drm_client_dev *client;
+  /**
+   * @client: DRM client
+   */
+  struct drm_client_dev *client;
 
-	/**
-	 * @handle: Buffer handle
-	 */
-	u32 handle;
+  /**
+   * @handle: Buffer handle
+   */
+  u32 handle;
 
-	/**
-	 * @pitch: Buffer pitch
-	 */
-	u32 pitch;
+  /**
+   * @pitch: Buffer pitch
+   */
+  u32 pitch;
 
-	/**
-	 * @gem: GEM object backing this buffer
-	 */
-	struct drm_gem_object *gem;
+  /**
+   * @gem: GEM object backing this buffer
+   */
+  struct drm_gem_object *gem;
 
-	/**
-	 * @map: Virtual address for the buffer
-	 */
-	struct dma_buf_map map;
+  /**
+   * @map: Virtual address for the buffer
+   */
+  struct dma_buf_map map;
 
-	/**
-	 * @fb: DRM framebuffer
-	 */
-	struct drm_framebuffer *fb;
+  /**
+   * @fb: DRM framebuffer
+   */
+  struct drm_framebuffer *fb;
 };
 
 struct drm_client_buffer *
@@ -174,8 +174,8 @@ int drm_client_modeset_dpms(struct drm_client_dev *client, int mode);
  * @client: DRM client
  */
 #define drm_client_for_each_modeset(modeset, client) \
-	for (({ lockdep_assert_held(&(client)->modeset_mutex); }), \
-	     modeset = (client)->modesets; modeset->crtc; modeset++)
+  for (({ lockdep_assert_held(&(client)->modeset_mutex); }), \
+       modeset = (client)->modesets; modeset->crtc; modeset++)
 
 /**
  * drm_client_for_each_connector_iter - connector_list iterator macro
@@ -188,8 +188,8 @@ int drm_client_modeset_dpms(struct drm_client_dev *client, int mode);
  * For more info see drm_for_each_connector_iter().
  */
 #define drm_client_for_each_connector_iter(connector, iter) \
-	drm_for_each_connector_iter(connector, iter) \
-		if (connector->connector_type != DRM_MODE_CONNECTOR_WRITEBACK)
+  drm_for_each_connector_iter(connector, iter) \
+    if (connector->connector_type != DRM_MODE_CONNECTOR_WRITEBACK)
 
 void drm_client_debugfs_init(struct drm_minor *minor);
 

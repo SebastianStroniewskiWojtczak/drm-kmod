@@ -55,7 +55,7 @@
  */
 
 struct fixed31_32 {
-	long long value;
+  long long value;
 };
 
 
@@ -86,11 +86,11 @@ struct fixed31_32 dc_fixpt_from_fraction(long long numerator, long long denomina
  */
 static inline struct fixed31_32 dc_fixpt_from_int(int arg)
 {
-	struct fixed31_32 res;
+  struct fixed31_32 res;
 
-	res.value = (long long) arg << FIXED31_32_BITS_PER_FRACTIONAL_PART;
+  res.value = (long long) arg << FIXED31_32_BITS_PER_FRACTIONAL_PART;
 
-	return res;
+  return res;
 }
 
 /*
@@ -104,11 +104,11 @@ static inline struct fixed31_32 dc_fixpt_from_int(int arg)
  */
 static inline struct fixed31_32 dc_fixpt_neg(struct fixed31_32 arg)
 {
-	struct fixed31_32 res;
+  struct fixed31_32 res;
 
-	res.value = -arg.value;
+  res.value = -arg.value;
 
-	return res;
+  return res;
 }
 
 /*
@@ -117,10 +117,10 @@ static inline struct fixed31_32 dc_fixpt_neg(struct fixed31_32 arg)
  */
 static inline struct fixed31_32 dc_fixpt_abs(struct fixed31_32 arg)
 {
-	if (arg.value < 0)
-		return dc_fixpt_neg(arg);
-	else
-		return arg;
+  if (arg.value < 0)
+    return dc_fixpt_neg(arg);
+  else
+    return arg;
 }
 
 /*
@@ -134,7 +134,7 @@ static inline struct fixed31_32 dc_fixpt_abs(struct fixed31_32 arg)
  */
 static inline bool dc_fixpt_lt(struct fixed31_32 arg1, struct fixed31_32 arg2)
 {
-	return arg1.value < arg2.value;
+  return arg1.value < arg2.value;
 }
 
 /*
@@ -143,7 +143,7 @@ static inline bool dc_fixpt_lt(struct fixed31_32 arg1, struct fixed31_32 arg2)
  */
 static inline bool dc_fixpt_le(struct fixed31_32 arg1, struct fixed31_32 arg2)
 {
-	return arg1.value <= arg2.value;
+  return arg1.value <= arg2.value;
 }
 
 /*
@@ -152,7 +152,7 @@ static inline bool dc_fixpt_le(struct fixed31_32 arg1, struct fixed31_32 arg2)
  */
 static inline bool dc_fixpt_eq(struct fixed31_32 arg1, struct fixed31_32 arg2)
 {
-	return arg1.value == arg2.value;
+  return arg1.value == arg2.value;
 }
 
 /*
@@ -161,10 +161,10 @@ static inline bool dc_fixpt_eq(struct fixed31_32 arg1, struct fixed31_32 arg2)
  */
 static inline struct fixed31_32 dc_fixpt_min(struct fixed31_32 arg1, struct fixed31_32 arg2)
 {
-	if (arg1.value <= arg2.value)
-		return arg1;
-	else
-		return arg2;
+  if (arg1.value <= arg2.value)
+    return arg1;
+  else
+    return arg2;
 }
 
 /*
@@ -173,10 +173,10 @@ static inline struct fixed31_32 dc_fixpt_min(struct fixed31_32 arg1, struct fixe
  */
 static inline struct fixed31_32 dc_fixpt_max(struct fixed31_32 arg1, struct fixed31_32 arg2)
 {
-	if (arg1.value <= arg2.value)
-		return arg2;
-	else
-		return arg1;
+  if (arg1.value <= arg2.value)
+    return arg2;
+  else
+    return arg1;
 }
 
 /*
@@ -186,16 +186,16 @@ static inline struct fixed31_32 dc_fixpt_max(struct fixed31_32 arg1, struct fixe
  *          | max_value, when arg >= max_value
  */
 static inline struct fixed31_32 dc_fixpt_clamp(
-	struct fixed31_32 arg,
-	struct fixed31_32 min_value,
-	struct fixed31_32 max_value)
+  struct fixed31_32 arg,
+  struct fixed31_32 min_value,
+  struct fixed31_32 max_value)
 {
-	if (dc_fixpt_le(arg, min_value))
-		return min_value;
-	else if (dc_fixpt_le(max_value, arg))
-		return max_value;
-	else
-		return arg;
+  if (dc_fixpt_le(arg, min_value))
+    return min_value;
+  else if (dc_fixpt_le(max_value, arg))
+    return max_value;
+  else
+    return arg;
 }
 
 /*
@@ -209,12 +209,12 @@ static inline struct fixed31_32 dc_fixpt_clamp(
  */
 static inline struct fixed31_32 dc_fixpt_shl(struct fixed31_32 arg, unsigned char shift)
 {
-	ASSERT(((arg.value >= 0) && (arg.value <= LLONG_MAX >> shift)) ||
-		((arg.value < 0) && (arg.value >= ~(LLONG_MAX >> shift))));
+  ASSERT(((arg.value >= 0) && (arg.value <= LLONG_MAX >> shift)) ||
+    ((arg.value < 0) && (arg.value >= ~(LLONG_MAX >> shift))));
 
-	arg.value = arg.value << shift;
+  arg.value = arg.value << shift;
 
-	return arg;
+  return arg;
 }
 
 /*
@@ -223,14 +223,14 @@ static inline struct fixed31_32 dc_fixpt_shl(struct fixed31_32 arg, unsigned cha
  */
 static inline struct fixed31_32 dc_fixpt_shr(struct fixed31_32 arg, unsigned char shift)
 {
-	bool negative = arg.value < 0;
+  bool negative = arg.value < 0;
 
-	if (negative)
-		arg.value = -arg.value;
-	arg.value = arg.value >> shift;
-	if (negative)
-		arg.value = -arg.value;
-	return arg;
+  if (negative)
+    arg.value = -arg.value;
+  arg.value = arg.value >> shift;
+  if (negative)
+    arg.value = -arg.value;
+  return arg;
 }
 
 /*
@@ -244,14 +244,14 @@ static inline struct fixed31_32 dc_fixpt_shr(struct fixed31_32 arg, unsigned cha
  */
 static inline struct fixed31_32 dc_fixpt_add(struct fixed31_32 arg1, struct fixed31_32 arg2)
 {
-	struct fixed31_32 res;
+  struct fixed31_32 res;
 
-	ASSERT(((arg1.value >= 0) && (LLONG_MAX - arg1.value >= arg2.value)) ||
-		((arg1.value < 0) && (LLONG_MIN - arg1.value <= arg2.value)));
+  ASSERT(((arg1.value >= 0) && (LLONG_MAX - arg1.value >= arg2.value)) ||
+    ((arg1.value < 0) && (LLONG_MIN - arg1.value <= arg2.value)));
 
-	res.value = arg1.value + arg2.value;
+  res.value = arg1.value + arg2.value;
 
-	return res;
+  return res;
 }
 
 /*
@@ -260,7 +260,7 @@ static inline struct fixed31_32 dc_fixpt_add(struct fixed31_32 arg1, struct fixe
  */
 static inline struct fixed31_32 dc_fixpt_add_int(struct fixed31_32 arg1, int arg2)
 {
-	return dc_fixpt_add(arg1, dc_fixpt_from_int(arg2));
+  return dc_fixpt_add(arg1, dc_fixpt_from_int(arg2));
 }
 
 /*
@@ -269,14 +269,14 @@ static inline struct fixed31_32 dc_fixpt_add_int(struct fixed31_32 arg1, int arg
  */
 static inline struct fixed31_32 dc_fixpt_sub(struct fixed31_32 arg1, struct fixed31_32 arg2)
 {
-	struct fixed31_32 res;
+  struct fixed31_32 res;
 
-	ASSERT(((arg2.value >= 0) && (LLONG_MIN + arg2.value <= arg1.value)) ||
-		((arg2.value < 0) && (LLONG_MAX + arg2.value >= arg1.value)));
+  ASSERT(((arg2.value >= 0) && (LLONG_MIN + arg2.value <= arg1.value)) ||
+    ((arg2.value < 0) && (LLONG_MAX + arg2.value >= arg1.value)));
 
-	res.value = arg1.value - arg2.value;
+  res.value = arg1.value - arg2.value;
 
-	return res;
+  return res;
 }
 
 /*
@@ -285,7 +285,7 @@ static inline struct fixed31_32 dc_fixpt_sub(struct fixed31_32 arg1, struct fixe
  */
 static inline struct fixed31_32 dc_fixpt_sub_int(struct fixed31_32 arg1, int arg2)
 {
-	return dc_fixpt_sub(arg1, dc_fixpt_from_int(arg2));
+  return dc_fixpt_sub(arg1, dc_fixpt_from_int(arg2));
 }
 
 
@@ -307,7 +307,7 @@ struct fixed31_32 dc_fixpt_mul(struct fixed31_32 arg1, struct fixed31_32 arg2);
  */
 static inline struct fixed31_32 dc_fixpt_mul_int(struct fixed31_32 arg1, int arg2)
 {
-	return dc_fixpt_mul(arg1, dc_fixpt_from_int(arg2));
+  return dc_fixpt_mul(arg1, dc_fixpt_from_int(arg2));
 }
 
 /*
@@ -322,7 +322,7 @@ struct fixed31_32 dc_fixpt_sqr(struct fixed31_32 arg);
  */
 static inline struct fixed31_32 dc_fixpt_div_int(struct fixed31_32 arg1, long long arg2)
 {
-	return dc_fixpt_from_fraction(arg1.value, dc_fixpt_from_int(arg2).value);
+  return dc_fixpt_from_fraction(arg1.value, dc_fixpt_from_int(arg2).value);
 }
 
 /*
@@ -331,7 +331,7 @@ static inline struct fixed31_32 dc_fixpt_div_int(struct fixed31_32 arg1, long lo
  */
 static inline struct fixed31_32 dc_fixpt_div(struct fixed31_32 arg1, struct fixed31_32 arg2)
 {
-	return dc_fixpt_from_fraction(arg1.value, arg2.value);
+  return dc_fixpt_from_fraction(arg1.value, arg2.value);
 }
 
 /*
@@ -425,13 +425,13 @@ struct fixed31_32 dc_fixpt_log(struct fixed31_32 arg);
  */
 static inline struct fixed31_32 dc_fixpt_pow(struct fixed31_32 arg1, struct fixed31_32 arg2)
 {
-	if (arg1.value == 0)
-		return arg2.value == 0 ? dc_fixpt_one : dc_fixpt_zero;
+  if (arg1.value == 0)
+    return arg2.value == 0 ? dc_fixpt_one : dc_fixpt_zero;
 
-	return dc_fixpt_exp(
-		dc_fixpt_mul(
-			dc_fixpt_log(arg1),
-			arg2));
+  return dc_fixpt_exp(
+    dc_fixpt_mul(
+      dc_fixpt_log(arg1),
+      arg2));
 }
 
 /*
@@ -445,12 +445,12 @@ static inline struct fixed31_32 dc_fixpt_pow(struct fixed31_32 arg1, struct fixe
  */
 static inline int dc_fixpt_floor(struct fixed31_32 arg)
 {
-	unsigned long long arg_value = arg.value > 0 ? arg.value : -arg.value;
+  unsigned long long arg_value = arg.value > 0 ? arg.value : -arg.value;
 
-	if (arg.value >= 0)
-		return (int)(arg_value >> FIXED31_32_BITS_PER_FRACTIONAL_PART);
-	else
-		return -(int)(arg_value >> FIXED31_32_BITS_PER_FRACTIONAL_PART);
+  if (arg.value >= 0)
+    return (int)(arg_value >> FIXED31_32_BITS_PER_FRACTIONAL_PART);
+  else
+    return -(int)(arg_value >> FIXED31_32_BITS_PER_FRACTIONAL_PART);
 }
 
 /*
@@ -459,18 +459,18 @@ static inline int dc_fixpt_floor(struct fixed31_32 arg)
  */
 static inline int dc_fixpt_round(struct fixed31_32 arg)
 {
-	unsigned long long arg_value = arg.value > 0 ? arg.value : -arg.value;
+  unsigned long long arg_value = arg.value > 0 ? arg.value : -arg.value;
 
-	const long long summand = dc_fixpt_half.value;
+  const long long summand = dc_fixpt_half.value;
 
-	ASSERT(LLONG_MAX - (long long)arg_value >= summand);
+  ASSERT(LLONG_MAX - (long long)arg_value >= summand);
 
-	arg_value += summand;
+  arg_value += summand;
 
-	if (arg.value >= 0)
-		return (int)(arg_value >> FIXED31_32_BITS_PER_FRACTIONAL_PART);
-	else
-		return -(int)(arg_value >> FIXED31_32_BITS_PER_FRACTIONAL_PART);
+  if (arg.value >= 0)
+    return (int)(arg_value >> FIXED31_32_BITS_PER_FRACTIONAL_PART);
+  else
+    return -(int)(arg_value >> FIXED31_32_BITS_PER_FRACTIONAL_PART);
 }
 
 /*
@@ -479,19 +479,19 @@ static inline int dc_fixpt_round(struct fixed31_32 arg)
  */
 static inline int dc_fixpt_ceil(struct fixed31_32 arg)
 {
-	unsigned long long arg_value = arg.value > 0 ? arg.value : -arg.value;
+  unsigned long long arg_value = arg.value > 0 ? arg.value : -arg.value;
 
-	const long long summand = dc_fixpt_one.value -
-		dc_fixpt_epsilon.value;
+  const long long summand = dc_fixpt_one.value -
+    dc_fixpt_epsilon.value;
 
-	ASSERT(LLONG_MAX - (long long)arg_value >= summand);
+  ASSERT(LLONG_MAX - (long long)arg_value >= summand);
 
-	arg_value += summand;
+  arg_value += summand;
 
-	if (arg.value >= 0)
-		return (int)(arg_value >> FIXED31_32_BITS_PER_FRACTIONAL_PART);
-	else
-		return -(int)(arg_value >> FIXED31_32_BITS_PER_FRACTIONAL_PART);
+  if (arg.value >= 0)
+    return (int)(arg_value >> FIXED31_32_BITS_PER_FRACTIONAL_PART);
+  else
+    return -(int)(arg_value >> FIXED31_32_BITS_PER_FRACTIONAL_PART);
 }
 
 /* the following two function are used in scaler hw programming to convert fixed
@@ -516,19 +516,19 @@ int dc_fixpt_s4d19(struct fixed31_32 arg);
 
 static inline struct fixed31_32 dc_fixpt_truncate(struct fixed31_32 arg, unsigned int frac_bits)
 {
-	bool negative = arg.value < 0;
+  bool negative = arg.value < 0;
 
-	if (frac_bits >= FIXED31_32_BITS_PER_FRACTIONAL_PART) {
-		ASSERT(frac_bits == FIXED31_32_BITS_PER_FRACTIONAL_PART);
-		return arg;
-	}
+  if (frac_bits >= FIXED31_32_BITS_PER_FRACTIONAL_PART) {
+    ASSERT(frac_bits == FIXED31_32_BITS_PER_FRACTIONAL_PART);
+    return arg;
+  }
 
-	if (negative)
-		arg.value = -arg.value;
-	arg.value &= (~0LL) << (FIXED31_32_BITS_PER_FRACTIONAL_PART - frac_bits);
-	if (negative)
-		arg.value = -arg.value;
-	return arg;
+  if (negative)
+    arg.value = -arg.value;
+  arg.value &= (~0LL) << (FIXED31_32_BITS_PER_FRACTIONAL_PART - frac_bits);
+  if (negative)
+    arg.value = -arg.value;
+  return arg;
 }
 
 #endif

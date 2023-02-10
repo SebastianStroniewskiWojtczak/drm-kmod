@@ -574,7 +574,7 @@ typedef enum {
   CUSTOMER_VARIANT_FALCON,
   CUSTOMER_VARIANT_COUNT,
 } CUSTOMER_VARIANT_e;
-	 
+   
 // Used for 2-step UCLK DPM change workaround
 typedef struct {
   uint16_t Fmin;

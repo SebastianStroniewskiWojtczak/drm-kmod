@@ -14,22 +14,22 @@
 struct intel_uc;
 
 struct intel_uc_ops {
-	int (*sanitize)(struct intel_uc *uc);
-	void (*init_fw)(struct intel_uc *uc);
-	void (*fini_fw)(struct intel_uc *uc);
-	int (*init)(struct intel_uc *uc);
-	void (*fini)(struct intel_uc *uc);
-	int (*init_hw)(struct intel_uc *uc);
-	void (*fini_hw)(struct intel_uc *uc);
+  int (*sanitize)(struct intel_uc *uc);
+  void (*init_fw)(struct intel_uc *uc);
+  void (*fini_fw)(struct intel_uc *uc);
+  int (*init)(struct intel_uc *uc);
+  void (*fini)(struct intel_uc *uc);
+  int (*init_hw)(struct intel_uc *uc);
+  void (*fini_hw)(struct intel_uc *uc);
 };
 
 struct intel_uc {
-	struct intel_uc_ops const *ops;
-	struct intel_guc guc;
-	struct intel_huc huc;
+  struct intel_uc_ops const *ops;
+  struct intel_guc guc;
+  struct intel_huc huc;
 
-	/* Snapshot of GuC log from last failed load */
-	struct drm_i915_gem_object *load_err_log;
+  /* Snapshot of GuC log from last failed load */
+  struct drm_i915_gem_object *load_err_log;
 };
 
 void intel_uc_init_early(struct intel_uc *uc);
@@ -66,7 +66,7 @@ int intel_uc_runtime_resume(struct intel_uc *uc);
 #define __uc_state_checker(x, func, state, required) \
 static inline bool intel_uc_##state##_##func(struct intel_uc *uc) \
 { \
-	return intel_##func##_is_##required(&uc->x); \
+  return intel_##func##_is_##required(&uc->x); \
 }
 
 #define uc_state_checkers(x, func) \
@@ -84,9 +84,9 @@ uc_state_checkers(guc, guc_submission);
 #define intel_uc_ops_function(_NAME, _OPS, _TYPE, _RET) \
 static inline _TYPE intel_uc_##_NAME(struct intel_uc *uc) \
 { \
-	if (uc->ops->_OPS) \
-		return uc->ops->_OPS(uc); \
-	return _RET; \
+  if (uc->ops->_OPS) \
+    return uc->ops->_OPS(uc); \
+  return _RET; \
 }
 intel_uc_ops_function(sanitize, sanitize, int, 0);
 intel_uc_ops_function(fetch_firmwares, init_fw, void, );

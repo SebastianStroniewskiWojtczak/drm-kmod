@@ -34,32 +34,32 @@
 #include <linux/module.h>
 
 static void ttm_eu_backoff_reservation_reverse(struct list_head *list,
-					      struct ttm_validate_buffer *entry)
+                struct ttm_validate_buffer *entry)
 {
-	list_for_each_entry_continue_reverse(entry, list, head) {
-		struct ttm_buffer_object *bo = entry->bo;
+  list_for_each_entry_continue_reverse(entry, list, head) {
+    struct ttm_buffer_object *bo = entry->bo;
 
-		dma_resv_unlock(bo->base.resv);
-	}
+    dma_resv_unlock(bo->base.resv);
+  }
 }
 
 void ttm_eu_backoff_reservation(struct ww_acquire_ctx *ticket,
-				struct list_head *list)
+        struct list_head *list)
 {
-	struct ttm_validate_buffer *entry;
+  struct ttm_validate_buffer *entry;
 
-	if (list_empty(list))
-		return;
+  if (list_empty(list))
+    return;
 
-	list_for_each_entry(entry, list, head) {
-		struct ttm_buffer_object *bo = entry->bo;
+  list_for_each_entry(entry, list, head) {
+    struct ttm_buffer_object *bo = entry->bo;
 
-		ttm_bo_move_to_lru_tail_unlocked(bo);
-		dma_resv_unlock(bo->base.resv);
-	}
+    ttm_bo_move_to_lru_tail_unlocked(bo);
+    dma_resv_unlock(bo->base.resv);
+  }
 
-	if (ticket)
-		ww_acquire_fini(ticket);
+  if (ticket)
+    ww_acquire_fini(ticket);
 }
 EXPORT_SYMBOL(ttm_eu_backoff_reservation);
 
@@ -76,93 +76,93 @@ EXPORT_SYMBOL(ttm_eu_backoff_reservation);
  */
 
 int ttm_eu_reserve_buffers(struct ww_acquire_ctx *ticket,
-			   struct list_head *list, bool intr,
-			   struct list_head *dups)
+         struct list_head *list, bool intr,
+         struct list_head *dups)
 {
-	struct ttm_validate_buffer *entry;
-	int ret;
+  struct ttm_validate_buffer *entry;
+  int ret;
 
-	if (list_empty(list))
-		return 0;
+  if (list_empty(list))
+    return 0;
 
-	if (ticket)
-		ww_acquire_init(ticket, &reservation_ww_class);
+  if (ticket)
+    ww_acquire_init(ticket, &reservation_ww_class);
 
-	list_for_each_entry(entry, list, head) {
-		struct ttm_buffer_object *bo = entry->bo;
+  list_for_each_entry(entry, list, head) {
+    struct ttm_buffer_object *bo = entry->bo;
 
-		ret = ttm_bo_reserve(bo, intr, (ticket == NULL), ticket);
-		if (ret == -EALREADY && dups) {
-			struct ttm_validate_buffer *safe = entry;
-			entry = list_prev_entry(entry, head);
-			list_del(&safe->head);
-			list_add(&safe->head, dups);
-			continue;
-		}
+    ret = ttm_bo_reserve(bo, intr, (ticket == NULL), ticket);
+    if (ret == -EALREADY && dups) {
+      struct ttm_validate_buffer *safe = entry;
+      entry = list_prev_entry(entry, head);
+      list_del(&safe->head);
+      list_add(&safe->head, dups);
+      continue;
+    }
 
-		if (!ret) {
-			if (!entry->num_shared)
-				continue;
+    if (!ret) {
+      if (!entry->num_shared)
+        continue;
 
-			ret = dma_resv_reserve_shared(bo->base.resv,
-								entry->num_shared);
-			if (!ret)
-				continue;
-		}
+      ret = dma_resv_reserve_shared(bo->base.resv,
+                entry->num_shared);
+      if (!ret)
+        continue;
+    }
 
-		/* uh oh, we lost out, drop every reservation and try
-		 * to only reserve this buffer, then start over if
-		 * this succeeds.
-		 */
-		ttm_eu_backoff_reservation_reverse(list, entry);
+    /* uh oh, we lost out, drop every reservation and try
+     * to only reserve this buffer, then start over if
+     * this succeeds.
+     */
+    ttm_eu_backoff_reservation_reverse(list, entry);
 
-		if (ret == -EDEADLK) {
-			ret = ttm_bo_reserve_slowpath(bo, intr, ticket);
-		}
+    if (ret == -EDEADLK) {
+      ret = ttm_bo_reserve_slowpath(bo, intr, ticket);
+    }
 
-		if (!ret && entry->num_shared)
-			ret = dma_resv_reserve_shared(bo->base.resv,
-								entry->num_shared);
+    if (!ret && entry->num_shared)
+      ret = dma_resv_reserve_shared(bo->base.resv,
+                entry->num_shared);
 
-		if (unlikely(ret != 0)) {
-			if (ticket) {
-				ww_acquire_done(ticket);
-				ww_acquire_fini(ticket);
-			}
-			return ret;
-		}
+    if (unlikely(ret != 0)) {
+      if (ticket) {
+        ww_acquire_done(ticket);
+        ww_acquire_fini(ticket);
+      }
+      return ret;
+    }
 
-		/* move this item to the front of the list,
-		 * forces correct iteration of the loop without keeping track
-		 */
-		list_del(&entry->head);
-		list_add(&entry->head, list);
-	}
+    /* move this item to the front of the list,
+     * forces correct iteration of the loop without keeping track
+     */
+    list_del(&entry->head);
+    list_add(&entry->head, list);
+  }
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(ttm_eu_reserve_buffers);
 
 void ttm_eu_fence_buffer_objects(struct ww_acquire_ctx *ticket,
-				 struct list_head *list,
-				 struct dma_fence *fence)
+         struct list_head *list,
+         struct dma_fence *fence)
 {
-	struct ttm_validate_buffer *entry;
+  struct ttm_validate_buffer *entry;
 
-	if (list_empty(list))
-		return;
+  if (list_empty(list))
+    return;
 
-	list_for_each_entry(entry, list, head) {
-		struct ttm_buffer_object *bo = entry->bo;
+  list_for_each_entry(entry, list, head) {
+    struct ttm_buffer_object *bo = entry->bo;
 
-		if (entry->num_shared)
-			dma_resv_add_shared_fence(bo->base.resv, fence);
-		else
-			dma_resv_add_excl_fence(bo->base.resv, fence);
-		ttm_bo_move_to_lru_tail_unlocked(bo);
-		dma_resv_unlock(bo->base.resv);
-	}
-	if (ticket)
-		ww_acquire_fini(ticket);
+    if (entry->num_shared)
+      dma_resv_add_shared_fence(bo->base.resv, fence);
+    else
+      dma_resv_add_excl_fence(bo->base.resv, fence);
+    ttm_bo_move_to_lru_tail_unlocked(bo);
+    dma_resv_unlock(bo->base.resv);
+  }
+  if (ticket)
+    ww_acquire_fini(ticket);
 }
 EXPORT_SYMBOL(ttm_eu_fence_buffer_objects);

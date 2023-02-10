@@ -84,8 +84,8 @@
 #       define NI_OVL_REGAMMA_MODE(x)                  (((x) & 0x7) << 4)
 
 #define NI_DP_MSE_LINK_TIMING                          0x73a0
-#	define NI_DP_MSE_LINK_FRAME			(((x) & 0x3ff) << 0)
-#	define NI_DP_MSE_LINK_LINE                      (((x) & 0x3) << 16)
+#  define NI_DP_MSE_LINK_FRAME      (((x) & 0x3ff) << 0)
+#  define NI_DP_MSE_LINK_LINE                      (((x) & 0x3) << 16)
 
 #define NI_DP_MSE_MISC_CNTL                            0x736c
 #       define NI_DP_MSE_BLANK_CODE                    (((x) & 0x1) << 0)

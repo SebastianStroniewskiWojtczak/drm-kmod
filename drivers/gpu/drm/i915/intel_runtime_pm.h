@@ -19,9 +19,9 @@ struct drm_i915_private;
 struct drm_printer;
 
 enum i915_drm_suspend_mode {
-	I915_DRM_SUSPEND_IDLE,
-	I915_DRM_SUSPEND_MEM,
-	I915_DRM_SUSPEND_HIBERNATE,
+  I915_DRM_SUSPEND_IDLE,
+  I915_DRM_SUSPEND_MEM,
+  I915_DRM_SUSPEND_HIBERNATE,
 };
 
 /*
@@ -48,83 +48,83 @@ enum i915_drm_suspend_mode {
  * For more, read the Documentation/power/runtime_pm.rst.
  */
 struct intel_runtime_pm {
-	atomic_t wakeref_count;
-	struct device *kdev; /* points to i915->drm.dev */
-	bool available;
-	bool suspended;
-	bool irqs_enabled;
+  atomic_t wakeref_count;
+  struct device *kdev; /* points to i915->drm.dev */
+  bool available;
+  bool suspended;
+  bool irqs_enabled;
 
 #if IS_ENABLED(CONFIG_DRM_I915_DEBUG_RUNTIME_PM)
-	/*
-	 * To aide detection of wakeref leaks and general misuse, we
-	 * track all wakeref holders. With manual markup (i.e. returning
-	 * a cookie to each rpm_get caller which they then supply to their
-	 * paired rpm_put) we can remove corresponding pairs of and keep
-	 * the array trimmed to active wakerefs.
-	 */
-	struct intel_runtime_pm_debug {
-		spinlock_t lock;
+  /*
+   * To aide detection of wakeref leaks and general misuse, we
+   * track all wakeref holders. With manual markup (i.e. returning
+   * a cookie to each rpm_get caller which they then supply to their
+   * paired rpm_put) we can remove corresponding pairs of and keep
+   * the array trimmed to active wakerefs.
+   */
+  struct intel_runtime_pm_debug {
+    spinlock_t lock;
 
-		depot_stack_handle_t last_acquire;
-		depot_stack_handle_t last_release;
+    depot_stack_handle_t last_acquire;
+    depot_stack_handle_t last_release;
 
-		depot_stack_handle_t *owners;
-		unsigned long count;
-	} debug;
+    depot_stack_handle_t *owners;
+    unsigned long count;
+  } debug;
 #endif
 };
 
-#define BITS_PER_WAKEREF	\
-	BITS_PER_TYPE(struct_member(struct intel_runtime_pm, wakeref_count))
-#define INTEL_RPM_WAKELOCK_SHIFT	(BITS_PER_WAKEREF / 2)
-#define INTEL_RPM_WAKELOCK_BIAS		(1 << INTEL_RPM_WAKELOCK_SHIFT)
-#define INTEL_RPM_RAW_WAKEREF_MASK	(INTEL_RPM_WAKELOCK_BIAS - 1)
+#define BITS_PER_WAKEREF  \
+  BITS_PER_TYPE(struct_member(struct intel_runtime_pm, wakeref_count))
+#define INTEL_RPM_WAKELOCK_SHIFT  (BITS_PER_WAKEREF / 2)
+#define INTEL_RPM_WAKELOCK_BIAS    (1 << INTEL_RPM_WAKELOCK_SHIFT)
+#define INTEL_RPM_RAW_WAKEREF_MASK  (INTEL_RPM_WAKELOCK_BIAS - 1)
 
 static inline int
 intel_rpm_raw_wakeref_count(int wakeref_count)
 {
-	return wakeref_count & INTEL_RPM_RAW_WAKEREF_MASK;
+  return wakeref_count & INTEL_RPM_RAW_WAKEREF_MASK;
 }
 
 static inline int
 intel_rpm_wakelock_count(int wakeref_count)
 {
-	return wakeref_count >> INTEL_RPM_WAKELOCK_SHIFT;
+  return wakeref_count >> INTEL_RPM_WAKELOCK_SHIFT;
 }
 
 static inline void
 assert_rpm_device_not_suspended(struct intel_runtime_pm *rpm)
 {
-	WARN_ONCE(rpm->suspended,
-		  "Device suspended during HW access\n");
+  WARN_ONCE(rpm->suspended,
+      "Device suspended during HW access\n");
 }
 
 static inline void
 __assert_rpm_raw_wakeref_held(struct intel_runtime_pm *rpm, int wakeref_count)
 {
-	assert_rpm_device_not_suspended(rpm);
-	WARN_ONCE(!intel_rpm_raw_wakeref_count(wakeref_count),
-		  "RPM raw-wakeref not held\n");
+  assert_rpm_device_not_suspended(rpm);
+  WARN_ONCE(!intel_rpm_raw_wakeref_count(wakeref_count),
+      "RPM raw-wakeref not held\n");
 }
 
 static inline void
 __assert_rpm_wakelock_held(struct intel_runtime_pm *rpm, int wakeref_count)
 {
-	__assert_rpm_raw_wakeref_held(rpm, wakeref_count);
-	WARN_ONCE(!intel_rpm_wakelock_count(wakeref_count),
-		  "RPM wakelock ref not held during HW access\n");
+  __assert_rpm_raw_wakeref_held(rpm, wakeref_count);
+  WARN_ONCE(!intel_rpm_wakelock_count(wakeref_count),
+      "RPM wakelock ref not held during HW access\n");
 }
 
 static inline void
 assert_rpm_raw_wakeref_held(struct intel_runtime_pm *rpm)
 {
-	__assert_rpm_raw_wakeref_held(rpm, atomic_read(&rpm->wakeref_count));
+  __assert_rpm_raw_wakeref_held(rpm, atomic_read(&rpm->wakeref_count));
 }
 
 static inline void
 assert_rpm_wakelock_held(struct intel_runtime_pm *rpm)
 {
-	__assert_rpm_wakelock_held(rpm, atomic_read(&rpm->wakeref_count));
+  __assert_rpm_wakelock_held(rpm, atomic_read(&rpm->wakeref_count));
 }
 
 /**
@@ -148,8 +148,8 @@ assert_rpm_wakelock_held(struct intel_runtime_pm *rpm)
 static inline void
 disable_rpm_wakeref_asserts(struct intel_runtime_pm *rpm)
 {
-	atomic_add(INTEL_RPM_WAKELOCK_BIAS + 1,
-		   &rpm->wakeref_count);
+  atomic_add(INTEL_RPM_WAKELOCK_BIAS + 1,
+       &rpm->wakeref_count);
 }
 
 /**
@@ -166,8 +166,8 @@ disable_rpm_wakeref_asserts(struct intel_runtime_pm *rpm)
 static inline void
 enable_rpm_wakeref_asserts(struct intel_runtime_pm *rpm)
 {
-	atomic_sub(INTEL_RPM_WAKELOCK_BIAS + 1,
-		   &rpm->wakeref_count);
+  atomic_sub(INTEL_RPM_WAKELOCK_BIAS + 1,
+       &rpm->wakeref_count);
 }
 
 void intel_runtime_pm_init_early(struct intel_runtime_pm *rpm);
@@ -182,16 +182,16 @@ intel_wakeref_t intel_runtime_pm_get_noresume(struct intel_runtime_pm *rpm);
 intel_wakeref_t intel_runtime_pm_get_raw(struct intel_runtime_pm *rpm);
 
 #define with_intel_runtime_pm(rpm, wf) \
-	for ((wf) = intel_runtime_pm_get(rpm); (wf); \
-	     intel_runtime_pm_put((rpm), (wf)), (wf) = 0)
+  for ((wf) = intel_runtime_pm_get(rpm); (wf); \
+       intel_runtime_pm_put((rpm), (wf)), (wf) = 0)
 
 #define with_intel_runtime_pm_if_in_use(rpm, wf) \
-	for ((wf) = intel_runtime_pm_get_if_in_use(rpm); (wf); \
-	     intel_runtime_pm_put((rpm), (wf)), (wf) = 0)
+  for ((wf) = intel_runtime_pm_get_if_in_use(rpm); (wf); \
+       intel_runtime_pm_put((rpm), (wf)), (wf) = 0)
 
 #define with_intel_runtime_pm_if_active(rpm, wf) \
-	for ((wf) = intel_runtime_pm_get_if_active(rpm); (wf); \
-	     intel_runtime_pm_put((rpm), (wf)), (wf) = 0)
+  for ((wf) = intel_runtime_pm_get_if_active(rpm); (wf); \
+       intel_runtime_pm_put((rpm), (wf)), (wf) = 0)
 
 void intel_runtime_pm_put_unchecked(struct intel_runtime_pm *rpm);
 #if IS_ENABLED(CONFIG_DRM_I915_DEBUG_RUNTIME_PM)
@@ -200,17 +200,17 @@ void intel_runtime_pm_put(struct intel_runtime_pm *rpm, intel_wakeref_t wref);
 static inline void
 intel_runtime_pm_put(struct intel_runtime_pm *rpm, intel_wakeref_t wref)
 {
-	intel_runtime_pm_put_unchecked(rpm);
+  intel_runtime_pm_put_unchecked(rpm);
 }
 #endif
 void intel_runtime_pm_put_raw(struct intel_runtime_pm *rpm, intel_wakeref_t wref);
 
 #if IS_ENABLED(CONFIG_DRM_I915_DEBUG_RUNTIME_PM)
 void print_intel_runtime_pm_wakeref(struct intel_runtime_pm *rpm,
-				    struct drm_printer *p);
+            struct drm_printer *p);
 #else
 static inline void print_intel_runtime_pm_wakeref(struct intel_runtime_pm *rpm,
-						  struct drm_printer *p)
+              struct drm_printer *p)
 {
 }
 #endif

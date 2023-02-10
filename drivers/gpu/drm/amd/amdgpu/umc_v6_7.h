@@ -24,13 +24,13 @@
 #define __UMC_V6_7_H__
 
 /* EccErrCnt max value */
-#define UMC_V6_7_CE_CNT_MAX		0xffff
+#define UMC_V6_7_CE_CNT_MAX    0xffff
 /* umc ce interrupt threshold */
-#define UMC_V6_7_CE_INT_THRESHOLD	0xffff
+#define UMC_V6_7_CE_INT_THRESHOLD  0xffff
 /* umc ce count initial value */
-#define UMC_V6_7_CE_CNT_INIT	(UMC_V6_7_CE_CNT_MAX - UMC_V6_7_CE_INT_THRESHOLD)
+#define UMC_V6_7_CE_CNT_INIT  (UMC_V6_7_CE_CNT_MAX - UMC_V6_7_CE_INT_THRESHOLD)
 
-#define UMC_V6_7_INST_DIST	0x40000
+#define UMC_V6_7_INST_DIST  0x40000
 
 extern const struct amdgpu_umc_ras_funcs umc_v6_7_ras_funcs;
 

@@ -31,20 +31,20 @@
 #include <linux/irq_work.h>
 
 struct dma_fence_chain {
-	struct dma_fence base;
-	spinlock_t lock;
-	struct dma_fence __rcu *prev;
-	u64 prev_seqno;
-	struct dma_fence *fence;
-	struct dma_fence_cb cb;
-	struct irq_work work;
+  struct dma_fence base;
+  spinlock_t lock;
+  struct dma_fence __rcu *prev;
+  u64 prev_seqno;
+  struct dma_fence *fence;
+  struct dma_fence_cb cb;
+  struct irq_work work;
 };
 
 extern const struct dma_fence_ops dma_fence_chain_ops;
 
-#define dma_fence_chain_for_each(iter, head)	\
-	for (iter = dma_fence_get(head); iter; \
-	     iter = dma_fence_chain_walk(iter))
+#define dma_fence_chain_for_each(iter, head)  \
+  for (iter = dma_fence_get(head); iter; \
+       iter = dma_fence_chain_walk(iter))
 
 struct dma_fence_chain *to_dma_fence_chain(struct dma_fence *fence);
 struct dma_fence *dma_fence_chain_walk(struct dma_fence *fence);

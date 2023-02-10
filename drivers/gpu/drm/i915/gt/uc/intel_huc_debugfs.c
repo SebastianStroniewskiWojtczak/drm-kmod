@@ -11,26 +11,26 @@
 
 static int huc_info_show(struct seq_file *m, void *data)
 {
-	struct intel_huc *huc = m->private;
-	struct drm_printer p = drm_seq_file_printer(m);
+  struct intel_huc *huc = m->private;
+  struct drm_printer p = drm_seq_file_printer(m);
 
-	if (!intel_huc_is_supported(huc))
-		return -ENODEV;
+  if (!intel_huc_is_supported(huc))
+    return -ENODEV;
 
-	intel_huc_load_status(huc, &p);
+  intel_huc_load_status(huc, &p);
 
-	return 0;
+  return 0;
 }
 DEFINE_GT_DEBUGFS_ATTRIBUTE(huc_info);
 
 void intel_huc_debugfs_register(struct intel_huc *huc, struct dentry *root)
 {
-	static const struct debugfs_gt_file files[] = {
-		{ "huc_info", &huc_info_fops, NULL },
-	};
+  static const struct debugfs_gt_file files[] = {
+    { "huc_info", &huc_info_fops, NULL },
+  };
 
-	if (!intel_huc_is_supported(huc))
-		return;
+  if (!intel_huc_is_supported(huc))
+    return;
 
-	intel_gt_debugfs_register_files(root, files, ARRAY_SIZE(files), huc);
+  intel_gt_debugfs_register_files(root, files, ARRAY_SIZE(files), huc);
 }

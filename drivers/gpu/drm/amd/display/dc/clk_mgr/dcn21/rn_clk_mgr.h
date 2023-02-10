@@ -30,12 +30,12 @@
 #include "dm_pp_smu.h"
 
 struct rn_clk_registers {
-	uint32_t CLK1_CLK0_CURRENT_CNT; /* DPREFCLK */
+  uint32_t CLK1_CLK0_CURRENT_CNT; /* DPREFCLK */
 };
 
 void rn_clk_mgr_construct(struct dc_context *ctx,
-		struct clk_mgr_internal *clk_mgr,
-		struct pp_smu_funcs *pp_smu,
-		struct dccg *dccg);
+    struct clk_mgr_internal *clk_mgr,
+    struct pp_smu_funcs *pp_smu,
+    struct dccg *dccg);
 
 #endif //__RN_CLK_MGR_H__

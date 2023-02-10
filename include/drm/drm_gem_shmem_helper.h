@@ -21,90 +21,90 @@ struct sg_table;
  * struct drm_gem_shmem_object - GEM object backed by shmem
  */
 struct drm_gem_shmem_object {
-	/**
-	 * @base: Base GEM object
-	 */
-	struct drm_gem_object base;
+  /**
+   * @base: Base GEM object
+   */
+  struct drm_gem_object base;
 
-	/**
-	 * @pages_lock: Protects the page table and use count
-	 */
-	struct mutex pages_lock;
+  /**
+   * @pages_lock: Protects the page table and use count
+   */
+  struct mutex pages_lock;
 
-	/**
-	 * @pages: Page table
-	 */
-	struct page **pages;
+  /**
+   * @pages: Page table
+   */
+  struct page **pages;
 
-	/**
-	 * @pages_use_count:
-	 *
-	 * Reference count on the pages table.
-	 * The pages are put when the count reaches zero.
-	 */
-	unsigned int pages_use_count;
+  /**
+   * @pages_use_count:
+   *
+   * Reference count on the pages table.
+   * The pages are put when the count reaches zero.
+   */
+  unsigned int pages_use_count;
 
-	/**
-	 * @madv: State for madvise
-	 *
-	 * 0 is active/inuse.
-	 * A negative value is the object is purged.
-	 * Positive values are driver specific and not used by the helpers.
-	 */
-	int madv;
+  /**
+   * @madv: State for madvise
+   *
+   * 0 is active/inuse.
+   * A negative value is the object is purged.
+   * Positive values are driver specific and not used by the helpers.
+   */
+  int madv;
 
-	/**
-	 * @madv_list: List entry for madvise tracking
-	 *
-	 * Typically used by drivers to track purgeable objects
-	 */
-	struct list_head madv_list;
+  /**
+   * @madv_list: List entry for madvise tracking
+   *
+   * Typically used by drivers to track purgeable objects
+   */
+  struct list_head madv_list;
 
-	/**
-	 * @pages_mark_dirty_on_put:
-	 *
-	 * Mark pages as dirty when they are put.
-	 */
-	unsigned int pages_mark_dirty_on_put    : 1;
+  /**
+   * @pages_mark_dirty_on_put:
+   *
+   * Mark pages as dirty when they are put.
+   */
+  unsigned int pages_mark_dirty_on_put    : 1;
 
-	/**
-	 * @pages_mark_accessed_on_put:
-	 *
-	 * Mark pages as accessed when they are put.
-	 */
-	unsigned int pages_mark_accessed_on_put : 1;
+  /**
+   * @pages_mark_accessed_on_put:
+   *
+   * Mark pages as accessed when they are put.
+   */
+  unsigned int pages_mark_accessed_on_put : 1;
 
-	/**
-	 * @sgt: Scatter/gather table for imported PRIME buffers
-	 */
-	struct sg_table *sgt;
+  /**
+   * @sgt: Scatter/gather table for imported PRIME buffers
+   */
+  struct sg_table *sgt;
 
-	/**
-	 * @vmap_lock: Protects the vmap address and use count
-	 */
-	struct mutex vmap_lock;
+  /**
+   * @vmap_lock: Protects the vmap address and use count
+   */
+  struct mutex vmap_lock;
 
-	/**
-	 * @vaddr: Kernel virtual address of the backing memory
-	 */
-	void *vaddr;
+  /**
+   * @vaddr: Kernel virtual address of the backing memory
+   */
+  void *vaddr;
 
-	/**
-	 * @vmap_use_count:
-	 *
-	 * Reference count on the virtual address.
-	 * The address are un-mapped when the count reaches zero.
-	 */
-	unsigned int vmap_use_count;
+  /**
+   * @vmap_use_count:
+   *
+   * Reference count on the virtual address.
+   * The address are un-mapped when the count reaches zero.
+   */
+  unsigned int vmap_use_count;
 
-	/**
-	 * @map_wc: map object write-combined (instead of using shmem defaults).
-	 */
-	bool map_wc;
+  /**
+   * @map_wc: map object write-combined (instead of using shmem defaults).
+   */
+  bool map_wc;
 };
 
 #define to_drm_gem_shmem_obj(obj) \
-	container_of(obj, struct drm_gem_shmem_object, base)
+  container_of(obj, struct drm_gem_shmem_object, base)
 
 struct drm_gem_shmem_object *drm_gem_shmem_create(struct drm_device *dev, size_t size);
 void drm_gem_shmem_free_object(struct drm_gem_object *obj);
@@ -120,9 +120,9 @@ int drm_gem_shmem_madvise(struct drm_gem_object *obj, int madv);
 
 static inline bool drm_gem_shmem_is_purgeable(struct drm_gem_shmem_object *shmem)
 {
-	return (shmem->madv > 0) &&
-		!shmem->vmap_use_count && shmem->sgt &&
-		!shmem->base.dma_buf && !shmem->base.import_attach;
+  return (shmem->madv > 0) &&
+    !shmem->vmap_use_count && shmem->sgt &&
+    !shmem->base.dma_buf && !shmem->base.import_attach;
 }
 
 void drm_gem_shmem_purge_locked(struct drm_gem_object *obj);
@@ -130,22 +130,22 @@ bool drm_gem_shmem_purge(struct drm_gem_object *obj);
 
 struct drm_gem_shmem_object *
 drm_gem_shmem_create_with_handle(struct drm_file *file_priv,
-				 struct drm_device *dev, size_t size,
-				 uint32_t *handle);
+         struct drm_device *dev, size_t size,
+         uint32_t *handle);
 
 int drm_gem_shmem_dumb_create(struct drm_file *file, struct drm_device *dev,
-			      struct drm_mode_create_dumb *args);
+            struct drm_mode_create_dumb *args);
 
 int drm_gem_shmem_mmap(struct drm_gem_object *obj, struct vm_area_struct *vma);
 
 void drm_gem_shmem_print_info(struct drm_printer *p, unsigned int indent,
-			      const struct drm_gem_object *obj);
+            const struct drm_gem_object *obj);
 
 struct sg_table *drm_gem_shmem_get_sg_table(struct drm_gem_object *obj);
 struct drm_gem_object *
 drm_gem_shmem_prime_import_sg_table(struct drm_device *dev,
-				    struct dma_buf_attachment *attach,
-				    struct sg_table *sgt);
+            struct dma_buf_attachment *attach,
+            struct sg_table *sgt);
 
 struct sg_table *drm_gem_shmem_get_pages_sgt(struct drm_gem_object *obj);
 
@@ -156,10 +156,10 @@ struct sg_table *drm_gem_shmem_get_pages_sgt(struct drm_gem_object *obj);
  * the &drm_driver structure.
  */
 #define DRM_GEM_SHMEM_DRIVER_OPS \
-	.prime_handle_to_fd	= drm_gem_prime_handle_to_fd, \
-	.prime_fd_to_handle	= drm_gem_prime_fd_to_handle, \
-	.gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table, \
-	.gem_prime_mmap		= drm_gem_prime_mmap, \
-	.dumb_create		= drm_gem_shmem_dumb_create
+  .prime_handle_to_fd  = drm_gem_prime_handle_to_fd, \
+  .prime_fd_to_handle  = drm_gem_prime_fd_to_handle, \
+  .gem_prime_import_sg_table = drm_gem_shmem_prime_import_sg_table, \
+  .gem_prime_mmap    = drm_gem_prime_mmap, \
+  .dumb_create    = drm_gem_shmem_dumb_create
 
 #endif /* __DRM_GEM_SHMEM_HELPER_H__ */

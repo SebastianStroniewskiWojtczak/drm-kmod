@@ -34,8 +34,8 @@
 #define MAX_HW_POINTS (NUM_PTS_IN_REGION*NUM_REGIONS)
 
 enum table_type {
-	type_pq_table,
-	type_de_pq_table
+  type_pq_table,
+  type_de_pq_table
 };
 
 bool mod_color_is_table_init(enum table_type type);

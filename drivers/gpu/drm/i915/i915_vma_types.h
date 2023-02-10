@@ -96,68 +96,68 @@ enum i915_cache_level;
  */
 
 struct intel_remapped_plane_info {
-	/* in gtt pages */
-	u32 offset;
-	u16 width;
-	u16 height;
-	u16 src_stride;
-	u16 dst_stride;
+  /* in gtt pages */
+  u32 offset;
+  u16 width;
+  u16 height;
+  u16 src_stride;
+  u16 dst_stride;
 } __packed;
 
 struct intel_remapped_info {
-	struct intel_remapped_plane_info plane[2];
-	u32 unused_mbz;
+  struct intel_remapped_plane_info plane[2];
+  u32 unused_mbz;
 } __packed;
 
 struct intel_rotation_info {
-	struct intel_remapped_plane_info plane[2];
+  struct intel_remapped_plane_info plane[2];
 } __packed;
 
 struct intel_partial_info {
-	u64 offset;
-	unsigned int size;
+  u64 offset;
+  unsigned int size;
 } __packed;
 
 enum i915_ggtt_view_type {
-	I915_GGTT_VIEW_NORMAL = 0,
-	I915_GGTT_VIEW_ROTATED = sizeof(struct intel_rotation_info),
-	I915_GGTT_VIEW_PARTIAL = sizeof(struct intel_partial_info),
-	I915_GGTT_VIEW_REMAPPED = sizeof(struct intel_remapped_info),
+  I915_GGTT_VIEW_NORMAL = 0,
+  I915_GGTT_VIEW_ROTATED = sizeof(struct intel_rotation_info),
+  I915_GGTT_VIEW_PARTIAL = sizeof(struct intel_partial_info),
+  I915_GGTT_VIEW_REMAPPED = sizeof(struct intel_remapped_info),
 };
 
 static inline void assert_i915_gem_gtt_types(void)
 {
-	BUILD_BUG_ON(sizeof(struct intel_rotation_info) != 2 * sizeof(u32) + 8 * sizeof(u16));
-	BUILD_BUG_ON(sizeof(struct intel_partial_info) != sizeof(u64) + sizeof(unsigned int));
-	BUILD_BUG_ON(sizeof(struct intel_remapped_info) != 3 * sizeof(u32) + 8 * sizeof(u16));
+  BUILD_BUG_ON(sizeof(struct intel_rotation_info) != 2 * sizeof(u32) + 8 * sizeof(u16));
+  BUILD_BUG_ON(sizeof(struct intel_partial_info) != sizeof(u64) + sizeof(unsigned int));
+  BUILD_BUG_ON(sizeof(struct intel_remapped_info) != 3 * sizeof(u32) + 8 * sizeof(u16));
 
-	/* Check that rotation/remapped shares offsets for simplicity */
-	BUILD_BUG_ON(offsetof(struct intel_remapped_info, plane[0]) !=
-		     offsetof(struct intel_rotation_info, plane[0]));
-	BUILD_BUG_ON(offsetofend(struct intel_remapped_info, plane[1]) !=
-		     offsetofend(struct intel_rotation_info, plane[1]));
+  /* Check that rotation/remapped shares offsets for simplicity */
+  BUILD_BUG_ON(offsetof(struct intel_remapped_info, plane[0]) !=
+         offsetof(struct intel_rotation_info, plane[0]));
+  BUILD_BUG_ON(offsetofend(struct intel_remapped_info, plane[1]) !=
+         offsetofend(struct intel_rotation_info, plane[1]));
 
-	/* As we encode the size of each branch inside the union into its type,
-	 * we have to be careful that each branch has a unique size.
-	 */
-	switch ((enum i915_ggtt_view_type)0) {
-	case I915_GGTT_VIEW_NORMAL:
-	case I915_GGTT_VIEW_PARTIAL:
-	case I915_GGTT_VIEW_ROTATED:
-	case I915_GGTT_VIEW_REMAPPED:
-		/* gcc complains if these are identical cases */
-		break;
-	}
+  /* As we encode the size of each branch inside the union into its type,
+   * we have to be careful that each branch has a unique size.
+   */
+  switch ((enum i915_ggtt_view_type)0) {
+  case I915_GGTT_VIEW_NORMAL:
+  case I915_GGTT_VIEW_PARTIAL:
+  case I915_GGTT_VIEW_ROTATED:
+  case I915_GGTT_VIEW_REMAPPED:
+    /* gcc complains if these are identical cases */
+    break;
+  }
 }
 
 struct i915_ggtt_view {
-	enum i915_ggtt_view_type type;
-	union {
-		/* Members need to contain no holes/padding */
-		struct intel_partial_info partial;
-		struct intel_rotation_info rotated;
-		struct intel_remapped_info remapped;
-	};
+  enum i915_ggtt_view_type type;
+  union {
+    /* Members need to contain no holes/padding */
+    struct intel_partial_info partial;
+    struct intel_rotation_info rotated;
+    struct intel_remapped_info remapped;
+  };
 };
 
 /**
@@ -171,118 +171,118 @@ struct i915_ggtt_view {
  * will always be <= an objects lifetime. So object refcounting should cover us.
  */
 struct i915_vma {
-	struct drm_mm_node node;
+  struct drm_mm_node node;
 
-	struct i915_address_space *vm;
-	const struct i915_vma_ops *ops;
+  struct i915_address_space *vm;
+  const struct i915_vma_ops *ops;
 
-	struct drm_i915_gem_object *obj;
-	struct dma_resv *resv; /** Alias of obj->resv */
+  struct drm_i915_gem_object *obj;
+  struct dma_resv *resv; /** Alias of obj->resv */
 
-	struct sg_table *pages;
-	void __iomem *iomap;
-	void *private; /* owned by creator */
+  struct sg_table *pages;
+  void __iomem *iomap;
+  void *private; /* owned by creator */
 
-	struct i915_fence_reg *fence;
+  struct i915_fence_reg *fence;
 
-	u64 size;
-	u64 display_alignment;
-	struct i915_page_sizes page_sizes;
+  u64 size;
+  u64 display_alignment;
+  struct i915_page_sizes page_sizes;
 
-	/* mmap-offset associated with fencing for this vma */
-	struct i915_mmap_offset	*mmo;
+  /* mmap-offset associated with fencing for this vma */
+  struct i915_mmap_offset  *mmo;
 
-	u32 fence_size;
-	u32 fence_alignment;
+  u32 fence_size;
+  u32 fence_alignment;
 
-	/**
-	 * Count of the number of times this vma has been opened by different
-	 * handles (but same file) for execbuf, i.e. the number of aliases
-	 * that exist in the ctx->handle_vmas LUT for this vma.
-	 */
-	struct kref ref;
-	atomic_t open_count;
-	atomic_t flags;
-	/**
-	 * How many users have pinned this object in GTT space.
-	 *
-	 * This is a tightly bound, fairly small number of users, so we
-	 * stuff inside the flags field so that we can both check for overflow
-	 * and detect a no-op i915_vma_pin() in a single check, while also
-	 * pinning the vma.
-	 *
-	 * The worst case display setup would have the same vma pinned for
-	 * use on each plane on each crtc, while also building the next atomic
-	 * state and holding a pin for the length of the cleanup queue. In the
-	 * future, the flip queue may be increased from 1.
-	 * Estimated worst case: 3 [qlen] * 4 [max crtcs] * 7 [max planes] = 84
-	 *
-	 * For GEM, the number of concurrent users for pwrite/pread is
-	 * unbounded. For execbuffer, it is currently one but will in future
-	 * be extended to allow multiple clients to pin vma concurrently.
-	 *
-	 * We also use suballocated pages, with each suballocation claiming
-	 * its own pin on the shared vma. At present, this is limited to
-	 * exclusive cachelines of a single page, so a maximum of 64 possible
-	 * users.
-	 */
+  /**
+   * Count of the number of times this vma has been opened by different
+   * handles (but same file) for execbuf, i.e. the number of aliases
+   * that exist in the ctx->handle_vmas LUT for this vma.
+   */
+  struct kref ref;
+  atomic_t open_count;
+  atomic_t flags;
+  /**
+   * How many users have pinned this object in GTT space.
+   *
+   * This is a tightly bound, fairly small number of users, so we
+   * stuff inside the flags field so that we can both check for overflow
+   * and detect a no-op i915_vma_pin() in a single check, while also
+   * pinning the vma.
+   *
+   * The worst case display setup would have the same vma pinned for
+   * use on each plane on each crtc, while also building the next atomic
+   * state and holding a pin for the length of the cleanup queue. In the
+   * future, the flip queue may be increased from 1.
+   * Estimated worst case: 3 [qlen] * 4 [max crtcs] * 7 [max planes] = 84
+   *
+   * For GEM, the number of concurrent users for pwrite/pread is
+   * unbounded. For execbuffer, it is currently one but will in future
+   * be extended to allow multiple clients to pin vma concurrently.
+   *
+   * We also use suballocated pages, with each suballocation claiming
+   * its own pin on the shared vma. At present, this is limited to
+   * exclusive cachelines of a single page, so a maximum of 64 possible
+   * users.
+   */
 #define I915_VMA_PIN_MASK 0x3ff
 #define I915_VMA_OVERFLOW 0x200
 
-	/** Flags and address space this VMA is bound to */
+  /** Flags and address space this VMA is bound to */
 #define I915_VMA_GLOBAL_BIND_BIT 10
 #define I915_VMA_LOCAL_BIND_BIT  11
 
-#define I915_VMA_GLOBAL_BIND	((int)BIT(I915_VMA_GLOBAL_BIND_BIT))
-#define I915_VMA_LOCAL_BIND	((int)BIT(I915_VMA_LOCAL_BIND_BIT))
+#define I915_VMA_GLOBAL_BIND  ((int)BIT(I915_VMA_GLOBAL_BIND_BIT))
+#define I915_VMA_LOCAL_BIND  ((int)BIT(I915_VMA_LOCAL_BIND_BIT))
 
 #define I915_VMA_BIND_MASK (I915_VMA_GLOBAL_BIND | I915_VMA_LOCAL_BIND)
 
-#define I915_VMA_ALLOC_BIT	12
+#define I915_VMA_ALLOC_BIT  12
 
-#define I915_VMA_ERROR_BIT	13
-#define I915_VMA_ERROR		((int)BIT(I915_VMA_ERROR_BIT))
+#define I915_VMA_ERROR_BIT  13
+#define I915_VMA_ERROR    ((int)BIT(I915_VMA_ERROR_BIT))
 
-#define I915_VMA_GGTT_BIT	14
-#define I915_VMA_CAN_FENCE_BIT	15
-#define I915_VMA_USERFAULT_BIT	16
-#define I915_VMA_GGTT_WRITE_BIT	17
+#define I915_VMA_GGTT_BIT  14
+#define I915_VMA_CAN_FENCE_BIT  15
+#define I915_VMA_USERFAULT_BIT  16
+#define I915_VMA_GGTT_WRITE_BIT  17
 
-#define I915_VMA_GGTT		((int)BIT(I915_VMA_GGTT_BIT))
-#define I915_VMA_CAN_FENCE	((int)BIT(I915_VMA_CAN_FENCE_BIT))
-#define I915_VMA_USERFAULT	((int)BIT(I915_VMA_USERFAULT_BIT))
-#define I915_VMA_GGTT_WRITE	((int)BIT(I915_VMA_GGTT_WRITE_BIT))
+#define I915_VMA_GGTT    ((int)BIT(I915_VMA_GGTT_BIT))
+#define I915_VMA_CAN_FENCE  ((int)BIT(I915_VMA_CAN_FENCE_BIT))
+#define I915_VMA_USERFAULT  ((int)BIT(I915_VMA_USERFAULT_BIT))
+#define I915_VMA_GGTT_WRITE  ((int)BIT(I915_VMA_GGTT_WRITE_BIT))
 
-#define I915_VMA_SCANOUT_BIT	18
-#define I915_VMA_SCANOUT	((int)BIT(I915_VMA_SCANOUT_BIT))
+#define I915_VMA_SCANOUT_BIT  18
+#define I915_VMA_SCANOUT  ((int)BIT(I915_VMA_SCANOUT_BIT))
 
-	struct i915_active active;
+  struct i915_active active;
 
 #define I915_VMA_PAGES_BIAS 24
 #define I915_VMA_PAGES_ACTIVE (BIT(24) | 1)
-	atomic_t pages_count; /* number of active binds to the pages */
-	struct mutex pages_mutex; /* protect acquire/release of backing pages */
+  atomic_t pages_count; /* number of active binds to the pages */
+  struct mutex pages_mutex; /* protect acquire/release of backing pages */
 
-	/**
-	 * Support different GGTT views into the same object.
-	 * This means there can be multiple VMA mappings per object and per VM.
-	 * i915_ggtt_view_type is used to distinguish between those entries.
-	 * The default one of zero (I915_GGTT_VIEW_NORMAL) is default and also
-	 * assumed in GEM functions which take no ggtt view parameter.
-	 */
-	struct i915_ggtt_view ggtt_view;
+  /**
+   * Support different GGTT views into the same object.
+   * This means there can be multiple VMA mappings per object and per VM.
+   * i915_ggtt_view_type is used to distinguish between those entries.
+   * The default one of zero (I915_GGTT_VIEW_NORMAL) is default and also
+   * assumed in GEM functions which take no ggtt view parameter.
+   */
+  struct i915_ggtt_view ggtt_view;
 
-	/** This object's place on the active/inactive lists */
-	struct list_head vm_link;
+  /** This object's place on the active/inactive lists */
+  struct list_head vm_link;
 
-	struct list_head obj_link; /* Link in the object's VMA list */
-	struct rb_node obj_node;
-	struct hlist_node obj_hash;
+  struct list_head obj_link; /* Link in the object's VMA list */
+  struct rb_node obj_node;
+  struct hlist_node obj_hash;
 
-	/** This vma's place in the eviction list */
-	struct list_head evict_link;
+  /** This vma's place in the eviction list */
+  struct list_head evict_link;
 
-	struct list_head closed_link;
+  struct list_head closed_link;
 };
 
 #endif

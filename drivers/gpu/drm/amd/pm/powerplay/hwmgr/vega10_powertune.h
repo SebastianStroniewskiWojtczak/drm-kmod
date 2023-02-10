@@ -24,17 +24,17 @@
 #define _VEGA10_POWERTUNE_H_
 
 enum vega10_pt_config_reg_type {
-	VEGA10_CONFIGREG_MMR = 0,
-	VEGA10_CONFIGREG_SMC_IND,
-	VEGA10_CONFIGREG_DIDT_IND,
-	VEGA10_CONFIGREG_CACHE,
-	VEGA10_CONFIGREG_MAX
+  VEGA10_CONFIGREG_MMR = 0,
+  VEGA10_CONFIGREG_SMC_IND,
+  VEGA10_CONFIGREG_DIDT_IND,
+  VEGA10_CONFIGREG_CACHE,
+  VEGA10_CONFIGREG_MAX
 };
 
 enum vega10_didt_config_reg_type {
-	VEGA10_CONFIGREG_DIDT = 0,
-	VEGA10_CONFIGREG_GCCAC,
-	VEGA10_CONFIGREG_SECAC
+  VEGA10_CONFIGREG_DIDT = 0,
+  VEGA10_CONFIGREG_GCCAC,
+  VEGA10_CONFIGREG_SECAC
 };
 
 /* PowerContainment Features */
@@ -43,18 +43,18 @@ enum vega10_didt_config_reg_type {
 #define POWERCONTAINMENT_FEATURE_PkgPwrLimit     0x00000004
 
 struct vega10_pt_config_reg {
-	uint32_t                           offset;
-	uint32_t                           mask;
-	uint32_t                           shift;
-	uint32_t                           value;
-	enum vega10_pt_config_reg_type       type;
+  uint32_t                           offset;
+  uint32_t                           mask;
+  uint32_t                           shift;
+  uint32_t                           value;
+  enum vega10_pt_config_reg_type       type;
 };
 
 struct vega10_didt_config_reg {
-	uint32_t		offset;
-	uint32_t		mask;
-	uint32_t		shift;
-	uint32_t		value;
+  uint32_t    offset;
+  uint32_t    mask;
+  uint32_t    shift;
+  uint32_t    value;
 };
 
 struct vega10_pt_defaults {

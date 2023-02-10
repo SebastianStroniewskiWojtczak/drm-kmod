@@ -40,7 +40,7 @@ struct ttm_operation_ctx;
 #define TTM_PAGE_FLAG_SWAPPED         (1 << 4)
 #define TTM_PAGE_FLAG_ZERO_ALLOC      (1 << 6)
 #define TTM_PAGE_FLAG_SG              (1 << 8)
-#define TTM_PAGE_FLAG_NO_RETRY	      (1 << 9)
+#define TTM_PAGE_FLAG_NO_RETRY        (1 << 9)
 
 #define TTM_PAGE_FLAG_PRIV_POPULATED  (1 << 31)
 
@@ -61,19 +61,19 @@ struct ttm_operation_ctx;
  * memory.
  */
 struct ttm_tt {
-	struct page **pages;
+  struct page **pages;
 #ifdef __FreeBSD__
-	/* On Linux, `struct page` has a private field. It is used by
-	 * `ttm_pool` to store private data. FreeBSD's `struct vm_page` does
-	 * not have that, so we use an extra field in `struct ttm_tt` */
-	unsigned int *orders;
+  /* On Linux, `struct page` has a private field. It is used by
+   * `ttm_pool` to store private data. FreeBSD's `struct vm_page` does
+   * not have that, so we use an extra field in `struct ttm_tt` */
+  unsigned int *orders;
 #endif
-	uint32_t page_flags;
-	uint32_t num_pages;
-	struct sg_table *sg;
-	dma_addr_t *dma_address;
-	struct file *swap_storage;
-	enum ttm_caching caching;
+  uint32_t page_flags;
+  uint32_t num_pages;
+  struct sg_table *sg;
+  dma_addr_t *dma_address;
+  struct file *swap_storage;
+  enum ttm_caching caching;
 };
 
 /**
@@ -83,14 +83,14 @@ struct ttm_tt {
  * @prot: Cached page protection for mapping.
  */
 struct ttm_kmap_iter_tt {
-	struct ttm_kmap_iter base;
-	struct ttm_tt *tt;
-	pgprot_t prot;
+  struct ttm_kmap_iter base;
+  struct ttm_tt *tt;
+  pgprot_t prot;
 };
 
 static inline bool ttm_tt_is_populated(struct ttm_tt *tt)
 {
-	return tt->page_flags & TTM_PAGE_FLAG_PRIV_POPULATED;
+  return tt->page_flags & TTM_PAGE_FLAG_PRIV_POPULATED;
 }
 
 /**
@@ -118,9 +118,9 @@ int ttm_tt_create(struct ttm_buffer_object *bo, bool zero_alloc);
  * NULL: Out of memory.
  */
 int ttm_tt_init(struct ttm_tt *ttm, struct ttm_buffer_object *bo,
-		uint32_t page_flags, enum ttm_caching caching);
+    uint32_t page_flags, enum ttm_caching caching);
 int ttm_sg_tt_init(struct ttm_tt *ttm_dma, struct ttm_buffer_object *bo,
-		   uint32_t page_flags, enum ttm_caching caching);
+       uint32_t page_flags, enum ttm_caching caching);
 
 /**
  * ttm_tt_fini
@@ -156,7 +156,7 @@ void ttm_tt_destroy_common(struct ttm_device *bdev, struct ttm_tt *ttm);
  */
 int ttm_tt_swapin(struct ttm_tt *ttm);
 int ttm_tt_swapout(struct ttm_device *bdev, struct ttm_tt *ttm,
-		   gfp_t gfp_flags);
+       gfp_t gfp_flags);
 
 /**
  * ttm_tt_populate - allocate pages for a ttm
@@ -186,13 +186,13 @@ void ttm_tt_unpopulate(struct ttm_device *bdev, struct ttm_tt *ttm);
  */
 static inline void ttm_tt_mark_for_clear(struct ttm_tt *ttm)
 {
-	ttm->page_flags |= TTM_PAGE_FLAG_ZERO_ALLOC;
+  ttm->page_flags |= TTM_PAGE_FLAG_ZERO_ALLOC;
 }
 
 void ttm_tt_mgr_init(unsigned long num_pages, unsigned long num_dma32_pages);
 
 struct ttm_kmap_iter *ttm_kmap_iter_tt_init(struct ttm_kmap_iter_tt *iter_tt,
-					    struct ttm_tt *tt);
+              struct ttm_tt *tt);
 
 #if IS_ENABLED(CONFIG_AGP)
 #include <linux/agp_backend.h>
@@ -211,11 +211,11 @@ struct ttm_kmap_iter *ttm_kmap_iter_tt_init(struct ttm_kmap_iter_tt *iter_tt,
  */
 struct ttm_tt *ttm_agp_tt_create(struct ttm_buffer_object *bo,
 #ifdef __linux__
-				 struct agp_bridge_data *bridge,
+         struct agp_bridge_data *bridge,
 #else
-				 device_t bridge,
+         device_t bridge,
 #endif
-				 uint32_t page_flags);
+         uint32_t page_flags);
 int ttm_agp_bind(struct ttm_tt *ttm, struct ttm_resource *bo_mem);
 void ttm_agp_unbind(struct ttm_tt *ttm);
 void ttm_agp_destroy(struct ttm_tt *ttm);

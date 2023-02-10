@@ -39,11 +39,11 @@
  *  Function: dc_stat_get_dmub_notification
  *
  *  @brief
- *		Calls dmub layer to retrieve dmub notification
+ *    Calls dmub layer to retrieve dmub notification
  *
  *  @param
- *		[in] dc: dc structure
- *		[in] notify: dmub notification structure
+ *    [in] dc: dc structure
+ *    [in] notify: dmub notification structure
  *
  *  @return
  *     None
@@ -51,14 +51,14 @@
  */
 void dc_stat_get_dmub_notification(const struct dc *dc, struct dmub_notification *notify)
 {
-	/**
-	 * This function is called without dal and dc locks, so
-	 * we shall not modify any dc, dc_dmub_srv or dmub variables
-	 * except variables exclusively accessed by this function
-	 */
-	struct dmub_srv *dmub = dc->ctx->dmub_srv->dmub;
-	enum dmub_status status;
+  /**
+   * This function is called without dal and dc locks, so
+   * we shall not modify any dc, dc_dmub_srv or dmub variables
+   * except variables exclusively accessed by this function
+   */
+  struct dmub_srv *dmub = dc->ctx->dmub_srv->dmub;
+  enum dmub_status status;
 
-	status = dmub_srv_stat_get_notification(dmub, notify);
-	ASSERT(status == DMUB_STATUS_OK);
+  status = dmub_srv_stat_get_notification(dmub, notify);
+  ASSERT(status == DMUB_STATUS_OK);
 }

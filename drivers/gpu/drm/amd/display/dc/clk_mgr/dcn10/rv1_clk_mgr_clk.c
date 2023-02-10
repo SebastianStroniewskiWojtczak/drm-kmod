@@ -37,43 +37,43 @@
 #include "dce100/dce_clk_mgr.h"
 
 #define CLK_BASE_INNER(inst) \
-	CLK_BASE__INST ## inst ## _SEG0
+  CLK_BASE__INST ## inst ## _SEG0
 
 
 #define CLK_REG(reg_name, block, inst)\
-	CLK_BASE(mm ## block ## _ ## inst ## _ ## reg_name ## _BASE_IDX) + \
-					mm ## block ## _ ## inst ## _ ## reg_name
+  CLK_BASE(mm ## block ## _ ## inst ## _ ## reg_name ## _BASE_IDX) + \
+          mm ## block ## _ ## inst ## _ ## reg_name
 
 #define REG(reg_name) \
-	CLK_REG(reg_name, CLK0, 0)
+  CLK_REG(reg_name, CLK0, 0)
 
 
 /* Only used by testing framework*/
 void rv1_dump_clk_registers(struct clk_state_registers *regs, struct clk_bypass *bypass, struct clk_mgr *clk_mgr_base)
 {
-	struct clk_mgr_internal *clk_mgr = TO_CLK_MGR_INTERNAL(clk_mgr_base);
+  struct clk_mgr_internal *clk_mgr = TO_CLK_MGR_INTERNAL(clk_mgr_base);
 
-		regs->CLK0_CLK8_CURRENT_CNT = REG_READ(CLK0_CLK8_CURRENT_CNT) / 10; //dcf clk
+    regs->CLK0_CLK8_CURRENT_CNT = REG_READ(CLK0_CLK8_CURRENT_CNT) / 10; //dcf clk
 
-		bypass->dcfclk_bypass = REG_READ(CLK0_CLK8_BYPASS_CNTL) & 0x0007;
-		if (bypass->dcfclk_bypass < 0 || bypass->dcfclk_bypass > 4)
-			bypass->dcfclk_bypass = 0;
+    bypass->dcfclk_bypass = REG_READ(CLK0_CLK8_BYPASS_CNTL) & 0x0007;
+    if (bypass->dcfclk_bypass < 0 || bypass->dcfclk_bypass > 4)
+      bypass->dcfclk_bypass = 0;
 
 
-		regs->CLK0_CLK8_DS_CNTL = REG_READ(CLK0_CLK8_DS_CNTL) / 10;	//dcf deep sleep divider
+    regs->CLK0_CLK8_DS_CNTL = REG_READ(CLK0_CLK8_DS_CNTL) / 10;  //dcf deep sleep divider
 
-		regs->CLK0_CLK8_ALLOW_DS = REG_READ(CLK0_CLK8_ALLOW_DS); //dcf deep sleep allow
+    regs->CLK0_CLK8_ALLOW_DS = REG_READ(CLK0_CLK8_ALLOW_DS); //dcf deep sleep allow
 
-		regs->CLK0_CLK10_CURRENT_CNT = REG_READ(CLK0_CLK10_CURRENT_CNT) / 10; //dpref clk
+    regs->CLK0_CLK10_CURRENT_CNT = REG_READ(CLK0_CLK10_CURRENT_CNT) / 10; //dpref clk
 
-		bypass->dispclk_pypass = REG_READ(CLK0_CLK10_BYPASS_CNTL) & 0x0007;
-		if (bypass->dispclk_pypass < 0 || bypass->dispclk_pypass > 4)
-			bypass->dispclk_pypass = 0;
+    bypass->dispclk_pypass = REG_READ(CLK0_CLK10_BYPASS_CNTL) & 0x0007;
+    if (bypass->dispclk_pypass < 0 || bypass->dispclk_pypass > 4)
+      bypass->dispclk_pypass = 0;
 
-		regs->CLK0_CLK11_CURRENT_CNT = REG_READ(CLK0_CLK11_CURRENT_CNT) / 10; //disp clk
+    regs->CLK0_CLK11_CURRENT_CNT = REG_READ(CLK0_CLK11_CURRENT_CNT) / 10; //disp clk
 
-		bypass->dprefclk_bypass = REG_READ(CLK0_CLK11_BYPASS_CNTL) & 0x0007;
-		if (bypass->dprefclk_bypass < 0 || bypass->dprefclk_bypass > 4)
-			bypass->dprefclk_bypass = 0;
+    bypass->dprefclk_bypass = REG_READ(CLK0_CLK11_BYPASS_CNTL) & 0x0007;
+    if (bypass->dprefclk_bypass < 0 || bypass->dprefclk_bypass > 4)
+      bypass->dprefclk_bypass = 0;
 
 }

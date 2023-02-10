@@ -29,26 +29,26 @@
 struct amdgpu_device;
 
 enum amdgpu_ras_eeprom_err_type{
-	AMDGPU_RAS_EEPROM_ERR_PLACE_HOLDER,
-	AMDGPU_RAS_EEPROM_ERR_RECOVERABLE,
-	AMDGPU_RAS_EEPROM_ERR_NON_RECOVERABLE
+  AMDGPU_RAS_EEPROM_ERR_PLACE_HOLDER,
+  AMDGPU_RAS_EEPROM_ERR_RECOVERABLE,
+  AMDGPU_RAS_EEPROM_ERR_NON_RECOVERABLE
 };
 
 struct amdgpu_ras_eeprom_table_header {
-	uint32_t header;
-	uint32_t version;
-	uint32_t first_rec_offset;
-	uint32_t tbl_size;
-	uint32_t checksum;
+  uint32_t header;
+  uint32_t version;
+  uint32_t first_rec_offset;
+  uint32_t tbl_size;
+  uint32_t checksum;
 }__attribute__((__packed__));
 
 struct amdgpu_ras_eeprom_control {
-	struct amdgpu_ras_eeprom_table_header tbl_hdr;
-	uint32_t next_addr;
-	unsigned int num_recs;
-	struct mutex tbl_mutex;
-	uint32_t tbl_byte_sum;
-	uint16_t i2c_address; // 8-bit represented address
+  struct amdgpu_ras_eeprom_table_header tbl_hdr;
+  uint32_t next_addr;
+  unsigned int num_recs;
+  struct mutex tbl_mutex;
+  uint32_t tbl_byte_sum;
+  uint16_t i2c_address; // 8-bit represented address
 };
 
 /*
@@ -57,35 +57,35 @@ struct amdgpu_ras_eeprom_control {
  */
 struct eeprom_table_record {
 
-	union {
-		uint64_t address;
-		uint64_t offset;
-	};
+  union {
+    uint64_t address;
+    uint64_t offset;
+  };
 
-	uint64_t retired_page;
-	uint64_t ts;
+  uint64_t retired_page;
+  uint64_t ts;
 
-	enum amdgpu_ras_eeprom_err_type err_type;
+  enum amdgpu_ras_eeprom_err_type err_type;
 
-	union {
-		unsigned char bank;
-		unsigned char cu;
-	};
+  union {
+    unsigned char bank;
+    unsigned char cu;
+  };
 
-	unsigned char mem_channel;
-	unsigned char mcumc_id;
+  unsigned char mem_channel;
+  unsigned char mcumc_id;
 }__attribute__((__packed__));
 
 int amdgpu_ras_eeprom_init(struct amdgpu_ras_eeprom_control *control,
-			bool *exceed_err_limit);
+      bool *exceed_err_limit);
 int amdgpu_ras_eeprom_reset_table(struct amdgpu_ras_eeprom_control *control);
 
 bool amdgpu_ras_eeprom_check_err_threshold(struct amdgpu_device *adev);
 
 int amdgpu_ras_eeprom_process_recods(struct amdgpu_ras_eeprom_control *control,
-					    struct eeprom_table_record *records,
-					    bool write,
-					    int num);
+              struct eeprom_table_record *records,
+              bool write,
+              int num);
 
 #ifdef __linux__
 inline uint32_t amdgpu_ras_eeprom_get_record_max_length(void);

@@ -29,35 +29,35 @@ struct intel_wakeref;
 typedef depot_stack_handle_t intel_wakeref_t;
 
 struct intel_wakeref_ops {
-	int (*get)(struct intel_wakeref *wf);
-	int (*put)(struct intel_wakeref *wf);
+  int (*get)(struct intel_wakeref *wf);
+  int (*put)(struct intel_wakeref *wf);
 };
 
 struct intel_wakeref {
-	atomic_t count;
-	struct mutex mutex;
+  atomic_t count;
+  struct mutex mutex;
 
-	intel_wakeref_t wakeref;
+  intel_wakeref_t wakeref;
 
-	struct intel_runtime_pm *rpm;
-	const struct intel_wakeref_ops *ops;
+  struct intel_runtime_pm *rpm;
+  const struct intel_wakeref_ops *ops;
 
-	struct delayed_work work;
+  struct delayed_work work;
 };
 
 struct intel_wakeref_lockclass {
-	struct lock_class_key mutex;
-	struct lock_class_key work;
+  struct lock_class_key mutex;
+  struct lock_class_key work;
 };
 
 void __intel_wakeref_init(struct intel_wakeref *wf,
-			  struct intel_runtime_pm *rpm,
-			  const struct intel_wakeref_ops *ops,
-			  struct intel_wakeref_lockclass *key);
-#define intel_wakeref_init(wf, rpm, ops) do {				\
-	static struct intel_wakeref_lockclass __key;			\
-									\
-	__intel_wakeref_init((wf), (rpm), (ops), &__key);		\
+        struct intel_runtime_pm *rpm,
+        const struct intel_wakeref_ops *ops,
+        struct intel_wakeref_lockclass *key);
+#define intel_wakeref_init(wf, rpm, ops) do {        \
+  static struct intel_wakeref_lockclass __key;      \
+                  \
+  __intel_wakeref_init((wf), (rpm), (ops), &__key);    \
 } while (0)
 
 int __intel_wakeref_get_first(struct intel_wakeref *wf);
@@ -80,11 +80,11 @@ void __intel_wakeref_put_last(struct intel_wakeref *wf, unsigned long flags);
 static inline int
 intel_wakeref_get(struct intel_wakeref *wf)
 {
-	might_sleep();
-	if (unlikely(!atomic_inc_not_zero(&wf->count)))
-		return __intel_wakeref_get_first(wf);
+  might_sleep();
+  if (unlikely(!atomic_inc_not_zero(&wf->count)))
+    return __intel_wakeref_get_first(wf);
 
-	return 0;
+  return 0;
 }
 
 /**
@@ -99,8 +99,8 @@ intel_wakeref_get(struct intel_wakeref *wf)
 static inline void
 __intel_wakeref_get(struct intel_wakeref *wf)
 {
-	INTEL_WAKEREF_BUG_ON(atomic_read(&wf->count) <= 0);
-	atomic_inc(&wf->count);
+  INTEL_WAKEREF_BUG_ON(atomic_read(&wf->count) <= 0);
+  atomic_inc(&wf->count);
 }
 
 /**
@@ -115,12 +115,12 @@ __intel_wakeref_get(struct intel_wakeref *wf)
 static inline bool
 intel_wakeref_get_if_active(struct intel_wakeref *wf)
 {
-	return atomic_inc_not_zero(&wf->count);
+  return atomic_inc_not_zero(&wf->count);
 }
 
 enum {
-	INTEL_WAKEREF_PUT_ASYNC_BIT = 0,
-	__INTEL_WAKEREF_PUT_LAST_BIT__
+  INTEL_WAKEREF_PUT_ASYNC_BIT = 0,
+  __INTEL_WAKEREF_PUT_LAST_BIT__
 };
 
 /**
@@ -142,32 +142,32 @@ static inline void
 __intel_wakeref_put(struct intel_wakeref *wf, unsigned long flags)
 #define INTEL_WAKEREF_PUT_ASYNC BIT(INTEL_WAKEREF_PUT_ASYNC_BIT)
 #define INTEL_WAKEREF_PUT_DELAY \
-	GENMASK(BITS_PER_LONG - 1, __INTEL_WAKEREF_PUT_LAST_BIT__)
+  GENMASK(BITS_PER_LONG - 1, __INTEL_WAKEREF_PUT_LAST_BIT__)
 {
-	INTEL_WAKEREF_BUG_ON(atomic_read(&wf->count) <= 0);
-	if (unlikely(!atomic_add_unless(&wf->count, -1, 1)))
-		__intel_wakeref_put_last(wf, flags);
+  INTEL_WAKEREF_BUG_ON(atomic_read(&wf->count) <= 0);
+  if (unlikely(!atomic_add_unless(&wf->count, -1, 1)))
+    __intel_wakeref_put_last(wf, flags);
 }
 
 static inline void
 intel_wakeref_put(struct intel_wakeref *wf)
 {
-	might_sleep();
-	__intel_wakeref_put(wf, 0);
+  might_sleep();
+  __intel_wakeref_put(wf, 0);
 }
 
 static inline void
 intel_wakeref_put_async(struct intel_wakeref *wf)
 {
-	__intel_wakeref_put(wf, INTEL_WAKEREF_PUT_ASYNC);
+  __intel_wakeref_put(wf, INTEL_WAKEREF_PUT_ASYNC);
 }
 
 static inline void
 intel_wakeref_put_delay(struct intel_wakeref *wf, unsigned long delay)
 {
-	__intel_wakeref_put(wf,
-			    INTEL_WAKEREF_PUT_ASYNC |
-			    FIELD_PREP(INTEL_WAKEREF_PUT_DELAY, delay));
+  __intel_wakeref_put(wf,
+          INTEL_WAKEREF_PUT_ASYNC |
+          FIELD_PREP(INTEL_WAKEREF_PUT_DELAY, delay));
 }
 
 /**
@@ -180,9 +180,9 @@ intel_wakeref_put_delay(struct intel_wakeref *wf, unsigned long delay)
  */
 static inline void
 intel_wakeref_lock(struct intel_wakeref *wf)
-	__acquires(wf->mutex)
+  __acquires(wf->mutex)
 {
-	mutex_lock(&wf->mutex);
+  mutex_lock(&wf->mutex);
 }
 
 /**
@@ -193,9 +193,9 @@ intel_wakeref_lock(struct intel_wakeref *wf)
  */
 static inline void
 intel_wakeref_unlock(struct intel_wakeref *wf)
-	__releases(wf->mutex)
+  __releases(wf->mutex)
 {
-	mutex_unlock(&wf->mutex);
+  mutex_unlock(&wf->mutex);
 }
 
 /**
@@ -208,9 +208,9 @@ intel_wakeref_unlock(struct intel_wakeref *wf)
 static inline void
 intel_wakeref_unlock_wait(struct intel_wakeref *wf)
 {
-	mutex_lock(&wf->mutex);
-	mutex_unlock(&wf->mutex);
-	flush_delayed_work(&wf->work);
+  mutex_lock(&wf->mutex);
+  mutex_unlock(&wf->mutex);
+  flush_delayed_work(&wf->work);
 }
 
 /**
@@ -222,7 +222,7 @@ intel_wakeref_unlock_wait(struct intel_wakeref *wf)
 static inline bool
 intel_wakeref_is_active(const struct intel_wakeref *wf)
 {
-	return READ_ONCE(wf->wakeref);
+  return READ_ONCE(wf->wakeref);
 }
 
 /**
@@ -232,9 +232,9 @@ intel_wakeref_is_active(const struct intel_wakeref *wf)
 static inline void
 __intel_wakeref_defer_park(struct intel_wakeref *wf)
 {
-	lockdep_assert_held(&wf->mutex);
-	INTEL_WAKEREF_BUG_ON(atomic_read(&wf->count));
-	atomic_set_release(&wf->count, 1);
+  lockdep_assert_held(&wf->mutex);
+  INTEL_WAKEREF_BUG_ON(atomic_read(&wf->count));
+  atomic_set_release(&wf->count, 1);
 }
 
 /**
@@ -251,11 +251,11 @@ __intel_wakeref_defer_park(struct intel_wakeref *wf)
 int intel_wakeref_wait_for_idle(struct intel_wakeref *wf);
 
 struct intel_wakeref_auto {
-	struct intel_runtime_pm *rpm;
-	struct timer_list timer;
-	intel_wakeref_t wakeref;
-	spinlock_t lock;
-	refcount_t count;
+  struct intel_runtime_pm *rpm;
+  struct timer_list timer;
+  intel_wakeref_t wakeref;
+  spinlock_t lock;
+  refcount_t count;
 };
 
 /**
@@ -276,7 +276,7 @@ struct intel_wakeref_auto {
 void intel_wakeref_auto(struct intel_wakeref_auto *wf, unsigned long timeout);
 
 void intel_wakeref_auto_init(struct intel_wakeref_auto *wf,
-			     struct intel_runtime_pm *rpm);
+           struct intel_runtime_pm *rpm);
 void intel_wakeref_auto_fini(struct intel_wakeref_auto *wf);
 
 #endif /* INTEL_WAKEREF_H */

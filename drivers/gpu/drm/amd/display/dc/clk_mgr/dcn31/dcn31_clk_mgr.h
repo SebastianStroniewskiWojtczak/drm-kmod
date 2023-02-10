@@ -30,19 +30,19 @@
 struct dcn31_watermarks;
 
 struct dcn31_smu_watermark_set {
-	struct dcn31_watermarks *wm_set;
-	union large_integer mc_address;
+  struct dcn31_watermarks *wm_set;
+  union large_integer mc_address;
 };
 
 struct clk_mgr_dcn31 {
-	struct clk_mgr_internal base;
-	struct dcn31_smu_watermark_set smu_wm_set;
+  struct clk_mgr_internal base;
+  struct dcn31_smu_watermark_set smu_wm_set;
 };
 
 void dcn31_clk_mgr_construct(struct dc_context *ctx,
-		struct clk_mgr_dcn31 *clk_mgr,
-		struct pp_smu_funcs *pp_smu,
-		struct dccg *dccg);
+    struct clk_mgr_dcn31 *clk_mgr,
+    struct pp_smu_funcs *pp_smu,
+    struct dccg *dccg);
 
 void dcn31_clk_mgr_destroy(struct clk_mgr_internal *clk_mgr_int);
 

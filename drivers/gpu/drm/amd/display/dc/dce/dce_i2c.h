@@ -31,8 +31,8 @@
 #include "dce_i2c_sw.h"
 
 bool dce_i2c_submit_command(
-	struct resource_pool *pool,
-	struct ddc *ddc,
-	struct i2c_command *cmd);
+  struct resource_pool *pool,
+  struct ddc *ddc,
+  struct i2c_command *cmd);
 
 #endif

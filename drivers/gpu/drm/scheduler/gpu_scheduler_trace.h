@@ -28,22 +28,22 @@
 
 static inline void
 trace_drm_sched_job(void *sched_job, void *entity) {
-	CTR2(KTR_DRM, "drm_sched_job %p, entity %p", sched_job, entity);
+  CTR2(KTR_DRM, "drm_sched_job %p, entity %p", sched_job, entity);
 }
 
 static inline void
 trace_drm_run_job(void *sched_job, void *entity) {
-	CTR2(KTR_DRM, "drm_sched_job %p, entity %p", sched_job, entity);
+  CTR2(KTR_DRM, "drm_sched_job %p, entity %p", sched_job, entity);
 }
 
 static inline void
 trace_drm_sched_job_wait_dep(struct drm_sched_job *job, struct dma_fence *fence) {
-	CTR2(KTR_DRM, "drm_process_wait_job %p fence %p", job, fence);
+  CTR2(KTR_DRM, "drm_process_wait_job %p fence %p", job, fence);
 }
 
 static inline void
 trace_drm_sched_process_job(void *s_fence) {
-	CTR1(KTR_DRM, "drm_process_sched_job %p", s_fence);
+  CTR1(KTR_DRM, "drm_process_sched_job %p", s_fence);
 }
 
 #else
@@ -57,94 +57,94 @@ trace_drm_sched_process_job(void *s_fence) {
 #define TRACE_INCLUDE_FILE gpu_scheduler_trace
 
 TRACE_EVENT(drm_sched_job,
-	    TP_PROTO(struct drm_sched_job *sched_job, struct drm_sched_entity *entity),
-	    TP_ARGS(sched_job, entity),
-	    TP_STRUCT__entry(
-			     __field(struct drm_sched_entity *, entity)
-			     __field(struct dma_fence *, fence)
-			     __field(const char *, name)
-			     __field(uint64_t, id)
-			     __field(u32, job_count)
-			     __field(int, hw_job_count)
-			     ),
+      TP_PROTO(struct drm_sched_job *sched_job, struct drm_sched_entity *entity),
+      TP_ARGS(sched_job, entity),
+      TP_STRUCT__entry(
+           __field(struct drm_sched_entity *, entity)
+           __field(struct dma_fence *, fence)
+           __field(const char *, name)
+           __field(uint64_t, id)
+           __field(u32, job_count)
+           __field(int, hw_job_count)
+           ),
 
-	    TP_fast_assign(
-			   __entry->entity = entity;
-			   __entry->id = sched_job->id;
-			   __entry->fence = &sched_job->s_fence->finished;
-			   __entry->name = sched_job->sched->name;
-			   __entry->job_count = spsc_queue_count(&entity->job_queue);
-			   __entry->hw_job_count = atomic_read(
-				   &sched_job->sched->hw_rq_count);
-			   ),
-	    TP_printk("entity=%p, id=%llu, fence=%p, ring=%s, job count:%u, hw job count:%d",
-		      __entry->entity, __entry->id,
-		      __entry->fence, __entry->name,
-		      __entry->job_count, __entry->hw_job_count)
+      TP_fast_assign(
+         __entry->entity = entity;
+         __entry->id = sched_job->id;
+         __entry->fence = &sched_job->s_fence->finished;
+         __entry->name = sched_job->sched->name;
+         __entry->job_count = spsc_queue_count(&entity->job_queue);
+         __entry->hw_job_count = atomic_read(
+           &sched_job->sched->hw_rq_count);
+         ),
+      TP_printk("entity=%p, id=%llu, fence=%p, ring=%s, job count:%u, hw job count:%d",
+          __entry->entity, __entry->id,
+          __entry->fence, __entry->name,
+          __entry->job_count, __entry->hw_job_count)
 );
 
 TRACE_EVENT(drm_run_job,
-	    TP_PROTO(struct drm_sched_job *sched_job, struct drm_sched_entity *entity),
-	    TP_ARGS(sched_job, entity),
-	    TP_STRUCT__entry(
-			     __field(struct drm_sched_entity *, entity)
-			     __field(struct dma_fence *, fence)
-			     __field(const char *, name)
-			     __field(uint64_t, id)
-			     __field(u32, job_count)
-			     __field(int, hw_job_count)
-			     ),
+      TP_PROTO(struct drm_sched_job *sched_job, struct drm_sched_entity *entity),
+      TP_ARGS(sched_job, entity),
+      TP_STRUCT__entry(
+           __field(struct drm_sched_entity *, entity)
+           __field(struct dma_fence *, fence)
+           __field(const char *, name)
+           __field(uint64_t, id)
+           __field(u32, job_count)
+           __field(int, hw_job_count)
+           ),
 
-	    TP_fast_assign(
-			   __entry->entity = entity;
-			   __entry->id = sched_job->id;
-			   __entry->fence = &sched_job->s_fence->finished;
-			   __entry->name = sched_job->sched->name;
-			   __entry->job_count = spsc_queue_count(&entity->job_queue);
-			   __entry->hw_job_count = atomic_read(
-				   &sched_job->sched->hw_rq_count);
-			   ),
-	    TP_printk("entity=%p, id=%llu, fence=%p, ring=%s, job count:%u, hw job count:%d",
-		      __entry->entity, __entry->id,
-		      __entry->fence, __entry->name,
-		      __entry->job_count, __entry->hw_job_count)
+      TP_fast_assign(
+         __entry->entity = entity;
+         __entry->id = sched_job->id;
+         __entry->fence = &sched_job->s_fence->finished;
+         __entry->name = sched_job->sched->name;
+         __entry->job_count = spsc_queue_count(&entity->job_queue);
+         __entry->hw_job_count = atomic_read(
+           &sched_job->sched->hw_rq_count);
+         ),
+      TP_printk("entity=%p, id=%llu, fence=%p, ring=%s, job count:%u, hw job count:%d",
+          __entry->entity, __entry->id,
+          __entry->fence, __entry->name,
+          __entry->job_count, __entry->hw_job_count)
 );
 
 TRACE_EVENT(drm_sched_process_job,
-	    TP_PROTO(struct drm_sched_fence *fence),
-	    TP_ARGS(fence),
-	    TP_STRUCT__entry(
-		    __field(struct dma_fence *, fence)
-		    ),
+      TP_PROTO(struct drm_sched_fence *fence),
+      TP_ARGS(fence),
+      TP_STRUCT__entry(
+        __field(struct dma_fence *, fence)
+        ),
 
-	    TP_fast_assign(
-		    __entry->fence = &fence->finished;
-		    ),
-	    TP_printk("fence=%p signaled", __entry->fence)
+      TP_fast_assign(
+        __entry->fence = &fence->finished;
+        ),
+      TP_printk("fence=%p signaled", __entry->fence)
 );
 
 TRACE_EVENT(drm_sched_job_wait_dep,
-	    TP_PROTO(struct drm_sched_job *sched_job, struct dma_fence *fence),
-	    TP_ARGS(sched_job, fence),
-	    TP_STRUCT__entry(
-			     __field(const char *,name)
-			     __field(uint64_t, id)
-			     __field(struct dma_fence *, fence)
-			     __field(uint64_t, ctx)
-			     __field(unsigned, seqno)
-			     ),
+      TP_PROTO(struct drm_sched_job *sched_job, struct dma_fence *fence),
+      TP_ARGS(sched_job, fence),
+      TP_STRUCT__entry(
+           __field(const char *,name)
+           __field(uint64_t, id)
+           __field(struct dma_fence *, fence)
+           __field(uint64_t, ctx)
+           __field(unsigned, seqno)
+           ),
 
-	    TP_fast_assign(
-			   __entry->name = sched_job->sched->name;
-			   __entry->id = sched_job->id;
-			   __entry->fence = fence;
-			   __entry->ctx = fence->context;
-			   __entry->seqno = fence->seqno;
-			   ),
-	    TP_printk("job ring=%s, id=%llu, depends fence=%p, context=%llu, seq=%u",
-		      __entry->name, __entry->id,
-		      __entry->fence, __entry->ctx,
-		      __entry->seqno)
+      TP_fast_assign(
+         __entry->name = sched_job->sched->name;
+         __entry->id = sched_job->id;
+         __entry->fence = fence;
+         __entry->ctx = fence->context;
+         __entry->seqno = fence->seqno;
+         ),
+      TP_printk("job ring=%s, id=%llu, depends fence=%p, context=%llu, seq=%u",
+          __entry->name, __entry->id,
+          __entry->fence, __entry->ctx,
+          __entry->seqno)
 );
 
 #endif /* __FreeBSD__ */

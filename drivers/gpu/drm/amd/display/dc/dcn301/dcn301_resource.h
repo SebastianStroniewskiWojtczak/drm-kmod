@@ -33,10 +33,10 @@ struct resource_pool;
 struct _vcs_dpi_display_pipe_params_st;
 
 struct dcn301_resource_pool {
-	struct resource_pool base;
+  struct resource_pool base;
 };
 struct resource_pool *dcn301_create_resource_pool(
-		const struct dc_init_data *init_data,
-		struct dc *dc);
+    const struct dc_init_data *init_data,
+    struct dc *dc);
 
 #endif /* _DCN301_RESOURCE_H_ */

@@ -30,26 +30,26 @@ int drm_mode_create_lease_ioctl(struct drm_device *dev,
     void *data, struct drm_file *lessor_priv)
 {
 
-	return (-EINVAL);
+  return (-EINVAL);
 }
 
 int drm_mode_list_lessees_ioctl(struct drm_device *dev,
     void *data, struct drm_file *lessor_priv)
 {
 
-	return (-EINVAL);
+  return (-EINVAL);
 }
 
 int drm_mode_get_lease_ioctl(struct drm_device *dev,
     void *data, struct drm_file *lessee_priv)
 {
 
-	return (-EINVAL);
+  return (-EINVAL);
 }
 
 int drm_mode_revoke_lease_ioctl(struct drm_device *dev,
     void *data, struct drm_file *lessor_priv)
 {
 
-	return (-EINVAL);
+  return (-EINVAL);
 }

@@ -49,18 +49,18 @@ static LIST_HEAD(panel_list);
  * @dev: parent device of the panel
  * @funcs: panel operations
  * @connector_type: the connector type (DRM_MODE_CONNECTOR_*) corresponding to
- *	the panel interface
+ *  the panel interface
  *
  * Initialize the panel structure for subsequent registration with
  * drm_panel_add().
  */
 void drm_panel_init(struct drm_panel *panel, struct device *dev,
-		    const struct drm_panel_funcs *funcs, int connector_type)
+        const struct drm_panel_funcs *funcs, int connector_type)
 {
-	INIT_LIST_HEAD(&panel->list);
-	panel->dev = dev;
-	panel->funcs = funcs;
-	panel->connector_type = connector_type;
+  INIT_LIST_HEAD(&panel->list);
+  panel->dev = dev;
+  panel->funcs = funcs;
+  panel->connector_type = connector_type;
 }
 EXPORT_SYMBOL(drm_panel_init);
 
@@ -73,9 +73,9 @@ EXPORT_SYMBOL(drm_panel_init);
  */
 void drm_panel_add(struct drm_panel *panel)
 {
-	mutex_lock(&panel_lock);
-	list_add_tail(&panel->list, &panel_list);
-	mutex_unlock(&panel_lock);
+  mutex_lock(&panel_lock);
+  list_add_tail(&panel->list, &panel_list);
+  mutex_unlock(&panel_lock);
 }
 EXPORT_SYMBOL(drm_panel_add);
 
@@ -87,9 +87,9 @@ EXPORT_SYMBOL(drm_panel_add);
  */
 void drm_panel_remove(struct drm_panel *panel)
 {
-	mutex_lock(&panel_lock);
-	list_del_init(&panel->list);
-	mutex_unlock(&panel_lock);
+  mutex_lock(&panel_lock);
+  list_del_init(&panel->list);
+  mutex_unlock(&panel_lock);
 }
 EXPORT_SYMBOL(drm_panel_remove);
 
@@ -105,13 +105,13 @@ EXPORT_SYMBOL(drm_panel_remove);
  */
 int drm_panel_prepare(struct drm_panel *panel)
 {
-	if (!panel)
-		return -EINVAL;
+  if (!panel)
+    return -EINVAL;
 
-	if (panel->funcs && panel->funcs->prepare)
-		return panel->funcs->prepare(panel);
+  if (panel->funcs && panel->funcs->prepare)
+    return panel->funcs->prepare(panel);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_panel_prepare);
 
@@ -128,13 +128,13 @@ EXPORT_SYMBOL(drm_panel_prepare);
  */
 int drm_panel_unprepare(struct drm_panel *panel)
 {
-	if (!panel)
-		return -EINVAL;
+  if (!panel)
+    return -EINVAL;
 
-	if (panel->funcs && panel->funcs->unprepare)
-		return panel->funcs->unprepare(panel);
+  if (panel->funcs && panel->funcs->unprepare)
+    return panel->funcs->unprepare(panel);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_panel_unprepare);
 
@@ -150,23 +150,23 @@ EXPORT_SYMBOL(drm_panel_unprepare);
  */
 int drm_panel_enable(struct drm_panel *panel)
 {
-	int ret;
+  int ret;
 
-	if (!panel)
-		return -EINVAL;
+  if (!panel)
+    return -EINVAL;
 
-	if (panel->funcs && panel->funcs->enable) {
-		ret = panel->funcs->enable(panel);
-		if (ret < 0)
-			return ret;
-	}
+  if (panel->funcs && panel->funcs->enable) {
+    ret = panel->funcs->enable(panel);
+    if (ret < 0)
+      return ret;
+  }
 
-	ret = backlight_enable(panel->backlight);
-	if (ret < 0)
-		DRM_DEV_INFO(panel->dev, "failed to enable backlight: %d\n",
-			     ret);
+  ret = backlight_enable(panel->backlight);
+  if (ret < 0)
+    DRM_DEV_INFO(panel->dev, "failed to enable backlight: %d\n",
+           ret);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_panel_enable);
 
@@ -182,20 +182,20 @@ EXPORT_SYMBOL(drm_panel_enable);
  */
 int drm_panel_disable(struct drm_panel *panel)
 {
-	int ret;
+  int ret;
 
-	if (!panel)
-		return -EINVAL;
+  if (!panel)
+    return -EINVAL;
 
-	ret = backlight_disable(panel->backlight);
-	if (ret < 0)
-		DRM_DEV_INFO(panel->dev, "failed to disable backlight: %d\n",
-			     ret);
+  ret = backlight_disable(panel->backlight);
+  if (ret < 0)
+    DRM_DEV_INFO(panel->dev, "failed to disable backlight: %d\n",
+           ret);
 
-	if (panel->funcs && panel->funcs->disable)
-		return panel->funcs->disable(panel);
+  if (panel->funcs && panel->funcs->disable)
+    return panel->funcs->disable(panel);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_panel_disable);
 
@@ -211,15 +211,15 @@ EXPORT_SYMBOL(drm_panel_disable);
  * negative error code on failure.
  */
 int drm_panel_get_modes(struct drm_panel *panel,
-			struct drm_connector *connector)
+      struct drm_connector *connector)
 {
-	if (!panel)
-		return -EINVAL;
+  if (!panel)
+    return -EINVAL;
 
-	if (panel->funcs && panel->funcs->get_modes)
-		return panel->funcs->get_modes(panel, connector);
+  if (panel->funcs && panel->funcs->get_modes)
+    return panel->funcs->get_modes(panel, connector);
 
-	return -EOPNOTSUPP;
+  return -EOPNOTSUPP;
 }
 EXPORT_SYMBOL(drm_panel_get_modes);
 
@@ -242,22 +242,22 @@ EXPORT_SYMBOL(drm_panel_get_modes);
  */
 struct drm_panel *of_drm_find_panel(const struct device_node *np)
 {
-	struct drm_panel *panel;
+  struct drm_panel *panel;
 
-	if (!of_device_is_available(np))
-		return ERR_PTR(-ENODEV);
+  if (!of_device_is_available(np))
+    return ERR_PTR(-ENODEV);
 
-	mutex_lock(&panel_lock);
+  mutex_lock(&panel_lock);
 
-	list_for_each_entry(panel, &panel_list, list) {
-		if (panel->dev->of_node == np) {
-			mutex_unlock(&panel_lock);
-			return panel;
-		}
-	}
+  list_for_each_entry(panel, &panel_list, list) {
+    if (panel->dev->of_node == np) {
+      mutex_unlock(&panel_lock);
+      return panel;
+    }
+  }
 
-	mutex_unlock(&panel_lock);
-	return ERR_PTR(-EPROBE_DEFER);
+  mutex_unlock(&panel_lock);
+  return ERR_PTR(-EPROBE_DEFER);
 }
 EXPORT_SYMBOL(of_drm_find_panel);
 
@@ -275,32 +275,32 @@ EXPORT_SYMBOL(of_drm_find_panel);
  * rotation property doesn't exist. Return a negative error code on failure.
  */
 int of_drm_get_panel_orientation(const struct device_node *np,
-				 enum drm_panel_orientation *orientation)
+         enum drm_panel_orientation *orientation)
 {
-	int rotation, ret;
+  int rotation, ret;
 
-	ret = of_property_read_u32(np, "rotation", &rotation);
-	if (ret == -EINVAL) {
-		/* Don't return an error if there's no rotation property. */
-		*orientation = DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
-		return 0;
-	}
+  ret = of_property_read_u32(np, "rotation", &rotation);
+  if (ret == -EINVAL) {
+    /* Don't return an error if there's no rotation property. */
+    *orientation = DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
+    return 0;
+  }
 
-	if (ret < 0)
-		return ret;
+  if (ret < 0)
+    return ret;
 
-	if (rotation == 0)
-		*orientation = DRM_MODE_PANEL_ORIENTATION_NORMAL;
-	else if (rotation == 90)
-		*orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP;
-	else if (rotation == 180)
-		*orientation = DRM_MODE_PANEL_ORIENTATION_BOTTOM_UP;
-	else if (rotation == 270)
-		*orientation = DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
-	else
-		return -EINVAL;
+  if (rotation == 0)
+    *orientation = DRM_MODE_PANEL_ORIENTATION_NORMAL;
+  else if (rotation == 90)
+    *orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP;
+  else if (rotation == 180)
+    *orientation = DRM_MODE_PANEL_ORIENTATION_BOTTOM_UP;
+  else if (rotation == 270)
+    *orientation = DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
+  else
+    return -EINVAL;
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(of_drm_get_panel_orientation);
 #endif
@@ -329,18 +329,18 @@ EXPORT_SYMBOL(of_drm_get_panel_orientation);
  */
 int drm_panel_of_backlight(struct drm_panel *panel)
 {
-	struct backlight_device *backlight;
+  struct backlight_device *backlight;
 
-	if (!panel || !panel->dev)
-		return -EINVAL;
+  if (!panel || !panel->dev)
+    return -EINVAL;
 
-	backlight = devm_of_find_backlight(panel->dev);
+  backlight = devm_of_find_backlight(panel->dev);
 
-	if (IS_ERR(backlight))
-		return PTR_ERR(backlight);
+  if (IS_ERR(backlight))
+    return PTR_ERR(backlight);
 
-	panel->backlight = backlight;
-	return 0;
+  panel->backlight = backlight;
+  return 0;
 }
 EXPORT_SYMBOL(drm_panel_of_backlight);
 #endif

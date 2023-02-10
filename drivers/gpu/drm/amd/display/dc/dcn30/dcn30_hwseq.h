@@ -32,52 +32,52 @@ struct dc;
 
 void dcn30_init_hw(struct dc *dc);
 void dcn30_program_all_writeback_pipes_in_tree(
-		struct dc *dc,
-		const struct dc_stream_state *stream,
-		struct dc_state *context);
+    struct dc *dc,
+    const struct dc_stream_state *stream,
+    struct dc_state *context);
 void dcn30_update_writeback(
-		struct dc *dc,
-		struct dc_writeback_info *wb_info,
-		struct dc_state *context);
+    struct dc *dc,
+    struct dc_writeback_info *wb_info,
+    struct dc_state *context);
 void dcn30_enable_writeback(
-		struct dc *dc,
-		struct dc_writeback_info *wb_info,
-		struct dc_state *context);
+    struct dc *dc,
+    struct dc_writeback_info *wb_info,
+    struct dc_state *context);
 void dcn30_disable_writeback(
-		struct dc *dc,
-		unsigned int dwb_pipe_inst);
+    struct dc *dc,
+    unsigned int dwb_pipe_inst);
 
 bool dcn30_mmhubbub_warmup(
-	struct dc *dc,
-	unsigned int num_dwb,
-	struct dc_writeback_info *wb_info);
+  struct dc *dc,
+  unsigned int num_dwb,
+  struct dc_writeback_info *wb_info);
 
 bool dcn30_set_blend_lut(struct pipe_ctx *pipe_ctx,
-		const struct dc_plane_state *plane_state);
+    const struct dc_plane_state *plane_state);
 
 bool dcn30_set_input_transfer_func(struct dc *dc,
-				struct pipe_ctx *pipe_ctx,
-				const struct dc_plane_state *plane_state);
+        struct pipe_ctx *pipe_ctx,
+        const struct dc_plane_state *plane_state);
 bool dcn30_set_output_transfer_func(struct dc *dc,
-				struct pipe_ctx *pipe_ctx,
-				const struct dc_stream_state *stream);
+        struct pipe_ctx *pipe_ctx,
+        const struct dc_stream_state *stream);
 void dcn30_set_avmute(struct pipe_ctx *pipe_ctx, bool enable);
 void dcn30_update_info_frame(struct pipe_ctx *pipe_ctx);
 void dcn30_program_dmdata_engine(struct pipe_ctx *pipe_ctx);
 
 bool dcn30_does_plane_fit_in_mall(struct dc *dc, struct dc_plane_state *plane,
-		struct dc_cursor_attributes *cursor_attr);
+    struct dc_cursor_attributes *cursor_attr);
 
 bool dcn30_apply_idle_power_optimizations(struct dc *dc, bool enable);
 
 void dcn30_hardware_release(struct dc *dc);
 
 void dcn30_set_disp_pattern_generator(const struct dc *dc,
-		struct pipe_ctx *pipe_ctx,
-		enum controller_dp_test_pattern test_pattern,
-		enum controller_dp_color_space color_space,
-		enum dc_color_depth color_depth,
-		const struct tg_color *solid_color,
-		int width, int height, int offset);
+    struct pipe_ctx *pipe_ctx,
+    enum controller_dp_test_pattern test_pattern,
+    enum controller_dp_color_space color_space,
+    enum dc_color_depth color_depth,
+    const struct tg_color *solid_color,
+    int width, int height, int offset);
 
 #endif /* __DC_HWSS_DCN30_H__ */

@@ -27,8 +27,8 @@
  * Debugfs
  */
 struct amdgpu_autodump {
-	struct completion		dumping;
-	struct wait_queue_head		gpu_hang;
+  struct completion    dumping;
+  struct wait_queue_head    gpu_hang;
 };
 
 int amdgpu_debugfs_regs_init(struct amdgpu_device *adev);

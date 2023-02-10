@@ -25,74 +25,74 @@
 #include "aldebaran.h"
 
 int amdgpu_reset_add_handler(struct amdgpu_reset_control *reset_ctl,
-			     struct amdgpu_reset_handler *handler)
+           struct amdgpu_reset_handler *handler)
 {
-	/* TODO: Check if handler exists? */
-	list_add_tail(&handler->handler_list, &reset_ctl->reset_handlers);
-	return 0;
+  /* TODO: Check if handler exists? */
+  list_add_tail(&handler->handler_list, &reset_ctl->reset_handlers);
+  return 0;
 }
 
 int amdgpu_reset_init(struct amdgpu_device *adev)
 {
-	int ret = 0;
+  int ret = 0;
 
-	switch (adev->asic_type) {
-	case CHIP_ALDEBARAN:
-		ret = aldebaran_reset_init(adev);
-		break;
-	default:
-		break;
-	}
+  switch (adev->asic_type) {
+  case CHIP_ALDEBARAN:
+    ret = aldebaran_reset_init(adev);
+    break;
+  default:
+    break;
+  }
 
-	return ret;
+  return ret;
 }
 
 int amdgpu_reset_fini(struct amdgpu_device *adev)
 {
-	int ret = 0;
+  int ret = 0;
 
-	switch (adev->asic_type) {
-	case CHIP_ALDEBARAN:
-		ret = aldebaran_reset_fini(adev);
-		break;
-	default:
-		break;
-	}
+  switch (adev->asic_type) {
+  case CHIP_ALDEBARAN:
+    ret = aldebaran_reset_fini(adev);
+    break;
+  default:
+    break;
+  }
 
-	return ret;
+  return ret;
 }
 
 int amdgpu_reset_prepare_hwcontext(struct amdgpu_device *adev,
-				   struct amdgpu_reset_context *reset_context)
+           struct amdgpu_reset_context *reset_context)
 {
-	struct amdgpu_reset_handler *reset_handler = NULL;
+  struct amdgpu_reset_handler *reset_handler = NULL;
 
-	if (adev->reset_cntl && adev->reset_cntl->get_reset_handler)
-		reset_handler = adev->reset_cntl->get_reset_handler(
-			adev->reset_cntl, reset_context);
-	if (!reset_handler)
-		return -ENOSYS;
+  if (adev->reset_cntl && adev->reset_cntl->get_reset_handler)
+    reset_handler = adev->reset_cntl->get_reset_handler(
+      adev->reset_cntl, reset_context);
+  if (!reset_handler)
+    return -ENOSYS;
 
-	return reset_handler->prepare_hwcontext(adev->reset_cntl,
-						reset_context);
+  return reset_handler->prepare_hwcontext(adev->reset_cntl,
+            reset_context);
 }
 
 int amdgpu_reset_perform_reset(struct amdgpu_device *adev,
-			       struct amdgpu_reset_context *reset_context)
+             struct amdgpu_reset_context *reset_context)
 {
-	int ret;
-	struct amdgpu_reset_handler *reset_handler = NULL;
+  int ret;
+  struct amdgpu_reset_handler *reset_handler = NULL;
 
-	if (adev->reset_cntl)
-		reset_handler = adev->reset_cntl->get_reset_handler(
-			adev->reset_cntl, reset_context);
-	if (!reset_handler)
-		return -ENOSYS;
+  if (adev->reset_cntl)
+    reset_handler = adev->reset_cntl->get_reset_handler(
+      adev->reset_cntl, reset_context);
+  if (!reset_handler)
+    return -ENOSYS;
 
-	ret = reset_handler->perform_reset(adev->reset_cntl, reset_context);
-	if (ret)
-		return ret;
+  ret = reset_handler->perform_reset(adev->reset_cntl, reset_context);
+  if (ret)
+    return ret;
 
-	return reset_handler->restore_hwcontext(adev->reset_cntl,
-						reset_context);
+  return reset_handler->restore_hwcontext(adev->reset_cntl,
+            reset_context);
 }

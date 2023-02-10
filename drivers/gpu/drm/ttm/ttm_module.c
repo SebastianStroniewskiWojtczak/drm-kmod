@@ -27,7 +27,7 @@
  **************************************************************************/
 /*
  * Authors: Thomas Hellstrom <thellstrom-at-vmware-dot-com>
- * 	    Jerome Glisse
+ *       Jerome Glisse
  */
 #include <linux/module.h>
 #include <linux/device.h>
@@ -60,27 +60,27 @@ SYSCTL_NODE(_hw, OID_AUTO, ttm,
  */
 pgprot_t ttm_prot_from_caching(enum ttm_caching caching, pgprot_t tmp)
 {
-	/* Cached mappings need no adjustment */
-	if (caching == ttm_cached)
-		return tmp;
+  /* Cached mappings need no adjustment */
+  if (caching == ttm_cached)
+    return tmp;
 
 #if defined(__i386__) || defined(__x86_64__)
-	if (caching == ttm_write_combined)
-		tmp = pgprot_writecombine(tmp);
-	else if (boot_cpu_data.x86 > 3)
-		tmp = pgprot_noncached(tmp);
+  if (caching == ttm_write_combined)
+    tmp = pgprot_writecombine(tmp);
+  else if (boot_cpu_data.x86 > 3)
+    tmp = pgprot_noncached(tmp);
 #endif
 #if defined(__ia64__) || defined(__arm__) || defined(__aarch64__) || \
-	defined(__powerpc__) || defined(__mips__)
-	if (caching == ttm_write_combined)
-		tmp = pgprot_writecombine(tmp);
-	else
-		tmp = pgprot_noncached(tmp);
+  defined(__powerpc__) || defined(__mips__)
+  if (caching == ttm_write_combined)
+    tmp = pgprot_writecombine(tmp);
+  else
+    tmp = pgprot_noncached(tmp);
 #endif
 #if defined(__sparc__)
-	tmp = pgprot_noncached(tmp);
+  tmp = pgprot_noncached(tmp);
 #endif
-	return tmp;
+  return tmp;
 }
 
 #ifdef __linux__

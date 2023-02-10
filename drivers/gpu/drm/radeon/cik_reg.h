@@ -90,19 +90,19 @@
 #       define CIK_GRPH_ARRAY_LINEAR_ALIGNED      1
 #       define CIK_GRPH_ARRAY_1D_TILED_THIN1      2
 #       define CIK_GRPH_ARRAY_2D_TILED_THIN1      4
-#       define CIK_GRPH_PIPE_CONFIG(x)		 (((x) & 0x1f) << 24)
-#       define CIK_ADDR_SURF_P2			 0
-#       define CIK_ADDR_SURF_P4_8x16		 4
-#       define CIK_ADDR_SURF_P4_16x16		 5
-#       define CIK_ADDR_SURF_P4_16x32		 6
-#       define CIK_ADDR_SURF_P4_32x32		 7
-#       define CIK_ADDR_SURF_P8_16x16_8x16	 8
-#       define CIK_ADDR_SURF_P8_16x32_8x16	 9
-#       define CIK_ADDR_SURF_P8_32x32_8x16	 10
-#       define CIK_ADDR_SURF_P8_16x32_16x16	 11
-#       define CIK_ADDR_SURF_P8_32x32_16x16	 12
-#       define CIK_ADDR_SURF_P8_32x32_16x32	 13
-#       define CIK_ADDR_SURF_P8_32x64_32x32	 14
+#       define CIK_GRPH_PIPE_CONFIG(x)     (((x) & 0x1f) << 24)
+#       define CIK_ADDR_SURF_P2       0
+#       define CIK_ADDR_SURF_P4_8x16     4
+#       define CIK_ADDR_SURF_P4_16x16     5
+#       define CIK_ADDR_SURF_P4_16x32     6
+#       define CIK_ADDR_SURF_P4_32x32     7
+#       define CIK_ADDR_SURF_P8_16x16_8x16   8
+#       define CIK_ADDR_SURF_P8_16x32_8x16   9
+#       define CIK_ADDR_SURF_P8_32x32_8x16   10
+#       define CIK_ADDR_SURF_P8_16x32_16x16   11
+#       define CIK_ADDR_SURF_P8_32x32_16x16   12
+#       define CIK_ADDR_SURF_P8_32x32_16x32   13
+#       define CIK_ADDR_SURF_P8_32x64_32x32   14
 #       define CIK_GRPH_MICRO_TILE_MODE(x)       (((x) & 0x7) << 29)
 #       define CIK_DISPLAY_MICRO_TILING          0
 #       define CIK_THIN_MICRO_TILING             1
@@ -147,95 +147,95 @@
 
 #define CIK_LB_DESKTOP_HEIGHT                     0x6b0c
 
-#define SQ_IND_INDEX					0x8DE0
-#define SQ_CMD						0x8DEC
-#define SQ_IND_DATA					0x8DE4
+#define SQ_IND_INDEX          0x8DE0
+#define SQ_CMD            0x8DEC
+#define SQ_IND_DATA          0x8DE4
 
 /*
  * The TCP_WATCHx_xxxx addresses that are shown here are in dwords,
  * and that's why they are multiplied by 4
  */
-#define TCP_WATCH0_ADDR_H				(0x32A0*4)
-#define TCP_WATCH1_ADDR_H				(0x32A3*4)
-#define TCP_WATCH2_ADDR_H				(0x32A6*4)
-#define TCP_WATCH3_ADDR_H				(0x32A9*4)
-#define TCP_WATCH0_ADDR_L				(0x32A1*4)
-#define TCP_WATCH1_ADDR_L				(0x32A4*4)
-#define TCP_WATCH2_ADDR_L				(0x32A7*4)
-#define TCP_WATCH3_ADDR_L				(0x32AA*4)
-#define TCP_WATCH0_CNTL					(0x32A2*4)
-#define TCP_WATCH1_CNTL					(0x32A5*4)
-#define TCP_WATCH2_CNTL					(0x32A8*4)
-#define TCP_WATCH3_CNTL					(0x32AB*4)
+#define TCP_WATCH0_ADDR_H        (0x32A0*4)
+#define TCP_WATCH1_ADDR_H        (0x32A3*4)
+#define TCP_WATCH2_ADDR_H        (0x32A6*4)
+#define TCP_WATCH3_ADDR_H        (0x32A9*4)
+#define TCP_WATCH0_ADDR_L        (0x32A1*4)
+#define TCP_WATCH1_ADDR_L        (0x32A4*4)
+#define TCP_WATCH2_ADDR_L        (0x32A7*4)
+#define TCP_WATCH3_ADDR_L        (0x32AA*4)
+#define TCP_WATCH0_CNTL          (0x32A2*4)
+#define TCP_WATCH1_CNTL          (0x32A5*4)
+#define TCP_WATCH2_CNTL          (0x32A8*4)
+#define TCP_WATCH3_CNTL          (0x32AB*4)
 
-#define CPC_INT_CNTL					0xC2D0
+#define CPC_INT_CNTL          0xC2D0
 
-#define CP_HQD_IQ_RPTR					0xC970u
-#define SDMA0_RLC0_RB_CNTL				0xD400u
-#define	SDMA_RB_VMID(x)					(x << 24)
-#define	SDMA0_RLC0_RB_BASE				0xD404u
-#define	SDMA0_RLC0_RB_BASE_HI				0xD408u
-#define	SDMA0_RLC0_RB_RPTR				0xD40Cu
-#define	SDMA0_RLC0_RB_WPTR				0xD410u
-#define	SDMA0_RLC0_RB_WPTR_POLL_CNTL			0xD414u
-#define	SDMA0_RLC0_RB_WPTR_POLL_ADDR_HI			0xD418u
-#define	SDMA0_RLC0_RB_WPTR_POLL_ADDR_LO			0xD41Cu
-#define	SDMA0_RLC0_RB_RPTR_ADDR_HI			0xD420u
-#define	SDMA0_RLC0_RB_RPTR_ADDR_LO			0xD424u
-#define	SDMA0_RLC0_IB_CNTL				0xD428u
-#define	SDMA0_RLC0_IB_RPTR				0xD42Cu
-#define	SDMA0_RLC0_IB_OFFSET				0xD430u
-#define	SDMA0_RLC0_IB_BASE_LO				0xD434u
-#define	SDMA0_RLC0_IB_BASE_HI				0xD438u
-#define	SDMA0_RLC0_IB_SIZE				0xD43Cu
-#define	SDMA0_RLC0_SKIP_CNTL				0xD440u
-#define	SDMA0_RLC0_CONTEXT_STATUS			0xD444u
-#define	SDMA_RLC_IDLE					(1 << 2)
-#define	SDMA0_RLC0_DOORBELL				0xD448u
-#define	SDMA_OFFSET(x)					(x << 0)
-#define	SDMA_DB_ENABLE					(1 << 28)
-#define	SDMA0_RLC0_VIRTUAL_ADDR				0xD49Cu
-#define	SDMA_ATC					(1 << 0)
-#define	SDMA_VA_PTR32					(1 << 4)
-#define	SDMA_VA_SHARED_BASE(x)				(x << 8)
-#define	SDMA0_RLC0_APE1_CNTL				0xD4A0u
-#define	SDMA0_RLC0_DOORBELL_LOG				0xD4A4u
-#define	SDMA0_RLC0_WATERMARK				0xD4A8u
-#define	SDMA0_CNTL					0xD010
-#define	SDMA1_CNTL					0xD810
+#define CP_HQD_IQ_RPTR          0xC970u
+#define SDMA0_RLC0_RB_CNTL        0xD400u
+#define  SDMA_RB_VMID(x)          (x << 24)
+#define  SDMA0_RLC0_RB_BASE        0xD404u
+#define  SDMA0_RLC0_RB_BASE_HI        0xD408u
+#define  SDMA0_RLC0_RB_RPTR        0xD40Cu
+#define  SDMA0_RLC0_RB_WPTR        0xD410u
+#define  SDMA0_RLC0_RB_WPTR_POLL_CNTL      0xD414u
+#define  SDMA0_RLC0_RB_WPTR_POLL_ADDR_HI      0xD418u
+#define  SDMA0_RLC0_RB_WPTR_POLL_ADDR_LO      0xD41Cu
+#define  SDMA0_RLC0_RB_RPTR_ADDR_HI      0xD420u
+#define  SDMA0_RLC0_RB_RPTR_ADDR_LO      0xD424u
+#define  SDMA0_RLC0_IB_CNTL        0xD428u
+#define  SDMA0_RLC0_IB_RPTR        0xD42Cu
+#define  SDMA0_RLC0_IB_OFFSET        0xD430u
+#define  SDMA0_RLC0_IB_BASE_LO        0xD434u
+#define  SDMA0_RLC0_IB_BASE_HI        0xD438u
+#define  SDMA0_RLC0_IB_SIZE        0xD43Cu
+#define  SDMA0_RLC0_SKIP_CNTL        0xD440u
+#define  SDMA0_RLC0_CONTEXT_STATUS      0xD444u
+#define  SDMA_RLC_IDLE          (1 << 2)
+#define  SDMA0_RLC0_DOORBELL        0xD448u
+#define  SDMA_OFFSET(x)          (x << 0)
+#define  SDMA_DB_ENABLE          (1 << 28)
+#define  SDMA0_RLC0_VIRTUAL_ADDR        0xD49Cu
+#define  SDMA_ATC          (1 << 0)
+#define  SDMA_VA_PTR32          (1 << 4)
+#define  SDMA_VA_SHARED_BASE(x)        (x << 8)
+#define  SDMA0_RLC0_APE1_CNTL        0xD4A0u
+#define  SDMA0_RLC0_DOORBELL_LOG        0xD4A4u
+#define  SDMA0_RLC0_WATERMARK        0xD4A8u
+#define  SDMA0_CNTL          0xD010
+#define  SDMA1_CNTL          0xD810
 
 enum {
-	MAX_TRAPID = 8,		/* 3 bits in the bitfield.  */
-	MAX_WATCH_ADDRESSES = 4
+  MAX_TRAPID = 8,    /* 3 bits in the bitfield.  */
+  MAX_WATCH_ADDRESSES = 4
 };
 
 enum {
-	ADDRESS_WATCH_REG_ADDR_HI = 0,
-	ADDRESS_WATCH_REG_ADDR_LO,
-	ADDRESS_WATCH_REG_CNTL,
-	ADDRESS_WATCH_REG_MAX
+  ADDRESS_WATCH_REG_ADDR_HI = 0,
+  ADDRESS_WATCH_REG_ADDR_LO,
+  ADDRESS_WATCH_REG_CNTL,
+  ADDRESS_WATCH_REG_MAX
 };
 
-enum {				/*  not defined in the CI/KV reg file  */
-	ADDRESS_WATCH_REG_CNTL_ATC_BIT = 0x10000000UL,
-	ADDRESS_WATCH_REG_CNTL_DEFAULT_MASK = 0x00FFFFFF,
-	ADDRESS_WATCH_REG_ADDLOW_MASK_EXTENSION = 0x03000000,
-	/* extend the mask to 26 bits in order to match the low address field */
-	ADDRESS_WATCH_REG_ADDLOW_SHIFT = 6,
-	ADDRESS_WATCH_REG_ADDHIGH_MASK = 0xFFFF
+enum {        /*  not defined in the CI/KV reg file  */
+  ADDRESS_WATCH_REG_CNTL_ATC_BIT = 0x10000000UL,
+  ADDRESS_WATCH_REG_CNTL_DEFAULT_MASK = 0x00FFFFFF,
+  ADDRESS_WATCH_REG_ADDLOW_MASK_EXTENSION = 0x03000000,
+  /* extend the mask to 26 bits in order to match the low address field */
+  ADDRESS_WATCH_REG_ADDLOW_SHIFT = 6,
+  ADDRESS_WATCH_REG_ADDHIGH_MASK = 0xFFFF
 };
 
 union TCP_WATCH_CNTL_BITS {
-	struct {
-		uint32_t mask:24;
-		uint32_t vmid:4;
-		uint32_t atc:1;
-		uint32_t mode:2;
-		uint32_t valid:1;
-	} bitfields, bits;
-	uint32_t u32All;
-	signed int i32All;
-	float f32All;
+  struct {
+    uint32_t mask:24;
+    uint32_t vmid:4;
+    uint32_t atc:1;
+    uint32_t mode:2;
+    uint32_t valid:1;
+  } bitfields, bits;
+  uint32_t u32All;
+  signed int i32All;
+  float f32All;
 };
 
 #endif

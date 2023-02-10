@@ -14,6 +14,6 @@ enum port;
 struct drm_i915_private;
 
 void g4x_hdmi_init(struct drm_i915_private *dev_priv,
-		   i915_reg_t hdmi_reg, enum port port);
+       i915_reg_t hdmi_reg, enum port port);
 
 #endif

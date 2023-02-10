@@ -29,23 +29,23 @@
 #include "core_types.h"
 
 #define TO_DCN10_RES_POOL(pool)\
-	container_of(pool, struct dcn10_resource_pool, base)
+  container_of(pool, struct dcn10_resource_pool, base)
 
 struct dc;
 struct resource_pool;
 struct _vcs_dpi_display_pipe_params_st;
 
 struct dcn10_resource_pool {
-	struct resource_pool base;
+  struct resource_pool base;
 };
 struct resource_pool *dcn10_create_resource_pool(
-		const struct dc_init_data *init_data,
-		struct dc *dc);
+    const struct dc_init_data *init_data,
+    struct dc *dc);
 
 struct stream_encoder *dcn10_find_first_free_match_stream_enc_for_link(
-		struct resource_context *res_ctx,
-		const struct resource_pool *pool,
-		struct dc_stream_state *stream);
+    struct resource_context *res_ctx,
+    const struct resource_pool *pool,
+    struct dc_stream_state *stream);
 
 
 #endif /* __DC_RESOURCE_DCN10_H__ */

@@ -33,38 +33,38 @@
  *
  * .. code-block:: c
  *
- *	static int remove_conflicting_framebuffers(struct pci_dev *pdev)
- *	{
- *		bool primary = false;
- *		resource_size_t base, size;
- *		int ret;
+ *  static int remove_conflicting_framebuffers(struct pci_dev *pdev)
+ *  {
+ *    bool primary = false;
+ *    resource_size_t base, size;
+ *    int ret;
  *
- *		base = pci_resource_start(pdev, 0);
- *		size = pci_resource_len(pdev, 0);
- *	#ifdef CONFIG_X86
- *		primary = pdev->resource[PCI_ROM_RESOURCE].flags & IORESOURCE_ROM_SHADOW;
- *	#endif
+ *    base = pci_resource_start(pdev, 0);
+ *    size = pci_resource_len(pdev, 0);
+ *  #ifdef CONFIG_X86
+ *    primary = pdev->resource[PCI_ROM_RESOURCE].flags & IORESOURCE_ROM_SHADOW;
+ *  #endif
  *
- *		return drm_aperture_remove_conflicting_framebuffers(base, size, primary,
- *		                                                    "example driver");
- *	}
+ *    return drm_aperture_remove_conflicting_framebuffers(base, size, primary,
+ *                                                        "example driver");
+ *  }
  *
- *	static int probe(struct pci_dev *pdev)
- *	{
- *		int ret;
+ *  static int probe(struct pci_dev *pdev)
+ *  {
+ *    int ret;
  *
- *		// Remove any generic drivers...
- *		ret = remove_conflicting_framebuffers(pdev);
- *		if (ret)
- *			return ret;
+ *    // Remove any generic drivers...
+ *    ret = remove_conflicting_framebuffers(pdev);
+ *    if (ret)
+ *      return ret;
  *
- *		// ... and initialize the hardware.
- *		...
+ *    // ... and initialize the hardware.
+ *    ...
  *
- *		drm_dev_register();
+ *    drm_dev_register();
  *
- *		return 0;
- *	}
+ *    return 0;
+ *  }
  *
  * PCI device drivers should call
  * drm_aperture_remove_conflicting_pci_framebuffers() and let it detect the
@@ -81,37 +81,37 @@
  *
  * .. code-block:: c
  *
- *	static int acquire_framebuffers(struct drm_device *dev, struct platform_device *pdev)
- *	{
- *		resource_size_t base, size;
+ *  static int acquire_framebuffers(struct drm_device *dev, struct platform_device *pdev)
+ *  {
+ *    resource_size_t base, size;
  *
- *		mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- *		if (!mem)
- *			return -EINVAL;
- *		base = mem->start;
- *		size = resource_size(mem);
+ *    mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ *    if (!mem)
+ *      return -EINVAL;
+ *    base = mem->start;
+ *    size = resource_size(mem);
  *
- *		return devm_acquire_aperture_from_firmware(dev, base, size);
- *	}
+ *    return devm_acquire_aperture_from_firmware(dev, base, size);
+ *  }
  *
- *	static int probe(struct platform_device *pdev)
- *	{
- *		struct drm_device *dev;
- *		int ret;
+ *  static int probe(struct platform_device *pdev)
+ *  {
+ *    struct drm_device *dev;
+ *    int ret;
  *
- *		// ... Initialize the device...
- *		dev = devm_drm_dev_alloc();
- *		...
+ *    // ... Initialize the device...
+ *    dev = devm_drm_dev_alloc();
+ *    ...
  *
- *		// ... and acquire ownership of the framebuffer.
- *		ret = acquire_framebuffers(dev, pdev);
- *		if (ret)
- *			return ret;
+ *    // ... and acquire ownership of the framebuffer.
+ *    ret = acquire_framebuffers(dev, pdev);
+ *    if (ret)
+ *      return ret;
  *
- *		drm_dev_register(dev, 0);
+ *    drm_dev_register(dev, 0);
  *
- *		return 0;
- *	}
+ *    return 0;
+ *  }
  *
  * The generic driver is now subject to forced removal by other drivers. This
  * only works for platform drivers that support hot unplug.
@@ -123,93 +123,93 @@
  */
 
 struct drm_aperture {
-	struct drm_device *dev;
-	resource_size_t base;
-	resource_size_t size;
-	struct list_head lh;
-	void (*detach)(struct drm_device *dev);
+  struct drm_device *dev;
+  resource_size_t base;
+  resource_size_t size;
+  struct list_head lh;
+  void (*detach)(struct drm_device *dev);
 };
 
 static LIST_HEAD(drm_apertures);
 static DEFINE_MUTEX(drm_apertures_lock);
 
 static bool overlap(resource_size_t base1, resource_size_t end1,
-		    resource_size_t base2, resource_size_t end2)
+        resource_size_t base2, resource_size_t end2)
 {
-	return (base1 < end2) && (end1 > base2);
+  return (base1 < end2) && (end1 > base2);
 }
 
 static void devm_aperture_acquire_release(void *data)
 {
-	struct drm_aperture *ap = data;
-	bool detached = !ap->dev;
+  struct drm_aperture *ap = data;
+  bool detached = !ap->dev;
 
-	if (detached)
-		return;
+  if (detached)
+    return;
 
-	mutex_lock(&drm_apertures_lock);
-	list_del(&ap->lh);
-	mutex_unlock(&drm_apertures_lock);
+  mutex_lock(&drm_apertures_lock);
+  list_del(&ap->lh);
+  mutex_unlock(&drm_apertures_lock);
 }
 
 static int devm_aperture_acquire(struct drm_device *dev,
-				 resource_size_t base, resource_size_t size,
-				 void (*detach)(struct drm_device *))
+         resource_size_t base, resource_size_t size,
+         void (*detach)(struct drm_device *))
 {
-	size_t end = base + size;
-	struct list_head *pos;
-	struct drm_aperture *ap;
+  size_t end = base + size;
+  struct list_head *pos;
+  struct drm_aperture *ap;
 
-	mutex_lock(&drm_apertures_lock);
+  mutex_lock(&drm_apertures_lock);
 
-	list_for_each(pos, &drm_apertures) {
-		ap = container_of(pos, struct drm_aperture, lh);
-		if (overlap(base, end, ap->base, ap->base + ap->size))
-			return -EBUSY;
-	}
+  list_for_each(pos, &drm_apertures) {
+    ap = container_of(pos, struct drm_aperture, lh);
+    if (overlap(base, end, ap->base, ap->base + ap->size))
+      return -EBUSY;
+  }
 
-	ap = devm_kzalloc(dev->dev, sizeof(*ap), GFP_KERNEL);
-	if (!ap)
-		return -ENOMEM;
+  ap = devm_kzalloc(dev->dev, sizeof(*ap), GFP_KERNEL);
+  if (!ap)
+    return -ENOMEM;
 
-	ap->dev = dev;
-	ap->base = base;
-	ap->size = size;
-	ap->detach = detach;
-	INIT_LIST_HEAD(&ap->lh);
+  ap->dev = dev;
+  ap->base = base;
+  ap->size = size;
+  ap->detach = detach;
+  INIT_LIST_HEAD(&ap->lh);
 
-	list_add(&ap->lh, &drm_apertures);
+  list_add(&ap->lh, &drm_apertures);
 
-	mutex_unlock(&drm_apertures_lock);
+  mutex_unlock(&drm_apertures_lock);
 
-	return devm_add_action_or_reset(dev->dev, devm_aperture_acquire_release, ap);
+  return devm_add_action_or_reset(dev->dev, devm_aperture_acquire_release, ap);
 }
 
 static void drm_aperture_detach_firmware(struct drm_device *dev)
 {
-	struct platform_device *pdev = to_platform_device(dev->dev);
+  struct platform_device *pdev = to_platform_device(dev->dev);
 
-	/*
-	 * Remove the device from the device hierarchy. This is the right thing
-	 * to do for firmware-based DRM drivers, such as EFI, VESA or VGA. After
-	 * the new driver takes over the hardware, the firmware device's state
-	 * will be lost.
-	 *
-	 * For non-platform devices, a new callback would be required.
-	 *
-	 * If the aperture helpers ever need to handle native drivers, this call
-	 * would only have to unplug the DRM device, so that the hardware device
-	 * stays around after detachment.
-	 */
-	platform_device_unregister(pdev);
+  /*
+   * Remove the device from the device hierarchy. This is the right thing
+   * to do for firmware-based DRM drivers, such as EFI, VESA or VGA. After
+   * the new driver takes over the hardware, the firmware device's state
+   * will be lost.
+   *
+   * For non-platform devices, a new callback would be required.
+   *
+   * If the aperture helpers ever need to handle native drivers, this call
+   * would only have to unplug the DRM device, so that the hardware device
+   * stays around after detachment.
+   */
+  platform_device_unregister(pdev);
 }
 
 /**
  * devm_aperture_acquire_from_firmware - Acquires ownership of a firmware framebuffer
  *                                       on behalf of a DRM driver.
- * @dev:	the DRM device to own the framebuffer memory
- * @base:	the framebuffer's byte offset in physical memory
- * @size:	the framebuffer size in bytes
+ * @dev:  the DRM device to own the framebuffer memory
+ * @base:  the framebuffer's byte offset in physical memory
+ * @size:  the framebuffer size in bytes
  *
  * Installs the given device as the new owner of the framebuffer. The function
  * expects the framebuffer to be provided by a platform device that has been
@@ -229,40 +229,40 @@ static void drm_aperture_detach_firmware(struct drm_device *dev)
  * 0 on success, or a negative errno value otherwise.
  */
 int devm_aperture_acquire_from_firmware(struct drm_device *dev, resource_size_t base,
-					resource_size_t size)
+          resource_size_t size)
 {
-	if (drm_WARN_ON(dev, !dev_is_platform(dev->dev)))
-		return -EINVAL;
+  if (drm_WARN_ON(dev, !dev_is_platform(dev->dev)))
+    return -EINVAL;
 
-	return devm_aperture_acquire(dev, base, size, drm_aperture_detach_firmware);
+  return devm_aperture_acquire(dev, base, size, drm_aperture_detach_firmware);
 }
 EXPORT_SYMBOL(devm_aperture_acquire_from_firmware);
 
 static void drm_aperture_detach_drivers(resource_size_t base, resource_size_t size)
 {
-	resource_size_t end = base + size;
-	struct list_head *pos, *n;
+  resource_size_t end = base + size;
+  struct list_head *pos, *n;
 
-	mutex_lock(&drm_apertures_lock);
+  mutex_lock(&drm_apertures_lock);
 
-	list_for_each_safe(pos, n, &drm_apertures) {
-		struct drm_aperture *ap =
-			container_of(pos, struct drm_aperture, lh);
-		struct drm_device *dev = ap->dev;
+  list_for_each_safe(pos, n, &drm_apertures) {
+    struct drm_aperture *ap =
+      container_of(pos, struct drm_aperture, lh);
+    struct drm_device *dev = ap->dev;
 
-		if (WARN_ON_ONCE(!dev))
-			continue;
+    if (WARN_ON_ONCE(!dev))
+      continue;
 
-		if (!overlap(base, end, ap->base, ap->base + ap->size))
-			continue;
+    if (!overlap(base, end, ap->base, ap->base + ap->size))
+      continue;
 
-		ap->dev = NULL; /* detach from device */
-		list_del(&ap->lh);
+    ap->dev = NULL; /* detach from device */
+    list_del(&ap->lh);
 
-		ap->detach(dev);
-	}
+    ap->detach(dev);
+  }
 
-	mutex_unlock(&drm_apertures_lock);
+  mutex_unlock(&drm_apertures_lock);
 }
 
 /**
@@ -279,29 +279,29 @@ static void drm_aperture_detach_drivers(resource_size_t base, resource_size_t si
  * 0 on success, or a negative errno code otherwise
  */
 int drm_aperture_remove_conflicting_framebuffers(resource_size_t base, resource_size_t size,
-						 bool primary, const char *name)
+             bool primary, const char *name)
 {
 #if IS_REACHABLE(CONFIG_FB)
-	struct apertures_struct *a;
-	int ret;
+  struct apertures_struct *a;
+  int ret;
 
-	a = alloc_apertures(1);
-	if (!a)
-		return -ENOMEM;
+  a = alloc_apertures(1);
+  if (!a)
+    return -ENOMEM;
 
-	a->ranges[0].base = base;
-	a->ranges[0].size = size;
+  a->ranges[0].base = base;
+  a->ranges[0].size = size;
 
-	ret = remove_conflicting_framebuffers(a, name, primary);
-	kfree(a);
+  ret = remove_conflicting_framebuffers(a, name, primary);
+  kfree(a);
 
-	if (ret)
-		return ret;
+  if (ret)
+    return ret;
 #endif
 
-	drm_aperture_detach_drivers(base, size);
+  drm_aperture_detach_drivers(base, size);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_aperture_remove_conflicting_framebuffers);
 
@@ -319,28 +319,28 @@ EXPORT_SYMBOL(drm_aperture_remove_conflicting_framebuffers);
  */
 int drm_aperture_remove_conflicting_pci_framebuffers(struct pci_dev *pdev, const char *name)
 {
-	resource_size_t base, size;
-	int bar, ret = 0;
+  resource_size_t base, size;
+  int bar, ret = 0;
 
-	for (bar = 0; bar < PCI_STD_NUM_BARS; ++bar) {
-		if (!(pci_resource_flags(pdev, bar) & IORESOURCE_MEM))
-			continue;
-		base = pci_resource_start(pdev, bar);
-		size = pci_resource_len(pdev, bar);
-		drm_aperture_detach_drivers(base, size);
-	}
+  for (bar = 0; bar < PCI_STD_NUM_BARS; ++bar) {
+    if (!(pci_resource_flags(pdev, bar) & IORESOURCE_MEM))
+      continue;
+    base = pci_resource_start(pdev, bar);
+    size = pci_resource_len(pdev, bar);
+    drm_aperture_detach_drivers(base, size);
+  }
 
-	/*
-	 * WARNING: Apparently we must kick fbdev drivers before vgacon,
-	 * otherwise the vga fbdev driver falls over.
-	 */
+  /*
+   * WARNING: Apparently we must kick fbdev drivers before vgacon,
+   * otherwise the vga fbdev driver falls over.
+   */
 #if IS_REACHABLE(CONFIG_FB)
-	ret = remove_conflicting_pci_framebuffers(pdev, name);
+  ret = remove_conflicting_pci_framebuffers(pdev, name);
 #endif
 #ifdef __linux__
-	if (ret == 0)
-		ret = vga_remove_vgacon(pdev);
+  if (ret == 0)
+    ret = vga_remove_vgacon(pdev);
 #endif
-	return ret;
+  return ret;
 }
 EXPORT_SYMBOL(drm_aperture_remove_conflicting_pci_framebuffers);

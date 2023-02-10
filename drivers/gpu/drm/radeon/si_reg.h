@@ -88,18 +88,18 @@
 #       define SI_GRPH_ARRAY_LINEAR_ALIGNED      1
 #       define SI_GRPH_ARRAY_1D_TILED_THIN1      2
 #       define SI_GRPH_ARRAY_2D_TILED_THIN1      4
-#       define SI_GRPH_PIPE_CONFIG(x)		 (((x) & 0x1f) << 24)
-#       define SI_ADDR_SURF_P2			 0
-#       define SI_ADDR_SURF_P4_8x16		 4
-#       define SI_ADDR_SURF_P4_16x16		 5
-#       define SI_ADDR_SURF_P4_16x32		 6
-#       define SI_ADDR_SURF_P4_32x32		 7
-#       define SI_ADDR_SURF_P8_16x16_8x16	 8
-#       define SI_ADDR_SURF_P8_16x32_8x16	 9
-#       define SI_ADDR_SURF_P8_32x32_8x16	 10
-#       define SI_ADDR_SURF_P8_16x32_16x16	 11
-#       define SI_ADDR_SURF_P8_32x32_16x16	 12
-#       define SI_ADDR_SURF_P8_32x32_16x32	 13
-#       define SI_ADDR_SURF_P8_32x64_32x32	 14
+#       define SI_GRPH_PIPE_CONFIG(x)     (((x) & 0x1f) << 24)
+#       define SI_ADDR_SURF_P2       0
+#       define SI_ADDR_SURF_P4_8x16     4
+#       define SI_ADDR_SURF_P4_16x16     5
+#       define SI_ADDR_SURF_P4_16x32     6
+#       define SI_ADDR_SURF_P4_32x32     7
+#       define SI_ADDR_SURF_P8_16x16_8x16   8
+#       define SI_ADDR_SURF_P8_16x32_8x16   9
+#       define SI_ADDR_SURF_P8_32x32_8x16   10
+#       define SI_ADDR_SURF_P8_16x32_16x16   11
+#       define SI_ADDR_SURF_P8_32x32_16x16   12
+#       define SI_ADDR_SURF_P8_32x32_16x32   13
+#       define SI_ADDR_SURF_P8_32x64_32x32   14
 
 #endif

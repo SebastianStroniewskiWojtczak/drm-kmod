@@ -43,8 +43,8 @@ struct drm_buf_desc;
  * Generic DRM Contexts
  */
 
-#define DRM_KERNEL_CONTEXT		0
-#define DRM_RESERVED_CONTEXTS		1
+#define DRM_KERNEL_CONTEXT    0
+#define DRM_RESERVED_CONTEXTS    1
 
 #if IS_ENABLED(CONFIG_DRM_LEGACY)
 void drm_legacy_ctxbitmap_init(struct drm_device *dev);
@@ -79,17 +79,17 @@ int drm_legacy_getsareactx(struct drm_device *d, void *v, struct drm_file *f);
 #if IS_ENABLED(CONFIG_DRM_LEGACY)
 static inline int drm_legacy_create_map_hash(struct drm_device *dev)
 {
-	return drm_ht_create(&dev->map_hash, 12);
+  return drm_ht_create(&dev->map_hash, 12);
 }
 
 static inline void drm_legacy_remove_map_hash(struct drm_device *dev)
 {
-	drm_ht_remove(&dev->map_hash);
+  drm_ht_remove(&dev->map_hash);
 }
 #else
 static inline int drm_legacy_create_map_hash(struct drm_device *dev)
 {
-	return 0;
+  return 0;
 }
 
 static inline void drm_legacy_remove_map_hash(struct drm_device *dev) {}
@@ -98,7 +98,7 @@ static inline void drm_legacy_remove_map_hash(struct drm_device *dev) {}
 
 #if IS_ENABLED(CONFIG_DRM_LEGACY)
 int drm_legacy_getmap_ioctl(struct drm_device *dev, void *data,
-			    struct drm_file *file_priv);
+          struct drm_file *file_priv);
 int drm_legacy_addmap_ioctl(struct drm_device *d, void *v, struct drm_file *f);
 int drm_legacy_rmmap_ioctl(struct drm_device *d, void *v, struct drm_file *f);
 
@@ -111,19 +111,19 @@ int drm_legacy_dma_ioctl(struct drm_device *d, void *v, struct drm_file *f);
 #endif
 
 int __drm_legacy_infobufs(struct drm_device *, void *, int *,
-			  int (*)(void *, int, struct drm_buf_entry *));
+        int (*)(void *, int, struct drm_buf_entry *));
 int __drm_legacy_mapbufs(struct drm_device *, void *, int *,
-			  void __user **,
-			  int (*)(void *, int, unsigned long, struct drm_buf *),
-			  struct drm_file *);
+        void __user **,
+        int (*)(void *, int, unsigned long, struct drm_buf *),
+        struct drm_file *);
 
 #if IS_ENABLED(CONFIG_DRM_LEGACY)
 void drm_legacy_master_rmmaps(struct drm_device *dev,
-			      struct drm_master *master);
+            struct drm_master *master);
 void drm_legacy_rmmaps(struct drm_device *dev);
 #else
 static inline void drm_legacy_master_rmmaps(struct drm_device *dev,
-					    struct drm_master *master) {}
+              struct drm_master *master) {}
 static inline void drm_legacy_rmmaps(struct drm_device *dev) {}
 #endif
 
@@ -132,7 +132,7 @@ void drm_legacy_vma_flush(struct drm_device *d);
 #else
 static inline void drm_legacy_vma_flush(struct drm_device *d)
 {
-	/* do nothing */
+  /* do nothing */
 }
 #endif
 
@@ -141,11 +141,11 @@ static inline void drm_legacy_vma_flush(struct drm_device *d)
  */
 
 struct drm_agp_mem {
-	unsigned long handle;
-	struct agp_memory *memory;
-	unsigned long bound;
-	int pages;
-	struct list_head head;
+  unsigned long handle;
+  struct agp_memory *memory;
+  unsigned long bound;
+  int pages;
+  struct list_head head;
 };
 
 /* drm_agpsupport.c */
@@ -153,21 +153,21 @@ struct drm_agp_mem {
 void drm_legacy_agp_clear(struct drm_device *dev);
 
 int drm_legacy_agp_acquire_ioctl(struct drm_device *dev, void *data,
-				 struct drm_file *file_priv);
+         struct drm_file *file_priv);
 int drm_legacy_agp_release_ioctl(struct drm_device *dev, void *data,
-				 struct drm_file *file_priv);
+         struct drm_file *file_priv);
 int drm_legacy_agp_enable_ioctl(struct drm_device *dev, void *data,
-				struct drm_file *file_priv);
+        struct drm_file *file_priv);
 int drm_legacy_agp_info_ioctl(struct drm_device *dev, void *data,
-			      struct drm_file *file_priv);
+            struct drm_file *file_priv);
 int drm_legacy_agp_alloc_ioctl(struct drm_device *dev, void *data,
-			       struct drm_file *file_priv);
+             struct drm_file *file_priv);
 int drm_legacy_agp_free_ioctl(struct drm_device *dev, void *data,
-			      struct drm_file *file_priv);
+            struct drm_file *file_priv);
 int drm_legacy_agp_unbind_ioctl(struct drm_device *dev, void *data,
-				struct drm_file *file_priv);
+        struct drm_file *file_priv);
 int drm_legacy_agp_bind_ioctl(struct drm_device *dev, void *data,
-			      struct drm_file *file_priv);
+            struct drm_file *file_priv);
 #else
 static inline void drm_legacy_agp_clear(struct drm_device *dev) {}
 #endif
@@ -188,27 +188,27 @@ void drm_legacy_dma_takedown(struct drm_device *dev);
 #else
 static inline int drm_legacy_dma_setup(struct drm_device *dev)
 {
-	return 0;
+  return 0;
 }
 #endif
 
 void drm_legacy_free_buffer(struct drm_device *dev,
-			    struct drm_buf * buf);
+          struct drm_buf * buf);
 #if IS_ENABLED(CONFIG_DRM_LEGACY)
 void drm_legacy_reclaim_buffers(struct drm_device *dev,
-				struct drm_file *filp);
+        struct drm_file *filp);
 #else
 static inline void drm_legacy_reclaim_buffers(struct drm_device *dev,
-					      struct drm_file *filp) {}
+                struct drm_file *filp) {}
 #endif
 
 /* Scatter Gather Support */
 #if IS_ENABLED(CONFIG_DRM_LEGACY)
 void drm_legacy_sg_cleanup(struct drm_device *dev);
 int drm_legacy_sg_alloc(struct drm_device *dev, void *data,
-			struct drm_file *file_priv);
+      struct drm_file *file_priv);
 int drm_legacy_sg_free(struct drm_device *dev, void *data,
-		       struct drm_file *file_priv);
+           struct drm_file *file_priv);
 #endif
 
 #if IS_ENABLED(CONFIG_DRM_LEGACY)
@@ -241,9 +241,9 @@ int drm_legacy_irq_by_busid(struct drm_device *dev, void *data, struct drm_file 
 void drm_legacy_pci_agp_destroy(struct drm_device *dev);
 #else
 static inline int drm_legacy_irq_by_busid(struct drm_device *dev, void *data,
-					  struct drm_file *file_priv)
+            struct drm_file *file_priv)
 {
-	return -EINVAL;
+  return -EINVAL;
 }
 
 static inline void drm_legacy_pci_agp_destroy(struct drm_device *dev) {}

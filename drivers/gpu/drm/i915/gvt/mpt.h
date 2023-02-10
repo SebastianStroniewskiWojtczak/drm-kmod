@@ -52,12 +52,12 @@
  * Zero on success, negative error code if failed
  */
 static inline int intel_gvt_hypervisor_host_init(struct device *dev,
-						 void *gvt, const void *ops)
+             void *gvt, const void *ops)
 {
-	if (!intel_gvt_host.mpt->host_init)
-		return -ENODEV;
+  if (!intel_gvt_host.mpt->host_init)
+    return -ENODEV;
 
-	return intel_gvt_host.mpt->host_init(dev, gvt, ops);
+  return intel_gvt_host.mpt->host_init(dev, gvt, ops);
 }
 
 /**
@@ -65,11 +65,11 @@ static inline int intel_gvt_hypervisor_host_init(struct device *dev,
  */
 static inline void intel_gvt_hypervisor_host_exit(struct device *dev, void *gvt)
 {
-	/* optional to provide */
-	if (!intel_gvt_host.mpt->host_exit)
-		return;
+  /* optional to provide */
+  if (!intel_gvt_host.mpt->host_exit)
+    return;
 
-	intel_gvt_host.mpt->host_exit(dev, gvt);
+  intel_gvt_host.mpt->host_exit(dev, gvt);
 }
 
 /**
@@ -81,11 +81,11 @@ static inline void intel_gvt_hypervisor_host_exit(struct device *dev, void *gvt)
  */
 static inline int intel_gvt_hypervisor_attach_vgpu(struct intel_vgpu *vgpu)
 {
-	/* optional to provide */
-	if (!intel_gvt_host.mpt->attach_vgpu)
-		return 0;
+  /* optional to provide */
+  if (!intel_gvt_host.mpt->attach_vgpu)
+    return 0;
 
-	return intel_gvt_host.mpt->attach_vgpu(vgpu, &vgpu->handle);
+  return intel_gvt_host.mpt->attach_vgpu(vgpu, &vgpu->handle);
 }
 
 /**
@@ -97,11 +97,11 @@ static inline int intel_gvt_hypervisor_attach_vgpu(struct intel_vgpu *vgpu)
  */
 static inline void intel_gvt_hypervisor_detach_vgpu(struct intel_vgpu *vgpu)
 {
-	/* optional to provide */
-	if (!intel_gvt_host.mpt->detach_vgpu)
-		return;
+  /* optional to provide */
+  if (!intel_gvt_host.mpt->detach_vgpu)
+    return;
 
-	intel_gvt_host.mpt->detach_vgpu(vgpu);
+  intel_gvt_host.mpt->detach_vgpu(vgpu);
 }
 
 #define MSI_CAP_CONTROL(offset) (offset + 2)
@@ -117,28 +117,28 @@ static inline void intel_gvt_hypervisor_detach_vgpu(struct intel_vgpu *vgpu)
  */
 static inline int intel_gvt_hypervisor_inject_msi(struct intel_vgpu *vgpu)
 {
-	unsigned long offset = vgpu->gvt->device_info.msi_cap_offset;
-	u16 control, data;
-	u32 addr;
-	int ret;
+  unsigned long offset = vgpu->gvt->device_info.msi_cap_offset;
+  u16 control, data;
+  u32 addr;
+  int ret;
 
-	control = *(u16 *)(vgpu_cfg_space(vgpu) + MSI_CAP_CONTROL(offset));
-	addr = *(u32 *)(vgpu_cfg_space(vgpu) + MSI_CAP_ADDRESS(offset));
-	data = *(u16 *)(vgpu_cfg_space(vgpu) + MSI_CAP_DATA(offset));
+  control = *(u16 *)(vgpu_cfg_space(vgpu) + MSI_CAP_CONTROL(offset));
+  addr = *(u32 *)(vgpu_cfg_space(vgpu) + MSI_CAP_ADDRESS(offset));
+  data = *(u16 *)(vgpu_cfg_space(vgpu) + MSI_CAP_DATA(offset));
 
-	/* Do not generate MSI if MSIEN is disable */
-	if (!(control & MSI_CAP_EN))
-		return 0;
+  /* Do not generate MSI if MSIEN is disable */
+  if (!(control & MSI_CAP_EN))
+    return 0;
 
-	if (WARN(control & GENMASK(15, 1), "only support one MSI format\n"))
-		return -EINVAL;
+  if (WARN(control & GENMASK(15, 1), "only support one MSI format\n"))
+    return -EINVAL;
 
-	trace_inject_msi(vgpu->id, addr, data);
+  trace_inject_msi(vgpu->id, addr, data);
 
-	ret = intel_gvt_host.mpt->inject_msi(vgpu->handle, addr, data);
-	if (ret)
-		return ret;
-	return 0;
+  ret = intel_gvt_host.mpt->inject_msi(vgpu->handle, addr, data);
+  if (ret)
+    return ret;
+  return 0;
 }
 
 /**
@@ -150,7 +150,7 @@ static inline int intel_gvt_hypervisor_inject_msi(struct intel_vgpu *vgpu)
  */
 static inline unsigned long intel_gvt_hypervisor_virt_to_mfn(void *p)
 {
-	return intel_gvt_host.mpt->from_virt_to_mfn(p);
+  return intel_gvt_host.mpt->from_virt_to_mfn(p);
 }
 
 /**
@@ -162,9 +162,9 @@ static inline unsigned long intel_gvt_hypervisor_virt_to_mfn(void *p)
  * Zero on success, negative error code if failed.
  */
 static inline int intel_gvt_hypervisor_enable_page_track(
-		struct intel_vgpu *vgpu, unsigned long gfn)
+    struct intel_vgpu *vgpu, unsigned long gfn)
 {
-	return intel_gvt_host.mpt->enable_page_track(vgpu->handle, gfn);
+  return intel_gvt_host.mpt->enable_page_track(vgpu->handle, gfn);
 }
 
 /**
@@ -176,9 +176,9 @@ static inline int intel_gvt_hypervisor_enable_page_track(
  * Zero on success, negative error code if failed.
  */
 static inline int intel_gvt_hypervisor_disable_page_track(
-		struct intel_vgpu *vgpu, unsigned long gfn)
+    struct intel_vgpu *vgpu, unsigned long gfn)
 {
-	return intel_gvt_host.mpt->disable_page_track(vgpu->handle, gfn);
+  return intel_gvt_host.mpt->disable_page_track(vgpu->handle, gfn);
 }
 
 /**
@@ -192,9 +192,9 @@ static inline int intel_gvt_hypervisor_disable_page_track(
  * Zero on success, negative error code if failed.
  */
 static inline int intel_gvt_hypervisor_read_gpa(struct intel_vgpu *vgpu,
-		unsigned long gpa, void *buf, unsigned long len)
+    unsigned long gpa, void *buf, unsigned long len)
 {
-	return intel_gvt_host.mpt->read_gpa(vgpu->handle, gpa, buf, len);
+  return intel_gvt_host.mpt->read_gpa(vgpu->handle, gpa, buf, len);
 }
 
 /**
@@ -208,9 +208,9 @@ static inline int intel_gvt_hypervisor_read_gpa(struct intel_vgpu *vgpu,
  * Zero on success, negative error code if failed.
  */
 static inline int intel_gvt_hypervisor_write_gpa(struct intel_vgpu *vgpu,
-		unsigned long gpa, void *buf, unsigned long len)
+    unsigned long gpa, void *buf, unsigned long len)
 {
-	return intel_gvt_host.mpt->write_gpa(vgpu->handle, gpa, buf, len);
+  return intel_gvt_host.mpt->write_gpa(vgpu->handle, gpa, buf, len);
 }
 
 /**
@@ -222,9 +222,9 @@ static inline int intel_gvt_hypervisor_write_gpa(struct intel_vgpu *vgpu,
  * MFN on success, INTEL_GVT_INVALID_ADDR if failed.
  */
 static inline unsigned long intel_gvt_hypervisor_gfn_to_mfn(
-		struct intel_vgpu *vgpu, unsigned long gfn)
+    struct intel_vgpu *vgpu, unsigned long gfn)
 {
-	return intel_gvt_host.mpt->gfn_to_mfn(vgpu->handle, gfn);
+  return intel_gvt_host.mpt->gfn_to_mfn(vgpu->handle, gfn);
 }
 
 /**
@@ -238,11 +238,11 @@ static inline unsigned long intel_gvt_hypervisor_gfn_to_mfn(
  * 0 on success, negative error code if failed.
  */
 static inline int intel_gvt_hypervisor_dma_map_guest_page(
-		struct intel_vgpu *vgpu, unsigned long gfn, unsigned long size,
-		dma_addr_t *dma_addr)
+    struct intel_vgpu *vgpu, unsigned long gfn, unsigned long size,
+    dma_addr_t *dma_addr)
 {
-	return intel_gvt_host.mpt->dma_map_guest_page(vgpu->handle, gfn, size,
-						      dma_addr);
+  return intel_gvt_host.mpt->dma_map_guest_page(vgpu->handle, gfn, size,
+                  dma_addr);
 }
 
 /**
@@ -251,9 +251,9 @@ static inline int intel_gvt_hypervisor_dma_map_guest_page(
  * @dma_addr: the mapped dma addr
  */
 static inline void intel_gvt_hypervisor_dma_unmap_guest_page(
-		struct intel_vgpu *vgpu, dma_addr_t dma_addr)
+    struct intel_vgpu *vgpu, dma_addr_t dma_addr)
 {
-	intel_gvt_host.mpt->dma_unmap_guest_page(vgpu->handle, dma_addr);
+  intel_gvt_host.mpt->dma_unmap_guest_page(vgpu->handle, dma_addr);
 }
 
 /**
@@ -266,9 +266,9 @@ static inline void intel_gvt_hypervisor_dma_unmap_guest_page(
  */
 static inline int
 intel_gvt_hypervisor_dma_pin_guest_page(struct intel_vgpu *vgpu,
-					dma_addr_t dma_addr)
+          dma_addr_t dma_addr)
 {
-	return intel_gvt_host.mpt->dma_pin_guest_page(vgpu->handle, dma_addr);
+  return intel_gvt_host.mpt->dma_pin_guest_page(vgpu->handle, dma_addr);
 }
 
 /**
@@ -283,16 +283,16 @@ intel_gvt_hypervisor_dma_pin_guest_page(struct intel_vgpu *vgpu,
  * Zero on success, negative error code if failed.
  */
 static inline int intel_gvt_hypervisor_map_gfn_to_mfn(
-		struct intel_vgpu *vgpu, unsigned long gfn,
-		unsigned long mfn, unsigned int nr,
-		bool map)
+    struct intel_vgpu *vgpu, unsigned long gfn,
+    unsigned long mfn, unsigned int nr,
+    bool map)
 {
-	/* a MPT implementation could have MMIO mapped elsewhere */
-	if (!intel_gvt_host.mpt->map_gfn_to_mfn)
-		return 0;
+  /* a MPT implementation could have MMIO mapped elsewhere */
+  if (!intel_gvt_host.mpt->map_gfn_to_mfn)
+    return 0;
 
-	return intel_gvt_host.mpt->map_gfn_to_mfn(vgpu->handle, gfn, mfn, nr,
-						  map);
+  return intel_gvt_host.mpt->map_gfn_to_mfn(vgpu->handle, gfn, mfn, nr,
+              map);
 }
 
 /**
@@ -306,13 +306,13 @@ static inline int intel_gvt_hypervisor_map_gfn_to_mfn(
  * Zero on success, negative error code if failed.
  */
 static inline int intel_gvt_hypervisor_set_trap_area(
-		struct intel_vgpu *vgpu, u64 start, u64 end, bool map)
+    struct intel_vgpu *vgpu, u64 start, u64 end, bool map)
 {
-	/* a MPT implementation could have MMIO trapped elsewhere */
-	if (!intel_gvt_host.mpt->set_trap_area)
-		return 0;
+  /* a MPT implementation could have MMIO trapped elsewhere */
+  if (!intel_gvt_host.mpt->set_trap_area)
+    return 0;
 
-	return intel_gvt_host.mpt->set_trap_area(vgpu->handle, start, end, map);
+  return intel_gvt_host.mpt->set_trap_area(vgpu->handle, start, end, map);
 }
 
 /**
@@ -324,10 +324,10 @@ static inline int intel_gvt_hypervisor_set_trap_area(
  */
 static inline int intel_gvt_hypervisor_set_opregion(struct intel_vgpu *vgpu)
 {
-	if (!intel_gvt_host.mpt->set_opregion)
-		return 0;
+  if (!intel_gvt_host.mpt->set_opregion)
+    return 0;
 
-	return intel_gvt_host.mpt->set_opregion(vgpu);
+  return intel_gvt_host.mpt->set_opregion(vgpu);
 }
 
 /**
@@ -339,12 +339,12 @@ static inline int intel_gvt_hypervisor_set_opregion(struct intel_vgpu *vgpu)
  * Zero on success, negative error code if failed.
  */
 static inline int intel_gvt_hypervisor_set_edid(struct intel_vgpu *vgpu,
-						int port_num)
+            int port_num)
 {
-	if (!intel_gvt_host.mpt->set_edid)
-		return 0;
+  if (!intel_gvt_host.mpt->set_edid)
+    return 0;
 
-	return intel_gvt_host.mpt->set_edid(vgpu, port_num);
+  return intel_gvt_host.mpt->set_edid(vgpu, port_num);
 }
 
 /**
@@ -356,10 +356,10 @@ static inline int intel_gvt_hypervisor_set_edid(struct intel_vgpu *vgpu,
  */
 static inline int intel_gvt_hypervisor_get_vfio_device(struct intel_vgpu *vgpu)
 {
-	if (!intel_gvt_host.mpt->get_vfio_device)
-		return 0;
+  if (!intel_gvt_host.mpt->get_vfio_device)
+    return 0;
 
-	return intel_gvt_host.mpt->get_vfio_device(vgpu);
+  return intel_gvt_host.mpt->get_vfio_device(vgpu);
 }
 
 /**
@@ -371,10 +371,10 @@ static inline int intel_gvt_hypervisor_get_vfio_device(struct intel_vgpu *vgpu)
  */
 static inline void intel_gvt_hypervisor_put_vfio_device(struct intel_vgpu *vgpu)
 {
-	if (!intel_gvt_host.mpt->put_vfio_device)
-		return;
+  if (!intel_gvt_host.mpt->put_vfio_device)
+    return;
 
-	intel_gvt_host.mpt->put_vfio_device(vgpu);
+  intel_gvt_host.mpt->put_vfio_device(vgpu);
 }
 
 /**
@@ -386,12 +386,12 @@ static inline void intel_gvt_hypervisor_put_vfio_device(struct intel_vgpu *vgpu)
  * true on valid gfn, false on not.
  */
 static inline bool intel_gvt_hypervisor_is_valid_gfn(
-		struct intel_vgpu *vgpu, unsigned long gfn)
+    struct intel_vgpu *vgpu, unsigned long gfn)
 {
-	if (!intel_gvt_host.mpt->is_valid_gfn)
-		return true;
+  if (!intel_gvt_host.mpt->is_valid_gfn)
+    return true;
 
-	return intel_gvt_host.mpt->is_valid_gfn(vgpu->handle, gfn);
+  return intel_gvt_host.mpt->is_valid_gfn(vgpu->handle, gfn);
 }
 
 int intel_gvt_register_hypervisor(const struct intel_gvt_mpt *);

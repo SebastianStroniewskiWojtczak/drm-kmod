@@ -8,8 +8,8 @@
 unsigned long
 i915_fence_context_timeout(const struct drm_i915_private *i915, u64 context)
 {
-	if (context && IS_ACTIVE(CONFIG_DRM_I915_FENCE_TIMEOUT))
-		return msecs_to_jiffies_timeout(CONFIG_DRM_I915_FENCE_TIMEOUT);
+  if (context && IS_ACTIVE(CONFIG_DRM_I915_FENCE_TIMEOUT))
+    return msecs_to_jiffies_timeout(CONFIG_DRM_I915_FENCE_TIMEOUT);
 
-	return 0;
+  return 0;
 }

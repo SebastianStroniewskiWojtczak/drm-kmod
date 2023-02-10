@@ -34,10 +34,10 @@ struct intel_guc;
  * @size: size of the commands buffer
  */
 struct intel_guc_ct_buffer {
-	spinlock_t lock;
-	struct guc_ct_buffer_desc *desc;
-	u32 *cmds;
-	u32 size;
+  spinlock_t lock;
+  struct guc_ct_buffer_desc *desc;
+  u32 *cmds;
+  u32 size;
 };
 
 
@@ -47,26 +47,26 @@ struct intel_guc_ct_buffer {
  * for the H2G and G2H requests sent and received through the buffers.
  */
 struct intel_guc_ct {
-	struct i915_vma *vma;
-	bool enabled;
+  struct i915_vma *vma;
+  bool enabled;
 
-	/* buffers for sending and receiving commands */
-	struct {
-		struct intel_guc_ct_buffer send;
-		struct intel_guc_ct_buffer recv;
-	} ctbs;
+  /* buffers for sending and receiving commands */
+  struct {
+    struct intel_guc_ct_buffer send;
+    struct intel_guc_ct_buffer recv;
+  } ctbs;
 
-	struct tasklet_struct receive_tasklet;
+  struct tasklet_struct receive_tasklet;
 
-	struct {
-		u32 last_fence; /* last fence used to send request */
+  struct {
+    u32 last_fence; /* last fence used to send request */
 
-		spinlock_t lock; /* protects pending requests list */
-		struct list_head pending; /* requests waiting for response */
+    spinlock_t lock; /* protects pending requests list */
+    struct list_head pending; /* requests waiting for response */
 
-		struct list_head incoming; /* incoming requests */
-		struct work_struct worker; /* handler for incoming requests */
-	} requests;
+    struct list_head incoming; /* incoming requests */
+    struct work_struct worker; /* handler for incoming requests */
+  } requests;
 };
 
 void intel_guc_ct_init_early(struct intel_guc_ct *ct);
@@ -77,16 +77,16 @@ void intel_guc_ct_disable(struct intel_guc_ct *ct);
 
 static inline void intel_guc_ct_sanitize(struct intel_guc_ct *ct)
 {
-	ct->enabled = false;
+  ct->enabled = false;
 }
 
 static inline bool intel_guc_ct_enabled(struct intel_guc_ct *ct)
 {
-	return ct->enabled;
+  return ct->enabled;
 }
 
 int intel_guc_ct_send(struct intel_guc_ct *ct, const u32 *action, u32 len,
-		      u32 *response_buf, u32 response_buf_size);
+          u32 *response_buf, u32 response_buf_size);
 void intel_guc_ct_event_handler(struct intel_guc_ct *ct);
 
 #endif /* _INTEL_GUC_CT_H_ */

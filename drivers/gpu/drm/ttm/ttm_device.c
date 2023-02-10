@@ -48,72 +48,72 @@ struct dentry *ttm_debugfs_root;
 
 static void ttm_global_release(void)
 {
-	struct ttm_global *glob = &ttm_glob;
+  struct ttm_global *glob = &ttm_glob;
 
-	mutex_lock(&ttm_global_mutex);
-	if (--ttm_glob_use_count > 0)
-		goto out;
+  mutex_lock(&ttm_global_mutex);
+  if (--ttm_glob_use_count > 0)
+    goto out;
 
-	ttm_pool_mgr_fini();
-	debugfs_remove(ttm_debugfs_root);
+  ttm_pool_mgr_fini();
+  debugfs_remove(ttm_debugfs_root);
 
-	__free_page(glob->dummy_read_page);
-	memset(glob, 0, sizeof(*glob));
+  __free_page(glob->dummy_read_page);
+  memset(glob, 0, sizeof(*glob));
 out:
-	mutex_unlock(&ttm_global_mutex);
+  mutex_unlock(&ttm_global_mutex);
 }
 
 static int ttm_global_init(void)
 {
-	struct ttm_global *glob = &ttm_glob;
-	unsigned long num_pages, num_dma32;
-	struct sysinfo si;
-	int ret = 0;
+  struct ttm_global *glob = &ttm_glob;
+  unsigned long num_pages, num_dma32;
+  struct sysinfo si;
+  int ret = 0;
 
-	mutex_lock(&ttm_global_mutex);
-	if (++ttm_glob_use_count > 1)
-		goto out;
+  mutex_lock(&ttm_global_mutex);
+  if (++ttm_glob_use_count > 1)
+    goto out;
 
-	si_meminfo(&si);
+  si_meminfo(&si);
 
-	ttm_debugfs_root = debugfs_create_dir("ttm", NULL);
-	if (IS_ERR(ttm_debugfs_root)) {
-		ttm_debugfs_root = NULL;
-	}
+  ttm_debugfs_root = debugfs_create_dir("ttm", NULL);
+  if (IS_ERR(ttm_debugfs_root)) {
+    ttm_debugfs_root = NULL;
+  }
 
-	/* Limit the number of pages in the pool to about 50% of the total
-	 * system memory.
-	 */
-	num_pages = ((u64)si.totalram * si.mem_unit) >> PAGE_SHIFT;
-	num_pages /= 2;
+  /* Limit the number of pages in the pool to about 50% of the total
+   * system memory.
+   */
+  num_pages = ((u64)si.totalram * si.mem_unit) >> PAGE_SHIFT;
+  num_pages /= 2;
 
-	/* But for DMA32 we limit ourself to only use 2GiB maximum. */
-	num_dma32 = (u64)(si.totalram - si.totalhigh) * si.mem_unit
-		>> PAGE_SHIFT;
-	num_dma32 = min(num_dma32, 2UL << (30 - PAGE_SHIFT));
+  /* But for DMA32 we limit ourself to only use 2GiB maximum. */
+  num_dma32 = (u64)(si.totalram - si.totalhigh) * si.mem_unit
+    >> PAGE_SHIFT;
+  num_dma32 = min(num_dma32, 2UL << (30 - PAGE_SHIFT));
 
-	ttm_pool_mgr_init(num_pages);
-	ttm_tt_mgr_init(num_pages, num_dma32);
+  ttm_pool_mgr_init(num_pages);
+  ttm_tt_mgr_init(num_pages, num_dma32);
 
-	glob->dummy_read_page = alloc_page(__GFP_ZERO | GFP_DMA32);
+  glob->dummy_read_page = alloc_page(__GFP_ZERO | GFP_DMA32);
 
-	if (unlikely(glob->dummy_read_page == NULL)) {
-		ret = -ENOMEM;
-		goto out;
-	}
+  if (unlikely(glob->dummy_read_page == NULL)) {
+    ret = -ENOMEM;
+    goto out;
+  }
 
-	INIT_LIST_HEAD(&glob->device_list);
-	atomic_set(&glob->bo_count, 0);
+  INIT_LIST_HEAD(&glob->device_list);
+  atomic_set(&glob->bo_count, 0);
 
-	debugfs_create_atomic_t("buffer_objects", 0444, ttm_debugfs_root,
-				&glob->bo_count);
+  debugfs_create_atomic_t("buffer_objects", 0444, ttm_debugfs_root,
+        &glob->bo_count);
 out:
-	if (ret && ttm_debugfs_root)
-		debugfs_remove(ttm_debugfs_root);
-	if (ret)
-		--ttm_glob_use_count;
-	mutex_unlock(&ttm_global_mutex);
-	return ret;
+  if (ret && ttm_debugfs_root)
+    debugfs_remove(ttm_debugfs_root);
+  if (ret)
+    --ttm_glob_use_count;
+  mutex_unlock(&ttm_global_mutex);
+  return ret;
 }
 
 /*
@@ -122,63 +122,63 @@ out:
  */
 int ttm_global_swapout(struct ttm_operation_ctx *ctx, gfp_t gfp_flags)
 {
-	struct ttm_global *glob = &ttm_glob;
-	struct ttm_device *bdev;
-	int ret = 0;
+  struct ttm_global *glob = &ttm_glob;
+  struct ttm_device *bdev;
+  int ret = 0;
 
-	mutex_lock(&ttm_global_mutex);
-	list_for_each_entry(bdev, &glob->device_list, device_list) {
-		ret = ttm_device_swapout(bdev, ctx, gfp_flags);
-		if (ret > 0) {
-			list_move_tail(&bdev->device_list, &glob->device_list);
-			break;
-		}
-	}
-	mutex_unlock(&ttm_global_mutex);
-	return ret;
+  mutex_lock(&ttm_global_mutex);
+  list_for_each_entry(bdev, &glob->device_list, device_list) {
+    ret = ttm_device_swapout(bdev, ctx, gfp_flags);
+    if (ret > 0) {
+      list_move_tail(&bdev->device_list, &glob->device_list);
+      break;
+    }
+  }
+  mutex_unlock(&ttm_global_mutex);
+  return ret;
 }
 EXPORT_SYMBOL(ttm_global_swapout);
 
 int ttm_device_swapout(struct ttm_device *bdev, struct ttm_operation_ctx *ctx,
-		       gfp_t gfp_flags)
+           gfp_t gfp_flags)
 {
-	struct ttm_resource_manager *man;
-	struct ttm_buffer_object *bo;
-	unsigned i, j;
-	int ret;
+  struct ttm_resource_manager *man;
+  struct ttm_buffer_object *bo;
+  unsigned i, j;
+  int ret;
 
-	spin_lock(&bdev->lru_lock);
-	for (i = TTM_PL_SYSTEM; i < TTM_NUM_MEM_TYPES; ++i) {
-		man = ttm_manager_type(bdev, i);
-		if (!man || !man->use_tt)
-			continue;
+  spin_lock(&bdev->lru_lock);
+  for (i = TTM_PL_SYSTEM; i < TTM_NUM_MEM_TYPES; ++i) {
+    man = ttm_manager_type(bdev, i);
+    if (!man || !man->use_tt)
+      continue;
 
-		for (j = 0; j < TTM_MAX_BO_PRIORITY; ++j) {
-			list_for_each_entry(bo, &man->lru[j], lru) {
-				uint32_t num_pages = PFN_UP(bo->base.size);
+    for (j = 0; j < TTM_MAX_BO_PRIORITY; ++j) {
+      list_for_each_entry(bo, &man->lru[j], lru) {
+        uint32_t num_pages = PFN_UP(bo->base.size);
 
-				ret = ttm_bo_swapout(bo, ctx, gfp_flags);
-				/* ttm_bo_swapout has dropped the lru_lock */
-				if (!ret)
-					return num_pages;
-				if (ret != -EBUSY)
-					return ret;
-			}
-		}
-	}
-	spin_unlock(&bdev->lru_lock);
-	return 0;
+        ret = ttm_bo_swapout(bo, ctx, gfp_flags);
+        /* ttm_bo_swapout has dropped the lru_lock */
+        if (!ret)
+          return num_pages;
+        if (ret != -EBUSY)
+          return ret;
+      }
+    }
+  }
+  spin_unlock(&bdev->lru_lock);
+  return 0;
 }
 EXPORT_SYMBOL(ttm_device_swapout);
 
 static void ttm_device_delayed_workqueue(struct work_struct *work)
 {
-	struct ttm_device *bdev =
-		container_of(work, struct ttm_device, wq.work);
+  struct ttm_device *bdev =
+    container_of(work, struct ttm_device, wq.work);
 
-	if (!ttm_bo_delayed_delete(bdev, false))
-		schedule_delayed_work(&bdev->wq,
-				      ((HZ / 100) < 1) ? 1 : HZ / 100);
+  if (!ttm_bo_delayed_delete(bdev, false))
+    schedule_delayed_work(&bdev->wq,
+              ((HZ / 100) < 1) ? 1 : HZ / 100);
 }
 
 /**
@@ -197,70 +197,70 @@ static void ttm_device_delayed_workqueue(struct work_struct *work)
  * !0: Failure.
  */
 int ttm_device_init(struct ttm_device *bdev, struct ttm_device_funcs *funcs,
-		    struct device *dev,
+        struct device *dev,
 #ifdef __linux__
-		    struct address_space *mapping,
+        struct address_space *mapping,
 #elif defined(__FreeBSD__)
-		    void *dummy,
+        void *dummy,
 #endif
-		    struct drm_vma_offset_manager *vma_manager,
-		    bool use_dma_alloc, bool use_dma32)
+        struct drm_vma_offset_manager *vma_manager,
+        bool use_dma_alloc, bool use_dma32)
 {
-	struct ttm_global *glob = &ttm_glob;
-	int ret;
+  struct ttm_global *glob = &ttm_glob;
+  int ret;
 
-	if (WARN_ON(vma_manager == NULL))
-		return -EINVAL;
+  if (WARN_ON(vma_manager == NULL))
+    return -EINVAL;
 
-	ret = ttm_global_init();
-	if (ret)
-		return ret;
+  ret = ttm_global_init();
+  if (ret)
+    return ret;
 
-	bdev->funcs = funcs;
+  bdev->funcs = funcs;
 
-	ttm_sys_man_init(bdev);
-	ttm_pool_init(&bdev->pool, dev, use_dma_alloc, use_dma32);
+  ttm_sys_man_init(bdev);
+  ttm_pool_init(&bdev->pool, dev, use_dma_alloc, use_dma32);
 
-	bdev->vma_manager = vma_manager;
-	INIT_DELAYED_WORK(&bdev->wq, ttm_device_delayed_workqueue);
-	spin_lock_init(&bdev->lru_lock);
-	INIT_LIST_HEAD(&bdev->ddestroy);
+  bdev->vma_manager = vma_manager;
+  INIT_DELAYED_WORK(&bdev->wq, ttm_device_delayed_workqueue);
+  spin_lock_init(&bdev->lru_lock);
+  INIT_LIST_HEAD(&bdev->ddestroy);
 #ifdef __linux__
-	bdev->dev_mapping = mapping;
+  bdev->dev_mapping = mapping;
 #endif
-	mutex_lock(&ttm_global_mutex);
-	list_add_tail(&bdev->device_list, &glob->device_list);
-	mutex_unlock(&ttm_global_mutex);
+  mutex_lock(&ttm_global_mutex);
+  list_add_tail(&bdev->device_list, &glob->device_list);
+  mutex_unlock(&ttm_global_mutex);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(ttm_device_init);
 
 void ttm_device_fini(struct ttm_device *bdev)
 {
-	struct ttm_resource_manager *man;
-	unsigned i;
+  struct ttm_resource_manager *man;
+  unsigned i;
 
-	man = ttm_manager_type(bdev, TTM_PL_SYSTEM);
-	ttm_resource_manager_set_used(man, false);
-	ttm_set_driver_manager(bdev, TTM_PL_SYSTEM, NULL);
+  man = ttm_manager_type(bdev, TTM_PL_SYSTEM);
+  ttm_resource_manager_set_used(man, false);
+  ttm_set_driver_manager(bdev, TTM_PL_SYSTEM, NULL);
 
-	mutex_lock(&ttm_global_mutex);
-	list_del(&bdev->device_list);
-	mutex_unlock(&ttm_global_mutex);
+  mutex_lock(&ttm_global_mutex);
+  list_del(&bdev->device_list);
+  mutex_unlock(&ttm_global_mutex);
 
-	cancel_delayed_work_sync(&bdev->wq);
+  cancel_delayed_work_sync(&bdev->wq);
 
-	if (ttm_bo_delayed_delete(bdev, true))
-		pr_debug("Delayed destroy list was clean\n");
+  if (ttm_bo_delayed_delete(bdev, true))
+    pr_debug("Delayed destroy list was clean\n");
 
-	spin_lock(&bdev->lru_lock);
-	for (i = 0; i < TTM_MAX_BO_PRIORITY; ++i)
-		if (list_empty(&man->lru[0]))
-			pr_debug("Swap list %d was clean\n", i);
-	spin_unlock(&bdev->lru_lock);
+  spin_lock(&bdev->lru_lock);
+  for (i = 0; i < TTM_MAX_BO_PRIORITY; ++i)
+    if (list_empty(&man->lru[0]))
+      pr_debug("Swap list %d was clean\n", i);
+  spin_unlock(&bdev->lru_lock);
 
-	ttm_pool_fini(&bdev->pool);
-	ttm_global_release();
+  ttm_pool_fini(&bdev->pool);
+  ttm_global_release();
 }
 EXPORT_SYMBOL(ttm_device_fini);

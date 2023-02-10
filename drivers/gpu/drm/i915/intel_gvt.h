@@ -37,7 +37,7 @@ void intel_gvt_resume(struct drm_i915_private *dev_priv);
 #else
 static inline int intel_gvt_init(struct drm_i915_private *dev_priv)
 {
-	return 0;
+  return 0;
 }
 
 static inline void intel_gvt_driver_remove(struct drm_i915_private *dev_priv)

@@ -39,50 +39,50 @@
 struct dma_fence_ops;
 
 struct dma_fence {
-	spinlock_t *lock;
-	const struct dma_fence_ops *ops;
-	union {
-		struct list_head cb_list;
-		ktime_t timestamp;
-		struct rcu_head rcu;
-	};
-	u64 context;
-	u64 seqno;
-	unsigned long flags;
-	struct kref refcount;
-	int error;
+  spinlock_t *lock;
+  const struct dma_fence_ops *ops;
+  union {
+    struct list_head cb_list;
+    ktime_t timestamp;
+    struct rcu_head rcu;
+  };
+  u64 context;
+  u64 seqno;
+  unsigned long flags;
+  struct kref refcount;
+  int error;
 };
 
 struct dma_fence_cb;
 
 typedef void (*dma_fence_func_t)(struct dma_fence *fence,
-				 struct dma_fence_cb *cb);
+         struct dma_fence_cb *cb);
 
 struct dma_fence_cb {
-	struct list_head node;
-	dma_fence_func_t func;
+  struct list_head node;
+  dma_fence_func_t func;
 };
 
 struct dma_fence_ops {
-	bool use_64bit_seqno;
+  bool use_64bit_seqno;
 
-	const char * (*get_driver_name)(struct dma_fence *fence);
-	const char * (*get_timeline_name)(struct dma_fence *fence);
-	bool (*enable_signaling)(struct dma_fence *fence);
-	bool (*signaled)(struct dma_fence *fence);
-	signed long (*wait)(struct dma_fence *fence,
-			    bool intr, signed long timeout);
-	void (*release)(struct dma_fence *fence);
-	void (*fence_value_str)(struct dma_fence *fence, char *str, int size);
-	void (*timeline_value_str)(struct dma_fence *fence,
-				   char *str, int size);
+  const char * (*get_driver_name)(struct dma_fence *fence);
+  const char * (*get_timeline_name)(struct dma_fence *fence);
+  bool (*enable_signaling)(struct dma_fence *fence);
+  bool (*signaled)(struct dma_fence *fence);
+  signed long (*wait)(struct dma_fence *fence,
+          bool intr, signed long timeout);
+  void (*release)(struct dma_fence *fence);
+  void (*fence_value_str)(struct dma_fence *fence, char *str, int size);
+  void (*timeline_value_str)(struct dma_fence *fence,
+           char *str, int size);
 };
 
 enum dma_fence_flag_bits {
-	DMA_FENCE_FLAG_SIGNALED_BIT,
-	DMA_FENCE_FLAG_TIMESTAMP_BIT,
-	DMA_FENCE_FLAG_ENABLE_SIGNAL_BIT,
-	DMA_FENCE_FLAG_USER_BITS, /* must always be last member */
+  DMA_FENCE_FLAG_SIGNALED_BIT,
+  DMA_FENCE_FLAG_TIMESTAMP_BIT,
+  DMA_FENCE_FLAG_ENABLE_SIGNAL_BIT,
+  DMA_FENCE_FLAG_USER_BITS, /* must always be last member */
 };
 
 void dma_fence_init(struct dma_fence *fence, const struct dma_fence_ops *ops,
@@ -93,7 +93,7 @@ int dma_fence_signal(struct dma_fence *fence);
 int dma_fence_signal_locked(struct dma_fence *fence);
 int dma_fence_signal_timestamp(struct dma_fence *fence, ktime_t timestamp);
 int dma_fence_signal_timestamp_locked(struct dma_fence *fence,
-				      ktime_t timestamp);
+              ktime_t timestamp);
 signed long dma_fence_default_wait(struct dma_fence *fence,
     bool intr, signed long timeout);
 int dma_fence_add_callback(struct dma_fence *fence,
@@ -123,21 +123,21 @@ int dma_fence_get_status_locked(struct dma_fence *fence);
 void dma_fence_set_error(struct dma_fence *fence, int error);
 signed long dma_fence_wait(struct dma_fence *fence, bool intr);
 
-#define	dma_fence_begin_signalling() true
-#define	dma_fence_end_signalling(cookie) do {} while (0)
+#define  dma_fence_begin_signalling() true
+#define  dma_fence_end_signalling(cookie) do {} while (0)
 
-#define	__dma_fence_might_wait	(void)
+#define  __dma_fence_might_wait  (void)
 
 #define DMA_FENCE_TRACE(f, fmt, args...) \
-	do {				\
-	} while (0)
+  do {        \
+  } while (0)
 
 #define DMA_FENCE_WARN(f, fmt, args...) \
-	do {				\
-	} while (0)
+  do {        \
+  } while (0)
 
 #define DMA_FENCE_ERR(f, fmt, args...) \
-	do {				\
-	} while (0)
+  do {        \
+  } while (0)
 
 #endif

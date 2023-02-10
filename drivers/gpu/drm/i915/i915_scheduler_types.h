@@ -17,18 +17,18 @@ struct i915_request;
 struct intel_engine_cs;
 
 struct i915_sched_attr {
-	/**
-	 * @priority: execution and service priority
-	 *
-	 * All clients are equal, but some are more equal than others!
-	 *
-	 * Requests from a context with a greater (more positive) value of
-	 * @priority will be executed before those with a lower @priority
-	 * value, forming a simple QoS.
-	 *
-	 * The &drm_i915_private.kernel_context is assigned the lowest priority.
-	 */
-	int priority;
+  /**
+   * @priority: execution and service priority
+   *
+   * All clients are equal, but some are more equal than others!
+   *
+   * Requests from a context with a greater (more positive) value of
+   * @priority will be executed before those with a lower @priority
+   * value, forming a simple QoS.
+   *
+   * The &drm_i915_private.kernel_context is assigned the lowest priority.
+   */
+  int priority;
 };
 
 /*
@@ -60,35 +60,35 @@ struct i915_sched_attr {
  * others.
  */
 struct i915_sched_node {
-	struct list_head signalers_list; /* those before us, we depend upon */
-	struct list_head waiters_list; /* those after us, they depend upon us */
-	struct list_head link;
-	struct i915_sched_attr attr;
-	unsigned int flags;
-#define I915_SCHED_HAS_EXTERNAL_CHAIN	BIT(0)
-	intel_engine_mask_t semaphores;
+  struct list_head signalers_list; /* those before us, we depend upon */
+  struct list_head waiters_list; /* those after us, they depend upon us */
+  struct list_head link;
+  struct i915_sched_attr attr;
+  unsigned int flags;
+#define I915_SCHED_HAS_EXTERNAL_CHAIN  BIT(0)
+  intel_engine_mask_t semaphores;
 };
 
 struct i915_dependency {
-	struct i915_sched_node *signaler;
-	struct i915_sched_node *waiter;
-	struct list_head signal_link;
-	struct list_head wait_link;
-	struct list_head dfs_link;
-	unsigned long flags;
-#define I915_DEPENDENCY_ALLOC		BIT(0)
-#define I915_DEPENDENCY_EXTERNAL	BIT(1)
-#define I915_DEPENDENCY_WEAK		BIT(2)
+  struct i915_sched_node *signaler;
+  struct i915_sched_node *waiter;
+  struct list_head signal_link;
+  struct list_head wait_link;
+  struct list_head dfs_link;
+  unsigned long flags;
+#define I915_DEPENDENCY_ALLOC    BIT(0)
+#define I915_DEPENDENCY_EXTERNAL  BIT(1)
+#define I915_DEPENDENCY_WEAK    BIT(2)
 };
 
 #define for_each_waiter(p__, rq__) \
-	list_for_each_entry_lockless(p__, \
-				     &(rq__)->sched.waiters_list, \
-				     wait_link)
+  list_for_each_entry_lockless(p__, \
+             &(rq__)->sched.waiters_list, \
+             wait_link)
 
 #define for_each_signaler(p__, rq__) \
-	list_for_each_entry_rcu(p__, \
-				&(rq__)->sched.signalers_list, \
-				signal_link)
+  list_for_each_entry_rcu(p__, \
+        &(rq__)->sched.signalers_list, \
+        signal_link)
 
 #endif /* _I915_SCHEDULER_TYPES_H_ */

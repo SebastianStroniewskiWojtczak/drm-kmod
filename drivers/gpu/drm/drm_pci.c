@@ -49,62 +49,62 @@ static DEFINE_MUTEX(legacy_dev_list_lock);
 static int drm_get_pci_domain(struct drm_device *dev)
 {
 #ifndef __alpha__
-	/* For historical reasons, drm_get_pci_domain() is busticated
-	 * on most archs and has to remain so for userspace interface
-	 * < 1.4, except on alpha which was right from the beginning
-	 */
-	if (dev->if_version < 0x10004)
-		return 0;
+  /* For historical reasons, drm_get_pci_domain() is busticated
+   * on most archs and has to remain so for userspace interface
+   * < 1.4, except on alpha which was right from the beginning
+   */
+  if (dev->if_version < 0x10004)
+    return 0;
 #endif /* __alpha__ */
 
 #ifdef __FreeBSD__
-	return pci_get_domain(dev->dev->bsddev);
+  return pci_get_domain(dev->dev->bsddev);
 #else
-	return pci_domain_nr(to_pci_dev(dev->dev)->bus);
+  return pci_domain_nr(to_pci_dev(dev->dev)->bus);
 #endif
 }
 
 int drm_pci_set_busid(struct drm_device *dev, struct drm_master *master)
 {
-	struct pci_dev *pdev = to_pci_dev(dev->dev);
+  struct pci_dev *pdev = to_pci_dev(dev->dev);
 
 #ifdef __FreeBSD__
-	master->unique = kasprintf(GFP_KERNEL, "pci:%04x:%02x:%02x.%d",
-					drm_get_pci_domain(dev),
-					pci_get_bus(dev->dev->bsddev),
-					pci_get_slot(dev->dev->bsddev),
-					PCI_FUNC(pdev->devfn));
+  master->unique = kasprintf(GFP_KERNEL, "pci:%04x:%02x:%02x.%d",
+          drm_get_pci_domain(dev),
+          pci_get_bus(dev->dev->bsddev),
+          pci_get_slot(dev->dev->bsddev),
+          PCI_FUNC(pdev->devfn));
 #else
-	master->unique = kasprintf(GFP_KERNEL, "pci:%04x:%02x:%02x.%d",
-					drm_get_pci_domain(dev),
-					pdev->bus->number,
-					PCI_SLOT(pdev->devfn),
-					PCI_FUNC(pdev->devfn));
+  master->unique = kasprintf(GFP_KERNEL, "pci:%04x:%02x:%02x.%d",
+          drm_get_pci_domain(dev),
+          pdev->bus->number,
+          PCI_SLOT(pdev->devfn),
+          PCI_FUNC(pdev->devfn));
 #endif
-	if (!master->unique)
-		return -ENOMEM;
+  if (!master->unique)
+    return -ENOMEM;
 
-	master->unique_len = strlen(master->unique);
-	return 0;
+  master->unique_len = strlen(master->unique);
+  return 0;
 }
 
 #ifdef __FreeBSD__
 int
 drm_getpciinfo(struct drm_device *dev, void *data, struct drm_file *file_priv)
 {
-	struct drm_pciinfo *info = data;
+  struct drm_pciinfo *info = data;
 
-	info->domain = pci_get_domain(dev->dev->bsddev);
-	info->bus = pci_get_bus(dev->dev->bsddev);
-	info->dev = pci_get_slot(dev->dev->bsddev);
-	info->func = pci_get_function(dev->dev->bsddev);
-	info->vendor_id = pci_get_vendor(dev->dev->bsddev);
-	info->device_id = pci_get_device(dev->dev->bsddev);
-	info->subvendor_id = pci_get_subvendor(dev->dev->bsddev);
-	info->subdevice_id = pci_get_subdevice(dev->dev->bsddev);
-	info->revision_id = pci_get_revid(dev->dev->bsddev);
+  info->domain = pci_get_domain(dev->dev->bsddev);
+  info->bus = pci_get_bus(dev->dev->bsddev);
+  info->dev = pci_get_slot(dev->dev->bsddev);
+  info->func = pci_get_function(dev->dev->bsddev);
+  info->vendor_id = pci_get_vendor(dev->dev->bsddev);
+  info->device_id = pci_get_device(dev->dev->bsddev);
+  info->subvendor_id = pci_get_subvendor(dev->dev->bsddev);
+  info->subdevice_id = pci_get_subdevice(dev->dev->bsddev);
+  info->revision_id = pci_get_revid(dev->dev->bsddev);
 
-	return 0;
+  return 0;
 }
 #endif
 
@@ -112,18 +112,18 @@ drm_getpciinfo(struct drm_device *dev, void *data, struct drm_file *file_priv)
 
 static int drm_legacy_pci_irq_by_busid(struct drm_device *dev, struct drm_irq_busid *p)
 {
-	struct pci_dev *pdev = to_pci_dev(dev->dev);
+  struct pci_dev *pdev = to_pci_dev(dev->dev);
 
-	if ((p->busnum >> 8) != drm_get_pci_domain(dev) ||
-	    (p->busnum & 0xff) != pdev->bus->number ||
-	    p->devnum != PCI_SLOT(pdev->devfn) || p->funcnum != PCI_FUNC(pdev->devfn))
-		return -EINVAL;
+  if ((p->busnum >> 8) != drm_get_pci_domain(dev) ||
+      (p->busnum & 0xff) != pdev->bus->number ||
+      p->devnum != PCI_SLOT(pdev->devfn) || p->funcnum != PCI_FUNC(pdev->devfn))
+    return -EINVAL;
 
-	p->irq = pdev->irq;
+  p->irq = pdev->irq;
 
-	DRM_DEBUG("%d:%d:%d => IRQ %d\n", p->busnum, p->devnum, p->funcnum,
-		  p->irq);
-	return 0;
+  DRM_DEBUG("%d:%d:%d => IRQ %d\n", p->busnum, p->devnum, p->funcnum,
+      p->irq);
+  return 0;
 }
 
 /**
@@ -139,103 +139,103 @@ static int drm_legacy_pci_irq_by_busid(struct drm_device *dev, struct drm_irq_bu
  * Return: 0 on success or a negative error code on failure.
  */
 int drm_legacy_irq_by_busid(struct drm_device *dev, void *data,
-			    struct drm_file *file_priv)
+          struct drm_file *file_priv)
 {
-	struct drm_irq_busid *p = data;
+  struct drm_irq_busid *p = data;
 
-	if (!drm_core_check_feature(dev, DRIVER_LEGACY))
-		return -EOPNOTSUPP;
+  if (!drm_core_check_feature(dev, DRIVER_LEGACY))
+    return -EOPNOTSUPP;
 
-	/* UMS was only ever support on PCI devices. */
-	if (WARN_ON(!dev_is_pci(dev->dev)))
-		return -EINVAL;
+  /* UMS was only ever support on PCI devices. */
+  if (WARN_ON(!dev_is_pci(dev->dev)))
+    return -EINVAL;
 
-	if (!drm_core_check_feature(dev, DRIVER_HAVE_IRQ))
-		return -EOPNOTSUPP;
+  if (!drm_core_check_feature(dev, DRIVER_HAVE_IRQ))
+    return -EOPNOTSUPP;
 
-	return drm_legacy_pci_irq_by_busid(dev, p);
+  return drm_legacy_pci_irq_by_busid(dev, p);
 }
 
 void drm_legacy_pci_agp_destroy(struct drm_device *dev)
 {
-	if (dev->agp) {
+  if (dev->agp) {
 #ifdef __linux__
-		arch_phys_wc_del(dev->agp->agp_mtrr);
+    arch_phys_wc_del(dev->agp->agp_mtrr);
 #elif defined(__FreeBSD__)
-		vm_phys_fictitious_unreg_range(
-			dev->agp->agp_info.aper_base,
-			dev->agp->agp_info.aper_base +
-			(dev->agp->agp_info.aper_size << 20));
+    vm_phys_fictitious_unreg_range(
+      dev->agp->agp_info.aper_base,
+      dev->agp->agp_info.aper_base +
+      (dev->agp->agp_info.aper_size << 20));
 #endif
-		drm_legacy_agp_clear(dev);
-		kfree(dev->agp);
-		dev->agp = NULL;
-	}
+    drm_legacy_agp_clear(dev);
+    kfree(dev->agp);
+    dev->agp = NULL;
+  }
 }
 
 static void drm_legacy_pci_agp_init(struct drm_device *dev)
 {
-	if (drm_core_check_feature(dev, DRIVER_USE_AGP)) {
-		if (pci_find_capability(to_pci_dev(dev->dev), PCI_CAP_ID_AGP))
-			dev->agp = drm_legacy_agp_init(dev);
-		if (dev->agp) {
+  if (drm_core_check_feature(dev, DRIVER_USE_AGP)) {
+    if (pci_find_capability(to_pci_dev(dev->dev), PCI_CAP_ID_AGP))
+      dev->agp = drm_legacy_agp_init(dev);
+    if (dev->agp) {
 #ifdef __linux__
-			dev->agp->agp_mtrr = arch_phys_wc_add(
-				dev->agp->agp_info.aper_base,
-				dev->agp->agp_info.aper_size *
-				1024 * 1024);
+      dev->agp->agp_mtrr = arch_phys_wc_add(
+        dev->agp->agp_info.aper_base,
+        dev->agp->agp_info.aper_size *
+        1024 * 1024);
 #elif defined(__FreeBSD__)
-			vm_phys_fictitious_reg_range(
-				dev->agp->agp_info.aper_base,
-				dev->agp->agp_info.aper_base +
-				(dev->agp->agp_info.aper_size << 20),
-				VM_MEMATTR_WRITE_COMBINING);
+      vm_phys_fictitious_reg_range(
+        dev->agp->agp_info.aper_base,
+        dev->agp->agp_info.aper_base +
+        (dev->agp->agp_info.aper_size << 20),
+        VM_MEMATTR_WRITE_COMBINING);
 #endif
-		}
-	}
+    }
+  }
 }
 
 static int drm_legacy_get_pci_dev(struct pci_dev *pdev,
-				  const struct pci_device_id *ent,
-				  const struct drm_driver *driver)
+          const struct pci_device_id *ent,
+          const struct drm_driver *driver)
 {
-	struct drm_device *dev;
-	int ret;
+  struct drm_device *dev;
+  int ret;
 
-	DRM_DEBUG("\n");
+  DRM_DEBUG("\n");
 
-	dev = drm_dev_alloc(driver, &pdev->dev);
-	if (IS_ERR(dev))
-		return PTR_ERR(dev);
+  dev = drm_dev_alloc(driver, &pdev->dev);
+  if (IS_ERR(dev))
+    return PTR_ERR(dev);
 
-	ret = pci_enable_device(pdev);
-	if (ret)
-		goto err_free;
+  ret = pci_enable_device(pdev);
+  if (ret)
+    goto err_free;
 
 #ifdef __alpha__
-	dev->hose = pdev->sysdata;
+  dev->hose = pdev->sysdata;
 #endif
 
-	drm_legacy_pci_agp_init(dev);
+  drm_legacy_pci_agp_init(dev);
 
-	ret = drm_dev_register(dev, ent->driver_data);
-	if (ret)
-		goto err_agp;
+  ret = drm_dev_register(dev, ent->driver_data);
+  if (ret)
+    goto err_agp;
 
-	if (drm_core_check_feature(dev, DRIVER_LEGACY)) {
-		mutex_lock(&legacy_dev_list_lock);
-		list_add_tail(&dev->legacy_dev_list, &legacy_dev_list);
-		mutex_unlock(&legacy_dev_list_lock);
-	}
+  if (drm_core_check_feature(dev, DRIVER_LEGACY)) {
+    mutex_lock(&legacy_dev_list_lock);
+    list_add_tail(&dev->legacy_dev_list, &legacy_dev_list);
+    mutex_unlock(&legacy_dev_list_lock);
+  }
 
-	return 0;
+  return 0;
 
 err_agp:
-	drm_legacy_pci_agp_destroy(dev);
-	pci_disable_device(pdev);
+  drm_legacy_pci_agp_destroy(dev);
+  pci_disable_device(pdev);
 err_free:
-	drm_dev_put(dev);
-	return ret;
+  drm_dev_put(dev);
+  return ret;
 }
 
 /**
@@ -248,41 +248,41 @@ err_free:
  * Return: 0 on success or a negative error code on failure.
  */
 int drm_legacy_pci_init(const struct drm_driver *driver,
-			struct pci_driver *pdriver)
+      struct pci_driver *pdriver)
 {
 #ifdef __linux__
-	struct pci_dev *pdev = NULL;
-	const struct pci_device_id *pid;
-	int i;
+  struct pci_dev *pdev = NULL;
+  const struct pci_device_id *pid;
+  int i;
 
-	DRM_DEBUG("\n");
+  DRM_DEBUG("\n");
 
-	if (WARN_ON(!(driver->driver_features & DRIVER_LEGACY)))
-		return -EINVAL;
+  if (WARN_ON(!(driver->driver_features & DRIVER_LEGACY)))
+    return -EINVAL;
 
-	/* If not using KMS, fall back to stealth mode manual scanning. */
-	for (i = 0; pdriver->id_table[i].vendor != 0; i++) {
-		pid = &pdriver->id_table[i];
+  /* If not using KMS, fall back to stealth mode manual scanning. */
+  for (i = 0; pdriver->id_table[i].vendor != 0; i++) {
+    pid = &pdriver->id_table[i];
 
-		/* Loop around setting up a DRM device for each PCI device
-		 * matching our ID and device class.  If we had the internal
-		 * function that pci_get_subsys and pci_get_class used, we'd
-		 * be able to just pass pid in instead of doing a two-stage
-		 * thing.
-		 */
-		pdev = NULL;
-		while ((pdev =
-			pci_get_subsys(pid->vendor, pid->device, pid->subvendor,
-				       pid->subdevice, pdev)) != NULL) {
-			if ((pdev->class & pid->class_mask) != pid->class)
-				continue;
+    /* Loop around setting up a DRM device for each PCI device
+     * matching our ID and device class.  If we had the internal
+     * function that pci_get_subsys and pci_get_class used, we'd
+     * be able to just pass pid in instead of doing a two-stage
+     * thing.
+     */
+    pdev = NULL;
+    while ((pdev =
+      pci_get_subsys(pid->vendor, pid->device, pid->subvendor,
+               pid->subdevice, pdev)) != NULL) {
+      if ((pdev->class & pid->class_mask) != pid->class)
+        continue;
 
-			/* stealth mode requires a manual probe */
-			pci_dev_get(pdev);
-			drm_legacy_get_pci_dev(pdev, pid, driver);
-		}
-	}
-	return 0;
+      /* stealth mode requires a manual probe */
+      pci_dev_get(pdev);
+      drm_legacy_get_pci_dev(pdev, pid, driver);
+    }
+  }
+  return 0;
 #endif
 }
 EXPORT_SYMBOL(drm_legacy_pci_init);
@@ -296,26 +296,26 @@ EXPORT_SYMBOL(drm_legacy_pci_init);
  * is deprecated and only used by dri1 drivers.
  */
 void drm_legacy_pci_exit(const struct drm_driver *driver,
-			 struct pci_driver *pdriver)
+       struct pci_driver *pdriver)
 {
-	struct drm_device *dev, *tmp;
+  struct drm_device *dev, *tmp;
 
-	DRM_DEBUG("\n");
+  DRM_DEBUG("\n");
 
-	if (!(driver->driver_features & DRIVER_LEGACY)) {
-		WARN_ON(1);
-	} else {
-		mutex_lock(&legacy_dev_list_lock);
-		list_for_each_entry_safe(dev, tmp, &legacy_dev_list,
-					 legacy_dev_list) {
-			if (dev->driver == driver) {
-				list_del(&dev->legacy_dev_list);
-				drm_put_dev(dev);
-			}
-		}
-		mutex_unlock(&legacy_dev_list_lock);
-	}
-	DRM_INFO("Module unloaded\n");
+  if (!(driver->driver_features & DRIVER_LEGACY)) {
+    WARN_ON(1);
+  } else {
+    mutex_lock(&legacy_dev_list_lock);
+    list_for_each_entry_safe(dev, tmp, &legacy_dev_list,
+           legacy_dev_list) {
+      if (dev->driver == driver) {
+        list_del(&dev->legacy_dev_list);
+        drm_put_dev(dev);
+      }
+    }
+    mutex_unlock(&legacy_dev_list_lock);
+  }
+  DRM_INFO("Module unloaded\n");
 }
 EXPORT_SYMBOL(drm_legacy_pci_exit);
 

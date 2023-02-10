@@ -22,7 +22,7 @@ void intel_fbdev_restore_mode(struct drm_device *dev);
 #else
 static inline int intel_fbdev_init(struct drm_device *dev)
 {
-	return 0;
+  return 0;
 }
 
 static inline void intel_fbdev_initial_config_async(struct drm_device *dev)

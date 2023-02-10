@@ -17,13 +17,13 @@ void i915_gemfs_fini(struct drm_i915_private *i915);
 static inline int
 i915_gemfs_init(struct drm_i915_private *i915)
 {
-	return -ENODEV;
+  return -ENODEV;
 }
 
 static inline void
 i915_gemfs_fini(struct drm_i915_private *i915)
 {
-	return;
+  return;
 }
 #endif
 

@@ -29,15 +29,15 @@
 void dml30_recalculate(struct display_mode_lib *mode_lib);
 void dml30_ModeSupportAndSystemConfigurationFull(struct display_mode_lib *mode_lib);
 double dml30_CalculateWriteBackDISPCLK(
-		enum source_format_class WritebackPixelFormat,
-		double PixelClock,
-		double WritebackHRatio,
-		double WritebackVRatio,
-		unsigned int WritebackHTaps,
-		unsigned int WritebackVTaps,
-		long   WritebackSourceWidth,
-		long   WritebackDestinationWidth,
-		unsigned int HTotal,
-		unsigned int WritebackLineBufferSize);
+    enum source_format_class WritebackPixelFormat,
+    double PixelClock,
+    double WritebackHRatio,
+    double WritebackVRatio,
+    unsigned int WritebackHTaps,
+    unsigned int WritebackVTaps,
+    long   WritebackSourceWidth,
+    long   WritebackDestinationWidth,
+    unsigned int HTotal,
+    unsigned int WritebackLineBufferSize);
 
 #endif /* __DML30_DISPLAY_MODE_VBA_H__ */

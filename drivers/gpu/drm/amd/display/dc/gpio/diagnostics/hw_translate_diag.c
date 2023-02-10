@@ -31,11 +31,11 @@
 
 /* function table */
 static const struct hw_translate_funcs funcs = {
-	.offset_to_id = NULL,
-	.id_to_offset = NULL,
+  .offset_to_id = NULL,
+  .id_to_offset = NULL,
 };
 
 void dal_hw_translate_diag_fpga_init(struct hw_translate *tr)
 {
-	tr->funcs = &funcs;
+  tr->funcs = &funcs;
 }

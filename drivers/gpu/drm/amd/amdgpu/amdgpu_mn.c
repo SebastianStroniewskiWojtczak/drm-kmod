@@ -61,30 +61,30 @@
  * potentially dirty.
  */
 static bool amdgpu_mn_invalidate_gfx(struct mmu_interval_notifier *mni,
-				     const struct mmu_notifier_range *range,
-				     unsigned long cur_seq)
+             const struct mmu_notifier_range *range,
+             unsigned long cur_seq)
 {
-	struct amdgpu_bo *bo = container_of(mni, struct amdgpu_bo, notifier);
-	struct amdgpu_device *adev = amdgpu_ttm_adev(bo->tbo.bdev);
-	long r;
+  struct amdgpu_bo *bo = container_of(mni, struct amdgpu_bo, notifier);
+  struct amdgpu_device *adev = amdgpu_ttm_adev(bo->tbo.bdev);
+  long r;
 
-	if (!mmu_notifier_range_blockable(range))
-		return false;
+  if (!mmu_notifier_range_blockable(range))
+    return false;
 
-	mutex_lock(&adev->notifier_lock);
+  mutex_lock(&adev->notifier_lock);
 
-	mmu_interval_set_seq(mni, cur_seq);
+  mmu_interval_set_seq(mni, cur_seq);
 
-	r = dma_resv_wait_timeout(bo->tbo.base.resv, true, false,
-				  MAX_SCHEDULE_TIMEOUT);
-	mutex_unlock(&adev->notifier_lock);
-	if (r <= 0)
-		DRM_ERROR("(%ld) failed to wait for user bo\n", r);
-	return true;
+  r = dma_resv_wait_timeout(bo->tbo.base.resv, true, false,
+          MAX_SCHEDULE_TIMEOUT);
+  mutex_unlock(&adev->notifier_lock);
+  if (r <= 0)
+    DRM_ERROR("(%ld) failed to wait for user bo\n", r);
+  return true;
 }
 
 static const struct mmu_interval_notifier_ops amdgpu_mn_gfx_ops = {
-	.invalidate = amdgpu_mn_invalidate_gfx,
+  .invalidate = amdgpu_mn_invalidate_gfx,
 };
 
 /**
@@ -98,27 +98,27 @@ static const struct mmu_interval_notifier_ops amdgpu_mn_gfx_ops = {
  * evicting all user-mode queues of the process.
  */
 static bool amdgpu_mn_invalidate_hsa(struct mmu_interval_notifier *mni,
-				     const struct mmu_notifier_range *range,
-				     unsigned long cur_seq)
+             const struct mmu_notifier_range *range,
+             unsigned long cur_seq)
 {
-	struct amdgpu_bo *bo = container_of(mni, struct amdgpu_bo, notifier);
-	struct amdgpu_device *adev = amdgpu_ttm_adev(bo->tbo.bdev);
+  struct amdgpu_bo *bo = container_of(mni, struct amdgpu_bo, notifier);
+  struct amdgpu_device *adev = amdgpu_ttm_adev(bo->tbo.bdev);
 
-	if (!mmu_notifier_range_blockable(range))
-		return false;
+  if (!mmu_notifier_range_blockable(range))
+    return false;
 
-	mutex_lock(&adev->notifier_lock);
+  mutex_lock(&adev->notifier_lock);
 
-	mmu_interval_set_seq(mni, cur_seq);
+  mmu_interval_set_seq(mni, cur_seq);
 
-	amdgpu_amdkfd_evict_userptr(bo->kfd_bo, bo->notifier.mm);
-	mutex_unlock(&adev->notifier_lock);
+  amdgpu_amdkfd_evict_userptr(bo->kfd_bo, bo->notifier.mm);
+  mutex_unlock(&adev->notifier_lock);
 
-	return true;
+  return true;
 }
 
 static const struct mmu_interval_notifier_ops amdgpu_mn_hsa_ops = {
-	.invalidate = amdgpu_mn_invalidate_hsa,
+  .invalidate = amdgpu_mn_invalidate_hsa,
 };
 
 /**
@@ -132,13 +132,13 @@ static const struct mmu_interval_notifier_ops amdgpu_mn_hsa_ops = {
  */
 int amdgpu_mn_register(struct amdgpu_bo *bo, unsigned long addr)
 {
-	if (bo->kfd_bo)
-		return mmu_interval_notifier_insert(&bo->notifier, current->mm,
-						    addr, amdgpu_bo_size(bo),
-						    &amdgpu_mn_hsa_ops);
-	return mmu_interval_notifier_insert(&bo->notifier, current->mm, addr,
-					    amdgpu_bo_size(bo),
-					    &amdgpu_mn_gfx_ops);
+  if (bo->kfd_bo)
+    return mmu_interval_notifier_insert(&bo->notifier, current->mm,
+                addr, amdgpu_bo_size(bo),
+                &amdgpu_mn_hsa_ops);
+  return mmu_interval_notifier_insert(&bo->notifier, current->mm, addr,
+              amdgpu_bo_size(bo),
+              &amdgpu_mn_gfx_ops);
 }
 
 /**
@@ -150,95 +150,95 @@ int amdgpu_mn_register(struct amdgpu_bo *bo, unsigned long addr)
  */
 void amdgpu_mn_unregister(struct amdgpu_bo *bo)
 {
-	if (!bo->notifier.mm)
-		return;
-	mmu_interval_notifier_remove(&bo->notifier);
-	bo->notifier.mm = NULL;
+  if (!bo->notifier.mm)
+    return;
+  mmu_interval_notifier_remove(&bo->notifier);
+  bo->notifier.mm = NULL;
 }
 
 int amdgpu_hmm_range_get_pages(struct mmu_interval_notifier *notifier,
-			       struct mm_struct *mm, struct page **pages,
-			       uint64_t start, uint64_t npages,
-			       struct hmm_range **phmm_range, bool readonly,
-			       bool mmap_locked, void *owner)
+             struct mm_struct *mm, struct page **pages,
+             uint64_t start, uint64_t npages,
+             struct hmm_range **phmm_range, bool readonly,
+             bool mmap_locked, void *owner)
 {
-	struct hmm_range *hmm_range;
-	unsigned long timeout;
-	unsigned long i;
-	unsigned long *pfns;
-	int r = 0;
+  struct hmm_range *hmm_range;
+  unsigned long timeout;
+  unsigned long i;
+  unsigned long *pfns;
+  int r = 0;
 
-	hmm_range = kzalloc(sizeof(*hmm_range), GFP_KERNEL);
-	if (unlikely(!hmm_range))
-		return -ENOMEM;
+  hmm_range = kzalloc(sizeof(*hmm_range), GFP_KERNEL);
+  if (unlikely(!hmm_range))
+    return -ENOMEM;
 
-	pfns = kvmalloc_array(npages, sizeof(*pfns), GFP_KERNEL);
-	if (unlikely(!pfns)) {
-		r = -ENOMEM;
-		goto out_free_range;
-	}
+  pfns = kvmalloc_array(npages, sizeof(*pfns), GFP_KERNEL);
+  if (unlikely(!pfns)) {
+    r = -ENOMEM;
+    goto out_free_range;
+  }
 
-	hmm_range->notifier = notifier;
-	hmm_range->default_flags = HMM_PFN_REQ_FAULT;
-	if (!readonly)
-		hmm_range->default_flags |= HMM_PFN_REQ_WRITE;
-	hmm_range->hmm_pfns = pfns;
-	hmm_range->start = start;
-	hmm_range->end = start + npages * PAGE_SIZE;
-	hmm_range->dev_private_owner = owner;
+  hmm_range->notifier = notifier;
+  hmm_range->default_flags = HMM_PFN_REQ_FAULT;
+  if (!readonly)
+    hmm_range->default_flags |= HMM_PFN_REQ_WRITE;
+  hmm_range->hmm_pfns = pfns;
+  hmm_range->start = start;
+  hmm_range->end = start + npages * PAGE_SIZE;
+  hmm_range->dev_private_owner = owner;
 
-	/* Assuming 512MB takes maxmium 1 second to fault page address */
-	timeout = max(npages >> 17, 1ULL) * HMM_RANGE_DEFAULT_TIMEOUT;
-	timeout = jiffies + msecs_to_jiffies(timeout);
+  /* Assuming 512MB takes maxmium 1 second to fault page address */
+  timeout = max(npages >> 17, 1ULL) * HMM_RANGE_DEFAULT_TIMEOUT;
+  timeout = jiffies + msecs_to_jiffies(timeout);
 
 retry:
-	hmm_range->notifier_seq = mmu_interval_read_begin(notifier);
+  hmm_range->notifier_seq = mmu_interval_read_begin(notifier);
 
-	if (likely(!mmap_locked))
-		mmap_read_lock(mm);
+  if (likely(!mmap_locked))
+    mmap_read_lock(mm);
 
-	r = hmm_range_fault(hmm_range);
+  r = hmm_range_fault(hmm_range);
 
-	if (likely(!mmap_locked))
-		mmap_read_unlock(mm);
-	if (unlikely(r)) {
-		/*
-		 * FIXME: This timeout should encompass the retry from
-		 * mmu_interval_read_retry() as well.
-		 */
-		if (r == -EBUSY && !time_after(jiffies, timeout))
-			goto retry;
-		goto out_free_pfns;
-	}
+  if (likely(!mmap_locked))
+    mmap_read_unlock(mm);
+  if (unlikely(r)) {
+    /*
+     * FIXME: This timeout should encompass the retry from
+     * mmu_interval_read_retry() as well.
+     */
+    if (r == -EBUSY && !time_after(jiffies, timeout))
+      goto retry;
+    goto out_free_pfns;
+  }
 
-	/*
-	 * Due to default_flags, all pages are HMM_PFN_VALID or
-	 * hmm_range_fault() fails. FIXME: The pages cannot be touched outside
-	 * the notifier_lock, and mmu_interval_read_retry() must be done first.
-	 */
-	for (i = 0; pages && i < npages; i++)
-		pages[i] = hmm_pfn_to_page(pfns[i]);
+  /*
+   * Due to default_flags, all pages are HMM_PFN_VALID or
+   * hmm_range_fault() fails. FIXME: The pages cannot be touched outside
+   * the notifier_lock, and mmu_interval_read_retry() must be done first.
+   */
+  for (i = 0; pages && i < npages; i++)
+    pages[i] = hmm_pfn_to_page(pfns[i]);
 
-	*phmm_range = hmm_range;
+  *phmm_range = hmm_range;
 
-	return 0;
+  return 0;
 
 out_free_pfns:
-	kvfree(pfns);
+  kvfree(pfns);
 out_free_range:
-	kfree(hmm_range);
+  kfree(hmm_range);
 
-	return r;
+  return r;
 }
 
 int amdgpu_hmm_range_get_pages_done(struct hmm_range *hmm_range)
 {
-	int r;
+  int r;
 
-	r = mmu_interval_read_retry(hmm_range->notifier,
-				    hmm_range->notifier_seq);
-	kvfree(hmm_range->hmm_pfns);
-	kfree(hmm_range);
+  r = mmu_interval_read_retry(hmm_range->notifier,
+            hmm_range->notifier_seq);
+  kvfree(hmm_range->hmm_pfns);
+  kfree(hmm_range);
 
-	return r;
+  return r;
 }

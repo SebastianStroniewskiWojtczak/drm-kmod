@@ -41,20 +41,20 @@
  * core.
  */
 struct drm_info_list {
-	/** @name: file name */
-	const char *name;
-	/**
-	 * @show:
-	 *
-	 * Show callback. &seq_file->private will be set to the &struct
-	 * drm_info_node corresponding to the instance of this info on a given
-	 * &struct drm_minor.
-	 */
-	int (*show)(struct seq_file*, void*);
-	/** @driver_features: Required driver features for this entry */
-	u32 driver_features;
-	/** @data: Driver-private data, should not be device-specific. */
-	void *data;
+  /** @name: file name */
+  const char *name;
+  /**
+   * @show:
+   *
+   * Show callback. &seq_file->private will be set to the &struct
+   * drm_info_node corresponding to the instance of this info on a given
+   * &struct drm_minor.
+   */
+  int (*show)(struct seq_file*, void*);
+  /** @driver_features: Required driver features for this entry */
+  u32 driver_features;
+  /** @data: Driver-private data, should not be device-specific. */
+  void *data;
 };
 
 /**
@@ -70,31 +70,31 @@ struct drm_info_list {
  * grown. It should probably be fixed, with a compatibility link, if needed.
  */
 struct drm_info_node {
-	/** @minor: &struct drm_minor for this node. */
-	struct drm_minor *minor;
-	/** @info_ent: template for this node. */
-	const struct drm_info_list *info_ent;
-	/* private: */
-	struct list_head list;
-	struct dentry *dent;
+  /** @minor: &struct drm_minor for this node. */
+  struct drm_minor *minor;
+  /** @info_ent: template for this node. */
+  const struct drm_info_list *info_ent;
+  /* private: */
+  struct list_head list;
+  struct dentry *dent;
 };
 
 #if defined(CONFIG_DEBUG_FS)
 void drm_debugfs_create_files(const struct drm_info_list *files,
-			      int count, struct dentry *root,
-			      struct drm_minor *minor);
+            int count, struct dentry *root,
+            struct drm_minor *minor);
 int drm_debugfs_remove_files(const struct drm_info_list *files,
-			     int count, struct drm_minor *minor);
+           int count, struct drm_minor *minor);
 #else
 static inline void drm_debugfs_create_files(const struct drm_info_list *files,
-					    int count, struct dentry *root,
-					    struct drm_minor *minor)
+              int count, struct dentry *root,
+              struct drm_minor *minor)
 {}
 
 static inline int drm_debugfs_remove_files(const struct drm_info_list *files,
-					   int count, struct drm_minor *minor)
+             int count, struct drm_minor *minor)
 {
-	return 0;
+  return 0;
 }
 #endif
 

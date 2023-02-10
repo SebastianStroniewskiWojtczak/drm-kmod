@@ -5,7 +5,7 @@
 #include <linux/types.h>
 
 #ifndef I2C_NAME_SIZE
-#define I2C_NAME_SIZE	20
+#define I2C_NAME_SIZE  20
 #endif
 #ifndef I2C_MODULE_PREFIX
 #define I2C_MODULE_PREFIX "i2c:"

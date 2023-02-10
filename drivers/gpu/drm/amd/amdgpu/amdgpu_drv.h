@@ -40,13 +40,13 @@ SYSCTL_DECL(_hw_amdgpu);
 /* General customization:
  */
 
-#define DRIVER_AUTHOR		"AMD linux driver team"
+#define DRIVER_AUTHOR    "AMD linux driver team"
 
-#define DRIVER_NAME		"amdgpu"
-#define DRIVER_DESC		"AMD GPU"
-#define DRIVER_DATE		"20150101"
+#define DRIVER_NAME    "amdgpu"
+#define DRIVER_DESC    "AMD GPU"
+#define DRIVER_DATE    "20150101"
 
 long amdgpu_drm_ioctl(struct file *filp,
-		      unsigned int cmd, unsigned long arg);
+          unsigned int cmd, unsigned long arg);
 
 #endif

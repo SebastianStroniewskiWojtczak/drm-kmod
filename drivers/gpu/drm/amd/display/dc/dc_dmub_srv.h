@@ -33,23 +33,23 @@ struct dmub_srv;
 struct dc;
 
 struct dc_reg_helper_state {
-	bool gather_in_progress;
-	uint32_t same_addr_count;
-	bool should_burst_write;
-	union dmub_rb_cmd cmd_data;
-	unsigned int reg_seq_count;
+  bool gather_in_progress;
+  uint32_t same_addr_count;
+  bool should_burst_write;
+  union dmub_rb_cmd cmd_data;
+  unsigned int reg_seq_count;
 };
 
 struct dc_dmub_srv {
-	struct dmub_srv *dmub;
-	struct dc_reg_helper_state reg_helper_offload;
+  struct dmub_srv *dmub;
+  struct dc_reg_helper_state reg_helper_offload;
 
-	struct dc_context *ctx;
-	void *dm;
+  struct dc_context *ctx;
+  void *dm;
 };
 
 void dc_dmub_srv_cmd_queue(struct dc_dmub_srv *dc_dmub_srv,
-			   union dmub_rb_cmd *cmd);
+         union dmub_rb_cmd *cmd);
 
 void dc_dmub_srv_cmd_execute(struct dc_dmub_srv *dc_dmub_srv);
 
@@ -60,7 +60,7 @@ void dc_dmub_srv_wait_phy_init(struct dc_dmub_srv *dc_dmub_srv);
 bool dc_dmub_srv_cmd_with_reply_data(struct dc_dmub_srv *dc_dmub_srv, union dmub_rb_cmd *cmd);
 
 bool dc_dmub_srv_notify_stream_mask(struct dc_dmub_srv *dc_dmub_srv,
-				    unsigned int stream_mask);
+            unsigned int stream_mask);
 
 bool dc_dmub_srv_is_restore_required(struct dc_dmub_srv *dc_dmub_srv);
 

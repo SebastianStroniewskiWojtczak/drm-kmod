@@ -30,17 +30,17 @@
 
 static int __init dummygfx_init(void)
 {
-	int ret;
+  int ret;
 
-	dummygfx_debugfs_init();
-	ret = 0;
-	return ret;
+  dummygfx_debugfs_init();
+  ret = 0;
+  return ret;
 }
 
 static void __exit dummygfx_exit(void)
 {
 
-	dummygfx_debugfs_exit();
+  dummygfx_debugfs_exit();
 }
 
 LKPI_DRIVER_MODULE(dummygfx, dummygfx_init, dummygfx_exit);

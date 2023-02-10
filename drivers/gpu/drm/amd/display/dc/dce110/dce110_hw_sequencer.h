@@ -36,8 +36,8 @@ struct dm_pp_display_configuration;
 void dce110_hw_sequencer_construct(struct dc *dc);
 
 enum dc_status dce110_apply_ctx_to_hw(
-		struct dc *dc,
-		struct dc_state *context);
+    struct dc *dc,
+    struct dc_state *context);
 
 
 void dce110_enable_stream(struct pipe_ctx *pipe_ctx);
@@ -45,7 +45,7 @@ void dce110_enable_stream(struct pipe_ctx *pipe_ctx);
 void dce110_disable_stream(struct pipe_ctx *pipe_ctx);
 
 void dce110_unblank_stream(struct pipe_ctx *pipe_ctx,
-		struct dc_link_settings *link_settings);
+    struct dc_link_settings *link_settings);
 
 void dce110_blank_stream(struct pipe_ctx *pipe_ctx);
 
@@ -60,34 +60,34 @@ void dce110_enable_accelerated_mode(struct dc *dc, struct dc_state *context);
 void dce110_power_down(struct dc *dc);
 
 void dce110_set_safe_displaymarks(
-		struct resource_context *res_ctx,
-		const struct resource_pool *pool);
+    struct resource_context *res_ctx,
+    const struct resource_pool *pool);
 
 void dce110_prepare_bandwidth(
-		struct dc *dc,
-		struct dc_state *context);
+    struct dc *dc,
+    struct dc_state *context);
 
 void dce110_optimize_bandwidth(
-		struct dc *dc,
-		struct dc_state *context);
+    struct dc *dc,
+    struct dc_state *context);
 
 void dp_receiver_power_ctrl(struct dc_link *link, bool on);
 
 void dce110_edp_power_control(
-		struct dc_link *link,
-		bool power_up);
+    struct dc_link *link,
+    bool power_up);
 
 void dce110_edp_backlight_control(
-	struct dc_link *link,
-	bool enable);
+  struct dc_link *link,
+  bool enable);
 
 void dce110_edp_wait_for_hpd_ready(
-		struct dc_link *link,
-		bool power_up);
+    struct dc_link *link,
+    bool power_up);
 
 bool dce110_set_backlight_level(struct pipe_ctx *pipe_ctx,
-		uint32_t backlight_pwm_u16_16,
-		uint32_t frame_ramp);
+    uint32_t backlight_pwm_u16_16,
+    uint32_t frame_ramp);
 void dce110_set_abm_immediate_disable(struct pipe_ctx *pipe_ctx);
 void dce110_set_pipe(struct pipe_ctx *pipe_ctx);
 

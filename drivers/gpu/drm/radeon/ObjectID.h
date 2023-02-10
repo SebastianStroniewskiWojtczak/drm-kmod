@@ -125,8 +125,8 @@
 /****************************************************/
 /* Router Object ID Definition                      */
 /****************************************************/
-#define ROUTER_OBJECT_ID_NONE											0x00
-#define ROUTER_OBJECT_ID_I2C_EXTENDER_CNTL				0x01
+#define ROUTER_OBJECT_ID_NONE                      0x00
+#define ROUTER_OBJECT_ID_I2C_EXTENDER_CNTL        0x01
 
 /****************************************************/
 /* Generic Object ID Definition                     */

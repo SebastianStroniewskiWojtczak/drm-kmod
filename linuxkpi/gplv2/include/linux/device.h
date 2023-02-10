@@ -1,5 +1,5 @@
-#ifndef	_LINUX_GPLV2_DEVICE_H_
-#define	_LINUX_GPLV2_DEVICE_H_
+#ifndef  _LINUX_GPLV2_DEVICE_H_
+#define  _LINUX_GPLV2_DEVICE_H_
 
 #include_next <linux/device.h>
 
@@ -7,15 +7,15 @@
 int devm_add_action(struct device *dev, void (*action)(void *), void *data);
 
 static inline int devm_add_action_or_reset(struct device *dev,
-					   void (*action)(void *), void *data)
+             void (*action)(void *), void *data)
 {
-	int ret;
+  int ret;
 
-	ret = devm_add_action(dev, action, data);
-	if (ret)
-		action(data);
+  ret = devm_add_action(dev, action, data);
+  if (ret)
+    action(data);
 
-	return ret;
+  return ret;
 }
 
-#endif	/* _LINUX_DEVICE_H_ */
+#endif  /* _LINUX_DEVICE_H_ */

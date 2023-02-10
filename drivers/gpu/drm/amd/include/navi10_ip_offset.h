@@ -26,11 +26,11 @@
 
 
 struct IP_BASE_INSTANCE {
-	unsigned int segment[MAX_SEGMENT];
+  unsigned int segment[MAX_SEGMENT];
 };
  
 struct IP_BASE {
-	struct IP_BASE_INSTANCE instance[MAX_INSTANCE];
+  struct IP_BASE_INSTANCE instance[MAX_INSTANCE];
 } __maybe_unused;
 
 
@@ -106,12 +106,12 @@ static const struct IP_BASE OSSSYS_BASE            ={ { { { 0x000010A0, 0, 0, 0,
                                         { { 0, 0, 0, 0, 0, 0 } },
                                         { { 0, 0, 0, 0, 0, 0 } },
                                         { { 0, 0, 0, 0, 0, 0 } } } };
-static const struct IP_BASE RSMU_BASE			= { { { { 0x00012000, 0, 0, 0, 0, 0 } },
-					{ { 0, 0, 0, 0, 0, 0 } },
-					{ { 0, 0, 0, 0, 0, 0 } },
-					{ { 0, 0, 0, 0, 0, 0 } },
-					{ { 0, 0, 0, 0, 0, 0 } },
-					{ { 0, 0, 0, 0, 0, 0 } } } };
+static const struct IP_BASE RSMU_BASE      = { { { { 0x00012000, 0, 0, 0, 0, 0 } },
+          { { 0, 0, 0, 0, 0, 0 } },
+          { { 0, 0, 0, 0, 0, 0 } },
+          { { 0, 0, 0, 0, 0, 0 } },
+          { { 0, 0, 0, 0, 0, 0 } },
+          { { 0, 0, 0, 0, 0, 0 } } } };
 static const struct IP_BASE SMUIO_BASE            ={ { { { 0x00016800, 0x00016A00, 0, 0, 0, 0 } },
                                         { { 0, 0, 0, 0, 0, 0 } },
                                         { { 0, 0, 0, 0, 0, 0 } },

@@ -45,120 +45,120 @@ enum aux_return_code_type;
  * Returns virtual address, sets addr to physical address
  */
 void *dm_helpers_allocate_gpu_mem(
-		struct dc_context *ctx,
-		enum dc_gpu_mem_alloc_type type,
-		size_t size,
-		long long *addr);
+    struct dc_context *ctx,
+    enum dc_gpu_mem_alloc_type type,
+    size_t size,
+    long long *addr);
 
 /*
  * Free the GPU-accessible memory at the virtual address pvMem
  */
 void dm_helpers_free_gpu_mem(
-		struct dc_context *ctx,
-		enum dc_gpu_mem_alloc_type type,
-		void *pvMem);
+    struct dc_context *ctx,
+    enum dc_gpu_mem_alloc_type type,
+    void *pvMem);
 
 enum dc_edid_status dm_helpers_parse_edid_caps(
-	struct dc_context *ctx,
-	const struct dc_edid *edid,
-	struct dc_edid_caps *edid_caps);
+  struct dc_context *ctx,
+  const struct dc_edid *edid,
+  struct dc_edid_caps *edid_caps);
 
 
 /*
  * Update DP branch info
  */
 void dm_helpers_dp_update_branch_info(
-		struct dc_context *ctx,
-		const struct dc_link *link);
+    struct dc_context *ctx,
+    const struct dc_link *link);
 
 /*
  * Writes payload allocation table in immediate downstream device.
  */
 bool dm_helpers_dp_mst_write_payload_allocation_table(
-		struct dc_context *ctx,
-		const struct dc_stream_state *stream,
-		struct dp_mst_stream_allocation_table *proposed_table,
-		bool enable);
+    struct dc_context *ctx,
+    const struct dc_stream_state *stream,
+    struct dp_mst_stream_allocation_table *proposed_table,
+    bool enable);
 
 /*
  * poll pending down reply
  */
 void dm_helpers_dp_mst_poll_pending_down_reply(
-	struct dc_context *ctx,
-	const struct dc_link *link);
+  struct dc_context *ctx,
+  const struct dc_link *link);
 
 /*
  * Clear payload allocation table before enable MST DP link.
  */
 void dm_helpers_dp_mst_clear_payload_allocation_table(
-	struct dc_context *ctx,
-	const struct dc_link *link);
+  struct dc_context *ctx,
+  const struct dc_link *link);
 
 /*
  * Polls for ACT (allocation change trigger) handled and
  */
 enum act_return_status dm_helpers_dp_mst_poll_for_allocation_change_trigger(
-		struct dc_context *ctx,
-		const struct dc_stream_state *stream);
+    struct dc_context *ctx,
+    const struct dc_stream_state *stream);
 /*
  * Sends ALLOCATE_PAYLOAD message.
  */
 bool dm_helpers_dp_mst_send_payload_allocation(
-		struct dc_context *ctx,
-		const struct dc_stream_state *stream,
-		bool enable);
+    struct dc_context *ctx,
+    const struct dc_stream_state *stream,
+    bool enable);
 
 bool dm_helpers_dp_mst_start_top_mgr(
-		struct dc_context *ctx,
-		const struct dc_link *link,
-		bool boot);
+    struct dc_context *ctx,
+    const struct dc_link *link,
+    bool boot);
 
 void dm_helpers_dp_mst_stop_top_mgr(
-		struct dc_context *ctx,
-		struct dc_link *link);
+    struct dc_context *ctx,
+    struct dc_link *link);
 /**
  * OS specific aux read callback.
  */
 bool dm_helpers_dp_read_dpcd(
-		struct dc_context *ctx,
-		const struct dc_link *link,
-		uint32_t address,
-		uint8_t *data,
-		uint32_t size);
+    struct dc_context *ctx,
+    const struct dc_link *link,
+    uint32_t address,
+    uint8_t *data,
+    uint32_t size);
 
 /**
  * OS specific aux write callback.
  */
 bool dm_helpers_dp_write_dpcd(
-		struct dc_context *ctx,
-		const struct dc_link *link,
-		uint32_t address,
-		const uint8_t *data,
-		uint32_t size);
+    struct dc_context *ctx,
+    const struct dc_link *link,
+    uint32_t address,
+    const uint8_t *data,
+    uint32_t size);
 
 bool dm_helpers_submit_i2c(
-		struct dc_context *ctx,
-		const struct dc_link *link,
-		struct i2c_command *cmd);
+    struct dc_context *ctx,
+    const struct dc_link *link,
+    struct i2c_command *cmd);
 
 bool dm_helpers_dp_write_dsc_enable(
-		struct dc_context *ctx,
-		const struct dc_stream_state *stream,
-		bool enable
+    struct dc_context *ctx,
+    const struct dc_stream_state *stream,
+    bool enable
 );
 bool dm_helpers_is_dp_sink_present(
-		struct dc_link *link);
+    struct dc_link *link);
 
 void dm_helpers_mst_enable_stream_features(const struct dc_stream_state *stream);
 
 enum dc_edid_status dm_helpers_read_local_edid(
-		struct dc_context *ctx,
-		struct dc_link *link,
-		struct dc_sink *sink);
+    struct dc_context *ctx,
+    struct dc_link *link,
+    struct dc_sink *sink);
 
 void dm_set_dcn_clocks(
-		struct dc_context *ctx,
-		struct dc_clocks *clks);
+    struct dc_context *ctx,
+    struct dc_clocks *clks);
 
 bool dm_helpers_dmub_outbox_interrupt_control(struct dc_context *ctx, bool enable);
 
@@ -166,11 +166,11 @@ void dm_helpers_smu_timeout(struct dc_context *ctx, unsigned int msg_id, unsigne
 
 // 0x1 = Result_OK, 0xFE = Result_UnkmownCmd
 #define IS_SMU_TIMEOUT(result) \
-	(!(result == 0x1 || result == 0xFE))
+  (!(result == 0x1 || result == 0xFE))
 
 int dm_helper_dmub_aux_transfer_sync(
-		struct dc_context *ctx,
-		const struct dc_link *link,
-		struct aux_payload *payload,
-		enum aux_return_code_type *operation_result);
+    struct dc_context *ctx,
+    const struct dc_link *link,
+    struct aux_payload *payload,
+    enum aux_return_code_type *operation_result);
 #endif /* __DM_HELPERS__ */

@@ -30,7 +30,7 @@
 #include "amdgpu.h"
 
 static const struct amdgpu_afmt_acr amdgpu_afmt_predefined_acr[] = {
-    /*	     32kHz	  44.1kHz	48kHz    */
+    /*       32kHz    44.1kHz  48kHz    */
     /* Clock      N     CTS      N     CTS      N     CTS */
     {  25175,  4096,  25175, 28224, 125875,  6144,  25175 }, /*  25,20/1.001 MHz */
     {  25200,  4096,  25200,  6272,  28000,  6144,  25200 }, /*  25.20       MHz */
@@ -50,56 +50,56 @@ static const struct amdgpu_afmt_acr amdgpu_afmt_predefined_acr[] = {
  */
 static void amdgpu_afmt_calc_cts(uint32_t clock, int *CTS, int *N, int freq)
 {
-	int n, cts;
-	unsigned long div, mul;
+  int n, cts;
+  unsigned long div, mul;
 
-	/* Safe, but overly large values */
-	n = 128 * freq;
-	cts = clock * 1000;
+  /* Safe, but overly large values */
+  n = 128 * freq;
+  cts = clock * 1000;
 
-	/* Smallest valid fraction */
-	div = gcd(n, cts);
+  /* Smallest valid fraction */
+  div = gcd(n, cts);
 
-	n /= div;
-	cts /= div;
+  n /= div;
+  cts /= div;
 
-	/*
-	 * The optimal N is 128*freq/1000. Calculate the closest larger
-	 * value that doesn't truncate any bits.
-	 */
-	mul = ((128*freq/1000) + (n-1))/n;
+  /*
+   * The optimal N is 128*freq/1000. Calculate the closest larger
+   * value that doesn't truncate any bits.
+   */
+  mul = ((128*freq/1000) + (n-1))/n;
 
-	n *= mul;
-	cts *= mul;
+  n *= mul;
+  cts *= mul;
 
-	/* Check that we are in spec (not always possible) */
-	if (n < (128*freq/1500))
-		pr_warn("Calculated ACR N value is too small. You may experience audio problems.\n");
-	if (n > (128*freq/300))
-		pr_warn("Calculated ACR N value is too large. You may experience audio problems.\n");
+  /* Check that we are in spec (not always possible) */
+  if (n < (128*freq/1500))
+    pr_warn("Calculated ACR N value is too small. You may experience audio problems.\n");
+  if (n > (128*freq/300))
+    pr_warn("Calculated ACR N value is too large. You may experience audio problems.\n");
 
-	*N = n;
-	*CTS = cts;
+  *N = n;
+  *CTS = cts;
 
-	DRM_DEBUG("Calculated ACR timing N=%d CTS=%d for frequency %d\n",
-		  *N, *CTS, freq);
+  DRM_DEBUG("Calculated ACR timing N=%d CTS=%d for frequency %d\n",
+      *N, *CTS, freq);
 }
 
 struct amdgpu_afmt_acr amdgpu_afmt_acr(uint32_t clock)
 {
-	struct amdgpu_afmt_acr res;
-	u8 i;
+  struct amdgpu_afmt_acr res;
+  u8 i;
 
-	/* Precalculated values for common clocks */
-	for (i = 0; i < ARRAY_SIZE(amdgpu_afmt_predefined_acr); i++) {
-		if (amdgpu_afmt_predefined_acr[i].clock == clock)
-			return amdgpu_afmt_predefined_acr[i];
-	}
+  /* Precalculated values for common clocks */
+  for (i = 0; i < ARRAY_SIZE(amdgpu_afmt_predefined_acr); i++) {
+    if (amdgpu_afmt_predefined_acr[i].clock == clock)
+      return amdgpu_afmt_predefined_acr[i];
+  }
 
-	/* And odd clocks get manually calculated */
-	amdgpu_afmt_calc_cts(clock, &res.cts_32khz, &res.n_32khz, 32000);
-	amdgpu_afmt_calc_cts(clock, &res.cts_44_1khz, &res.n_44_1khz, 44100);
-	amdgpu_afmt_calc_cts(clock, &res.cts_48khz, &res.n_48khz, 48000);
+  /* And odd clocks get manually calculated */
+  amdgpu_afmt_calc_cts(clock, &res.cts_32khz, &res.n_32khz, 32000);
+  amdgpu_afmt_calc_cts(clock, &res.cts_44_1khz, &res.n_44_1khz, 44100);
+  amdgpu_afmt_calc_cts(clock, &res.cts_48khz, &res.n_48khz, 48000);
 
-	return res;
+  return res;
 }

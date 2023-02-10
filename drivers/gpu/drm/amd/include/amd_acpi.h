@@ -27,87 +27,87 @@
 #define ACPI_AC_CLASS           "ac_adapter"
 
 struct atif_verify_interface {
-	u16 size;		/* structure size in bytes (includes size field) */
-	u16 version;		/* version */
-	u32 notification_mask;	/* supported notifications mask */
-	u32 function_bits;	/* supported functions bit vector */
+  u16 size;    /* structure size in bytes (includes size field) */
+  u16 version;    /* version */
+  u32 notification_mask;  /* supported notifications mask */
+  u32 function_bits;  /* supported functions bit vector */
 } __packed;
 
 struct atif_system_params {
-	u16 size;		/* structure size in bytes (includes size field) */
-	u32 valid_mask;		/* valid flags mask */
-	u32 flags;		/* flags */
-	u8 command_code;	/* notify command code */
+  u16 size;    /* structure size in bytes (includes size field) */
+  u32 valid_mask;    /* valid flags mask */
+  u32 flags;    /* flags */
+  u8 command_code;  /* notify command code */
 } __packed;
 
 struct atif_sbios_requests {
-	u16 size;		/* structure size in bytes (includes size field) */
-	u32 pending;		/* pending sbios requests */
-	u8 panel_exp_mode;	/* panel expansion mode */
-	u8 thermal_gfx;		/* thermal state: target gfx controller */
-	u8 thermal_state;	/* thermal state: state id (0: exit state, non-0: state) */
-	u8 forced_power_gfx;	/* forced power state: target gfx controller */
-	u8 forced_power_state;	/* forced power state: state id */
-	u8 system_power_src;	/* system power source */
-	u8 backlight_level;	/* panel backlight level (0-255) */
+  u16 size;    /* structure size in bytes (includes size field) */
+  u32 pending;    /* pending sbios requests */
+  u8 panel_exp_mode;  /* panel expansion mode */
+  u8 thermal_gfx;    /* thermal state: target gfx controller */
+  u8 thermal_state;  /* thermal state: state id (0: exit state, non-0: state) */
+  u8 forced_power_gfx;  /* forced power state: target gfx controller */
+  u8 forced_power_state;  /* forced power state: state id */
+  u8 system_power_src;  /* system power source */
+  u8 backlight_level;  /* panel backlight level (0-255) */
 } __packed;
 
 struct atif_qbtc_arguments {
-	u16 size;		/* structure size in bytes (includes size field) */
-	u8 requested_display;	/* which display is requested */
+  u16 size;    /* structure size in bytes (includes size field) */
+  u8 requested_display;  /* which display is requested */
 } __packed;
 
 #define ATIF_QBTC_MAX_DATA_POINTS 99
 
 struct atif_qbtc_data_point {
-	u8 luminance;		/* luminance in percent */
-	u8 ipnut_signal;	/* input signal in range 0-255 */
+  u8 luminance;    /* luminance in percent */
+  u8 ipnut_signal;  /* input signal in range 0-255 */
 } __packed;
 
 struct atif_qbtc_output {
-	u16 size;		/* structure size in bytes (includes size field) */
-	u16 flags;		/* all zeroes */
-	u8 error_code;		/* error code */
-	u8 ac_level;		/* default brightness on AC power */
-	u8 dc_level;		/* default brightness on DC power */
-	u8 min_input_signal;	/* max input signal in range 0-255 */
-	u8 max_input_signal;	/* min input signal in range 0-255 */
-	u8 number_of_points;	/* number of data points */
-	struct atif_qbtc_data_point data_points[ATIF_QBTC_MAX_DATA_POINTS];
+  u16 size;    /* structure size in bytes (includes size field) */
+  u16 flags;    /* all zeroes */
+  u8 error_code;    /* error code */
+  u8 ac_level;    /* default brightness on AC power */
+  u8 dc_level;    /* default brightness on DC power */
+  u8 min_input_signal;  /* max input signal in range 0-255 */
+  u8 max_input_signal;  /* min input signal in range 0-255 */
+  u8 number_of_points;  /* number of data points */
+  struct atif_qbtc_data_point data_points[ATIF_QBTC_MAX_DATA_POINTS];
 } __packed;
 
-#define ATIF_NOTIFY_MASK	0x3
-#define ATIF_NOTIFY_NONE	0
-#define ATIF_NOTIFY_81		1
-#define ATIF_NOTIFY_N		2
+#define ATIF_NOTIFY_MASK  0x3
+#define ATIF_NOTIFY_NONE  0
+#define ATIF_NOTIFY_81    1
+#define ATIF_NOTIFY_N    2
 
 struct atcs_verify_interface {
-	u16 size;		/* structure size in bytes (includes size field) */
-	u16 version;		/* version */
-	u32 function_bits;	/* supported functions bit vector */
+  u16 size;    /* structure size in bytes (includes size field) */
+  u16 version;    /* version */
+  u32 function_bits;  /* supported functions bit vector */
 } __packed;
 
-#define ATCS_VALID_FLAGS_MASK	0x3
+#define ATCS_VALID_FLAGS_MASK  0x3
 
 struct atcs_pref_req_input {
-	u16 size;		/* structure size in bytes (includes size field) */
-	u16 client_id;		/* client id (bit 2-0: func num, 7-3: dev num, 15-8: bus num) */
-	u16 valid_flags_mask;	/* valid flags mask */
-	u16 flags;		/* flags */
-	u8 req_type;		/* request type */
-	u8 perf_req;		/* performance request */
+  u16 size;    /* structure size in bytes (includes size field) */
+  u16 client_id;    /* client id (bit 2-0: func num, 7-3: dev num, 15-8: bus num) */
+  u16 valid_flags_mask;  /* valid flags mask */
+  u16 flags;    /* flags */
+  u8 req_type;    /* request type */
+  u8 perf_req;    /* performance request */
 } __packed;
 
 struct atcs_pref_req_output {
-	u16 size;		/* structure size in bytes (includes size field) */
-	u8 ret_val;		/* return value */
+  u16 size;    /* structure size in bytes (includes size field) */
+  u8 ret_val;    /* return value */
 } __packed;
 
 struct atcs_pwr_shift_input {
-	u16 size;		/* structure size in bytes (includes size field) */
-	u16 dgpu_id;		/* client id (bit 2-0: func num, 7-3: dev num, 15-8: bus num) */
-	u8 dev_acpi_state;	/* D0 = 0, D3 hot = 3 */
-	u8 drv_state;	/* 0 = operational, 1 = not operational */
+  u16 size;    /* structure size in bytes (includes size field) */
+  u16 dgpu_id;    /* client id (bit 2-0: func num, 7-3: dev num, 15-8: bus num) */
+  u8 dev_acpi_state;  /* D0 = 0, D3 hot = 3 */
+  u8 drv_state;  /* 0 = operational, 1 = not operational */
 } __packed;
 
 /* AMD hw uses four ACPI control methods:
@@ -425,7 +425,7 @@ struct atcs_pwr_shift_input {
 #       define ATCS_PCIE_PERFORMANCE_REQUEST_SUPPORTED             (1 << 1)
 #       define ATCS_PCIE_DEVICE_READY_NOTIFICATION_SUPPORTED       (1 << 2)
 #       define ATCS_SET_PCIE_BUS_WIDTH_SUPPORTED                   (1 << 3)
-#       define ATCS_SET_POWER_SHIFT_CONTROL_SUPPORTED		   (1 << 7)
+#       define ATCS_SET_POWER_SHIFT_CONTROL_SUPPORTED       (1 << 7)
 #define ATCS_FUNCTION_GET_EXTERNAL_STATE                           0x1
 /* ARG0: ATCS_FUNCTION_GET_EXTERNAL_STATE
  * ARG1: none

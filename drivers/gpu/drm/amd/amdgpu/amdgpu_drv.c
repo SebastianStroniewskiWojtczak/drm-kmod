@@ -103,9 +103,9 @@ SYSCTL_NODE(_hw, OID_AUTO, amdgpu,
  * - 3.41.0 - Add video codec query
  * - 3.42.0 - Add 16bpc fixed point display support
  */
-#define KMS_DRIVER_MAJOR	3
-#define KMS_DRIVER_MINOR	42
-#define KMS_DRIVER_PATCHLEVEL	0
+#define KMS_DRIVER_MAJOR  3
+#define KMS_DRIVER_MINOR  42
+#define KMS_DRIVER_PATCHLEVEL  0
 
 int amdgpu_vram_limit;
 int amdgpu_vis_vram_limit;
@@ -186,10 +186,10 @@ static void amdgpu_drv_delayed_reset_work_handler(struct work_struct *work);
 
 #ifdef __linux__
 struct amdgpu_mgpu_info mgpu_info = {
-	.mutex = __MUTEX_INITIALIZER(mgpu_info.mutex),
-	.delayed_reset_work = __DELAYED_WORK_INITIALIZER(
-			mgpu_info.delayed_reset_work,
-			amdgpu_drv_delayed_reset_work_handler, 0),
+  .mutex = __MUTEX_INITIALIZER(mgpu_info.mutex),
+  .delayed_reset_work = __DELAYED_WORK_INITIALIZER(
+      mgpu_info.delayed_reset_work,
+      amdgpu_drv_delayed_reset_work_handler, 0),
 };
 #elif defined(__FreeBSD__)
 struct amdgpu_mgpu_info mgpu_info;
@@ -197,9 +197,9 @@ SX_SYSINIT(amdgpu_mgpu_info_mtx, &mgpu_info.mutex.sx, "amdgpu mgpu");
 
 static void __linux_delayed_mgpu_info_work_init(void *arg)
 {
-	linux_init_delayed_work(
-	    &mgpu_info.delayed_reset_work,
-	    amdgpu_drv_delayed_reset_work_handler);
+  linux_init_delayed_work(
+      &mgpu_info.delayed_reset_work,
+      amdgpu_drv_delayed_reset_work_handler);
 }
 SYSINIT(mgpu_info_delayed_reset_work, SI_SUB_LOCK, SI_ORDER_SECOND,
     __linux_delayed_mgpu_info_work_init, NULL);
@@ -209,8 +209,8 @@ int amdgpu_ras_enable = -1;
 uint amdgpu_ras_mask = 0xffffffff;
 int amdgpu_bad_page_threshold = -1;
 struct amdgpu_watchdog_timer amdgpu_watchdog_timer = {
-	.timeout_fatal_disable = false,
-	.period = 0x0, /* default to 0x0 (timeout disable) */
+  .timeout_fatal_disable = false,
+  .period = 0x0, /* default to 0x0 (timeout disable) */
 };
 
 /**
@@ -315,10 +315,10 @@ module_param_named(msi, amdgpu_msi, int, 0444);
  * jobs is 10000. The timeout for compute is 60000.
  */
 MODULE_PARM_DESC(lockup_timeout, "GPU lockup timeout in ms (default: for bare metal 10000 for non-compute jobs and 60000 for compute jobs; "
-		"for passthrough or sriov, 10000 for all jobs."
-		" 0: keep default value. negative: infinity timeout), "
-		"format: for bare metal [Non-Compute] or [GFX,Compute,SDMA,Video]; "
-		"for passthrough or sriov [all jobs] or [GFX,Compute,SDMA,Video].");
+    "for passthrough or sriov, 10000 for all jobs."
+    " 0: keep default value. negative: infinity timeout), "
+    "format: for bare metal [Non-Compute] or [GFX,Compute,SDMA,Video]; "
+    "for passthrough or sriov [all jobs] or [GFX,Compute,SDMA,Video].");
 module_param_string(lockup_timeout, amdgpu_lockup_timeout, sizeof(amdgpu_lockup_timeout), 0444);
 
 /**
@@ -519,7 +519,7 @@ module_param_named(disable_cu, amdgpu_disable_cu, charp, 0444);
  * device at 26:00.0. The default is NULL.
  */
 MODULE_PARM_DESC(virtual_display,
-		 "Enable virtual display feature (the virtual_display will be set like xxxx:xx:xx.x,x;xxxx:xx:xx.x,x)");
+     "Enable virtual display feature (the virtual_display will be set like xxxx:xx:xx.x,x;xxxx:xx:xx.x,x)");
 module_param_named(virtual_display, amdgpu_virtual_display, charp, 0444);
 #endif
 
@@ -627,8 +627,8 @@ module_param_named(cik_support, amdgpu_cik_support, int, 0444);
  * E.g. 0x1 = 256Mbyte, 0x2 = 512Mbyte, 0x4 = 1 Gbyte, 0x8 = 2GByte. The default is 0 (disabled).
  */
 MODULE_PARM_DESC(smu_memory_pool_size,
-	"reserve gtt for smu debug usage, 0 = disable,"
-		"0x1 = 256Mbyte, 0x2 = 512Mbyte, 0x4 = 1 Gbyte, 0x8 = 2GByte");
+  "reserve gtt for smu debug usage, 0 = disable,"
+    "0x1 = 256Mbyte, 0x2 = 512Mbyte, 0x4 = 1 Gbyte, 0x8 = 2GByte");
 module_param_named(smu_memory_pool_size, amdgpu_smu_memory_pool_size, uint, 0444);
 
 /**
@@ -636,7 +636,7 @@ module_param_named(smu_memory_pool_size, amdgpu_smu_memory_pool_size, uint, 0444
  * It is used to enable gfx rings that could be configured with different prioritites or equal priorities
  */
 MODULE_PARM_DESC(async_gfx_ring,
-	"Asynchronous GFX rings that could be configured with either different priorities (HP3D ring and LP3D ring), or equal priorities (0 = disabled, 1 = enabled (default))");
+  "Asynchronous GFX rings that could be configured with either different priorities (HP3D ring and LP3D ring), or equal priorities (0 = disabled, 1 = enabled (default))");
 module_param_named(async_gfx_ring, amdgpu_async_gfx_ring, int, 0444);
 
 /**
@@ -644,7 +644,7 @@ module_param_named(async_gfx_ring, amdgpu_async_gfx_ring, int, 0444);
  * It is used to enable mid command buffer preemption. (0 = disabled (default), 1 = enabled)
  */
 MODULE_PARM_DESC(mcbp,
-	"Enable Mid-command buffer preemption (0 = disabled (default), 1 = enabled)");
+  "Enable Mid-command buffer preemption (0 = disabled (default), 1 = enabled)");
 module_param_named(mcbp, amdgpu_mcbp, int, 0444);
 
 /**
@@ -653,7 +653,7 @@ module_param_named(mcbp, amdgpu_mcbp, int, 0444);
  * (-1 = auto (default), 0 = disabled, 1 = enabled)
  */
 MODULE_PARM_DESC(discovery,
-	"Allow driver to discover hardware IPs from IP Discovery table at the top of VRAM");
+  "Allow driver to discover hardware IPs from IP Discovery table at the top of VRAM");
 module_param_named(discovery, amdgpu_discovery, int, 0444);
 
 /**
@@ -662,7 +662,7 @@ module_param_named(discovery, amdgpu_discovery, int, 0444);
  * (0 = disabled (default), 1 = enabled)
  */
 MODULE_PARM_DESC(mes,
-	"Enable Micro Engine Scheduler (0 = disabled (default), 1 = enabled)");
+  "Enable Micro Engine Scheduler (0 = disabled (default), 1 = enabled)");
 module_param_named(mes, amdgpu_mes, int, 0444);
 
 /**
@@ -672,7 +672,7 @@ module_param_named(mes, amdgpu_mes, int, 0444);
  * (0 = retry enabled, 1 = retry disabled, -1 auto (default))
  */
 MODULE_PARM_DESC(noretry,
-	"Disable retry faults (0 = retry enabled, 1 = retry disabled, -1 auto (default))");
+  "Disable retry faults (0 = retry enabled, 1 = retry disabled, -1 auto (default))");
 module_param_named(noretry, amdgpu_noretry, int, 0644);
 
 /**
@@ -680,7 +680,7 @@ module_param_named(noretry, amdgpu_noretry, int, 0644);
  * A non negative value used to specify the asic type for all supported GPUs.
  */
 MODULE_PARM_DESC(force_asic_type,
-	"A non negative value used to specify the asic type for all supported GPUs");
+  "A non negative value used to specify the asic type for all supported GPUs");
 module_param_named(force_asic_type, amdgpu_force_asic_type, int, 0444);
 
 
@@ -695,7 +695,7 @@ module_param_named(force_asic_type, amdgpu_force_asic_type, int, 0444);
 int sched_policy = KFD_SCHED_POLICY_HWS;
 module_param(sched_policy, int, 0444);
 MODULE_PARM_DESC(sched_policy,
-	"Scheduling policy (0 = HWS (Default), 1 = HWS without over-subscription, 2 = Non-HWS (Used for debugging only)");
+  "Scheduling policy (0 = HWS (Default), 1 = HWS without over-subscription, 2 = Non-HWS (Used for debugging only)");
 
 /**
  * DOC: hws_max_conc_proc (int)
@@ -705,7 +705,7 @@ MODULE_PARM_DESC(sched_policy,
 int hws_max_conc_proc = 8;
 module_param(hws_max_conc_proc, int, 0444);
 MODULE_PARM_DESC(hws_max_conc_proc,
-	"Max # processes HWS can execute concurrently when sched_policy=0 (0 = no concurrency, #VMIDs for KFD = Maximum(default))");
+  "Max # processes HWS can execute concurrently when sched_policy=0 (0 = no concurrency, #VMIDs for KFD = Maximum(default))");
 
 /**
  * DOC: cwsr_enable (int)
@@ -725,7 +725,7 @@ MODULE_PARM_DESC(cwsr_enable, "CWSR enable (0 = Off, 1 = On (Default))");
 int max_num_of_queues_per_device = KFD_MAX_NUM_OF_QUEUES_PER_DEVICE_DEFAULT;
 module_param(max_num_of_queues_per_device, int, 0444);
 MODULE_PARM_DESC(max_num_of_queues_per_device,
-	"Maximum number of supported queues per device (1 = Minimum, 4096 = default)");
+  "Maximum number of supported queues per device (1 = Minimum, 4096 = default)");
 
 /**
  * DOC: send_sigterm (int)
@@ -735,7 +735,7 @@ MODULE_PARM_DESC(max_num_of_queues_per_device,
 int send_sigterm;
 module_param(send_sigterm, int, 0444);
 MODULE_PARM_DESC(send_sigterm,
-	"Send sigterm to HSA process on unhandled exception (0 = disable, 1 = enable)");
+  "Send sigterm to HSA process on unhandled exception (0 = disable, 1 = enable)");
 
 /**
  * DOC: debug_largebar (int)
@@ -747,7 +747,7 @@ MODULE_PARM_DESC(send_sigterm,
 int debug_largebar;
 module_param(debug_largebar, int, 0444);
 MODULE_PARM_DESC(debug_largebar,
-	"Debug large-bar flag used to simulate large-bar capability on non-large bar machine (0 = disable, 1 = enable)");
+  "Debug large-bar flag used to simulate large-bar capability on non-large bar machine (0 = disable, 1 = enable)");
 
 /**
  * DOC: ignore_crat (int)
@@ -761,7 +761,7 @@ MODULE_PARM_DESC(debug_largebar,
 int ignore_crat;
 module_param(ignore_crat, int, 0444);
 MODULE_PARM_DESC(ignore_crat,
-	"Ignore CRAT table during KFD initialization (0 = auto (default), 1 = ignore CRAT)");
+  "Ignore CRAT table during KFD initialization (0 = auto (default), 1 = ignore CRAT)");
 
 /**
  * DOC: halt_if_hws_hang (int)
@@ -881,8 +881,8 @@ module_param_named(tmz, amdgpu_tmz, int, 0444);
  * The default value: 0 (off).
  */
 MODULE_PARM_DESC(
-	freesync_video,
-	"Enable freesync modesetting optimization feature (0 = off (default), 1 = on)");
+  freesync_video,
+  "Enable freesync modesetting optimization feature (0 = off (default), 1 = on)");
 module_param_named(freesync_video, amdgpu_freesync_vid_mode, uint, 0444);
 
 /**
@@ -911,339 +911,339 @@ module_param_named(num_kcq, amdgpu_num_kcq, int, 0444);
  * id > 0 use the soft pptable with specicfied id.
  */
 MODULE_PARM_DESC(smu_pptable_id,
-	"specify pptable id to be used (-1 = auto(default) value, 0 = use pptable from vbios, > 0 = soft pptable id)");
+  "specify pptable id to be used (-1 = auto(default) value, 0 = use pptable from vbios, > 0 = soft pptable id)");
 module_param_named(smu_pptable_id, amdgpu_smu_pptable_id, int, 0444);
 
 static const struct pci_device_id pciidlist[] = {
 #ifdef  CONFIG_DRM_AMDGPU_SI
-	{0x1002, 0x6780, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
-	{0x1002, 0x6784, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
-	{0x1002, 0x6788, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
-	{0x1002, 0x678A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
-	{0x1002, 0x6790, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
-	{0x1002, 0x6791, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
-	{0x1002, 0x6792, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
-	{0x1002, 0x6798, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
-	{0x1002, 0x6799, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
-	{0x1002, 0x679A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
-	{0x1002, 0x679B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
-	{0x1002, 0x679E, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
-	{0x1002, 0x679F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
-	{0x1002, 0x6800, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN|AMD_IS_MOBILITY},
-	{0x1002, 0x6801, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN|AMD_IS_MOBILITY},
-	{0x1002, 0x6802, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN|AMD_IS_MOBILITY},
-	{0x1002, 0x6806, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
-	{0x1002, 0x6808, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
-	{0x1002, 0x6809, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
-	{0x1002, 0x6810, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
-	{0x1002, 0x6811, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
-	{0x1002, 0x6816, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
-	{0x1002, 0x6817, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
-	{0x1002, 0x6818, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
-	{0x1002, 0x6819, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
-	{0x1002, 0x6600, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
-	{0x1002, 0x6601, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
-	{0x1002, 0x6602, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
-	{0x1002, 0x6603, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
-	{0x1002, 0x6604, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
-	{0x1002, 0x6605, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
-	{0x1002, 0x6606, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
-	{0x1002, 0x6607, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
-	{0x1002, 0x6608, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND},
-	{0x1002, 0x6610, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND},
-	{0x1002, 0x6611, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND},
-	{0x1002, 0x6613, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND},
-	{0x1002, 0x6617, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
-	{0x1002, 0x6620, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
-	{0x1002, 0x6621, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
-	{0x1002, 0x6623, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
-	{0x1002, 0x6631, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND},
-	{0x1002, 0x6820, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x6821, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x6822, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x6823, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x6824, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x6825, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x6826, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x6827, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x6828, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
-	{0x1002, 0x6829, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
-	{0x1002, 0x682A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x682B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x682C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
-	{0x1002, 0x682D, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x682F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x6830, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x6831, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
-	{0x1002, 0x6835, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
-	{0x1002, 0x6837, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
-	{0x1002, 0x6838, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
-	{0x1002, 0x6839, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
-	{0x1002, 0x683B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
-	{0x1002, 0x683D, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
-	{0x1002, 0x683F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
-	{0x1002, 0x6660, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAINAN|AMD_IS_MOBILITY},
-	{0x1002, 0x6663, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAINAN|AMD_IS_MOBILITY},
-	{0x1002, 0x6664, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAINAN|AMD_IS_MOBILITY},
-	{0x1002, 0x6665, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAINAN|AMD_IS_MOBILITY},
-	{0x1002, 0x6667, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAINAN|AMD_IS_MOBILITY},
-	{0x1002, 0x666F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAINAN|AMD_IS_MOBILITY},
+  {0x1002, 0x6780, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
+  {0x1002, 0x6784, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
+  {0x1002, 0x6788, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
+  {0x1002, 0x678A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
+  {0x1002, 0x6790, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
+  {0x1002, 0x6791, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
+  {0x1002, 0x6792, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
+  {0x1002, 0x6798, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
+  {0x1002, 0x6799, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
+  {0x1002, 0x679A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
+  {0x1002, 0x679B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
+  {0x1002, 0x679E, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
+  {0x1002, 0x679F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TAHITI},
+  {0x1002, 0x6800, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN|AMD_IS_MOBILITY},
+  {0x1002, 0x6801, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN|AMD_IS_MOBILITY},
+  {0x1002, 0x6802, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN|AMD_IS_MOBILITY},
+  {0x1002, 0x6806, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
+  {0x1002, 0x6808, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
+  {0x1002, 0x6809, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
+  {0x1002, 0x6810, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
+  {0x1002, 0x6811, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
+  {0x1002, 0x6816, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
+  {0x1002, 0x6817, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
+  {0x1002, 0x6818, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
+  {0x1002, 0x6819, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_PITCAIRN},
+  {0x1002, 0x6600, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
+  {0x1002, 0x6601, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
+  {0x1002, 0x6602, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
+  {0x1002, 0x6603, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
+  {0x1002, 0x6604, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
+  {0x1002, 0x6605, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
+  {0x1002, 0x6606, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
+  {0x1002, 0x6607, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
+  {0x1002, 0x6608, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND},
+  {0x1002, 0x6610, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND},
+  {0x1002, 0x6611, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND},
+  {0x1002, 0x6613, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND},
+  {0x1002, 0x6617, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
+  {0x1002, 0x6620, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
+  {0x1002, 0x6621, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
+  {0x1002, 0x6623, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND|AMD_IS_MOBILITY},
+  {0x1002, 0x6631, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_OLAND},
+  {0x1002, 0x6820, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x6821, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x6822, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x6823, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x6824, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x6825, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x6826, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x6827, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x6828, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
+  {0x1002, 0x6829, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
+  {0x1002, 0x682A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x682B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x682C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
+  {0x1002, 0x682D, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x682F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x6830, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x6831, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE|AMD_IS_MOBILITY},
+  {0x1002, 0x6835, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
+  {0x1002, 0x6837, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
+  {0x1002, 0x6838, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
+  {0x1002, 0x6839, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
+  {0x1002, 0x683B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
+  {0x1002, 0x683D, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
+  {0x1002, 0x683F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VERDE},
+  {0x1002, 0x6660, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAINAN|AMD_IS_MOBILITY},
+  {0x1002, 0x6663, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAINAN|AMD_IS_MOBILITY},
+  {0x1002, 0x6664, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAINAN|AMD_IS_MOBILITY},
+  {0x1002, 0x6665, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAINAN|AMD_IS_MOBILITY},
+  {0x1002, 0x6667, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAINAN|AMD_IS_MOBILITY},
+  {0x1002, 0x666F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAINAN|AMD_IS_MOBILITY},
 #endif
 #ifdef CONFIG_DRM_AMDGPU_CIK
-	/* Kaveri */
-	{0x1002, 0x1304, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x1305, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
-	{0x1002, 0x1306, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x1307, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
-	{0x1002, 0x1309, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x130A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x130B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x130C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x130D, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x130E, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x130F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
-	{0x1002, 0x1310, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
-	{0x1002, 0x1311, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
-	{0x1002, 0x1312, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
-	{0x1002, 0x1313, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
-	{0x1002, 0x1315, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
-	{0x1002, 0x1316, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
-	{0x1002, 0x1317, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x1318, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x131B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
-	{0x1002, 0x131C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
-	{0x1002, 0x131D, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
-	/* Bonaire */
-	{0x1002, 0x6640, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE|AMD_IS_MOBILITY},
-	{0x1002, 0x6641, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE|AMD_IS_MOBILITY},
-	{0x1002, 0x6646, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE|AMD_IS_MOBILITY},
-	{0x1002, 0x6647, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE|AMD_IS_MOBILITY},
-	{0x1002, 0x6649, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
-	{0x1002, 0x6650, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
-	{0x1002, 0x6651, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
-	{0x1002, 0x6658, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
-	{0x1002, 0x665c, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
-	{0x1002, 0x665d, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
-	{0x1002, 0x665f, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
-	/* Hawaii */
-	{0x1002, 0x67A0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
-	{0x1002, 0x67A1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
-	{0x1002, 0x67A2, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
-	{0x1002, 0x67A8, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
-	{0x1002, 0x67A9, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
-	{0x1002, 0x67AA, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
-	{0x1002, 0x67B0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
-	{0x1002, 0x67B1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
-	{0x1002, 0x67B8, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
-	{0x1002, 0x67B9, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
-	{0x1002, 0x67BA, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
-	{0x1002, 0x67BE, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
-	/* Kabini */
-	{0x1002, 0x9830, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9831, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
-	{0x1002, 0x9832, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9833, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
-	{0x1002, 0x9834, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9835, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
-	{0x1002, 0x9836, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9837, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
-	{0x1002, 0x9838, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9839, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x983a, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
-	{0x1002, 0x983b, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x983c, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
-	{0x1002, 0x983d, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
-	{0x1002, 0x983e, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
-	{0x1002, 0x983f, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
-	/* mullins */
-	{0x1002, 0x9850, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9851, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9852, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9853, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9854, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9855, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9856, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9857, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9858, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x9859, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x985A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x985B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x985C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x985D, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x985E, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
-	{0x1002, 0x985F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  /* Kaveri */
+  {0x1002, 0x1304, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x1305, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
+  {0x1002, 0x1306, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x1307, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
+  {0x1002, 0x1309, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x130A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x130B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x130C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x130D, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x130E, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x130F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
+  {0x1002, 0x1310, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
+  {0x1002, 0x1311, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
+  {0x1002, 0x1312, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
+  {0x1002, 0x1313, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
+  {0x1002, 0x1315, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
+  {0x1002, 0x1316, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
+  {0x1002, 0x1317, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x1318, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x131B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
+  {0x1002, 0x131C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
+  {0x1002, 0x131D, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KAVERI|AMD_IS_APU},
+  /* Bonaire */
+  {0x1002, 0x6640, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE|AMD_IS_MOBILITY},
+  {0x1002, 0x6641, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE|AMD_IS_MOBILITY},
+  {0x1002, 0x6646, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE|AMD_IS_MOBILITY},
+  {0x1002, 0x6647, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE|AMD_IS_MOBILITY},
+  {0x1002, 0x6649, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
+  {0x1002, 0x6650, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
+  {0x1002, 0x6651, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
+  {0x1002, 0x6658, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
+  {0x1002, 0x665c, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
+  {0x1002, 0x665d, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
+  {0x1002, 0x665f, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BONAIRE},
+  /* Hawaii */
+  {0x1002, 0x67A0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
+  {0x1002, 0x67A1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
+  {0x1002, 0x67A2, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
+  {0x1002, 0x67A8, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
+  {0x1002, 0x67A9, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
+  {0x1002, 0x67AA, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
+  {0x1002, 0x67B0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
+  {0x1002, 0x67B1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
+  {0x1002, 0x67B8, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
+  {0x1002, 0x67B9, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
+  {0x1002, 0x67BA, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
+  {0x1002, 0x67BE, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_HAWAII},
+  /* Kabini */
+  {0x1002, 0x9830, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9831, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
+  {0x1002, 0x9832, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9833, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
+  {0x1002, 0x9834, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9835, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
+  {0x1002, 0x9836, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9837, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
+  {0x1002, 0x9838, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9839, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x983a, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
+  {0x1002, 0x983b, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x983c, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
+  {0x1002, 0x983d, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
+  {0x1002, 0x983e, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
+  {0x1002, 0x983f, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_KABINI|AMD_IS_APU},
+  /* mullins */
+  {0x1002, 0x9850, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9851, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9852, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9853, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9854, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9855, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9856, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9857, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9858, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x9859, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x985A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x985B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x985C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x985D, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x985E, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
+  {0x1002, 0x985F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_MULLINS|AMD_IS_MOBILITY|AMD_IS_APU},
 #endif
-	/* topaz */
-	{0x1002, 0x6900, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TOPAZ},
-	{0x1002, 0x6901, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TOPAZ},
-	{0x1002, 0x6902, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TOPAZ},
-	{0x1002, 0x6903, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TOPAZ},
-	{0x1002, 0x6907, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TOPAZ},
-	/* tonga */
-	{0x1002, 0x6920, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
-	{0x1002, 0x6921, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
-	{0x1002, 0x6928, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
-	{0x1002, 0x6929, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
-	{0x1002, 0x692B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
-	{0x1002, 0x692F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
-	{0x1002, 0x6930, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
-	{0x1002, 0x6938, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
-	{0x1002, 0x6939, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
-	/* fiji */
-	{0x1002, 0x7300, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_FIJI},
-	{0x1002, 0x730F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_FIJI},
-	/* carrizo */
-	{0x1002, 0x9870, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_CARRIZO|AMD_IS_APU},
-	{0x1002, 0x9874, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_CARRIZO|AMD_IS_APU},
-	{0x1002, 0x9875, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_CARRIZO|AMD_IS_APU},
-	{0x1002, 0x9876, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_CARRIZO|AMD_IS_APU},
-	{0x1002, 0x9877, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_CARRIZO|AMD_IS_APU},
-	/* stoney */
-	{0x1002, 0x98E4, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_STONEY|AMD_IS_APU},
-	/* Polaris11 */
-	{0x1002, 0x67E0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
-	{0x1002, 0x67E3, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
-	{0x1002, 0x67E8, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
-	{0x1002, 0x67EB, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
-	{0x1002, 0x67EF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
-	{0x1002, 0x67FF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
-	{0x1002, 0x67E1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
-	{0x1002, 0x67E7, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
-	{0x1002, 0x67E9, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
-	/* Polaris10 */
-	{0x1002, 0x67C0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
-	{0x1002, 0x67C1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
-	{0x1002, 0x67C2, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
-	{0x1002, 0x67C4, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
-	{0x1002, 0x67C7, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
-	{0x1002, 0x67D0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
-	{0x1002, 0x67DF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
-	{0x1002, 0x67C8, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
-	{0x1002, 0x67C9, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
-	{0x1002, 0x67CA, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
-	{0x1002, 0x67CC, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
-	{0x1002, 0x67CF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
-	{0x1002, 0x6FDF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
-	/* Polaris12 */
-	{0x1002, 0x6980, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
-	{0x1002, 0x6981, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
-	{0x1002, 0x6985, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
-	{0x1002, 0x6986, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
-	{0x1002, 0x6987, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
-	{0x1002, 0x6995, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
-	{0x1002, 0x6997, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
-	{0x1002, 0x699F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
-	/* VEGAM */
-	{0x1002, 0x694C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGAM},
-	{0x1002, 0x694E, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGAM},
-	{0x1002, 0x694F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGAM},
-	/* Vega 10 */
-	{0x1002, 0x6860, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x6861, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x6862, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x6863, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x6864, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x6867, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x6868, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x6869, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x686a, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x686b, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x686c, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x686d, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x686e, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x686f, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	{0x1002, 0x687f, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
-	/* Vega 12 */
-	{0x1002, 0x69A0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA12},
-	{0x1002, 0x69A1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA12},
-	{0x1002, 0x69A2, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA12},
-	{0x1002, 0x69A3, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA12},
-	{0x1002, 0x69AF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA12},
-	/* Vega 20 */
-	{0x1002, 0x66A0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
-	{0x1002, 0x66A1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
-	{0x1002, 0x66A2, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
-	{0x1002, 0x66A3, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
-	{0x1002, 0x66A4, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
-	{0x1002, 0x66A7, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
-	{0x1002, 0x66AF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
-	/* Raven */
-	{0x1002, 0x15dd, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_RAVEN|AMD_IS_APU},
-	{0x1002, 0x15d8, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_RAVEN|AMD_IS_APU},
-	/* Arcturus */
-	{0x1002, 0x738C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ARCTURUS},
-	{0x1002, 0x7388, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ARCTURUS},
-	{0x1002, 0x738E, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ARCTURUS},
-	{0x1002, 0x7390, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ARCTURUS},
-	/* Navi10 */
-	{0x1002, 0x7310, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
-	{0x1002, 0x7312, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
-	{0x1002, 0x7318, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
-	{0x1002, 0x7319, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
-	{0x1002, 0x731A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
-	{0x1002, 0x731B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
-	{0x1002, 0x731E, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
-	{0x1002, 0x731F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
-	/* Navi14 */
-	{0x1002, 0x7340, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI14},
-	{0x1002, 0x7341, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI14},
-	{0x1002, 0x7347, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI14},
-	{0x1002, 0x734F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI14},
+  /* topaz */
+  {0x1002, 0x6900, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TOPAZ},
+  {0x1002, 0x6901, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TOPAZ},
+  {0x1002, 0x6902, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TOPAZ},
+  {0x1002, 0x6903, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TOPAZ},
+  {0x1002, 0x6907, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TOPAZ},
+  /* tonga */
+  {0x1002, 0x6920, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
+  {0x1002, 0x6921, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
+  {0x1002, 0x6928, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
+  {0x1002, 0x6929, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
+  {0x1002, 0x692B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
+  {0x1002, 0x692F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
+  {0x1002, 0x6930, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
+  {0x1002, 0x6938, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
+  {0x1002, 0x6939, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_TONGA},
+  /* fiji */
+  {0x1002, 0x7300, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_FIJI},
+  {0x1002, 0x730F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_FIJI},
+  /* carrizo */
+  {0x1002, 0x9870, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_CARRIZO|AMD_IS_APU},
+  {0x1002, 0x9874, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_CARRIZO|AMD_IS_APU},
+  {0x1002, 0x9875, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_CARRIZO|AMD_IS_APU},
+  {0x1002, 0x9876, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_CARRIZO|AMD_IS_APU},
+  {0x1002, 0x9877, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_CARRIZO|AMD_IS_APU},
+  /* stoney */
+  {0x1002, 0x98E4, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_STONEY|AMD_IS_APU},
+  /* Polaris11 */
+  {0x1002, 0x67E0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
+  {0x1002, 0x67E3, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
+  {0x1002, 0x67E8, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
+  {0x1002, 0x67EB, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
+  {0x1002, 0x67EF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
+  {0x1002, 0x67FF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
+  {0x1002, 0x67E1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
+  {0x1002, 0x67E7, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
+  {0x1002, 0x67E9, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS11},
+  /* Polaris10 */
+  {0x1002, 0x67C0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
+  {0x1002, 0x67C1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
+  {0x1002, 0x67C2, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
+  {0x1002, 0x67C4, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
+  {0x1002, 0x67C7, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
+  {0x1002, 0x67D0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
+  {0x1002, 0x67DF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
+  {0x1002, 0x67C8, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
+  {0x1002, 0x67C9, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
+  {0x1002, 0x67CA, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
+  {0x1002, 0x67CC, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
+  {0x1002, 0x67CF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
+  {0x1002, 0x6FDF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS10},
+  /* Polaris12 */
+  {0x1002, 0x6980, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
+  {0x1002, 0x6981, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
+  {0x1002, 0x6985, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
+  {0x1002, 0x6986, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
+  {0x1002, 0x6987, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
+  {0x1002, 0x6995, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
+  {0x1002, 0x6997, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
+  {0x1002, 0x699F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_POLARIS12},
+  /* VEGAM */
+  {0x1002, 0x694C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGAM},
+  {0x1002, 0x694E, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGAM},
+  {0x1002, 0x694F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGAM},
+  /* Vega 10 */
+  {0x1002, 0x6860, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x6861, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x6862, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x6863, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x6864, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x6867, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x6868, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x6869, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x686a, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x686b, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x686c, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x686d, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x686e, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x686f, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  {0x1002, 0x687f, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA10},
+  /* Vega 12 */
+  {0x1002, 0x69A0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA12},
+  {0x1002, 0x69A1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA12},
+  {0x1002, 0x69A2, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA12},
+  {0x1002, 0x69A3, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA12},
+  {0x1002, 0x69AF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA12},
+  /* Vega 20 */
+  {0x1002, 0x66A0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
+  {0x1002, 0x66A1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
+  {0x1002, 0x66A2, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
+  {0x1002, 0x66A3, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
+  {0x1002, 0x66A4, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
+  {0x1002, 0x66A7, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
+  {0x1002, 0x66AF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VEGA20},
+  /* Raven */
+  {0x1002, 0x15dd, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_RAVEN|AMD_IS_APU},
+  {0x1002, 0x15d8, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_RAVEN|AMD_IS_APU},
+  /* Arcturus */
+  {0x1002, 0x738C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ARCTURUS},
+  {0x1002, 0x7388, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ARCTURUS},
+  {0x1002, 0x738E, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ARCTURUS},
+  {0x1002, 0x7390, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ARCTURUS},
+  /* Navi10 */
+  {0x1002, 0x7310, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
+  {0x1002, 0x7312, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
+  {0x1002, 0x7318, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
+  {0x1002, 0x7319, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
+  {0x1002, 0x731A, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
+  {0x1002, 0x731B, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
+  {0x1002, 0x731E, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
+  {0x1002, 0x731F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI10},
+  /* Navi14 */
+  {0x1002, 0x7340, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI14},
+  {0x1002, 0x7341, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI14},
+  {0x1002, 0x7347, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI14},
+  {0x1002, 0x734F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI14},
 
-	/* Renoir */
-	{0x1002, 0x15E7, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_RENOIR|AMD_IS_APU},
-	{0x1002, 0x1636, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_RENOIR|AMD_IS_APU},
-	{0x1002, 0x1638, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_RENOIR|AMD_IS_APU},
-	{0x1002, 0x164C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_RENOIR|AMD_IS_APU},
+  /* Renoir */
+  {0x1002, 0x15E7, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_RENOIR|AMD_IS_APU},
+  {0x1002, 0x1636, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_RENOIR|AMD_IS_APU},
+  {0x1002, 0x1638, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_RENOIR|AMD_IS_APU},
+  {0x1002, 0x164C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_RENOIR|AMD_IS_APU},
 
-	/* Navi12 */
-	{0x1002, 0x7360, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI12},
-	{0x1002, 0x7362, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI12},
+  /* Navi12 */
+  {0x1002, 0x7360, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI12},
+  {0x1002, 0x7362, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVI12},
 
-	/* Sienna_Cichlid */
-	{0x1002, 0x73A0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
-	{0x1002, 0x73A1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
-	{0x1002, 0x73A2, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
-	{0x1002, 0x73A3, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
-	{0x1002, 0x73AB, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
-	{0x1002, 0x73AE, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
-	{0x1002, 0x73AF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
-	{0x1002, 0x73BF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
+  /* Sienna_Cichlid */
+  {0x1002, 0x73A0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
+  {0x1002, 0x73A1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
+  {0x1002, 0x73A2, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
+  {0x1002, 0x73A3, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
+  {0x1002, 0x73AB, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
+  {0x1002, 0x73AE, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
+  {0x1002, 0x73AF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
+  {0x1002, 0x73BF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_SIENNA_CICHLID},
 
-	/* Van Gogh */
-	{0x1002, 0x163F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VANGOGH|AMD_IS_APU},
+  /* Van Gogh */
+  {0x1002, 0x163F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_VANGOGH|AMD_IS_APU},
 
-	/* Yellow Carp */
-	{0x1002, 0x164D, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_YELLOW_CARP|AMD_IS_APU},
-	{0x1002, 0x1681, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_YELLOW_CARP|AMD_IS_APU},
+  /* Yellow Carp */
+  {0x1002, 0x164D, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_YELLOW_CARP|AMD_IS_APU},
+  {0x1002, 0x1681, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_YELLOW_CARP|AMD_IS_APU},
 
-	/* Navy_Flounder */
-	{0x1002, 0x73C0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVY_FLOUNDER},
-	{0x1002, 0x73C1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVY_FLOUNDER},
-	{0x1002, 0x73C3, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVY_FLOUNDER},
-	{0x1002, 0x73DF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVY_FLOUNDER},
+  /* Navy_Flounder */
+  {0x1002, 0x73C0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVY_FLOUNDER},
+  {0x1002, 0x73C1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVY_FLOUNDER},
+  {0x1002, 0x73C3, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVY_FLOUNDER},
+  {0x1002, 0x73DF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_NAVY_FLOUNDER},
 
-	/* DIMGREY_CAVEFISH */
-	{0x1002, 0x73E0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_DIMGREY_CAVEFISH},
-	{0x1002, 0x73E1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_DIMGREY_CAVEFISH},
-	{0x1002, 0x73E2, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_DIMGREY_CAVEFISH},
-	{0x1002, 0x73E3, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_DIMGREY_CAVEFISH},
-	{0x1002, 0x73FF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_DIMGREY_CAVEFISH},
+  /* DIMGREY_CAVEFISH */
+  {0x1002, 0x73E0, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_DIMGREY_CAVEFISH},
+  {0x1002, 0x73E1, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_DIMGREY_CAVEFISH},
+  {0x1002, 0x73E2, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_DIMGREY_CAVEFISH},
+  {0x1002, 0x73E3, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_DIMGREY_CAVEFISH},
+  {0x1002, 0x73FF, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_DIMGREY_CAVEFISH},
 
-	/* Aldebaran */
-	{0x1002, 0x7408, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ALDEBARAN|AMD_EXP_HW_SUPPORT},
-	{0x1002, 0x740C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ALDEBARAN|AMD_EXP_HW_SUPPORT},
-	{0x1002, 0x740F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ALDEBARAN|AMD_EXP_HW_SUPPORT},
-	{0x1002, 0x7410, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ALDEBARAN|AMD_EXP_HW_SUPPORT},
+  /* Aldebaran */
+  {0x1002, 0x7408, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ALDEBARAN|AMD_EXP_HW_SUPPORT},
+  {0x1002, 0x740C, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ALDEBARAN|AMD_EXP_HW_SUPPORT},
+  {0x1002, 0x740F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ALDEBARAN|AMD_EXP_HW_SUPPORT},
+  {0x1002, 0x7410, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_ALDEBARAN|AMD_EXP_HW_SUPPORT},
 
-	/* BEIGE_GOBY */
-	{0x1002, 0x7420, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BEIGE_GOBY},
-	{0x1002, 0x7421, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BEIGE_GOBY},
-	{0x1002, 0x7422, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BEIGE_GOBY},
-	{0x1002, 0x7423, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BEIGE_GOBY},
-	{0x1002, 0x743F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BEIGE_GOBY},
+  /* BEIGE_GOBY */
+  {0x1002, 0x7420, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BEIGE_GOBY},
+  {0x1002, 0x7421, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BEIGE_GOBY},
+  {0x1002, 0x7422, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BEIGE_GOBY},
+  {0x1002, 0x7423, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BEIGE_GOBY},
+  {0x1002, 0x743F, PCI_ANY_ID, PCI_ANY_ID, 0, 0, CHIP_BEIGE_GOBY},
 
-	{0, 0, 0}
+  {0, 0, 0}
 };
 
 #ifdef __linux__
@@ -1253,154 +1253,154 @@ MODULE_DEVICE_TABLE(pci, pciidlist);
 static const struct drm_driver amdgpu_kms_driver;
 
 static int amdgpu_pci_probe(struct pci_dev *pdev,
-			    const struct pci_device_id *ent)
+          const struct pci_device_id *ent)
 {
-	struct drm_device *ddev;
-	struct amdgpu_device *adev;
-	unsigned long flags = ent->driver_data;
-	int ret, retry = 0;
-	bool supports_atomic = false;
+  struct drm_device *ddev;
+  struct amdgpu_device *adev;
+  unsigned long flags = ent->driver_data;
+  int ret, retry = 0;
+  bool supports_atomic = false;
 
-	if (!amdgpu_virtual_display &&
-	    amdgpu_device_asic_has_dc_support(flags & AMD_ASIC_MASK))
-		supports_atomic = true;
+  if (!amdgpu_virtual_display &&
+      amdgpu_device_asic_has_dc_support(flags & AMD_ASIC_MASK))
+    supports_atomic = true;
 
-	if ((flags & AMD_EXP_HW_SUPPORT) && !amdgpu_exp_hw_support) {
-		DRM_INFO("This hardware requires experimental hardware support.\n"
-			 "See modparam exp_hw_support\n");
-		return -ENODEV;
-	}
+  if ((flags & AMD_EXP_HW_SUPPORT) && !amdgpu_exp_hw_support) {
+    DRM_INFO("This hardware requires experimental hardware support.\n"
+       "See modparam exp_hw_support\n");
+    return -ENODEV;
+  }
 
 #ifdef __linux__
-	/* Due to hardware bugs, S/G Display on raven requires a 1:1 IOMMU mapping,
-	 * however, SME requires an indirect IOMMU mapping because the encryption
-	 * bit is beyond the DMA mask of the chip.
-	 */
-	if (mem_encrypt_active() && ((flags & AMD_ASIC_MASK) == CHIP_RAVEN)) {
-		dev_info(&pdev->dev,
-			 "SME is not compatible with RAVEN\n");
-		return -ENOTSUPP;
-	}
+  /* Due to hardware bugs, S/G Display on raven requires a 1:1 IOMMU mapping,
+   * however, SME requires an indirect IOMMU mapping because the encryption
+   * bit is beyond the DMA mask of the chip.
+   */
+  if (mem_encrypt_active() && ((flags & AMD_ASIC_MASK) == CHIP_RAVEN)) {
+    dev_info(&pdev->dev,
+       "SME is not compatible with RAVEN\n");
+    return -ENOTSUPP;
+  }
 #endif
 
 #ifdef CONFIG_DRM_AMDGPU_SI
-	if (!amdgpu_si_support) {
-		switch (flags & AMD_ASIC_MASK) {
-		case CHIP_TAHITI:
-		case CHIP_PITCAIRN:
-		case CHIP_VERDE:
-		case CHIP_OLAND:
-		case CHIP_HAINAN:
-			dev_info(&pdev->dev,
-				 "SI support provided by radeon.\n");
-			dev_info(&pdev->dev,
-				 "Use radeon.si_support=0 amdgpu.si_support=1 to override.\n"
-				);
-			return -ENODEV;
-		}
-	}
+  if (!amdgpu_si_support) {
+    switch (flags & AMD_ASIC_MASK) {
+    case CHIP_TAHITI:
+    case CHIP_PITCAIRN:
+    case CHIP_VERDE:
+    case CHIP_OLAND:
+    case CHIP_HAINAN:
+      dev_info(&pdev->dev,
+         "SI support provided by radeon.\n");
+      dev_info(&pdev->dev,
+         "Use radeon.si_support=0 amdgpu.si_support=1 to override.\n"
+        );
+      return -ENODEV;
+    }
+  }
 #endif
 #ifdef CONFIG_DRM_AMDGPU_CIK
-	if (!amdgpu_cik_support) {
-		switch (flags & AMD_ASIC_MASK) {
-		case CHIP_KAVERI:
-		case CHIP_BONAIRE:
-		case CHIP_HAWAII:
-		case CHIP_KABINI:
-		case CHIP_MULLINS:
-			dev_info(&pdev->dev,
-				 "CIK support provided by radeon.\n");
-			dev_info(&pdev->dev,
-				 "Use radeon.cik_support=0 amdgpu.cik_support=1 to override.\n"
-				);
-			return -ENODEV;
-		}
-	}
+  if (!amdgpu_cik_support) {
+    switch (flags & AMD_ASIC_MASK) {
+    case CHIP_KAVERI:
+    case CHIP_BONAIRE:
+    case CHIP_HAWAII:
+    case CHIP_KABINI:
+    case CHIP_MULLINS:
+      dev_info(&pdev->dev,
+         "CIK support provided by radeon.\n");
+      dev_info(&pdev->dev,
+         "Use radeon.cik_support=0 amdgpu.cik_support=1 to override.\n"
+        );
+      return -ENODEV;
+    }
+  }
 #endif
 
-	/* Get rid of things like offb */
-	ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "amdgpudrmfb");
-	if (ret)
-		return ret;
+  /* Get rid of things like offb */
+  ret = drm_aperture_remove_conflicting_pci_framebuffers(pdev, "amdgpudrmfb");
+  if (ret)
+    return ret;
 
-	adev = devm_drm_dev_alloc(&pdev->dev, &amdgpu_kms_driver, typeof(*adev), ddev);
-	if (IS_ERR(adev))
-		return PTR_ERR(adev);
+  adev = devm_drm_dev_alloc(&pdev->dev, &amdgpu_kms_driver, typeof(*adev), ddev);
+  if (IS_ERR(adev))
+    return PTR_ERR(adev);
 
-	adev->dev  = &pdev->dev;
-	adev->pdev = pdev;
-	ddev = adev_to_drm(adev);
+  adev->dev  = &pdev->dev;
+  adev->pdev = pdev;
+  ddev = adev_to_drm(adev);
 
-	if (!supports_atomic)
-		ddev->driver_features &= ~DRIVER_ATOMIC;
+  if (!supports_atomic)
+    ddev->driver_features &= ~DRIVER_ATOMIC;
 
-	ret = pci_enable_device(pdev);
-	if (ret)
-		return ret;
+  ret = pci_enable_device(pdev);
+  if (ret)
+    return ret;
 
-	pci_set_drvdata(pdev, ddev);
+  pci_set_drvdata(pdev, ddev);
 
-	ret = amdgpu_driver_load_kms(adev, ent->driver_data);
-	if (ret)
-		goto err_pci;
+  ret = amdgpu_driver_load_kms(adev, ent->driver_data);
+  if (ret)
+    goto err_pci;
 
 retry_init:
-	ret = drm_dev_register(ddev, ent->driver_data);
-	if (ret == -EAGAIN && ++retry <= 3) {
-		DRM_INFO("retry init %d\n", retry);
-		/* Don't request EX mode too frequently which is attacking */
-		msleep(5000);
-		goto retry_init;
-	} else if (ret) {
-		goto err_pci;
-	}
+  ret = drm_dev_register(ddev, ent->driver_data);
+  if (ret == -EAGAIN && ++retry <= 3) {
+    DRM_INFO("retry init %d\n", retry);
+    /* Don't request EX mode too frequently which is attacking */
+    msleep(5000);
+    goto retry_init;
+  } else if (ret) {
+    goto err_pci;
+  }
 
-	ret = amdgpu_debugfs_init(adev);
-	if (ret)
-		DRM_ERROR("Creating debugfs files failed (%d).\n", ret);
+  ret = amdgpu_debugfs_init(adev);
+  if (ret)
+    DRM_ERROR("Creating debugfs files failed (%d).\n", ret);
 
-	return 0;
+  return 0;
 
 err_pci:
-	pci_disable_device(pdev);
-	return ret;
+  pci_disable_device(pdev);
+  return ret;
 }
 
 static void
 amdgpu_pci_remove(struct pci_dev *pdev)
 {
-	struct drm_device *dev = pci_get_drvdata(pdev);
+  struct drm_device *dev = pci_get_drvdata(pdev);
 
-	drm_dev_unplug(dev);
-	amdgpu_driver_unload_kms(dev);
+  drm_dev_unplug(dev);
+  amdgpu_driver_unload_kms(dev);
 
-	/*
-	 * Flush any in flight DMA operations from device.
-	 * Clear the Bus Master Enable bit and then wait on the PCIe Device
-	 * StatusTransactions Pending bit.
-	 */
-	pci_disable_device(pdev);
-	pci_wait_for_pending_transaction(pdev);
+  /*
+   * Flush any in flight DMA operations from device.
+   * Clear the Bus Master Enable bit and then wait on the PCIe Device
+   * StatusTransactions Pending bit.
+   */
+  pci_disable_device(pdev);
+  pci_wait_for_pending_transaction(pdev);
 }
 
 static void
 amdgpu_pci_shutdown(struct pci_dev *pdev)
 {
-	struct drm_device *dev = pci_get_drvdata(pdev);
-	struct amdgpu_device *adev = drm_to_adev(dev);
+  struct drm_device *dev = pci_get_drvdata(pdev);
+  struct amdgpu_device *adev = drm_to_adev(dev);
 
-	if (amdgpu_ras_intr_triggered())
-		return;
+  if (amdgpu_ras_intr_triggered())
+    return;
 
-	/* if we are running in a VM, make sure the device
-	 * torn down properly on reboot/shutdown.
-	 * unfortunately we can't detect certain
-	 * hypervisors so just do this all the time.
-	 */
-	if (!amdgpu_passthrough(adev))
-		adev->mp1_state = PP_MP1_STATE_UNLOAD;
-	amdgpu_device_ip_suspend(adev);
-	adev->mp1_state = PP_MP1_STATE_NONE;
+  /* if we are running in a VM, make sure the device
+   * torn down properly on reboot/shutdown.
+   * unfortunately we can't detect certain
+   * hypervisors so just do this all the time.
+   */
+  if (!amdgpu_passthrough(adev))
+    adev->mp1_state = PP_MP1_STATE_UNLOAD;
+  amdgpu_device_ip_suspend(adev);
+  adev->mp1_state = PP_MP1_STATE_NONE;
 }
 
 /**
@@ -1410,438 +1410,438 @@ amdgpu_pci_shutdown(struct pci_dev *pdev)
  */
 static void amdgpu_drv_delayed_reset_work_handler(struct work_struct *work)
 {
-	struct list_head device_list;
-	struct amdgpu_device *adev;
-	int i, r;
-	struct amdgpu_reset_context reset_context;
+  struct list_head device_list;
+  struct amdgpu_device *adev;
+  int i, r;
+  struct amdgpu_reset_context reset_context;
 
-	memset(&reset_context, 0, sizeof(reset_context));
+  memset(&reset_context, 0, sizeof(reset_context));
 
-	mutex_lock(&mgpu_info.mutex);
-	if (mgpu_info.pending_reset == true) {
-		mutex_unlock(&mgpu_info.mutex);
-		return;
-	}
-	mgpu_info.pending_reset = true;
-	mutex_unlock(&mgpu_info.mutex);
+  mutex_lock(&mgpu_info.mutex);
+  if (mgpu_info.pending_reset == true) {
+    mutex_unlock(&mgpu_info.mutex);
+    return;
+  }
+  mgpu_info.pending_reset = true;
+  mutex_unlock(&mgpu_info.mutex);
 
-	/* Use a common context, just need to make sure full reset is done */
-	reset_context.method = AMD_RESET_METHOD_NONE;
-	set_bit(AMDGPU_NEED_FULL_RESET, &reset_context.flags);
+  /* Use a common context, just need to make sure full reset is done */
+  reset_context.method = AMD_RESET_METHOD_NONE;
+  set_bit(AMDGPU_NEED_FULL_RESET, &reset_context.flags);
 
-	for (i = 0; i < mgpu_info.num_dgpu; i++) {
-		adev = mgpu_info.gpu_ins[i].adev;
-		reset_context.reset_req_dev = adev;
-		r = amdgpu_device_pre_asic_reset(adev, &reset_context);
-		if (r) {
-			dev_err(adev->dev, "GPU pre asic reset failed with err, %d for drm dev, %s ",
-				r, adev_to_drm(adev)->unique);
-		}
-		if (!queue_work(system_unbound_wq, &adev->xgmi_reset_work))
-			r = -EALREADY;
-	}
-	for (i = 0; i < mgpu_info.num_dgpu; i++) {
-		adev = mgpu_info.gpu_ins[i].adev;
-		flush_work(&adev->xgmi_reset_work);
-		adev->gmc.xgmi.pending_reset = false;
-	}
+  for (i = 0; i < mgpu_info.num_dgpu; i++) {
+    adev = mgpu_info.gpu_ins[i].adev;
+    reset_context.reset_req_dev = adev;
+    r = amdgpu_device_pre_asic_reset(adev, &reset_context);
+    if (r) {
+      dev_err(adev->dev, "GPU pre asic reset failed with err, %d for drm dev, %s ",
+        r, adev_to_drm(adev)->unique);
+    }
+    if (!queue_work(system_unbound_wq, &adev->xgmi_reset_work))
+      r = -EALREADY;
+  }
+  for (i = 0; i < mgpu_info.num_dgpu; i++) {
+    adev = mgpu_info.gpu_ins[i].adev;
+    flush_work(&adev->xgmi_reset_work);
+    adev->gmc.xgmi.pending_reset = false;
+  }
 
-	/* reset function will rebuild the xgmi hive info , clear it now */
-	for (i = 0; i < mgpu_info.num_dgpu; i++)
-		amdgpu_xgmi_remove_device(mgpu_info.gpu_ins[i].adev);
+  /* reset function will rebuild the xgmi hive info , clear it now */
+  for (i = 0; i < mgpu_info.num_dgpu; i++)
+    amdgpu_xgmi_remove_device(mgpu_info.gpu_ins[i].adev);
 
-	INIT_LIST_HEAD(&device_list);
+  INIT_LIST_HEAD(&device_list);
 
-	for (i = 0; i < mgpu_info.num_dgpu; i++)
-		list_add_tail(&mgpu_info.gpu_ins[i].adev->reset_list, &device_list);
+  for (i = 0; i < mgpu_info.num_dgpu; i++)
+    list_add_tail(&mgpu_info.gpu_ins[i].adev->reset_list, &device_list);
 
-	/* unregister the GPU first, reset function will add them back */
-	list_for_each_entry(adev, &device_list, reset_list)
-		amdgpu_unregister_gpu_instance(adev);
+  /* unregister the GPU first, reset function will add them back */
+  list_for_each_entry(adev, &device_list, reset_list)
+    amdgpu_unregister_gpu_instance(adev);
 
-	/* Use a common context, just need to make sure full reset is done */
-	set_bit(AMDGPU_SKIP_HW_RESET, &reset_context.flags);
-	r = amdgpu_do_asic_reset(&device_list, &reset_context);
+  /* Use a common context, just need to make sure full reset is done */
+  set_bit(AMDGPU_SKIP_HW_RESET, &reset_context.flags);
+  r = amdgpu_do_asic_reset(&device_list, &reset_context);
 
-	if (r) {
-		DRM_ERROR("reinit gpus failure");
-		return;
-	}
-	for (i = 0; i < mgpu_info.num_dgpu; i++) {
-		adev = mgpu_info.gpu_ins[i].adev;
-		if (!adev->kfd.init_complete)
-			amdgpu_amdkfd_device_init(adev);
-		amdgpu_ttm_set_buffer_funcs_status(adev, true);
-	}
-	return;
+  if (r) {
+    DRM_ERROR("reinit gpus failure");
+    return;
+  }
+  for (i = 0; i < mgpu_info.num_dgpu; i++) {
+    adev = mgpu_info.gpu_ins[i].adev;
+    if (!adev->kfd.init_complete)
+      amdgpu_amdkfd_device_init(adev);
+    amdgpu_ttm_set_buffer_funcs_status(adev, true);
+  }
+  return;
 }
 
 static int amdgpu_pmops_prepare(struct device *dev)
 {
-	struct drm_device *drm_dev = dev_get_drvdata(dev);
+  struct drm_device *drm_dev = dev_get_drvdata(dev);
 
-	/* Return a positive number here so
-	 * DPM_FLAG_SMART_SUSPEND works properly
-	 */
-	if (amdgpu_device_supports_boco(drm_dev))
-		return pm_runtime_suspended(dev) &&
-			pm_suspend_via_firmware();
+  /* Return a positive number here so
+   * DPM_FLAG_SMART_SUSPEND works properly
+   */
+  if (amdgpu_device_supports_boco(drm_dev))
+    return pm_runtime_suspended(dev) &&
+      pm_suspend_via_firmware();
 
-	return 0;
+  return 0;
 }
 
 static void amdgpu_pmops_complete(struct device *dev)
 {
-	/* nothing to do */
+  /* nothing to do */
 }
 
 static int amdgpu_pmops_suspend(struct device *dev)
 {
-	struct drm_device *drm_dev = dev_get_drvdata(dev);
-	struct amdgpu_device *adev = drm_to_adev(drm_dev);
-	int r;
+  struct drm_device *drm_dev = dev_get_drvdata(dev);
+  struct amdgpu_device *adev = drm_to_adev(drm_dev);
+  int r;
 
-	if (amdgpu_acpi_is_s0ix_supported(adev))
-		adev->in_s0ix = true;
-	adev->in_s3 = true;
-	r = amdgpu_device_suspend(drm_dev, true);
-	adev->in_s3 = false;
+  if (amdgpu_acpi_is_s0ix_supported(adev))
+    adev->in_s0ix = true;
+  adev->in_s3 = true;
+  r = amdgpu_device_suspend(drm_dev, true);
+  adev->in_s3 = false;
 
-	return r;
+  return r;
 }
 
 static int amdgpu_pmops_resume(struct device *dev)
 {
-	struct drm_device *drm_dev = dev_get_drvdata(dev);
-	struct amdgpu_device *adev = drm_to_adev(drm_dev);
-	int r;
+  struct drm_device *drm_dev = dev_get_drvdata(dev);
+  struct amdgpu_device *adev = drm_to_adev(drm_dev);
+  int r;
 
-	r = amdgpu_device_resume(drm_dev, true);
-	if (amdgpu_acpi_is_s0ix_supported(adev))
-		adev->in_s0ix = false;
-	return r;
+  r = amdgpu_device_resume(drm_dev, true);
+  if (amdgpu_acpi_is_s0ix_supported(adev))
+    adev->in_s0ix = false;
+  return r;
 }
 
 static int amdgpu_pmops_freeze(struct device *dev)
 {
-	struct drm_device *drm_dev = dev_get_drvdata(dev);
-	struct amdgpu_device *adev = drm_to_adev(drm_dev);
-	int r;
+  struct drm_device *drm_dev = dev_get_drvdata(dev);
+  struct amdgpu_device *adev = drm_to_adev(drm_dev);
+  int r;
 
-	adev->in_s4 = true;
-	r = amdgpu_device_suspend(drm_dev, true);
-	adev->in_s4 = false;
-	if (r)
-		return r;
-	return amdgpu_asic_reset(adev);
+  adev->in_s4 = true;
+  r = amdgpu_device_suspend(drm_dev, true);
+  adev->in_s4 = false;
+  if (r)
+    return r;
+  return amdgpu_asic_reset(adev);
 }
 
 static int amdgpu_pmops_thaw(struct device *dev)
 {
-	struct drm_device *drm_dev = dev_get_drvdata(dev);
+  struct drm_device *drm_dev = dev_get_drvdata(dev);
 
-	return amdgpu_device_resume(drm_dev, true);
+  return amdgpu_device_resume(drm_dev, true);
 }
 
 static int amdgpu_pmops_poweroff(struct device *dev)
 {
-	struct drm_device *drm_dev = dev_get_drvdata(dev);
+  struct drm_device *drm_dev = dev_get_drvdata(dev);
 
-	return amdgpu_device_suspend(drm_dev, true);
+  return amdgpu_device_suspend(drm_dev, true);
 }
 
 static int amdgpu_pmops_restore(struct device *dev)
 {
-	struct drm_device *drm_dev = dev_get_drvdata(dev);
+  struct drm_device *drm_dev = dev_get_drvdata(dev);
 
-	return amdgpu_device_resume(drm_dev, true);
+  return amdgpu_device_resume(drm_dev, true);
 }
 
 static int amdgpu_pmops_runtime_suspend(struct device *dev)
 {
-	struct pci_dev *pdev = to_pci_dev(dev);
-	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-	struct amdgpu_device *adev = drm_to_adev(drm_dev);
-	int ret, i;
+  struct pci_dev *pdev = to_pci_dev(dev);
+  struct drm_device *drm_dev = pci_get_drvdata(pdev);
+  struct amdgpu_device *adev = drm_to_adev(drm_dev);
+  int ret, i;
 
-	if (!adev->runpm) {
-		pm_runtime_forbid(dev);
-		return -EBUSY;
-	}
+  if (!adev->runpm) {
+    pm_runtime_forbid(dev);
+    return -EBUSY;
+  }
 
-	/* wait for all rings to drain before suspending */
-	for (i = 0; i < AMDGPU_MAX_RINGS; i++) {
-		struct amdgpu_ring *ring = adev->rings[i];
-		if (ring && ring->sched.ready) {
-			ret = amdgpu_fence_wait_empty(ring);
-			if (ret)
-				return -EBUSY;
-		}
-	}
+  /* wait for all rings to drain before suspending */
+  for (i = 0; i < AMDGPU_MAX_RINGS; i++) {
+    struct amdgpu_ring *ring = adev->rings[i];
+    if (ring && ring->sched.ready) {
+      ret = amdgpu_fence_wait_empty(ring);
+      if (ret)
+        return -EBUSY;
+    }
+  }
 
-	adev->in_runpm = true;
-	if (amdgpu_device_supports_px(drm_dev))
-		drm_dev->switch_power_state = DRM_SWITCH_POWER_CHANGING;
+  adev->in_runpm = true;
+  if (amdgpu_device_supports_px(drm_dev))
+    drm_dev->switch_power_state = DRM_SWITCH_POWER_CHANGING;
 
-	ret = amdgpu_device_suspend(drm_dev, false);
-	if (ret) {
-		adev->in_runpm = false;
-		return ret;
-	}
+  ret = amdgpu_device_suspend(drm_dev, false);
+  if (ret) {
+    adev->in_runpm = false;
+    return ret;
+  }
 
-	if (amdgpu_device_supports_px(drm_dev)) {
-		/* Only need to handle PCI state in the driver for ATPX
-		 * PCI core handles it for _PR3.
-		 */
-		amdgpu_device_cache_pci_state(pdev);
-		pci_disable_device(pdev);
-		pci_ignore_hotplug(pdev);
-		pci_set_power_state(pdev, PCI_D3cold);
-		drm_dev->switch_power_state = DRM_SWITCH_POWER_DYNAMIC_OFF;
-	} else if (amdgpu_device_supports_boco(drm_dev)) {
-		/* nothing to do */
-	} else if (amdgpu_device_supports_baco(drm_dev)) {
-		amdgpu_device_baco_enter(drm_dev);
-	}
+  if (amdgpu_device_supports_px(drm_dev)) {
+    /* Only need to handle PCI state in the driver for ATPX
+     * PCI core handles it for _PR3.
+     */
+    amdgpu_device_cache_pci_state(pdev);
+    pci_disable_device(pdev);
+    pci_ignore_hotplug(pdev);
+    pci_set_power_state(pdev, PCI_D3cold);
+    drm_dev->switch_power_state = DRM_SWITCH_POWER_DYNAMIC_OFF;
+  } else if (amdgpu_device_supports_boco(drm_dev)) {
+    /* nothing to do */
+  } else if (amdgpu_device_supports_baco(drm_dev)) {
+    amdgpu_device_baco_enter(drm_dev);
+  }
 
-	return 0;
+  return 0;
 }
 
 static int amdgpu_pmops_runtime_resume(struct device *dev)
 {
-	struct pci_dev *pdev = to_pci_dev(dev);
-	struct drm_device *drm_dev = pci_get_drvdata(pdev);
-	struct amdgpu_device *adev = drm_to_adev(drm_dev);
-	int ret;
+  struct pci_dev *pdev = to_pci_dev(dev);
+  struct drm_device *drm_dev = pci_get_drvdata(pdev);
+  struct amdgpu_device *adev = drm_to_adev(drm_dev);
+  int ret;
 
-	if (!adev->runpm)
-		return -EINVAL;
+  if (!adev->runpm)
+    return -EINVAL;
 
-	/* Avoids registers access if device is physically gone */
-	if (!pci_device_is_present(adev->pdev))
-		adev->no_hw_access = true;
+  /* Avoids registers access if device is physically gone */
+  if (!pci_device_is_present(adev->pdev))
+    adev->no_hw_access = true;
 
-	if (amdgpu_device_supports_px(drm_dev)) {
-		drm_dev->switch_power_state = DRM_SWITCH_POWER_CHANGING;
+  if (amdgpu_device_supports_px(drm_dev)) {
+    drm_dev->switch_power_state = DRM_SWITCH_POWER_CHANGING;
 
-		/* Only need to handle PCI state in the driver for ATPX
-		 * PCI core handles it for _PR3.
-		 */
-		pci_set_power_state(pdev, PCI_D0);
-		amdgpu_device_load_pci_state(pdev);
-		ret = pci_enable_device(pdev);
-		if (ret)
-			return ret;
-		pci_set_master(pdev);
-	} else if (amdgpu_device_supports_boco(drm_dev)) {
-		/* Only need to handle PCI state in the driver for ATPX
-		 * PCI core handles it for _PR3.
-		 */
-		pci_set_master(pdev);
-	} else if (amdgpu_device_supports_baco(drm_dev)) {
-		amdgpu_device_baco_exit(drm_dev);
-	}
-	ret = amdgpu_device_resume(drm_dev, false);
-	if (ret)
-		return ret;
+    /* Only need to handle PCI state in the driver for ATPX
+     * PCI core handles it for _PR3.
+     */
+    pci_set_power_state(pdev, PCI_D0);
+    amdgpu_device_load_pci_state(pdev);
+    ret = pci_enable_device(pdev);
+    if (ret)
+      return ret;
+    pci_set_master(pdev);
+  } else if (amdgpu_device_supports_boco(drm_dev)) {
+    /* Only need to handle PCI state in the driver for ATPX
+     * PCI core handles it for _PR3.
+     */
+    pci_set_master(pdev);
+  } else if (amdgpu_device_supports_baco(drm_dev)) {
+    amdgpu_device_baco_exit(drm_dev);
+  }
+  ret = amdgpu_device_resume(drm_dev, false);
+  if (ret)
+    return ret;
 
-	if (amdgpu_device_supports_px(drm_dev))
-		drm_dev->switch_power_state = DRM_SWITCH_POWER_ON;
-	adev->in_runpm = false;
-	return 0;
+  if (amdgpu_device_supports_px(drm_dev))
+    drm_dev->switch_power_state = DRM_SWITCH_POWER_ON;
+  adev->in_runpm = false;
+  return 0;
 }
 
 static int amdgpu_pmops_runtime_idle(struct device *dev)
 {
-	struct drm_device *drm_dev = dev_get_drvdata(dev);
-	struct amdgpu_device *adev = drm_to_adev(drm_dev);
-	/* we don't want the main rpm_idle to call suspend - we want to autosuspend */
-	int ret = 1;
+  struct drm_device *drm_dev = dev_get_drvdata(dev);
+  struct amdgpu_device *adev = drm_to_adev(drm_dev);
+  /* we don't want the main rpm_idle to call suspend - we want to autosuspend */
+  int ret = 1;
 
-	if (!adev->runpm) {
-		pm_runtime_forbid(dev);
-		return -EBUSY;
-	}
+  if (!adev->runpm) {
+    pm_runtime_forbid(dev);
+    return -EBUSY;
+  }
 
-	if (amdgpu_device_has_dc_support(adev)) {
-		struct drm_crtc *crtc;
+  if (amdgpu_device_has_dc_support(adev)) {
+    struct drm_crtc *crtc;
 
-		drm_for_each_crtc(crtc, drm_dev) {
-			drm_modeset_lock(&crtc->mutex, NULL);
-			if (crtc->state->active)
-				ret = -EBUSY;
-			drm_modeset_unlock(&crtc->mutex);
-			if (ret < 0)
-				break;
-		}
+    drm_for_each_crtc(crtc, drm_dev) {
+      drm_modeset_lock(&crtc->mutex, NULL);
+      if (crtc->state->active)
+        ret = -EBUSY;
+      drm_modeset_unlock(&crtc->mutex);
+      if (ret < 0)
+        break;
+    }
 
-	} else {
-		struct drm_connector *list_connector;
-		struct drm_connector_list_iter iter;
+  } else {
+    struct drm_connector *list_connector;
+    struct drm_connector_list_iter iter;
 
-		mutex_lock(&drm_dev->mode_config.mutex);
-		drm_modeset_lock(&drm_dev->mode_config.connection_mutex, NULL);
+    mutex_lock(&drm_dev->mode_config.mutex);
+    drm_modeset_lock(&drm_dev->mode_config.connection_mutex, NULL);
 
-		drm_connector_list_iter_begin(drm_dev, &iter);
-		drm_for_each_connector_iter(list_connector, &iter) {
-			if (list_connector->dpms ==  DRM_MODE_DPMS_ON) {
-				ret = -EBUSY;
-				break;
-			}
-		}
+    drm_connector_list_iter_begin(drm_dev, &iter);
+    drm_for_each_connector_iter(list_connector, &iter) {
+      if (list_connector->dpms ==  DRM_MODE_DPMS_ON) {
+        ret = -EBUSY;
+        break;
+      }
+    }
 
-		drm_connector_list_iter_end(&iter);
+    drm_connector_list_iter_end(&iter);
 
-		drm_modeset_unlock(&drm_dev->mode_config.connection_mutex);
-		mutex_unlock(&drm_dev->mode_config.mutex);
-	}
+    drm_modeset_unlock(&drm_dev->mode_config.connection_mutex);
+    mutex_unlock(&drm_dev->mode_config.mutex);
+  }
 
-	if (ret == -EBUSY)
-		DRM_DEBUG_DRIVER("failing to power off - crtc active\n");
+  if (ret == -EBUSY)
+    DRM_DEBUG_DRIVER("failing to power off - crtc active\n");
 
-	pm_runtime_mark_last_busy(dev);
-	pm_runtime_autosuspend(dev);
-	return ret;
+  pm_runtime_mark_last_busy(dev);
+  pm_runtime_autosuspend(dev);
+  return ret;
 }
 
 long amdgpu_drm_ioctl(struct file *filp,
-		      unsigned int cmd, unsigned long arg)
+          unsigned int cmd, unsigned long arg)
 {
-	struct drm_file *file_priv = filp->private_data;
-	struct drm_device *dev;
-	long ret;
-	dev = file_priv->minor->dev;
-	ret = pm_runtime_get_sync(dev->dev);
-	if (ret < 0)
-		goto out;
+  struct drm_file *file_priv = filp->private_data;
+  struct drm_device *dev;
+  long ret;
+  dev = file_priv->minor->dev;
+  ret = pm_runtime_get_sync(dev->dev);
+  if (ret < 0)
+    goto out;
 
-	ret = drm_ioctl(filp, cmd, arg);
+  ret = drm_ioctl(filp, cmd, arg);
 
-	pm_runtime_mark_last_busy(dev->dev);
+  pm_runtime_mark_last_busy(dev->dev);
 out:
-	pm_runtime_put_autosuspend(dev->dev);
-	return ret;
+  pm_runtime_put_autosuspend(dev->dev);
+  return ret;
 }
 
 static const struct dev_pm_ops amdgpu_pm_ops = {
-	.prepare = amdgpu_pmops_prepare,
-	.complete = amdgpu_pmops_complete,
-	.suspend = amdgpu_pmops_suspend,
-	.resume = amdgpu_pmops_resume,
-	.freeze = amdgpu_pmops_freeze,
-	.thaw = amdgpu_pmops_thaw,
-	.poweroff = amdgpu_pmops_poweroff,
-	.restore = amdgpu_pmops_restore,
-	.runtime_suspend = amdgpu_pmops_runtime_suspend,
-	.runtime_resume = amdgpu_pmops_runtime_resume,
-	.runtime_idle = amdgpu_pmops_runtime_idle,
+  .prepare = amdgpu_pmops_prepare,
+  .complete = amdgpu_pmops_complete,
+  .suspend = amdgpu_pmops_suspend,
+  .resume = amdgpu_pmops_resume,
+  .freeze = amdgpu_pmops_freeze,
+  .thaw = amdgpu_pmops_thaw,
+  .poweroff = amdgpu_pmops_poweroff,
+  .restore = amdgpu_pmops_restore,
+  .runtime_suspend = amdgpu_pmops_runtime_suspend,
+  .runtime_resume = amdgpu_pmops_runtime_resume,
+  .runtime_idle = amdgpu_pmops_runtime_idle,
 };
 
 #ifdef __linux__ /* Mute unused function warning (see below). */
 static int amdgpu_flush(struct file *f, fl_owner_t id)
 {
-	struct drm_file *file_priv = f->private_data;
-	struct amdgpu_fpriv *fpriv = file_priv->driver_priv;
-	long timeout = MAX_WAIT_SCHED_ENTITY_Q_EMPTY;
+  struct drm_file *file_priv = f->private_data;
+  struct amdgpu_fpriv *fpriv = file_priv->driver_priv;
+  long timeout = MAX_WAIT_SCHED_ENTITY_Q_EMPTY;
 
-	timeout = amdgpu_ctx_mgr_entity_flush(&fpriv->ctx_mgr, timeout);
-	timeout = amdgpu_vm_wait_idle(&fpriv->vm, timeout);
+  timeout = amdgpu_ctx_mgr_entity_flush(&fpriv->ctx_mgr, timeout);
+  timeout = amdgpu_vm_wait_idle(&fpriv->vm, timeout);
 
-	return timeout >= 0 ? 0 : timeout;
+  return timeout >= 0 ? 0 : timeout;
 }
 #endif
 
 static const struct file_operations amdgpu_driver_kms_fops = {
-	.owner = THIS_MODULE,
-	.open = drm_open,
+  .owner = THIS_MODULE,
+  .open = drm_open,
 #ifdef __linux__
-	/* BSDFIXME: Not supported in lkpi */
-	.flush = amdgpu_flush,
+  /* BSDFIXME: Not supported in lkpi */
+  .flush = amdgpu_flush,
 #endif
-	.release = drm_release,
-	.unlocked_ioctl = amdgpu_drm_ioctl,
-	.mmap = drm_gem_mmap,
-	.poll = drm_poll,
-	.read = drm_read,
+  .release = drm_release,
+  .unlocked_ioctl = amdgpu_drm_ioctl,
+  .mmap = drm_gem_mmap,
+  .poll = drm_poll,
+  .read = drm_read,
 #ifdef CONFIG_COMPAT
-	.compat_ioctl = amdgpu_kms_compat_ioctl,
+  .compat_ioctl = amdgpu_kms_compat_ioctl,
 #endif
 #ifdef CONFIG_PROC_FS
-	.show_fdinfo = amdgpu_show_fdinfo
+  .show_fdinfo = amdgpu_show_fdinfo
 #endif
 };
 
 int amdgpu_file_to_fpriv(struct file *filp, struct amdgpu_fpriv **fpriv)
 {
-	struct drm_file *file;
+  struct drm_file *file;
 
-	if (!filp)
-		return -EINVAL;
+  if (!filp)
+    return -EINVAL;
 
-	if (filp->f_op != &amdgpu_driver_kms_fops) {
-		return -EINVAL;
-	}
+  if (filp->f_op != &amdgpu_driver_kms_fops) {
+    return -EINVAL;
+  }
 
-	file = filp->private_data;
-	*fpriv = file->driver_priv;
-	return 0;
+  file = filp->private_data;
+  *fpriv = file->driver_priv;
+  return 0;
 }
 
 const struct drm_ioctl_desc amdgpu_ioctls_kms[] = {
-	DRM_IOCTL_DEF_DRV(AMDGPU_GEM_CREATE, amdgpu_gem_create_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	DRM_IOCTL_DEF_DRV(AMDGPU_CTX, amdgpu_ctx_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	DRM_IOCTL_DEF_DRV(AMDGPU_VM, amdgpu_vm_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	DRM_IOCTL_DEF_DRV(AMDGPU_SCHED, amdgpu_sched_ioctl, DRM_MASTER),
-	DRM_IOCTL_DEF_DRV(AMDGPU_BO_LIST, amdgpu_bo_list_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	DRM_IOCTL_DEF_DRV(AMDGPU_FENCE_TO_HANDLE, amdgpu_cs_fence_to_handle_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	/* KMS */
-	DRM_IOCTL_DEF_DRV(AMDGPU_GEM_MMAP, amdgpu_gem_mmap_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	DRM_IOCTL_DEF_DRV(AMDGPU_GEM_WAIT_IDLE, amdgpu_gem_wait_idle_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	DRM_IOCTL_DEF_DRV(AMDGPU_CS, amdgpu_cs_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	DRM_IOCTL_DEF_DRV(AMDGPU_INFO, amdgpu_info_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	DRM_IOCTL_DEF_DRV(AMDGPU_WAIT_CS, amdgpu_cs_wait_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	DRM_IOCTL_DEF_DRV(AMDGPU_WAIT_FENCES, amdgpu_cs_wait_fences_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	DRM_IOCTL_DEF_DRV(AMDGPU_GEM_METADATA, amdgpu_gem_metadata_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	DRM_IOCTL_DEF_DRV(AMDGPU_GEM_VA, amdgpu_gem_va_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	DRM_IOCTL_DEF_DRV(AMDGPU_GEM_OP, amdgpu_gem_op_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
-	DRM_IOCTL_DEF_DRV(AMDGPU_GEM_USERPTR, amdgpu_gem_userptr_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_GEM_CREATE, amdgpu_gem_create_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_CTX, amdgpu_ctx_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_VM, amdgpu_vm_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_SCHED, amdgpu_sched_ioctl, DRM_MASTER),
+  DRM_IOCTL_DEF_DRV(AMDGPU_BO_LIST, amdgpu_bo_list_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_FENCE_TO_HANDLE, amdgpu_cs_fence_to_handle_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  /* KMS */
+  DRM_IOCTL_DEF_DRV(AMDGPU_GEM_MMAP, amdgpu_gem_mmap_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_GEM_WAIT_IDLE, amdgpu_gem_wait_idle_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_CS, amdgpu_cs_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_INFO, amdgpu_info_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_WAIT_CS, amdgpu_cs_wait_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_WAIT_FENCES, amdgpu_cs_wait_fences_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_GEM_METADATA, amdgpu_gem_metadata_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_GEM_VA, amdgpu_gem_va_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_GEM_OP, amdgpu_gem_op_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
+  DRM_IOCTL_DEF_DRV(AMDGPU_GEM_USERPTR, amdgpu_gem_userptr_ioctl, DRM_AUTH|DRM_RENDER_ALLOW),
 };
 
 static const struct drm_driver amdgpu_kms_driver = {
-	.driver_features =
-	    DRIVER_ATOMIC |
-	    DRIVER_GEM |
-	    DRIVER_RENDER | DRIVER_MODESET | DRIVER_SYNCOBJ |
-	    DRIVER_SYNCOBJ_TIMELINE,
-	.open = amdgpu_driver_open_kms,
-	.postclose = amdgpu_driver_postclose_kms,
-	.lastclose = amdgpu_driver_lastclose_kms,
-	.irq_handler = amdgpu_irq_handler,
-	.ioctls = amdgpu_ioctls_kms,
-	.num_ioctls = ARRAY_SIZE(amdgpu_ioctls_kms),
-	.dumb_create = amdgpu_mode_dumb_create,
-	.dumb_map_offset = amdgpu_mode_dumb_mmap,
-	.fops = &amdgpu_driver_kms_fops,
-	.release = &amdgpu_driver_release_kms,
+  .driver_features =
+      DRIVER_ATOMIC |
+      DRIVER_GEM |
+      DRIVER_RENDER | DRIVER_MODESET | DRIVER_SYNCOBJ |
+      DRIVER_SYNCOBJ_TIMELINE,
+  .open = amdgpu_driver_open_kms,
+  .postclose = amdgpu_driver_postclose_kms,
+  .lastclose = amdgpu_driver_lastclose_kms,
+  .irq_handler = amdgpu_irq_handler,
+  .ioctls = amdgpu_ioctls_kms,
+  .num_ioctls = ARRAY_SIZE(amdgpu_ioctls_kms),
+  .dumb_create = amdgpu_mode_dumb_create,
+  .dumb_map_offset = amdgpu_mode_dumb_mmap,
+  .fops = &amdgpu_driver_kms_fops,
+  .release = &amdgpu_driver_release_kms,
 
-	.prime_handle_to_fd = drm_gem_prime_handle_to_fd,
-	.prime_fd_to_handle = drm_gem_prime_fd_to_handle,
-	.gem_prime_import = amdgpu_gem_prime_import,
-	.gem_prime_mmap = drm_gem_prime_mmap,
+  .prime_handle_to_fd = drm_gem_prime_handle_to_fd,
+  .prime_fd_to_handle = drm_gem_prime_fd_to_handle,
+  .gem_prime_import = amdgpu_gem_prime_import,
+  .gem_prime_mmap = drm_gem_prime_mmap,
 
-	.name = DRIVER_NAME,
-	.desc = DRIVER_DESC,
-	.date = DRIVER_DATE,
-	.major = KMS_DRIVER_MAJOR,
-	.minor = KMS_DRIVER_MINOR,
-	.patchlevel = KMS_DRIVER_PATCHLEVEL,
+  .name = DRIVER_NAME,
+  .desc = DRIVER_DESC,
+  .date = DRIVER_DATE,
+  .major = KMS_DRIVER_MAJOR,
+  .minor = KMS_DRIVER_MINOR,
+  .patchlevel = KMS_DRIVER_PATCHLEVEL,
 };
 
 static struct pci_error_handlers amdgpu_pci_err_handler = {
-	.error_detected	= amdgpu_pci_error_detected,
-	.mmio_enabled	= amdgpu_pci_mmio_enabled,
-	.slot_reset	= amdgpu_pci_slot_reset,
-	.resume		= amdgpu_pci_resume,
+  .error_detected  = amdgpu_pci_error_detected,
+  .mmio_enabled  = amdgpu_pci_mmio_enabled,
+  .slot_reset  = amdgpu_pci_slot_reset,
+  .resume    = amdgpu_pci_resume,
 };
 
 #ifdef __linux__
@@ -1850,79 +1850,79 @@ extern const struct attribute_group amdgpu_gtt_mgr_attr_group;
 extern const struct attribute_group amdgpu_vbios_version_attr_group;
 
 static const struct attribute_group *amdgpu_sysfs_groups[] = {
-	&amdgpu_vram_mgr_attr_group,
-	&amdgpu_gtt_mgr_attr_group,
-	&amdgpu_vbios_version_attr_group,
-	NULL,
+  &amdgpu_vram_mgr_attr_group,
+  &amdgpu_gtt_mgr_attr_group,
+  &amdgpu_vbios_version_attr_group,
+  NULL,
 };
 #endif
 
 
 static struct pci_driver amdgpu_kms_pci_driver = {
-	.name = DRIVER_NAME,
-	.id_table = pciidlist,
-	.probe = amdgpu_pci_probe,
-	.remove = amdgpu_pci_remove,
-	.shutdown = amdgpu_pci_shutdown,
-	.driver.pm = &amdgpu_pm_ops,
-	.err_handler = &amdgpu_pci_err_handler,
+  .name = DRIVER_NAME,
+  .id_table = pciidlist,
+  .probe = amdgpu_pci_probe,
+  .remove = amdgpu_pci_remove,
+  .shutdown = amdgpu_pci_shutdown,
+  .driver.pm = &amdgpu_pm_ops,
+  .err_handler = &amdgpu_pci_err_handler,
 #ifdef __linux__
-	.dev_groups = amdgpu_sysfs_groups,
+  .dev_groups = amdgpu_sysfs_groups,
 #endif
 };
 
 static int __init amdgpu_init(void)
 {
-	int r;
+  int r;
 
-	if (vgacon_text_force()) {
-		DRM_ERROR("VGACON disables amdgpu kernel modesetting.\n");
-		return -EINVAL;
-	}
+  if (vgacon_text_force()) {
+    DRM_ERROR("VGACON disables amdgpu kernel modesetting.\n");
+    return -EINVAL;
+  }
 
-	r = amdgpu_sync_init();
-	if (r)
-		goto error_sync;
+  r = amdgpu_sync_init();
+  if (r)
+    goto error_sync;
 
-	r = amdgpu_fence_slab_init();
-	if (r)
-		goto error_fence;
+  r = amdgpu_fence_slab_init();
+  if (r)
+    goto error_fence;
 
-	DRM_INFO("amdgpu kernel modesetting enabled.\n");
-	amdgpu_register_atpx_handler();
-	amdgpu_acpi_detect();
+  DRM_INFO("amdgpu kernel modesetting enabled.\n");
+  amdgpu_register_atpx_handler();
+  amdgpu_acpi_detect();
 
-	/* Ignore KFD init failures. Normal when CONFIG_HSA_AMD is not set. */
-	amdgpu_amdkfd_init();
+  /* Ignore KFD init failures. Normal when CONFIG_HSA_AMD is not set. */
+  amdgpu_amdkfd_init();
 
 #ifdef __linux__
-	/* let modprobe override vga console setting */
-	return pci_register_driver(&amdgpu_kms_pci_driver);
+  /* let modprobe override vga console setting */
+  return pci_register_driver(&amdgpu_kms_pci_driver);
 #elif defined(__FreeBSD__)
-	amdgpu_kms_pci_driver.bsdclass = drm_devclass;
-	return linux_pci_register_drm_driver(&amdgpu_kms_pci_driver);
+  amdgpu_kms_pci_driver.bsdclass = drm_devclass;
+  return linux_pci_register_drm_driver(&amdgpu_kms_pci_driver);
 #endif
 
 error_fence:
-	amdgpu_sync_fini();
+  amdgpu_sync_fini();
 
 error_sync:
-	return r;
+  return r;
 }
 
 static void __exit amdgpu_exit(void)
 {
-	amdgpu_amdkfd_fini();
+  amdgpu_amdkfd_fini();
 #ifdef __linux__
-	pci_unregister_driver(&amdgpu_kms_pci_driver);
+  pci_unregister_driver(&amdgpu_kms_pci_driver);
 #elif defined(__FreeBSD__)
-	linux_pci_unregister_drm_driver(&amdgpu_kms_pci_driver);
+  linux_pci_unregister_drm_driver(&amdgpu_kms_pci_driver);
 #endif
-	amdgpu_unregister_atpx_handler();
-	amdgpu_sync_fini();
-	amdgpu_fence_slab_fini();
+  amdgpu_unregister_atpx_handler();
+  amdgpu_sync_fini();
+  amdgpu_fence_slab_fini();
 #ifdef __linux__
-	mmu_notifier_synchronize();
+  mmu_notifier_synchronize();
 #endif
 }
 

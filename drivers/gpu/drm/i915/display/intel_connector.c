@@ -39,38 +39,38 @@
 
 int intel_connector_init(struct intel_connector *connector)
 {
-	struct intel_digital_connector_state *conn_state;
+  struct intel_digital_connector_state *conn_state;
 
-	/*
-	 * Allocate enough memory to hold intel_digital_connector_state,
-	 * This might be a few bytes too many, but for connectors that don't
-	 * need it we'll free the state and allocate a smaller one on the first
-	 * successful commit anyway.
-	 */
-	conn_state = kzalloc(sizeof(*conn_state), GFP_KERNEL);
-	if (!conn_state)
-		return -ENOMEM;
+  /*
+   * Allocate enough memory to hold intel_digital_connector_state,
+   * This might be a few bytes too many, but for connectors that don't
+   * need it we'll free the state and allocate a smaller one on the first
+   * successful commit anyway.
+   */
+  conn_state = kzalloc(sizeof(*conn_state), GFP_KERNEL);
+  if (!conn_state)
+    return -ENOMEM;
 
-	__drm_atomic_helper_connector_reset(&connector->base,
-					    &conn_state->base);
+  __drm_atomic_helper_connector_reset(&connector->base,
+              &conn_state->base);
 
-	return 0;
+  return 0;
 }
 
 struct intel_connector *intel_connector_alloc(void)
 {
-	struct intel_connector *connector;
+  struct intel_connector *connector;
 
-	connector = kzalloc(sizeof(*connector), GFP_KERNEL);
-	if (!connector)
-		return NULL;
+  connector = kzalloc(sizeof(*connector), GFP_KERNEL);
+  if (!connector)
+    return NULL;
 
-	if (intel_connector_init(connector) < 0) {
-		kfree(connector);
-		return NULL;
-	}
+  if (intel_connector_init(connector) < 0) {
+    kfree(connector);
+    return NULL;
+  }
 
-	return connector;
+  return connector;
 }
 
 /*
@@ -82,8 +82,8 @@ struct intel_connector *intel_connector_alloc(void)
  */
 void intel_connector_free(struct intel_connector *connector)
 {
-	kfree(to_intel_digital_connector_state(connector->base.state));
-	kfree(connector);
+  kfree(to_intel_digital_connector_state(connector->base.state));
+  kfree(connector);
 }
 
 /*
@@ -91,61 +91,61 @@ void intel_connector_free(struct intel_connector *connector)
  */
 void intel_connector_destroy(struct drm_connector *connector)
 {
-	struct intel_connector *intel_connector = to_intel_connector(connector);
+  struct intel_connector *intel_connector = to_intel_connector(connector);
 
-	kfree(intel_connector->detect_edid);
+  kfree(intel_connector->detect_edid);
 
-	intel_hdcp_cleanup(intel_connector);
+  intel_hdcp_cleanup(intel_connector);
 
-	if (!IS_ERR_OR_NULL(intel_connector->edid))
-		kfree(intel_connector->edid);
+  if (!IS_ERR_OR_NULL(intel_connector->edid))
+    kfree(intel_connector->edid);
 
-	intel_panel_fini(&intel_connector->panel);
+  intel_panel_fini(&intel_connector->panel);
 
-	drm_connector_cleanup(connector);
+  drm_connector_cleanup(connector);
 
-	if (intel_connector->port)
-		drm_dp_mst_put_port_malloc(intel_connector->port);
+  if (intel_connector->port)
+    drm_dp_mst_put_port_malloc(intel_connector->port);
 
-	kfree(connector);
+  kfree(connector);
 }
 
 int intel_connector_register(struct drm_connector *connector)
 {
-	struct intel_connector *intel_connector = to_intel_connector(connector);
-	int ret;
+  struct intel_connector *intel_connector = to_intel_connector(connector);
+  int ret;
 
-	ret = intel_backlight_device_register(intel_connector);
-	if (ret)
-		goto err;
+  ret = intel_backlight_device_register(intel_connector);
+  if (ret)
+    goto err;
 
-	if (i915_inject_probe_failure(to_i915(connector->dev))) {
-		ret = -EFAULT;
-		goto err_backlight;
-	}
+  if (i915_inject_probe_failure(to_i915(connector->dev))) {
+    ret = -EFAULT;
+    goto err_backlight;
+  }
 
-	intel_connector_debugfs_add(connector);
+  intel_connector_debugfs_add(connector);
 
-	return 0;
+  return 0;
 
 err_backlight:
-	intel_backlight_device_unregister(intel_connector);
+  intel_backlight_device_unregister(intel_connector);
 err:
-	return ret;
+  return ret;
 }
 
 void intel_connector_unregister(struct drm_connector *connector)
 {
-	struct intel_connector *intel_connector = to_intel_connector(connector);
+  struct intel_connector *intel_connector = to_intel_connector(connector);
 
-	intel_backlight_device_unregister(intel_connector);
+  intel_backlight_device_unregister(intel_connector);
 }
 
 void intel_connector_attach_encoder(struct intel_connector *connector,
-				    struct intel_encoder *encoder)
+            struct intel_encoder *encoder)
 {
-	connector->encoder = encoder;
-	drm_connector_attach_encoder(&connector->base, &encoder->base);
+  connector->encoder = encoder;
+  drm_connector_attach_encoder(&connector->base, &encoder->base);
 }
 
 /*
@@ -155,23 +155,23 @@ void intel_connector_attach_encoder(struct intel_connector *connector,
  */
 bool intel_connector_get_hw_state(struct intel_connector *connector)
 {
-	enum pipe pipe = 0;
-	struct intel_encoder *encoder = intel_attached_encoder(connector);
+  enum pipe pipe = 0;
+  struct intel_encoder *encoder = intel_attached_encoder(connector);
 
-	return encoder->get_hw_state(encoder, &pipe);
+  return encoder->get_hw_state(encoder, &pipe);
 }
 
 enum pipe intel_connector_get_pipe(struct intel_connector *connector)
 {
-	struct drm_device *dev = connector->base.dev;
+  struct drm_device *dev = connector->base.dev;
 
-	drm_WARN_ON(dev,
-		    !drm_modeset_is_locked(&dev->mode_config.connection_mutex));
+  drm_WARN_ON(dev,
+        !drm_modeset_is_locked(&dev->mode_config.connection_mutex));
 
-	if (!connector->base.state->crtc)
-		return INVALID_PIPE;
+  if (!connector->base.state->crtc)
+    return INVALID_PIPE;
 
-	return to_intel_crtc(connector->base.state->crtc)->pipe;
+  return to_intel_crtc(connector->base.state->crtc)->pipe;
 }
 
 /**
@@ -180,14 +180,14 @@ enum pipe intel_connector_get_pipe(struct intel_connector *connector)
  * @edid: previously read EDID information
  */
 int intel_connector_update_modes(struct drm_connector *connector,
-				struct edid *edid)
+        struct edid *edid)
 {
-	int ret;
+  int ret;
 
-	drm_connector_update_edid_property(connector, edid);
-	ret = drm_add_edid_modes(connector, edid);
+  drm_connector_update_edid_property(connector, edid);
+  ret = drm_add_edid_modes(connector, edid);
 
-	return ret;
+  return ret;
 }
 
 /**
@@ -198,96 +198,96 @@ int intel_connector_update_modes(struct drm_connector *connector,
  * Fetch the EDID information from @connector using the DDC bus.
  */
 int intel_ddc_get_modes(struct drm_connector *connector,
-			struct i2c_adapter *adapter)
+      struct i2c_adapter *adapter)
 {
-	struct edid *edid;
-	int ret;
+  struct edid *edid;
+  int ret;
 
-	edid = drm_get_edid(connector, adapter);
-	if (!edid)
-		return 0;
+  edid = drm_get_edid(connector, adapter);
+  if (!edid)
+    return 0;
 
-	ret = intel_connector_update_modes(connector, edid);
-	kfree(edid);
+  ret = intel_connector_update_modes(connector, edid);
+  kfree(edid);
 
-	return ret;
+  return ret;
 }
 
 static const struct drm_prop_enum_list force_audio_names[] = {
-	{ HDMI_AUDIO_OFF_DVI, "force-dvi" },
-	{ HDMI_AUDIO_OFF, "off" },
-	{ HDMI_AUDIO_AUTO, "auto" },
-	{ HDMI_AUDIO_ON, "on" },
+  { HDMI_AUDIO_OFF_DVI, "force-dvi" },
+  { HDMI_AUDIO_OFF, "off" },
+  { HDMI_AUDIO_AUTO, "auto" },
+  { HDMI_AUDIO_ON, "on" },
 };
 
 void
 intel_attach_force_audio_property(struct drm_connector *connector)
 {
-	struct drm_device *dev = connector->dev;
-	struct drm_i915_private *dev_priv = to_i915(dev);
-	struct drm_property *prop;
+  struct drm_device *dev = connector->dev;
+  struct drm_i915_private *dev_priv = to_i915(dev);
+  struct drm_property *prop;
 
-	prop = dev_priv->force_audio_property;
-	if (prop == NULL) {
-		prop = drm_property_create_enum(dev, 0,
-					   "audio",
-					   force_audio_names,
-					   ARRAY_SIZE(force_audio_names));
-		if (prop == NULL)
-			return;
+  prop = dev_priv->force_audio_property;
+  if (prop == NULL) {
+    prop = drm_property_create_enum(dev, 0,
+             "audio",
+             force_audio_names,
+             ARRAY_SIZE(force_audio_names));
+    if (prop == NULL)
+      return;
 
-		dev_priv->force_audio_property = prop;
-	}
-	drm_object_attach_property(&connector->base, prop, 0);
+    dev_priv->force_audio_property = prop;
+  }
+  drm_object_attach_property(&connector->base, prop, 0);
 }
 
 static const struct drm_prop_enum_list broadcast_rgb_names[] = {
-	{ INTEL_BROADCAST_RGB_AUTO, "Automatic" },
-	{ INTEL_BROADCAST_RGB_FULL, "Full" },
-	{ INTEL_BROADCAST_RGB_LIMITED, "Limited 16:235" },
+  { INTEL_BROADCAST_RGB_AUTO, "Automatic" },
+  { INTEL_BROADCAST_RGB_FULL, "Full" },
+  { INTEL_BROADCAST_RGB_LIMITED, "Limited 16:235" },
 };
 
 void
 intel_attach_broadcast_rgb_property(struct drm_connector *connector)
 {
-	struct drm_device *dev = connector->dev;
-	struct drm_i915_private *dev_priv = to_i915(dev);
-	struct drm_property *prop;
+  struct drm_device *dev = connector->dev;
+  struct drm_i915_private *dev_priv = to_i915(dev);
+  struct drm_property *prop;
 
-	prop = dev_priv->broadcast_rgb_property;
-	if (prop == NULL) {
-		prop = drm_property_create_enum(dev, DRM_MODE_PROP_ENUM,
-					   "Broadcast RGB",
-					   broadcast_rgb_names,
-					   ARRAY_SIZE(broadcast_rgb_names));
-		if (prop == NULL)
-			return;
+  prop = dev_priv->broadcast_rgb_property;
+  if (prop == NULL) {
+    prop = drm_property_create_enum(dev, DRM_MODE_PROP_ENUM,
+             "Broadcast RGB",
+             broadcast_rgb_names,
+             ARRAY_SIZE(broadcast_rgb_names));
+    if (prop == NULL)
+      return;
 
-		dev_priv->broadcast_rgb_property = prop;
-	}
+    dev_priv->broadcast_rgb_property = prop;
+  }
 
-	drm_object_attach_property(&connector->base, prop, 0);
+  drm_object_attach_property(&connector->base, prop, 0);
 }
 
 void
 intel_attach_aspect_ratio_property(struct drm_connector *connector)
 {
-	if (!drm_mode_create_aspect_ratio_property(connector->dev))
-		drm_object_attach_property(&connector->base,
-			connector->dev->mode_config.aspect_ratio_property,
-			DRM_MODE_PICTURE_ASPECT_NONE);
+  if (!drm_mode_create_aspect_ratio_property(connector->dev))
+    drm_object_attach_property(&connector->base,
+      connector->dev->mode_config.aspect_ratio_property,
+      DRM_MODE_PICTURE_ASPECT_NONE);
 }
 
 void
 intel_attach_hdmi_colorspace_property(struct drm_connector *connector)
 {
-	if (!drm_mode_create_hdmi_colorspace_property(connector))
-		drm_connector_attach_colorspace_property(connector);
+  if (!drm_mode_create_hdmi_colorspace_property(connector))
+    drm_connector_attach_colorspace_property(connector);
 }
 
 void
 intel_attach_dp_colorspace_property(struct drm_connector *connector)
 {
-	if (!drm_mode_create_dp_colorspace_property(connector))
-		drm_connector_attach_colorspace_property(connector);
+  if (!drm_mode_create_dp_colorspace_property(connector))
+    drm_connector_attach_colorspace_property(connector);
 }

@@ -29,14 +29,14 @@
 #include "core_types.h"
 
 #define TO_DCN31_RES_POOL(pool)\
-	container_of(pool, struct dcn31_resource_pool, base)
+  container_of(pool, struct dcn31_resource_pool, base)
 
 struct dcn31_resource_pool {
-	struct resource_pool base;
+  struct resource_pool base;
 };
 
 struct resource_pool *dcn31_create_resource_pool(
-		const struct dc_init_data *init_data,
-		struct dc *dc);
+    const struct dc_init_data *init_data,
+    struct dc *dc);
 
 #endif /* _DCN31_RESOURCE_H_ */

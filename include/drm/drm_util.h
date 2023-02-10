@@ -58,9 +58,9 @@
  *
  * Typical use::
  *
- *	#define for_each_foo_bar(x, y) \'
- *		list_for_each_entry(x, y->list, head) \'
- *			for_each_if(x->something == SOMETHING)
+ *  #define for_each_foo_bar(x, y) \'
+ *    list_for_each_entry(x, y->list, head) \'
+ *      for_each_if(x->something == SOMETHING)
  *
  * The for_each_if() macro makes the use of for_each_foo_bar() less error
  * prone.
@@ -80,9 +80,9 @@
  */
 static inline bool drm_can_sleep(void)
 {
-	if (in_atomic() || in_dbg_master() || irqs_disabled())
-		return false;
-	return true;
+  if (in_atomic() || in_dbg_master() || irqs_disabled())
+    return false;
+  return true;
 }
 
 #endif

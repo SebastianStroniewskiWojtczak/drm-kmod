@@ -98,325 +98,325 @@
 #define ATOM_Tonga_TABLE_REVISION_TONGA                 7
 
 typedef struct _ATOM_Tonga_POWERPLAYTABLE {
-	ATOM_COMMON_TABLE_HEADER sHeader;
+  ATOM_COMMON_TABLE_HEADER sHeader;
 
-	UCHAR  ucTableRevision;
-	USHORT usTableSize;						/*the size of header structure */
+  UCHAR  ucTableRevision;
+  USHORT usTableSize;            /*the size of header structure */
 
-	ULONG	ulGoldenPPID;
-	ULONG	ulGoldenRevision;
-	USHORT	usFormatID;
+  ULONG  ulGoldenPPID;
+  ULONG  ulGoldenRevision;
+  USHORT  usFormatID;
 
-	USHORT	usVoltageTime;					 /*in microseconds */
-	ULONG	ulPlatformCaps;					  /*See ATOM_Tonga_CAPS_* */
+  USHORT  usVoltageTime;           /*in microseconds */
+  ULONG  ulPlatformCaps;            /*See ATOM_Tonga_CAPS_* */
 
-	ULONG	ulMaxODEngineClock; 			   /*For Overdrive.  */
-	ULONG	ulMaxODMemoryClock; 			   /*For Overdrive. */
+  ULONG  ulMaxODEngineClock;          /*For Overdrive.  */
+  ULONG  ulMaxODMemoryClock;          /*For Overdrive. */
 
-	USHORT	usPowerControlLimit;
-	USHORT	usUlvVoltageOffset;				  /*in mv units */
+  USHORT  usPowerControlLimit;
+  USHORT  usUlvVoltageOffset;          /*in mv units */
 
-	USHORT	usStateArrayOffset;				  /*points to ATOM_Tonga_State_Array */
-	USHORT	usFanTableOffset;				  /*points to ATOM_Tonga_Fan_Table */
-	USHORT	usThermalControllerOffset;		   /*points to ATOM_Tonga_Thermal_Controller */
-	USHORT	usReserv;						   /*CustomThermalPolicy removed for Tonga. Keep this filed as reserved. */
+  USHORT  usStateArrayOffset;          /*points to ATOM_Tonga_State_Array */
+  USHORT  usFanTableOffset;          /*points to ATOM_Tonga_Fan_Table */
+  USHORT  usThermalControllerOffset;       /*points to ATOM_Tonga_Thermal_Controller */
+  USHORT  usReserv;               /*CustomThermalPolicy removed for Tonga. Keep this filed as reserved. */
 
-	USHORT	usMclkDependencyTableOffset;	   /*points to ATOM_Tonga_MCLK_Dependency_Table */
-	USHORT	usSclkDependencyTableOffset;	   /*points to ATOM_Tonga_SCLK_Dependency_Table */
-	USHORT	usVddcLookupTableOffset;		   /*points to ATOM_Tonga_Voltage_Lookup_Table */
-	USHORT	usVddgfxLookupTableOffset; 		/*points to ATOM_Tonga_Voltage_Lookup_Table */
+  USHORT  usMclkDependencyTableOffset;     /*points to ATOM_Tonga_MCLK_Dependency_Table */
+  USHORT  usSclkDependencyTableOffset;     /*points to ATOM_Tonga_SCLK_Dependency_Table */
+  USHORT  usVddcLookupTableOffset;       /*points to ATOM_Tonga_Voltage_Lookup_Table */
+  USHORT  usVddgfxLookupTableOffset;     /*points to ATOM_Tonga_Voltage_Lookup_Table */
 
-	USHORT	usMMDependencyTableOffset;		  /*points to ATOM_Tonga_MM_Dependency_Table */
+  USHORT  usMMDependencyTableOffset;      /*points to ATOM_Tonga_MM_Dependency_Table */
 
-	USHORT	usVCEStateTableOffset;			   /*points to ATOM_Tonga_VCE_State_Table; */
+  USHORT  usVCEStateTableOffset;         /*points to ATOM_Tonga_VCE_State_Table; */
 
-	USHORT	usPPMTableOffset;				  /*points to ATOM_Tonga_PPM_Table */
-	USHORT	usPowerTuneTableOffset;			  /*points to ATOM_PowerTune_Table */
+  USHORT  usPPMTableOffset;          /*points to ATOM_Tonga_PPM_Table */
+  USHORT  usPowerTuneTableOffset;        /*points to ATOM_PowerTune_Table */
 
-	USHORT	usHardLimitTableOffset; 		   /*points to ATOM_Tonga_Hard_Limit_Table */
+  USHORT  usHardLimitTableOffset;        /*points to ATOM_Tonga_Hard_Limit_Table */
 
-	USHORT	usPCIETableOffset;				  /*points to ATOM_Tonga_PCIE_Table */
+  USHORT  usPCIETableOffset;          /*points to ATOM_Tonga_PCIE_Table */
 
-	USHORT	usGPIOTableOffset;				  /*points to ATOM_Tonga_GPIO_Table */
+  USHORT  usGPIOTableOffset;          /*points to ATOM_Tonga_GPIO_Table */
 
-	USHORT	usReserved[6];					   /*TODO: modify reserved size to fit structure aligning */
+  USHORT  usReserved[6];             /*TODO: modify reserved size to fit structure aligning */
 } ATOM_Tonga_POWERPLAYTABLE;
 
 typedef struct _ATOM_Tonga_State {
-	UCHAR  ucEngineClockIndexHigh;
-	UCHAR  ucEngineClockIndexLow;
+  UCHAR  ucEngineClockIndexHigh;
+  UCHAR  ucEngineClockIndexLow;
 
-	UCHAR  ucMemoryClockIndexHigh;
-	UCHAR  ucMemoryClockIndexLow;
+  UCHAR  ucMemoryClockIndexHigh;
+  UCHAR  ucMemoryClockIndexLow;
 
-	UCHAR  ucPCIEGenLow;
-	UCHAR  ucPCIEGenHigh;
+  UCHAR  ucPCIEGenLow;
+  UCHAR  ucPCIEGenHigh;
 
-	UCHAR  ucPCIELaneLow;
-	UCHAR  ucPCIELaneHigh;
+  UCHAR  ucPCIELaneLow;
+  UCHAR  ucPCIELaneHigh;
 
-	USHORT usClassification;
-	ULONG ulCapsAndSettings;
-	USHORT usClassification2;
-	UCHAR  ucUnused[4];
+  USHORT usClassification;
+  ULONG ulCapsAndSettings;
+  USHORT usClassification2;
+  UCHAR  ucUnused[4];
 } ATOM_Tonga_State;
 
 typedef struct _ATOM_Tonga_State_Array {
-	UCHAR ucRevId;
-	UCHAR ucNumEntries;		/* Number of entries. */
-	ATOM_Tonga_State entries[1];	/* Dynamically allocate entries. */
+  UCHAR ucRevId;
+  UCHAR ucNumEntries;    /* Number of entries. */
+  ATOM_Tonga_State entries[1];  /* Dynamically allocate entries. */
 } ATOM_Tonga_State_Array;
 
 typedef struct _ATOM_Tonga_MCLK_Dependency_Record {
-	UCHAR  ucVddcInd;	/* Vddc voltage */
-	USHORT usVddci;
-	USHORT usVddgfxOffset;	/* Offset relative to Vddc voltage */
-	USHORT usMvdd;
-	ULONG ulMclk;
-	USHORT usReserved;
+  UCHAR  ucVddcInd;  /* Vddc voltage */
+  USHORT usVddci;
+  USHORT usVddgfxOffset;  /* Offset relative to Vddc voltage */
+  USHORT usMvdd;
+  ULONG ulMclk;
+  USHORT usReserved;
 } ATOM_Tonga_MCLK_Dependency_Record;
 
 typedef struct _ATOM_Tonga_MCLK_Dependency_Table {
-	UCHAR ucRevId;
-	UCHAR ucNumEntries; 										/* Number of entries. */
-	ATOM_Tonga_MCLK_Dependency_Record entries[1];				/* Dynamically allocate entries. */
+  UCHAR ucRevId;
+  UCHAR ucNumEntries;                     /* Number of entries. */
+  ATOM_Tonga_MCLK_Dependency_Record entries[1];        /* Dynamically allocate entries. */
 } ATOM_Tonga_MCLK_Dependency_Table;
 
 typedef struct _ATOM_Tonga_SCLK_Dependency_Record {
-	UCHAR  ucVddInd;											/* Base voltage */
-	USHORT usVddcOffset;										/* Offset relative to base voltage */
-	ULONG ulSclk;
-	USHORT usEdcCurrent;
-	UCHAR  ucReliabilityTemperature;
-	UCHAR  ucCKSVOffsetandDisable;							  /* Bits 0~6: Voltage offset for CKS, Bit 7: Disable/enable for the SCLK level. */
+  UCHAR  ucVddInd;                      /* Base voltage */
+  USHORT usVddcOffset;                    /* Offset relative to base voltage */
+  ULONG ulSclk;
+  USHORT usEdcCurrent;
+  UCHAR  ucReliabilityTemperature;
+  UCHAR  ucCKSVOffsetandDisable;                /* Bits 0~6: Voltage offset for CKS, Bit 7: Disable/enable for the SCLK level. */
 } ATOM_Tonga_SCLK_Dependency_Record;
 
 typedef struct _ATOM_Tonga_SCLK_Dependency_Table {
-	UCHAR ucRevId;
-	UCHAR ucNumEntries; 										/* Number of entries. */
-	ATOM_Tonga_SCLK_Dependency_Record entries[1];				 /* Dynamically allocate entries. */
+  UCHAR ucRevId;
+  UCHAR ucNumEntries;                     /* Number of entries. */
+  ATOM_Tonga_SCLK_Dependency_Record entries[1];         /* Dynamically allocate entries. */
 } ATOM_Tonga_SCLK_Dependency_Table;
 
 typedef struct _ATOM_Polaris_SCLK_Dependency_Record {
-	UCHAR  ucVddInd;											/* Base voltage */
-	USHORT usVddcOffset;										/* Offset relative to base voltage */
-	ULONG ulSclk;
-	USHORT usEdcCurrent;
-	UCHAR  ucReliabilityTemperature;
-	UCHAR  ucCKSVOffsetandDisable;			/* Bits 0~6: Voltage offset for CKS, Bit 7: Disable/enable for the SCLK level. */
-	ULONG  ulSclkOffset;
+  UCHAR  ucVddInd;                      /* Base voltage */
+  USHORT usVddcOffset;                    /* Offset relative to base voltage */
+  ULONG ulSclk;
+  USHORT usEdcCurrent;
+  UCHAR  ucReliabilityTemperature;
+  UCHAR  ucCKSVOffsetandDisable;      /* Bits 0~6: Voltage offset for CKS, Bit 7: Disable/enable for the SCLK level. */
+  ULONG  ulSclkOffset;
 } ATOM_Polaris_SCLK_Dependency_Record;
 
 typedef struct _ATOM_Polaris_SCLK_Dependency_Table {
-	UCHAR ucRevId;
-	UCHAR ucNumEntries;							/* Number of entries. */
-	ATOM_Polaris_SCLK_Dependency_Record entries[1];				 /* Dynamically allocate entries. */
+  UCHAR ucRevId;
+  UCHAR ucNumEntries;              /* Number of entries. */
+  ATOM_Polaris_SCLK_Dependency_Record entries[1];         /* Dynamically allocate entries. */
 } ATOM_Polaris_SCLK_Dependency_Table;
 
 typedef struct _ATOM_Tonga_PCIE_Record {
-	UCHAR ucPCIEGenSpeed;
-	UCHAR usPCIELaneWidth;
-	UCHAR ucReserved[2];
+  UCHAR ucPCIEGenSpeed;
+  UCHAR usPCIELaneWidth;
+  UCHAR ucReserved[2];
 } ATOM_Tonga_PCIE_Record;
 
 typedef struct _ATOM_Tonga_PCIE_Table {
-	UCHAR ucRevId;
-	UCHAR ucNumEntries; 										/* Number of entries. */
-	ATOM_Tonga_PCIE_Record entries[1];							/* Dynamically allocate entries. */
+  UCHAR ucRevId;
+  UCHAR ucNumEntries;                     /* Number of entries. */
+  ATOM_Tonga_PCIE_Record entries[1];              /* Dynamically allocate entries. */
 } ATOM_Tonga_PCIE_Table;
 
 typedef struct _ATOM_Polaris10_PCIE_Record {
-	UCHAR ucPCIEGenSpeed;
-	UCHAR usPCIELaneWidth;
-	UCHAR ucReserved[2];
-	ULONG ulPCIE_Sclk;
+  UCHAR ucPCIEGenSpeed;
+  UCHAR usPCIELaneWidth;
+  UCHAR ucReserved[2];
+  ULONG ulPCIE_Sclk;
 } ATOM_Polaris10_PCIE_Record;
 
 typedef struct _ATOM_Polaris10_PCIE_Table {
-	UCHAR ucRevId;
-	UCHAR ucNumEntries;                                         /* Number of entries. */
-	ATOM_Polaris10_PCIE_Record entries[1];                      /* Dynamically allocate entries. */
+  UCHAR ucRevId;
+  UCHAR ucNumEntries;                                         /* Number of entries. */
+  ATOM_Polaris10_PCIE_Record entries[1];                      /* Dynamically allocate entries. */
 } ATOM_Polaris10_PCIE_Table;
 
 
 typedef struct _ATOM_Tonga_MM_Dependency_Record {
-	UCHAR   ucVddcInd;											 /* VDDC voltage */
-	USHORT  usVddgfxOffset;									  /* Offset relative to VDDC voltage */
-	ULONG  ulDClk;												/* UVD D-clock */
-	ULONG  ulVClk;												/* UVD V-clock */
-	ULONG  ulEClk;												/* VCE clock */
-	ULONG  ulAClk;												/* ACP clock */
-	ULONG  ulSAMUClk;											/* SAMU clock */
+  UCHAR   ucVddcInd;                       /* VDDC voltage */
+  USHORT  usVddgfxOffset;                    /* Offset relative to VDDC voltage */
+  ULONG  ulDClk;                        /* UVD D-clock */
+  ULONG  ulVClk;                        /* UVD V-clock */
+  ULONG  ulEClk;                        /* VCE clock */
+  ULONG  ulAClk;                        /* ACP clock */
+  ULONG  ulSAMUClk;                      /* SAMU clock */
 } ATOM_Tonga_MM_Dependency_Record;
 
 typedef struct _ATOM_Tonga_MM_Dependency_Table {
-	UCHAR ucRevId;
-	UCHAR ucNumEntries; 										/* Number of entries. */
-	ATOM_Tonga_MM_Dependency_Record entries[1]; 			   /* Dynamically allocate entries. */
+  UCHAR ucRevId;
+  UCHAR ucNumEntries;                     /* Number of entries. */
+  ATOM_Tonga_MM_Dependency_Record entries[1];          /* Dynamically allocate entries. */
 } ATOM_Tonga_MM_Dependency_Table;
 
 typedef struct _ATOM_Tonga_Voltage_Lookup_Record {
-	USHORT usVdd;											   /* Base voltage */
-	USHORT usCACLow;
-	USHORT usCACMid;
-	USHORT usCACHigh;
+  USHORT usVdd;                         /* Base voltage */
+  USHORT usCACLow;
+  USHORT usCACMid;
+  USHORT usCACHigh;
 } ATOM_Tonga_Voltage_Lookup_Record;
 
 typedef struct _ATOM_Tonga_Voltage_Lookup_Table {
-	UCHAR ucRevId;
-	UCHAR ucNumEntries; 										/* Number of entries. */
-	ATOM_Tonga_Voltage_Lookup_Record entries[1];				/* Dynamically allocate entries. */
+  UCHAR ucRevId;
+  UCHAR ucNumEntries;                     /* Number of entries. */
+  ATOM_Tonga_Voltage_Lookup_Record entries[1];        /* Dynamically allocate entries. */
 } ATOM_Tonga_Voltage_Lookup_Table;
 
 typedef struct _ATOM_Tonga_Fan_Table {
-	UCHAR   ucRevId;						 /* Change this if the table format changes or version changes so that the other fields are not the same. */
-	UCHAR   ucTHyst;						 /* Temperature hysteresis. Integer. */
-	USHORT  usTMin; 						 /* The temperature, in 0.01 centigrades, below which we just run at a minimal PWM. */
-	USHORT  usTMed; 						 /* The middle temperature where we change slopes. */
-	USHORT  usTHigh;						 /* The high point above TMed for adjusting the second slope. */
-	USHORT  usPWMMin;						 /* The minimum PWM value in percent (0.01% increments). */
-	USHORT  usPWMMed;						 /* The PWM value (in percent) at TMed. */
-	USHORT  usPWMHigh;						 /* The PWM value at THigh. */
-	USHORT  usTMax; 						 /* The max temperature */
-	UCHAR   ucFanControlMode;				  /* Legacy or Fuzzy Fan mode */
-	USHORT  usFanPWMMax;					  /* Maximum allowed fan power in percent */
-	USHORT  usFanOutputSensitivity;		  /* Sensitivity of fan reaction to temepature changes */
-	USHORT  usFanRPMMax;					  /* The default value in RPM */
-	ULONG  ulMinFanSCLKAcousticLimit;	   /* Minimum Fan Controller SCLK Frequency Acoustic Limit. */
-	UCHAR   ucTargetTemperature;			 /* Advanced fan controller target temperature. */
-	UCHAR   ucMinimumPWMLimit; 			  /* The minimum PWM that the advanced fan controller can set.	This should be set to the highest PWM that will run the fan at its lowest RPM. */
-	USHORT  usReserved;
+  UCHAR   ucRevId;             /* Change this if the table format changes or version changes so that the other fields are not the same. */
+  UCHAR   ucTHyst;             /* Temperature hysteresis. Integer. */
+  USHORT  usTMin;              /* The temperature, in 0.01 centigrades, below which we just run at a minimal PWM. */
+  USHORT  usTMed;              /* The middle temperature where we change slopes. */
+  USHORT  usTHigh;             /* The high point above TMed for adjusting the second slope. */
+  USHORT  usPWMMin;             /* The minimum PWM value in percent (0.01% increments). */
+  USHORT  usPWMMed;             /* The PWM value (in percent) at TMed. */
+  USHORT  usPWMHigh;             /* The PWM value at THigh. */
+  USHORT  usTMax;              /* The max temperature */
+  UCHAR   ucFanControlMode;          /* Legacy or Fuzzy Fan mode */
+  USHORT  usFanPWMMax;            /* Maximum allowed fan power in percent */
+  USHORT  usFanOutputSensitivity;      /* Sensitivity of fan reaction to temepature changes */
+  USHORT  usFanRPMMax;            /* The default value in RPM */
+  ULONG  ulMinFanSCLKAcousticLimit;     /* Minimum Fan Controller SCLK Frequency Acoustic Limit. */
+  UCHAR   ucTargetTemperature;       /* Advanced fan controller target temperature. */
+  UCHAR   ucMinimumPWMLimit;         /* The minimum PWM that the advanced fan controller can set.  This should be set to the highest PWM that will run the fan at its lowest RPM. */
+  USHORT  usReserved;
 } ATOM_Tonga_Fan_Table;
 
 typedef struct _ATOM_Fiji_Fan_Table {
-	UCHAR   ucRevId;						 /* Change this if the table format changes or version changes so that the other fields are not the same. */
-	UCHAR   ucTHyst;						 /* Temperature hysteresis. Integer. */
-	USHORT  usTMin; 						 /* The temperature, in 0.01 centigrades, below which we just run at a minimal PWM. */
-	USHORT  usTMed; 						 /* The middle temperature where we change slopes. */
-	USHORT  usTHigh;						 /* The high point above TMed for adjusting the second slope. */
-	USHORT  usPWMMin;						 /* The minimum PWM value in percent (0.01% increments). */
-	USHORT  usPWMMed;						 /* The PWM value (in percent) at TMed. */
-	USHORT  usPWMHigh;						 /* The PWM value at THigh. */
-	USHORT  usTMax; 						 /* The max temperature */
-	UCHAR   ucFanControlMode;				  /* Legacy or Fuzzy Fan mode */
-	USHORT  usFanPWMMax;					  /* Maximum allowed fan power in percent */
-	USHORT  usFanOutputSensitivity;		  /* Sensitivity of fan reaction to temepature changes */
-	USHORT  usFanRPMMax;					  /* The default value in RPM */
-	ULONG  ulMinFanSCLKAcousticLimit;		/* Minimum Fan Controller SCLK Frequency Acoustic Limit. */
-	UCHAR   ucTargetTemperature;			 /* Advanced fan controller target temperature. */
-	UCHAR   ucMinimumPWMLimit; 			  /* The minimum PWM that the advanced fan controller can set.	This should be set to the highest PWM that will run the fan at its lowest RPM. */
-	USHORT  usFanGainEdge;
-	USHORT  usFanGainHotspot;
-	USHORT  usFanGainLiquid;
-	USHORT  usFanGainVrVddc;
-	USHORT  usFanGainVrMvdd;
-	USHORT  usFanGainPlx;
-	USHORT  usFanGainHbm;
-	USHORT  usReserved;
+  UCHAR   ucRevId;             /* Change this if the table format changes or version changes so that the other fields are not the same. */
+  UCHAR   ucTHyst;             /* Temperature hysteresis. Integer. */
+  USHORT  usTMin;              /* The temperature, in 0.01 centigrades, below which we just run at a minimal PWM. */
+  USHORT  usTMed;              /* The middle temperature where we change slopes. */
+  USHORT  usTHigh;             /* The high point above TMed for adjusting the second slope. */
+  USHORT  usPWMMin;             /* The minimum PWM value in percent (0.01% increments). */
+  USHORT  usPWMMed;             /* The PWM value (in percent) at TMed. */
+  USHORT  usPWMHigh;             /* The PWM value at THigh. */
+  USHORT  usTMax;              /* The max temperature */
+  UCHAR   ucFanControlMode;          /* Legacy or Fuzzy Fan mode */
+  USHORT  usFanPWMMax;            /* Maximum allowed fan power in percent */
+  USHORT  usFanOutputSensitivity;      /* Sensitivity of fan reaction to temepature changes */
+  USHORT  usFanRPMMax;            /* The default value in RPM */
+  ULONG  ulMinFanSCLKAcousticLimit;    /* Minimum Fan Controller SCLK Frequency Acoustic Limit. */
+  UCHAR   ucTargetTemperature;       /* Advanced fan controller target temperature. */
+  UCHAR   ucMinimumPWMLimit;         /* The minimum PWM that the advanced fan controller can set.  This should be set to the highest PWM that will run the fan at its lowest RPM. */
+  USHORT  usFanGainEdge;
+  USHORT  usFanGainHotspot;
+  USHORT  usFanGainLiquid;
+  USHORT  usFanGainVrVddc;
+  USHORT  usFanGainVrMvdd;
+  USHORT  usFanGainPlx;
+  USHORT  usFanGainHbm;
+  USHORT  usReserved;
 } ATOM_Fiji_Fan_Table;
 
 typedef struct _ATOM_Polaris_Fan_Table {
-	UCHAR   ucRevId;						 /* Change this if the table format changes or version changes so that the other fields are not the same. */
-	UCHAR   ucTHyst;						 /* Temperature hysteresis. Integer. */
-	USHORT  usTMin; 						 /* The temperature, in 0.01 centigrades, below which we just run at a minimal PWM. */
-	USHORT  usTMed; 						 /* The middle temperature where we change slopes. */
-	USHORT  usTHigh;						 /* The high point above TMed for adjusting the second slope. */
-	USHORT  usPWMMin;						 /* The minimum PWM value in percent (0.01% increments). */
-	USHORT  usPWMMed;						 /* The PWM value (in percent) at TMed. */
-	USHORT  usPWMHigh;						 /* The PWM value at THigh. */
-	USHORT  usTMax; 						 /* The max temperature */
-	UCHAR   ucFanControlMode;				  /* Legacy or Fuzzy Fan mode */
-	USHORT  usFanPWMMax;					  /* Maximum allowed fan power in percent */
-	USHORT  usFanOutputSensitivity;		  /* Sensitivity of fan reaction to temepature changes */
-	USHORT  usFanRPMMax;					  /* The default value in RPM */
-	ULONG  ulMinFanSCLKAcousticLimit;		/* Minimum Fan Controller SCLK Frequency Acoustic Limit. */
-	UCHAR   ucTargetTemperature;			 /* Advanced fan controller target temperature. */
-	UCHAR   ucMinimumPWMLimit; 			  /* The minimum PWM that the advanced fan controller can set.	This should be set to the highest PWM that will run the fan at its lowest RPM. */
-	USHORT  usFanGainEdge;
-	USHORT  usFanGainHotspot;
-	USHORT  usFanGainLiquid;
-	USHORT  usFanGainVrVddc;
-	USHORT  usFanGainVrMvdd;
-	USHORT  usFanGainPlx;
-	USHORT  usFanGainHbm;
-	UCHAR   ucEnableZeroRPM;
-	UCHAR   ucFanStopTemperature;
-	UCHAR   ucFanStartTemperature;
-	USHORT  usReserved;
+  UCHAR   ucRevId;             /* Change this if the table format changes or version changes so that the other fields are not the same. */
+  UCHAR   ucTHyst;             /* Temperature hysteresis. Integer. */
+  USHORT  usTMin;              /* The temperature, in 0.01 centigrades, below which we just run at a minimal PWM. */
+  USHORT  usTMed;              /* The middle temperature where we change slopes. */
+  USHORT  usTHigh;             /* The high point above TMed for adjusting the second slope. */
+  USHORT  usPWMMin;             /* The minimum PWM value in percent (0.01% increments). */
+  USHORT  usPWMMed;             /* The PWM value (in percent) at TMed. */
+  USHORT  usPWMHigh;             /* The PWM value at THigh. */
+  USHORT  usTMax;              /* The max temperature */
+  UCHAR   ucFanControlMode;          /* Legacy or Fuzzy Fan mode */
+  USHORT  usFanPWMMax;            /* Maximum allowed fan power in percent */
+  USHORT  usFanOutputSensitivity;      /* Sensitivity of fan reaction to temepature changes */
+  USHORT  usFanRPMMax;            /* The default value in RPM */
+  ULONG  ulMinFanSCLKAcousticLimit;    /* Minimum Fan Controller SCLK Frequency Acoustic Limit. */
+  UCHAR   ucTargetTemperature;       /* Advanced fan controller target temperature. */
+  UCHAR   ucMinimumPWMLimit;         /* The minimum PWM that the advanced fan controller can set.  This should be set to the highest PWM that will run the fan at its lowest RPM. */
+  USHORT  usFanGainEdge;
+  USHORT  usFanGainHotspot;
+  USHORT  usFanGainLiquid;
+  USHORT  usFanGainVrVddc;
+  USHORT  usFanGainVrMvdd;
+  USHORT  usFanGainPlx;
+  USHORT  usFanGainHbm;
+  UCHAR   ucEnableZeroRPM;
+  UCHAR   ucFanStopTemperature;
+  UCHAR   ucFanStartTemperature;
+  USHORT  usReserved;
 } ATOM_Polaris_Fan_Table;
 
 typedef struct _ATOM_Tonga_Thermal_Controller {
-	UCHAR ucRevId;
-	UCHAR ucType;		   /* one of ATOM_TONGA_PP_THERMALCONTROLLER_* */
-	UCHAR ucI2cLine;		/* as interpreted by DAL I2C */
-	UCHAR ucI2cAddress;
-	UCHAR ucFanParameters;	/* Fan Control Parameters. */
-	UCHAR ucFanMinRPM; 	 /* Fan Minimum RPM (hundreds) -- for display purposes only. */
-	UCHAR ucFanMaxRPM; 	 /* Fan Maximum RPM (hundreds) -- for display purposes only. */
-	UCHAR ucReserved;
-	UCHAR ucFlags;		   /* to be defined */
+  UCHAR ucRevId;
+  UCHAR ucType;       /* one of ATOM_TONGA_PP_THERMALCONTROLLER_* */
+  UCHAR ucI2cLine;    /* as interpreted by DAL I2C */
+  UCHAR ucI2cAddress;
+  UCHAR ucFanParameters;  /* Fan Control Parameters. */
+  UCHAR ucFanMinRPM;    /* Fan Minimum RPM (hundreds) -- for display purposes only. */
+  UCHAR ucFanMaxRPM;    /* Fan Maximum RPM (hundreds) -- for display purposes only. */
+  UCHAR ucReserved;
+  UCHAR ucFlags;       /* to be defined */
 } ATOM_Tonga_Thermal_Controller;
 
 typedef struct _ATOM_Tonga_VCE_State_Record {
-	UCHAR  ucVCEClockIndex;	/*index into usVCEDependencyTableOffset of 'ATOM_Tonga_MM_Dependency_Table' type */
-	UCHAR  ucFlag;		/* 2 bits indicates memory p-states */
-	UCHAR  ucSCLKIndex;		/*index into ATOM_Tonga_SCLK_Dependency_Table */
-	UCHAR  ucMCLKIndex;		/*index into ATOM_Tonga_MCLK_Dependency_Table */
+  UCHAR  ucVCEClockIndex;  /*index into usVCEDependencyTableOffset of 'ATOM_Tonga_MM_Dependency_Table' type */
+  UCHAR  ucFlag;    /* 2 bits indicates memory p-states */
+  UCHAR  ucSCLKIndex;    /*index into ATOM_Tonga_SCLK_Dependency_Table */
+  UCHAR  ucMCLKIndex;    /*index into ATOM_Tonga_MCLK_Dependency_Table */
 } ATOM_Tonga_VCE_State_Record;
 
 typedef struct _ATOM_Tonga_VCE_State_Table {
-	UCHAR ucRevId;
-	UCHAR ucNumEntries;
-	ATOM_Tonga_VCE_State_Record entries[1];
+  UCHAR ucRevId;
+  UCHAR ucNumEntries;
+  ATOM_Tonga_VCE_State_Record entries[1];
 } ATOM_Tonga_VCE_State_Table;
 
 typedef struct _ATOM_Tonga_PowerTune_Table {
-	UCHAR  ucRevId;
-	USHORT usTDP;
-	USHORT usConfigurableTDP;
-	USHORT usTDC;
-	USHORT usBatteryPowerLimit;
-	USHORT usSmallPowerLimit;
-	USHORT usLowCACLeakage;
-	USHORT usHighCACLeakage;
-	USHORT usMaximumPowerDeliveryLimit;
-	USHORT usTjMax;
-	USHORT usPowerTuneDataSetID;
-	USHORT usEDCLimit;
-	USHORT usSoftwareShutdownTemp;
-	USHORT usClockStretchAmount;
-	USHORT usReserve[2];
+  UCHAR  ucRevId;
+  USHORT usTDP;
+  USHORT usConfigurableTDP;
+  USHORT usTDC;
+  USHORT usBatteryPowerLimit;
+  USHORT usSmallPowerLimit;
+  USHORT usLowCACLeakage;
+  USHORT usHighCACLeakage;
+  USHORT usMaximumPowerDeliveryLimit;
+  USHORT usTjMax;
+  USHORT usPowerTuneDataSetID;
+  USHORT usEDCLimit;
+  USHORT usSoftwareShutdownTemp;
+  USHORT usClockStretchAmount;
+  USHORT usReserve[2];
 } ATOM_Tonga_PowerTune_Table;
 
 typedef struct _ATOM_Fiji_PowerTune_Table {
-	UCHAR  ucRevId;
-	USHORT usTDP;
-	USHORT usConfigurableTDP;
-	USHORT usTDC;
-	USHORT usBatteryPowerLimit;
-	USHORT usSmallPowerLimit;
-	USHORT usLowCACLeakage;
-	USHORT usHighCACLeakage;
-	USHORT usMaximumPowerDeliveryLimit;
-	USHORT usTjMax;  /* For Fiji, this is also usTemperatureLimitEdge; */
-	USHORT usPowerTuneDataSetID;
-	USHORT usEDCLimit;
-	USHORT usSoftwareShutdownTemp;
-	USHORT usClockStretchAmount;
-	USHORT usTemperatureLimitHotspot;  /*The following are added for Fiji */
-	USHORT usTemperatureLimitLiquid1;
-	USHORT usTemperatureLimitLiquid2;
-	USHORT usTemperatureLimitVrVddc;
-	USHORT usTemperatureLimitVrMvdd;
-	USHORT usTemperatureLimitPlx;
-	UCHAR  ucLiquid1_I2C_address;  /*Liquid */
-	UCHAR  ucLiquid2_I2C_address;
-	UCHAR  ucLiquid_I2C_Line;
-	UCHAR  ucVr_I2C_address;	/*VR */
-	UCHAR  ucVr_I2C_Line;
-	UCHAR  ucPlx_I2C_address;  /*PLX */
-	UCHAR  ucPlx_I2C_Line;
-	USHORT usReserved;
+  UCHAR  ucRevId;
+  USHORT usTDP;
+  USHORT usConfigurableTDP;
+  USHORT usTDC;
+  USHORT usBatteryPowerLimit;
+  USHORT usSmallPowerLimit;
+  USHORT usLowCACLeakage;
+  USHORT usHighCACLeakage;
+  USHORT usMaximumPowerDeliveryLimit;
+  USHORT usTjMax;  /* For Fiji, this is also usTemperatureLimitEdge; */
+  USHORT usPowerTuneDataSetID;
+  USHORT usEDCLimit;
+  USHORT usSoftwareShutdownTemp;
+  USHORT usClockStretchAmount;
+  USHORT usTemperatureLimitHotspot;  /*The following are added for Fiji */
+  USHORT usTemperatureLimitLiquid1;
+  USHORT usTemperatureLimitLiquid2;
+  USHORT usTemperatureLimitVrVddc;
+  USHORT usTemperatureLimitVrMvdd;
+  USHORT usTemperatureLimitPlx;
+  UCHAR  ucLiquid1_I2C_address;  /*Liquid */
+  UCHAR  ucLiquid2_I2C_address;
+  UCHAR  ucLiquid_I2C_Line;
+  UCHAR  ucVr_I2C_address;  /*VR */
+  UCHAR  ucVr_I2C_Line;
+  UCHAR  ucPlx_I2C_address;  /*PLX */
+  UCHAR  ucPlx_I2C_Line;
+  USHORT usReserved;
 } ATOM_Fiji_PowerTune_Table;
 
 typedef struct _ATOM_Polaris_PowerTune_Table
@@ -458,41 +458,41 @@ typedef struct _ATOM_Polaris_PowerTune_Table
 #define ATOM_PPM_A_A    1
 #define ATOM_PPM_A_I    2
 typedef struct _ATOM_Tonga_PPM_Table {
-	UCHAR   ucRevId;
-	UCHAR   ucPpmDesign;		  /*A+I or A+A */
-	USHORT  usCpuCoreNumber;
-	ULONG  ulPlatformTDP;
-	ULONG  ulSmallACPlatformTDP;
-	ULONG  ulPlatformTDC;
-	ULONG  ulSmallACPlatformTDC;
-	ULONG  ulApuTDP;
-	ULONG  ulDGpuTDP;
-	ULONG  ulDGpuUlvPower;
-	ULONG  ulTjmax;
+  UCHAR   ucRevId;
+  UCHAR   ucPpmDesign;      /*A+I or A+A */
+  USHORT  usCpuCoreNumber;
+  ULONG  ulPlatformTDP;
+  ULONG  ulSmallACPlatformTDP;
+  ULONG  ulPlatformTDC;
+  ULONG  ulSmallACPlatformTDC;
+  ULONG  ulApuTDP;
+  ULONG  ulDGpuTDP;
+  ULONG  ulDGpuUlvPower;
+  ULONG  ulTjmax;
 } ATOM_Tonga_PPM_Table;
 
 typedef struct _ATOM_Tonga_Hard_Limit_Record {
-	ULONG  ulSCLKLimit;
-	ULONG  ulMCLKLimit;
-	USHORT  usVddcLimit;
-	USHORT  usVddciLimit;
-	USHORT  usVddgfxLimit;
+  ULONG  ulSCLKLimit;
+  ULONG  ulMCLKLimit;
+  USHORT  usVddcLimit;
+  USHORT  usVddciLimit;
+  USHORT  usVddgfxLimit;
 } ATOM_Tonga_Hard_Limit_Record;
 
 typedef struct _ATOM_Tonga_Hard_Limit_Table {
-	UCHAR ucRevId;
-	UCHAR ucNumEntries;
-	ATOM_Tonga_Hard_Limit_Record entries[1];
+  UCHAR ucRevId;
+  UCHAR ucNumEntries;
+  ATOM_Tonga_Hard_Limit_Record entries[1];
 } ATOM_Tonga_Hard_Limit_Table;
 
 typedef struct _ATOM_Tonga_GPIO_Table {
-	UCHAR  ucRevId;
-	UCHAR  ucVRHotTriggeredSclkDpmIndex;		/* If VRHot signal is triggered SCLK will be limited to this DPM level */
-	UCHAR  ucReserve[5];
+  UCHAR  ucRevId;
+  UCHAR  ucVRHotTriggeredSclkDpmIndex;    /* If VRHot signal is triggered SCLK will be limited to this DPM level */
+  UCHAR  ucReserve[5];
 } ATOM_Tonga_GPIO_Table;
 
 typedef struct _PPTable_Generic_SubTable_Header {
-	UCHAR  ucRevId;
+  UCHAR  ucRevId;
 } PPTable_Generic_SubTable_Header;
 
 

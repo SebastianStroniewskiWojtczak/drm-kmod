@@ -25,46 +25,46 @@
 #include "i915_vgpu.h"
 
 int i915_gem_gtt_prepare_pages(struct drm_i915_gem_object *obj,
-			       struct sg_table *pages)
+             struct sg_table *pages)
 {
-	do {
-		if (dma_map_sg_attrs(obj->base.dev->dev,
-				     pages->sgl, pages->nents,
-				     PCI_DMA_BIDIRECTIONAL,
-				     DMA_ATTR_SKIP_CPU_SYNC |
-				     DMA_ATTR_NO_KERNEL_MAPPING |
-				     DMA_ATTR_NO_WARN))
-			return 0;
+  do {
+    if (dma_map_sg_attrs(obj->base.dev->dev,
+             pages->sgl, pages->nents,
+             PCI_DMA_BIDIRECTIONAL,
+             DMA_ATTR_SKIP_CPU_SYNC |
+             DMA_ATTR_NO_KERNEL_MAPPING |
+             DMA_ATTR_NO_WARN))
+      return 0;
 
-		/*
-		 * If the DMA remap fails, one cause can be that we have
-		 * too many objects pinned in a small remapping table,
-		 * such as swiotlb. Incrementally purge all other objects and
-		 * try again - if there are no more pages to remove from
-		 * the DMA remapper, i915_gem_shrink will return 0.
-		 */
-		GEM_BUG_ON(obj->mm.pages == pages);
-	} while (i915_gem_shrink(NULL, to_i915(obj->base.dev),
-				 obj->base.size >> PAGE_SHIFT, NULL,
-				 I915_SHRINK_BOUND |
-				 I915_SHRINK_UNBOUND));
+    /*
+     * If the DMA remap fails, one cause can be that we have
+     * too many objects pinned in a small remapping table,
+     * such as swiotlb. Incrementally purge all other objects and
+     * try again - if there are no more pages to remove from
+     * the DMA remapper, i915_gem_shrink will return 0.
+     */
+    GEM_BUG_ON(obj->mm.pages == pages);
+  } while (i915_gem_shrink(NULL, to_i915(obj->base.dev),
+         obj->base.size >> PAGE_SHIFT, NULL,
+         I915_SHRINK_BOUND |
+         I915_SHRINK_UNBOUND));
 
-	return -ENOSPC;
+  return -ENOSPC;
 }
 
 void i915_gem_gtt_finish_pages(struct drm_i915_gem_object *obj,
-			       struct sg_table *pages)
+             struct sg_table *pages)
 {
-	struct drm_i915_private *i915 = to_i915(obj->base.dev);
-	struct i915_ggtt *ggtt = &i915->ggtt;
+  struct drm_i915_private *i915 = to_i915(obj->base.dev);
+  struct i915_ggtt *ggtt = &i915->ggtt;
 
-	/* XXX This does not prevent more requests being submitted! */
-	if (unlikely(ggtt->do_idle_maps))
-		/* Wait a bit, in the hope it avoids the hang */
-		usleep_range(100, 250);
+  /* XXX This does not prevent more requests being submitted! */
+  if (unlikely(ggtt->do_idle_maps))
+    /* Wait a bit, in the hope it avoids the hang */
+    usleep_range(100, 250);
 
-	dma_unmap_sg(i915->drm.dev, pages->sgl, pages->nents,
-		     PCI_DMA_BIDIRECTIONAL);
+  dma_unmap_sg(i915->drm.dev, pages->sgl, pages->nents,
+         PCI_DMA_BIDIRECTIONAL);
 }
 
 /**
@@ -93,60 +93,60 @@ void i915_gem_gtt_finish_pages(struct drm_i915_gem_object *obj,
  * asked to wait for eviction and interrupted.
  */
 int i915_gem_gtt_reserve(struct i915_address_space *vm,
-			 struct drm_mm_node *node,
-			 u64 size, u64 offset, unsigned long color,
-			 unsigned int flags)
+       struct drm_mm_node *node,
+       u64 size, u64 offset, unsigned long color,
+       unsigned int flags)
 {
-	int err;
+  int err;
 
-	GEM_BUG_ON(!size);
-	GEM_BUG_ON(!IS_ALIGNED(size, I915_GTT_PAGE_SIZE));
-	GEM_BUG_ON(!IS_ALIGNED(offset, I915_GTT_MIN_ALIGNMENT));
-	GEM_BUG_ON(range_overflows(offset, size, vm->total));
-	GEM_BUG_ON(vm == &vm->i915->ggtt.alias->vm);
-	GEM_BUG_ON(drm_mm_node_allocated(node));
+  GEM_BUG_ON(!size);
+  GEM_BUG_ON(!IS_ALIGNED(size, I915_GTT_PAGE_SIZE));
+  GEM_BUG_ON(!IS_ALIGNED(offset, I915_GTT_MIN_ALIGNMENT));
+  GEM_BUG_ON(range_overflows(offset, size, vm->total));
+  GEM_BUG_ON(vm == &vm->i915->ggtt.alias->vm);
+  GEM_BUG_ON(drm_mm_node_allocated(node));
 
-	node->size = size;
-	node->start = offset;
-	node->color = color;
+  node->size = size;
+  node->start = offset;
+  node->color = color;
 
-	err = drm_mm_reserve_node(&vm->mm, node);
-	if (err != -ENOSPC)
-		return err;
+  err = drm_mm_reserve_node(&vm->mm, node);
+  if (err != -ENOSPC)
+    return err;
 
-	if (flags & PIN_NOEVICT)
-		return -ENOSPC;
+  if (flags & PIN_NOEVICT)
+    return -ENOSPC;
 
-	err = i915_gem_evict_for_node(vm, node, flags);
-	if (err == 0)
-		err = drm_mm_reserve_node(&vm->mm, node);
+  err = i915_gem_evict_for_node(vm, node, flags);
+  if (err == 0)
+    err = drm_mm_reserve_node(&vm->mm, node);
 
-	return err;
+  return err;
 }
 
 static u64 random_offset(u64 start, u64 end, u64 len, u64 align)
 {
-	u64 range, addr;
+  u64 range, addr;
 
-	GEM_BUG_ON(range_overflows(start, len, end));
-	GEM_BUG_ON(round_up(start, align) > round_down(end - len, align));
+  GEM_BUG_ON(range_overflows(start, len, end));
+  GEM_BUG_ON(round_up(start, align) > round_down(end - len, align));
 
-	range = round_down(end - len, align) - round_up(start, align);
-	if (range) {
-		if (sizeof(unsigned long) == sizeof(u64)) {
-			addr = get_random_long();
-		} else {
-			addr = get_random_int();
-			if (range > U32_MAX) {
-				addr <<= 32;
-				addr |= get_random_int();
-			}
-		}
-		div64_u64_rem(addr, range, &addr);
-		start += addr;
-	}
+  range = round_down(end - len, align) - round_up(start, align);
+  if (range) {
+    if (sizeof(unsigned long) == sizeof(u64)) {
+      addr = get_random_long();
+    } else {
+      addr = get_random_int();
+      if (range > U32_MAX) {
+        addr <<= 32;
+        addr |= get_random_int();
+      }
+    }
+    div64_u64_rem(addr, range, &addr);
+    start += addr;
+  }
 
-	return round_up(start, align);
+  return round_up(start, align);
 }
 
 /**
@@ -184,107 +184,107 @@ static u64 random_offset(u64 start, u64 end, u64 len, u64 align)
  * asked to wait for eviction and interrupted.
  */
 int i915_gem_gtt_insert(struct i915_address_space *vm,
-			struct drm_mm_node *node,
-			u64 size, u64 alignment, unsigned long color,
-			u64 start, u64 end, unsigned int flags)
+      struct drm_mm_node *node,
+      u64 size, u64 alignment, unsigned long color,
+      u64 start, u64 end, unsigned int flags)
 {
-	enum drm_mm_insert_mode mode;
-	u64 offset;
-	int err;
+  enum drm_mm_insert_mode mode;
+  u64 offset;
+  int err;
 
-	lockdep_assert_held(&vm->mutex);
+  lockdep_assert_held(&vm->mutex);
 
-	GEM_BUG_ON(!size);
-	GEM_BUG_ON(!IS_ALIGNED(size, I915_GTT_PAGE_SIZE));
-	GEM_BUG_ON(alignment && !is_power_of_2(alignment));
-	GEM_BUG_ON(alignment && !IS_ALIGNED(alignment, I915_GTT_MIN_ALIGNMENT));
-	GEM_BUG_ON(start >= end);
-	GEM_BUG_ON(start > 0  && !IS_ALIGNED(start, I915_GTT_PAGE_SIZE));
-	GEM_BUG_ON(end < U64_MAX && !IS_ALIGNED(end, I915_GTT_PAGE_SIZE));
-	GEM_BUG_ON(vm == &vm->i915->ggtt.alias->vm);
-	GEM_BUG_ON(drm_mm_node_allocated(node));
+  GEM_BUG_ON(!size);
+  GEM_BUG_ON(!IS_ALIGNED(size, I915_GTT_PAGE_SIZE));
+  GEM_BUG_ON(alignment && !is_power_of_2(alignment));
+  GEM_BUG_ON(alignment && !IS_ALIGNED(alignment, I915_GTT_MIN_ALIGNMENT));
+  GEM_BUG_ON(start >= end);
+  GEM_BUG_ON(start > 0  && !IS_ALIGNED(start, I915_GTT_PAGE_SIZE));
+  GEM_BUG_ON(end < U64_MAX && !IS_ALIGNED(end, I915_GTT_PAGE_SIZE));
+  GEM_BUG_ON(vm == &vm->i915->ggtt.alias->vm);
+  GEM_BUG_ON(drm_mm_node_allocated(node));
 
-	if (unlikely(range_overflows(start, size, end)))
-		return -ENOSPC;
+  if (unlikely(range_overflows(start, size, end)))
+    return -ENOSPC;
 
-	if (unlikely(round_up(start, alignment) > round_down(end - size, alignment)))
-		return -ENOSPC;
+  if (unlikely(round_up(start, alignment) > round_down(end - size, alignment)))
+    return -ENOSPC;
 
-	mode = DRM_MM_INSERT_BEST;
-	if (flags & PIN_HIGH)
-		mode = DRM_MM_INSERT_HIGHEST;
-	if (flags & PIN_MAPPABLE)
-		mode = DRM_MM_INSERT_LOW;
+  mode = DRM_MM_INSERT_BEST;
+  if (flags & PIN_HIGH)
+    mode = DRM_MM_INSERT_HIGHEST;
+  if (flags & PIN_MAPPABLE)
+    mode = DRM_MM_INSERT_LOW;
 
-	/* We only allocate in PAGE_SIZE/GTT_PAGE_SIZE (4096) chunks,
-	 * so we know that we always have a minimum alignment of 4096.
-	 * The drm_mm range manager is optimised to return results
-	 * with zero alignment, so where possible use the optimal
-	 * path.
-	 */
-	BUILD_BUG_ON(I915_GTT_MIN_ALIGNMENT > I915_GTT_PAGE_SIZE);
-	if (alignment <= I915_GTT_MIN_ALIGNMENT)
-		alignment = 0;
+  /* We only allocate in PAGE_SIZE/GTT_PAGE_SIZE (4096) chunks,
+   * so we know that we always have a minimum alignment of 4096.
+   * The drm_mm range manager is optimised to return results
+   * with zero alignment, so where possible use the optimal
+   * path.
+   */
+  BUILD_BUG_ON(I915_GTT_MIN_ALIGNMENT > I915_GTT_PAGE_SIZE);
+  if (alignment <= I915_GTT_MIN_ALIGNMENT)
+    alignment = 0;
 
-	err = drm_mm_insert_node_in_range(&vm->mm, node,
-					  size, alignment, color,
-					  start, end, mode);
-	if (err != -ENOSPC)
-		return err;
+  err = drm_mm_insert_node_in_range(&vm->mm, node,
+            size, alignment, color,
+            start, end, mode);
+  if (err != -ENOSPC)
+    return err;
 
-	if (mode & DRM_MM_INSERT_ONCE) {
-		err = drm_mm_insert_node_in_range(&vm->mm, node,
-						  size, alignment, color,
-						  start, end,
-						  DRM_MM_INSERT_BEST);
-		if (err != -ENOSPC)
-			return err;
-	}
+  if (mode & DRM_MM_INSERT_ONCE) {
+    err = drm_mm_insert_node_in_range(&vm->mm, node,
+              size, alignment, color,
+              start, end,
+              DRM_MM_INSERT_BEST);
+    if (err != -ENOSPC)
+      return err;
+  }
 
-	if (flags & PIN_NOEVICT)
-		return -ENOSPC;
+  if (flags & PIN_NOEVICT)
+    return -ENOSPC;
 
-	/*
-	 * No free space, pick a slot at random.
-	 *
-	 * There is a pathological case here using a GTT shared between
-	 * mmap and GPU (i.e. ggtt/aliasing_ppgtt but not full-ppgtt):
-	 *
-	 *    |<-- 256 MiB aperture -->||<-- 1792 MiB unmappable -->|
-	 *         (64k objects)             (448k objects)
-	 *
-	 * Now imagine that the eviction LRU is ordered top-down (just because
-	 * pathology meets real life), and that we need to evict an object to
-	 * make room inside the aperture. The eviction scan then has to walk
-	 * the 448k list before it finds one within range. And now imagine that
-	 * it has to search for a new hole between every byte inside the memcpy,
-	 * for several simultaneous clients.
-	 *
-	 * On a full-ppgtt system, if we have run out of available space, there
-	 * will be lots and lots of objects in the eviction list! Again,
-	 * searching that LRU list may be slow if we are also applying any
-	 * range restrictions (e.g. restriction to low 4GiB) and so, for
-	 * simplicity and similarilty between different GTT, try the single
-	 * random replacement first.
-	 */
-	offset = random_offset(start, end,
-			       size, alignment ?: I915_GTT_MIN_ALIGNMENT);
-	err = i915_gem_gtt_reserve(vm, node, size, offset, color, flags);
-	if (err != -ENOSPC)
-		return err;
+  /*
+   * No free space, pick a slot at random.
+   *
+   * There is a pathological case here using a GTT shared between
+   * mmap and GPU (i.e. ggtt/aliasing_ppgtt but not full-ppgtt):
+   *
+   *    |<-- 256 MiB aperture -->||<-- 1792 MiB unmappable -->|
+   *         (64k objects)             (448k objects)
+   *
+   * Now imagine that the eviction LRU is ordered top-down (just because
+   * pathology meets real life), and that we need to evict an object to
+   * make room inside the aperture. The eviction scan then has to walk
+   * the 448k list before it finds one within range. And now imagine that
+   * it has to search for a new hole between every byte inside the memcpy,
+   * for several simultaneous clients.
+   *
+   * On a full-ppgtt system, if we have run out of available space, there
+   * will be lots and lots of objects in the eviction list! Again,
+   * searching that LRU list may be slow if we are also applying any
+   * range restrictions (e.g. restriction to low 4GiB) and so, for
+   * simplicity and similarilty between different GTT, try the single
+   * random replacement first.
+   */
+  offset = random_offset(start, end,
+             size, alignment ?: I915_GTT_MIN_ALIGNMENT);
+  err = i915_gem_gtt_reserve(vm, node, size, offset, color, flags);
+  if (err != -ENOSPC)
+    return err;
 
-	if (flags & PIN_NOSEARCH)
-		return -ENOSPC;
+  if (flags & PIN_NOSEARCH)
+    return -ENOSPC;
 
-	/* Randomly selected placement is pinned, do a search */
-	err = i915_gem_evict_something(vm, size, alignment, color,
-				       start, end, flags);
-	if (err)
-		return err;
+  /* Randomly selected placement is pinned, do a search */
+  err = i915_gem_evict_something(vm, size, alignment, color,
+               start, end, flags);
+  if (err)
+    return err;
 
-	return drm_mm_insert_node_in_range(&vm->mm, node,
-					   size, alignment, color,
-					   start, end, DRM_MM_INSERT_EVICT);
+  return drm_mm_insert_node_in_range(&vm->mm, node,
+             size, alignment, color,
+             start, end, DRM_MM_INSERT_EVICT);
 }
 
 #if IS_ENABLED(CONFIG_DRM_I915_SELFTEST)

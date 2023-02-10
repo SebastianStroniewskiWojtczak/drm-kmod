@@ -30,7 +30,7 @@
 #include "dc.h"
 
 void dce60_clk_mgr_construct(
-		struct dc_context *ctx,
-		struct clk_mgr_internal *clk_mgr_dce);
+    struct dc_context *ctx,
+    struct clk_mgr_internal *clk_mgr_dce);
 
 #endif /* DAL_DC_DCE_DCE60_CLK_MGR_H_ */

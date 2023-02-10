@@ -33,43 +33,43 @@
 #include <sys/ktr.h>
 
 #ifndef KTR_DRM
-#define	KTR_DRM	KTR_DEV
+#define  KTR_DRM  KTR_DEV
 #endif
 
 static inline void
 trace_dma_fence_init(void *fence)
 {
-	CTR1(KTR_DRM, "dma_fence_init dma_fence %p", fence);
+  CTR1(KTR_DRM, "dma_fence_init dma_fence %p", fence);
 }
 
 static inline void
 trace_dma_fence_destroy(void *fence)
 {
-	CTR1(KTR_DRM, "dma_fence_destroy dma_fence %p", fence);
+  CTR1(KTR_DRM, "dma_fence_destroy dma_fence %p", fence);
 }
 
 static inline void
 trace_dma_fence_enable_signal(void *fence)
 {
-	CTR1(KTR_DRM, "dma_fence_enable_signal dma_fence %p", fence);
+  CTR1(KTR_DRM, "dma_fence_enable_signal dma_fence %p", fence);
 }
 
 static inline void
 trace_dma_fence_signaled(void *fence)
 {
-	CTR1(KTR_DRM, "dma_fence_signaled dma_fence %p", fence);
+  CTR1(KTR_DRM, "dma_fence_signaled dma_fence %p", fence);
 }
 
 static inline void
 trace_dma_fence_wait_start(void *fence)
 {
-	CTR1(KTR_DRM, "dma_fence_wait_start dma_fence %p", fence);
+  CTR1(KTR_DRM, "dma_fence_wait_start dma_fence %p", fence);
 }
 
 static inline void
 trace_dma_fence_wait_end(void *fence)
 {
-	CTR1(KTR_DRM, "dma_fence_wait_end dma_fence %p", fence);
+  CTR1(KTR_DRM, "dma_fence_wait_end dma_fence %p", fence);
 }
 
 #endif

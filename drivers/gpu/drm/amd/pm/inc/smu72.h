@@ -34,66 +34,66 @@
 #define SMU__NUM_PCIE_DPM_LEVELS 8
 
 enum SID_OPTION {
-	SID_OPTION_HI,
-	SID_OPTION_LO,
-	SID_OPTION_COUNT
+  SID_OPTION_HI,
+  SID_OPTION_LO,
+  SID_OPTION_COUNT
 };
 
 enum Poly3rdOrderCoeff {
-	LEAKAGE_TEMPERATURE_SCALAR,
-	LEAKAGE_VOLTAGE_SCALAR,
-	DYNAMIC_VOLTAGE_SCALAR,
-	POLY_3RD_ORDER_COUNT
+  LEAKAGE_TEMPERATURE_SCALAR,
+  LEAKAGE_VOLTAGE_SCALAR,
+  DYNAMIC_VOLTAGE_SCALAR,
+  POLY_3RD_ORDER_COUNT
 };
 
 struct SMU7_Poly3rdOrder_Data {
-	int32_t a;
-	int32_t b;
-	int32_t c;
-	int32_t d;
-	uint8_t a_shift;
-	uint8_t b_shift;
-	uint8_t c_shift;
-	uint8_t x_shift;
+  int32_t a;
+  int32_t b;
+  int32_t c;
+  int32_t d;
+  uint8_t a_shift;
+  uint8_t b_shift;
+  uint8_t c_shift;
+  uint8_t x_shift;
 };
 
 typedef struct SMU7_Poly3rdOrder_Data SMU7_Poly3rdOrder_Data;
 
 struct Power_Calculator_Data {
-	uint16_t NoLoadVoltage;
-	uint16_t LoadVoltage;
-	uint16_t Resistance;
-	uint16_t Temperature;
-	uint16_t BaseLeakage;
-	uint16_t LkgTempScalar;
-	uint16_t LkgVoltScalar;
-	uint16_t LkgAreaScalar;
-	uint16_t LkgPower;
-	uint16_t DynVoltScalar;
-	uint32_t Cac;
-	uint32_t DynPower;
-	uint32_t TotalCurrent;
-	uint32_t TotalPower;
+  uint16_t NoLoadVoltage;
+  uint16_t LoadVoltage;
+  uint16_t Resistance;
+  uint16_t Temperature;
+  uint16_t BaseLeakage;
+  uint16_t LkgTempScalar;
+  uint16_t LkgVoltScalar;
+  uint16_t LkgAreaScalar;
+  uint16_t LkgPower;
+  uint16_t DynVoltScalar;
+  uint32_t Cac;
+  uint32_t DynPower;
+  uint32_t TotalCurrent;
+  uint32_t TotalPower;
 };
 
 typedef struct Power_Calculator_Data PowerCalculatorData_t;
 
 struct Gc_Cac_Weight_Data {
-	uint8_t index;
-	uint32_t value;
+  uint8_t index;
+  uint32_t value;
 };
 
 typedef struct Gc_Cac_Weight_Data GcCacWeight_Data;
 
 
 typedef struct {
-	uint32_t high;
-	uint32_t low;
+  uint32_t high;
+  uint32_t low;
 } data_64_t;
 
 typedef struct {
-	data_64_t high;
-	data_64_t low;
+  data_64_t high;
+  data_64_t low;
 } data_128_t;
 
 #define SMU7_CONTEXT_ID_SMC        1
@@ -194,94 +194,94 @@ typedef struct {
 #endif
 
 struct SMU7_HystController_Data {
-	uint8_t waterfall_up;
-	uint8_t waterfall_down;
-	uint8_t waterfall_limit;
-	uint8_t spare;
-	uint16_t release_cnt;
-	uint16_t release_limit;
+  uint8_t waterfall_up;
+  uint8_t waterfall_down;
+  uint8_t waterfall_limit;
+  uint8_t spare;
+  uint16_t release_cnt;
+  uint16_t release_limit;
 };
 
 typedef struct SMU7_HystController_Data SMU7_HystController_Data;
 
 struct SMU72_PIDController {
-	uint32_t Ki;
-	int32_t LFWindupUpperLim;
-	int32_t LFWindupLowerLim;
-	uint32_t StatePrecision;
-	uint32_t LfPrecision;
-	uint32_t LfOffset;
-	uint32_t MaxState;
-	uint32_t MaxLfFraction;
-	uint32_t StateShift;
+  uint32_t Ki;
+  int32_t LFWindupUpperLim;
+  int32_t LFWindupLowerLim;
+  uint32_t StatePrecision;
+  uint32_t LfPrecision;
+  uint32_t LfOffset;
+  uint32_t MaxState;
+  uint32_t MaxLfFraction;
+  uint32_t StateShift;
 };
 
 typedef struct SMU72_PIDController SMU72_PIDController;
 
 struct SMU7_LocalDpmScoreboard {
-	uint32_t PercentageBusy;
+  uint32_t PercentageBusy;
 
-	int32_t  PIDError;
-	int32_t  PIDIntegral;
-	int32_t  PIDOutput;
+  int32_t  PIDError;
+  int32_t  PIDIntegral;
+  int32_t  PIDOutput;
 
-	uint32_t SigmaDeltaAccum;
-	uint32_t SigmaDeltaOutput;
-	uint32_t SigmaDeltaLevel;
+  uint32_t SigmaDeltaAccum;
+  uint32_t SigmaDeltaOutput;
+  uint32_t SigmaDeltaLevel;
 
-	uint32_t UtilizationSetpoint;
+  uint32_t UtilizationSetpoint;
 
-	uint8_t  TdpClampMode;
-	uint8_t  TdcClampMode;
-	uint8_t  ThermClampMode;
-	uint8_t  VoltageBusy;
+  uint8_t  TdpClampMode;
+  uint8_t  TdcClampMode;
+  uint8_t  ThermClampMode;
+  uint8_t  VoltageBusy;
 
-	int8_t   CurrLevel;
-	int8_t   TargLevel;
-	uint8_t  LevelChangeInProgress;
-	uint8_t  UpHyst;
+  int8_t   CurrLevel;
+  int8_t   TargLevel;
+  uint8_t  LevelChangeInProgress;
+  uint8_t  UpHyst;
 
-	uint8_t  DownHyst;
-	uint8_t  VoltageDownHyst;
-	uint8_t  DpmEnable;
-	uint8_t  DpmRunning;
+  uint8_t  DownHyst;
+  uint8_t  VoltageDownHyst;
+  uint8_t  DpmEnable;
+  uint8_t  DpmRunning;
 
-	uint8_t  DpmForce;
-	uint8_t  DpmForceLevel;
-	uint8_t  DisplayWatermark;
-	uint8_t  McArbIndex;
+  uint8_t  DpmForce;
+  uint8_t  DpmForceLevel;
+  uint8_t  DisplayWatermark;
+  uint8_t  McArbIndex;
 
-	uint32_t MinimumPerfSclk;
+  uint32_t MinimumPerfSclk;
 
-	uint8_t  AcpiReq;
-	uint8_t  AcpiAck;
-	uint8_t  GfxClkSlow;
-	uint8_t  GpioClampMode; /* bit0 = VRHOT: bit1 = THERM: bit2 = DC */
+  uint8_t  AcpiReq;
+  uint8_t  AcpiAck;
+  uint8_t  GfxClkSlow;
+  uint8_t  GpioClampMode; /* bit0 = VRHOT: bit1 = THERM: bit2 = DC */
 
-	uint8_t  FpsFilterWeight;
-	uint8_t  EnabledLevelsChange;
-	uint8_t  DteClampMode;
-	uint8_t  FpsClampMode;
+  uint8_t  FpsFilterWeight;
+  uint8_t  EnabledLevelsChange;
+  uint8_t  DteClampMode;
+  uint8_t  FpsClampMode;
 
-	uint16_t LevelResidencyCounters[SMU72_MAX_LEVELS_GRAPHICS];
-	uint16_t LevelSwitchCounters[SMU72_MAX_LEVELS_GRAPHICS];
+  uint16_t LevelResidencyCounters[SMU72_MAX_LEVELS_GRAPHICS];
+  uint16_t LevelSwitchCounters[SMU72_MAX_LEVELS_GRAPHICS];
 
-	void     (*TargetStateCalculator)(uint8_t);
-	void     (*SavedTargetStateCalculator)(uint8_t);
+  void     (*TargetStateCalculator)(uint8_t);
+  void     (*SavedTargetStateCalculator)(uint8_t);
 
-	uint16_t AutoDpmInterval;
-	uint16_t AutoDpmRange;
+  uint16_t AutoDpmInterval;
+  uint16_t AutoDpmRange;
 
-	uint8_t  FpsEnabled;
-	uint8_t  MaxPerfLevel;
-	uint8_t  AllowLowClkInterruptToHost;
-	uint8_t  FpsRunning;
+  uint8_t  FpsEnabled;
+  uint8_t  MaxPerfLevel;
+  uint8_t  AllowLowClkInterruptToHost;
+  uint8_t  FpsRunning;
 
-	uint32_t MaxAllowedFrequency;
+  uint32_t MaxAllowedFrequency;
 
-	uint32_t FilteredSclkFrequency;
-	uint32_t LastSclkFrequency;
-	uint32_t FilteredSclkFrequencyCnt;
+  uint32_t FilteredSclkFrequency;
+  uint32_t LastSclkFrequency;
+  uint32_t FilteredSclkFrequencyCnt;
 };
 
 typedef struct SMU7_LocalDpmScoreboard SMU7_LocalDpmScoreboard;
@@ -291,52 +291,52 @@ typedef struct SMU7_LocalDpmScoreboard SMU7_LocalDpmScoreboard;
 typedef uint8_t (*VoltageChangeHandler_t)(uint16_t, uint8_t);
 
 struct SMU_VoltageLevel {
-	uint8_t Vddc;
-	uint8_t Vddci;
-	uint8_t VddGfx;
-	uint8_t Phases;
+  uint8_t Vddc;
+  uint8_t Vddci;
+  uint8_t VddGfx;
+  uint8_t Phases;
 };
 
 typedef struct SMU_VoltageLevel SMU_VoltageLevel;
 
 struct SMU7_VoltageScoreboard {
-	SMU_VoltageLevel CurrentVoltage;
-	SMU_VoltageLevel TargetVoltage;
-	uint16_t MaxVid;
-	uint8_t  HighestVidOffset;
-	uint8_t  CurrentVidOffset;
+  SMU_VoltageLevel CurrentVoltage;
+  SMU_VoltageLevel TargetVoltage;
+  uint16_t MaxVid;
+  uint8_t  HighestVidOffset;
+  uint8_t  CurrentVidOffset;
 
-	uint8_t  ControllerBusy;
-	uint8_t  CurrentVid;
-	uint8_t  CurrentVddciVid;
-	uint8_t  VddGfxShutdown; /* 0 = normal mode, 1 = shut down */
+  uint8_t  ControllerBusy;
+  uint8_t  CurrentVid;
+  uint8_t  CurrentVddciVid;
+  uint8_t  VddGfxShutdown; /* 0 = normal mode, 1 = shut down */
 
-	SMU_VoltageLevel RequestedVoltage[SMU7_MAX_VOLTAGE_CLIENTS];
-	uint8_t  EnabledRequest[SMU7_MAX_VOLTAGE_CLIENTS];
+  SMU_VoltageLevel RequestedVoltage[SMU7_MAX_VOLTAGE_CLIENTS];
+  uint8_t  EnabledRequest[SMU7_MAX_VOLTAGE_CLIENTS];
 
-	uint8_t  TargetIndex;
-	uint8_t  Delay;
-	uint8_t  ControllerEnable;
-	uint8_t  ControllerRunning;
-	uint16_t CurrentStdVoltageHiSidd;
-	uint16_t CurrentStdVoltageLoSidd;
-	uint8_t  OverrideVoltage;
-	uint8_t  VddcUseUlvOffset;
-	uint8_t  VddGfxUseUlvOffset;
-	uint8_t  padding;
+  uint8_t  TargetIndex;
+  uint8_t  Delay;
+  uint8_t  ControllerEnable;
+  uint8_t  ControllerRunning;
+  uint16_t CurrentStdVoltageHiSidd;
+  uint16_t CurrentStdVoltageLoSidd;
+  uint8_t  OverrideVoltage;
+  uint8_t  VddcUseUlvOffset;
+  uint8_t  VddGfxUseUlvOffset;
+  uint8_t  padding;
 
-	VoltageChangeHandler_t ChangeVddc;
-	VoltageChangeHandler_t ChangeVddGfx;
-	VoltageChangeHandler_t ChangeVddci;
-	VoltageChangeHandler_t ChangePhase;
-	VoltageChangeHandler_t ChangeMvdd;
+  VoltageChangeHandler_t ChangeVddc;
+  VoltageChangeHandler_t ChangeVddGfx;
+  VoltageChangeHandler_t ChangeVddci;
+  VoltageChangeHandler_t ChangePhase;
+  VoltageChangeHandler_t ChangeMvdd;
 
-	VoltageChangeHandler_t functionLinks[6];
+  VoltageChangeHandler_t functionLinks[6];
 
-	uint8_t *VddcFollower1;
-	uint8_t *VddcFollower2;
-	int16_t  Driver_OD_RequestedVidOffset1;
-	int16_t  Driver_OD_RequestedVidOffset2;
+  uint8_t *VddcFollower1;
+  uint8_t *VddcFollower2;
+  int16_t  Driver_OD_RequestedVidOffset1;
+  int16_t  Driver_OD_RequestedVidOffset2;
 
 };
 
@@ -345,22 +345,22 @@ typedef struct SMU7_VoltageScoreboard SMU7_VoltageScoreboard;
 #define SMU7_MAX_PCIE_LINK_SPEEDS 3 /* 0:Gen1 1:Gen2 2:Gen3 */
 
 struct SMU7_PCIeLinkSpeedScoreboard {
-	uint8_t     DpmEnable;
-	uint8_t     DpmRunning;
-	uint8_t     DpmForce;
-	uint8_t     DpmForceLevel;
+  uint8_t     DpmEnable;
+  uint8_t     DpmRunning;
+  uint8_t     DpmForce;
+  uint8_t     DpmForceLevel;
 
-	uint8_t     CurrentLinkSpeed;
-	uint8_t     EnabledLevelsChange;
-	uint16_t    AutoDpmInterval;
+  uint8_t     CurrentLinkSpeed;
+  uint8_t     EnabledLevelsChange;
+  uint16_t    AutoDpmInterval;
 
-	uint16_t    AutoDpmRange;
-	uint16_t    AutoDpmCount;
+  uint16_t    AutoDpmRange;
+  uint16_t    AutoDpmCount;
 
-	uint8_t     DpmMode;
-	uint8_t     AcpiReq;
-	uint8_t     AcpiAck;
-	uint8_t     CurrentLinkLevel;
+  uint8_t     DpmMode;
+  uint8_t     AcpiReq;
+  uint8_t     AcpiAck;
+  uint8_t     CurrentLinkLevel;
 
 };
 
@@ -373,65 +373,65 @@ typedef struct SMU7_PCIeLinkSpeedScoreboard SMU7_PCIeLinkSpeedScoreboard;
 #define SMU7_SCALE_R 12
 
 struct SMU7_PowerScoreboard {
-	PowerCalculatorData_t VddGfxPowerData[SID_OPTION_COUNT];
-	PowerCalculatorData_t VddcPowerData[SID_OPTION_COUNT];
+  PowerCalculatorData_t VddGfxPowerData[SID_OPTION_COUNT];
+  PowerCalculatorData_t VddcPowerData[SID_OPTION_COUNT];
 
-	uint32_t TotalGpuPower;
-	uint32_t TdcCurrent;
+  uint32_t TotalGpuPower;
+  uint32_t TdcCurrent;
 
-	uint16_t   VddciTotalPower;
-	uint16_t   sparesasfsdfd;
-	uint16_t   Vddr1Power;
-	uint16_t   RocPower;
+  uint16_t   VddciTotalPower;
+  uint16_t   sparesasfsdfd;
+  uint16_t   Vddr1Power;
+  uint16_t   RocPower;
 
-	uint16_t   CalcMeasPowerBlend;
-	uint8_t    SidOptionPower;
-	uint8_t    SidOptionCurrent;
+  uint16_t   CalcMeasPowerBlend;
+  uint8_t    SidOptionPower;
+  uint8_t    SidOptionCurrent;
 
-	uint32_t   WinTime;
+  uint32_t   WinTime;
 
-	uint16_t Telemetry_1_slope;
-	uint16_t Telemetry_2_slope;
-	int32_t Telemetry_1_offset;
-	int32_t Telemetry_2_offset;
+  uint16_t Telemetry_1_slope;
+  uint16_t Telemetry_2_slope;
+  int32_t Telemetry_1_offset;
+  int32_t Telemetry_2_offset;
 
-	uint32_t VddcCurrentTelemetry;
-	uint32_t VddGfxCurrentTelemetry;
-	uint32_t VddcPowerTelemetry;
-	uint32_t VddGfxPowerTelemetry;
-	uint32_t VddciPowerTelemetry;
+  uint32_t VddcCurrentTelemetry;
+  uint32_t VddGfxCurrentTelemetry;
+  uint32_t VddcPowerTelemetry;
+  uint32_t VddGfxPowerTelemetry;
+  uint32_t VddciPowerTelemetry;
 
-	uint32_t VddcPower;
-	uint32_t VddGfxPower;
-	uint32_t VddciPower;
+  uint32_t VddcPower;
+  uint32_t VddGfxPower;
+  uint32_t VddciPower;
 
-	uint32_t TelemetryCurrent[2];
-	uint32_t TelemetryVoltage[2];
-	uint32_t TelemetryPower[2];
+  uint32_t TelemetryCurrent[2];
+  uint32_t TelemetryVoltage[2];
+  uint32_t TelemetryPower[2];
 };
 
 typedef struct SMU7_PowerScoreboard SMU7_PowerScoreboard;
 
 struct SMU7_ThermalScoreboard {
-	int16_t  GpuLimit;
-	int16_t  GpuHyst;
-	uint16_t CurrGnbTemp;
-	uint16_t FilteredGnbTemp;
+  int16_t  GpuLimit;
+  int16_t  GpuHyst;
+  uint16_t CurrGnbTemp;
+  uint16_t FilteredGnbTemp;
 
-	uint8_t  ControllerEnable;
-	uint8_t  ControllerRunning;
-	uint8_t  AutoTmonCalInterval;
-	uint8_t  AutoTmonCalEnable;
+  uint8_t  ControllerEnable;
+  uint8_t  ControllerRunning;
+  uint8_t  AutoTmonCalInterval;
+  uint8_t  AutoTmonCalEnable;
 
-	uint8_t  ThermalDpmEnabled;
-	uint8_t  SclkEnabledMask;
-	uint8_t  spare[2];
-	int32_t  temperature_gradient;
+  uint8_t  ThermalDpmEnabled;
+  uint8_t  SclkEnabledMask;
+  uint8_t  spare[2];
+  int32_t  temperature_gradient;
 
-	SMU7_HystController_Data HystControllerData;
-	int32_t  WeightedSensorTemperature;
-	uint16_t TemperatureLimit[SMU72_MAX_LEVELS_GRAPHICS];
-	uint32_t Alpha;
+  SMU7_HystController_Data HystControllerData;
+  int32_t  WeightedSensorTemperature;
+  uint16_t TemperatureLimit[SMU72_MAX_LEVELS_GRAPHICS];
+  uint32_t Alpha;
 };
 
 typedef struct SMU7_ThermalScoreboard SMU7_ThermalScoreboard;
@@ -456,83 +456,83 @@ typedef struct SMU7_ThermalScoreboard SMU7_ThermalScoreboard;
 
 /* All 'soft registers' should be uint32_t. */
 struct SMU72_SoftRegisters {
-	uint32_t        RefClockFrequency;
-	uint32_t        PmTimerPeriod;
-	uint32_t        FeatureEnables;
+  uint32_t        RefClockFrequency;
+  uint32_t        PmTimerPeriod;
+  uint32_t        FeatureEnables;
 
-	uint32_t        PreVBlankGap;
-	uint32_t        VBlankTimeout;
-	uint32_t        TrainTimeGap;
+  uint32_t        PreVBlankGap;
+  uint32_t        VBlankTimeout;
+  uint32_t        TrainTimeGap;
 
-	uint32_t        MvddSwitchTime;
-	uint32_t        LongestAcpiTrainTime;
-	uint32_t        AcpiDelay;
-	uint32_t        G5TrainTime;
-	uint32_t        DelayMpllPwron;
-	uint32_t        VoltageChangeTimeout;
+  uint32_t        MvddSwitchTime;
+  uint32_t        LongestAcpiTrainTime;
+  uint32_t        AcpiDelay;
+  uint32_t        G5TrainTime;
+  uint32_t        DelayMpllPwron;
+  uint32_t        VoltageChangeTimeout;
 
-	uint32_t        HandshakeDisables;
+  uint32_t        HandshakeDisables;
 
-	uint8_t         DisplayPhy1Config;
-	uint8_t         DisplayPhy2Config;
-	uint8_t         DisplayPhy3Config;
-	uint8_t         DisplayPhy4Config;
+  uint8_t         DisplayPhy1Config;
+  uint8_t         DisplayPhy2Config;
+  uint8_t         DisplayPhy3Config;
+  uint8_t         DisplayPhy4Config;
 
-	uint8_t         DisplayPhy5Config;
-	uint8_t         DisplayPhy6Config;
-	uint8_t         DisplayPhy7Config;
-	uint8_t         DisplayPhy8Config;
+  uint8_t         DisplayPhy5Config;
+  uint8_t         DisplayPhy6Config;
+  uint8_t         DisplayPhy7Config;
+  uint8_t         DisplayPhy8Config;
 
-	uint32_t        AverageGraphicsActivity;
-	uint32_t        AverageMemoryActivity;
-	uint32_t        AverageGioActivity;
+  uint32_t        AverageGraphicsActivity;
+  uint32_t        AverageMemoryActivity;
+  uint32_t        AverageGioActivity;
 
-	uint8_t         SClkDpmEnabledLevels;
-	uint8_t         MClkDpmEnabledLevels;
-	uint8_t         LClkDpmEnabledLevels;
-	uint8_t         PCIeDpmEnabledLevels;
+  uint8_t         SClkDpmEnabledLevels;
+  uint8_t         MClkDpmEnabledLevels;
+  uint8_t         LClkDpmEnabledLevels;
+  uint8_t         PCIeDpmEnabledLevels;
 
-	uint8_t         UVDDpmEnabledLevels;
-	uint8_t         SAMUDpmEnabledLevels;
-	uint8_t         ACPDpmEnabledLevels;
-	uint8_t         VCEDpmEnabledLevels;
+  uint8_t         UVDDpmEnabledLevels;
+  uint8_t         SAMUDpmEnabledLevels;
+  uint8_t         ACPDpmEnabledLevels;
+  uint8_t         VCEDpmEnabledLevels;
 
-	uint32_t        DRAM_LOG_ADDR_H;
-	uint32_t        DRAM_LOG_ADDR_L;
-	uint32_t        DRAM_LOG_PHY_ADDR_H;
-	uint32_t        DRAM_LOG_PHY_ADDR_L;
-	uint32_t        DRAM_LOG_BUFF_SIZE;
-	uint32_t        UlvEnterCount;
-	uint32_t        UlvTime;
-	uint32_t        UcodeLoadStatus;
-	uint32_t        Reserved[2];
+  uint32_t        DRAM_LOG_ADDR_H;
+  uint32_t        DRAM_LOG_ADDR_L;
+  uint32_t        DRAM_LOG_PHY_ADDR_H;
+  uint32_t        DRAM_LOG_PHY_ADDR_L;
+  uint32_t        DRAM_LOG_BUFF_SIZE;
+  uint32_t        UlvEnterCount;
+  uint32_t        UlvTime;
+  uint32_t        UcodeLoadStatus;
+  uint32_t        Reserved[2];
 
 };
 
 typedef struct SMU72_SoftRegisters SMU72_SoftRegisters;
 
 struct SMU72_Firmware_Header {
-	uint32_t Digest[5];
-	uint32_t Version;
-	uint32_t HeaderSize;
-	uint32_t Flags;
-	uint32_t EntryPoint;
-	uint32_t CodeSize;
-	uint32_t ImageSize;
+  uint32_t Digest[5];
+  uint32_t Version;
+  uint32_t HeaderSize;
+  uint32_t Flags;
+  uint32_t EntryPoint;
+  uint32_t CodeSize;
+  uint32_t ImageSize;
 
-	uint32_t Rtos;
-	uint32_t SoftRegisters;
-	uint32_t DpmTable;
-	uint32_t FanTable;
-	uint32_t CacConfigTable;
-	uint32_t CacStatusTable;
-	uint32_t mcRegisterTable;
-	uint32_t mcArbDramTimingTable;
-	uint32_t PmFuseTable;
-	uint32_t Globals;
-	uint32_t ClockStretcherTable;
-	uint32_t Reserved[41];
-	uint32_t Signature;
+  uint32_t Rtos;
+  uint32_t SoftRegisters;
+  uint32_t DpmTable;
+  uint32_t FanTable;
+  uint32_t CacConfigTable;
+  uint32_t CacStatusTable;
+  uint32_t mcRegisterTable;
+  uint32_t mcArbDramTimingTable;
+  uint32_t PmFuseTable;
+  uint32_t Globals;
+  uint32_t ClockStretcherTable;
+  uint32_t Reserved[41];
+  uint32_t Signature;
 };
 
 typedef struct SMU72_Firmware_Header SMU72_Firmware_Header;
@@ -540,19 +540,19 @@ typedef struct SMU72_Firmware_Header SMU72_Firmware_Header;
 #define SMU72_FIRMWARE_HEADER_LOCATION 0x20000
 
 enum  DisplayConfig {
-	PowerDown = 1,
-	DP54x4,
-	DP54x2,
-	DP54x1,
-	DP27x4,
-	DP27x2,
-	DP27x1,
-	HDMI297,
-	HDMI162,
-	LVDS,
-	DP324x4,
-	DP324x2,
-	DP324x1
+  PowerDown = 1,
+  DP54x4,
+  DP54x2,
+  DP54x1,
+  DP27x4,
+  DP27x2,
+  DP27x1,
+  HDMI297,
+  HDMI162,
+  LVDS,
+  DP324x4,
+  DP324x2,
+  DP324x1
 };
 
 #define MC_BLOCK_COUNT 1
@@ -561,19 +561,19 @@ enum  DisplayConfig {
 #define GC_BLOCK_COUNT 24
 
 struct SMU7_Local_Cac {
-	uint8_t BlockId;
-	uint8_t SignalId;
-	uint8_t Threshold;
-	uint8_t Padding;
+  uint8_t BlockId;
+  uint8_t SignalId;
+  uint8_t Threshold;
+  uint8_t Padding;
 };
 
 typedef struct SMU7_Local_Cac SMU7_Local_Cac;
 
 struct SMU7_Local_Cac_Table {
-	SMU7_Local_Cac CplLocalCac[CPL_BLOCK_COUNT];
-	SMU7_Local_Cac McLocalCac[MC_BLOCK_COUNT];
-	SMU7_Local_Cac SeLocalCac[SE_BLOCK_COUNT];
-	SMU7_Local_Cac GcLocalCac[GC_BLOCK_COUNT];
+  SMU7_Local_Cac CplLocalCac[CPL_BLOCK_COUNT];
+  SMU7_Local_Cac McLocalCac[MC_BLOCK_COUNT];
+  SMU7_Local_Cac SeLocalCac[SE_BLOCK_COUNT];
+  SMU7_Local_Cac GcLocalCac[GC_BLOCK_COUNT];
 };
 
 typedef struct SMU7_Local_Cac_Table SMU7_Local_Cac_Table;
@@ -656,29 +656,29 @@ typedef struct SMU7_Local_Cac_Table SMU7_Local_Cac_Table;
 #define CLOCK_STRETCHER_SETTING_ENABLE_SHIFT         0x7
 
 struct SMU_ClockStretcherDataTableEntry {
-	uint8_t minVID;
-	uint8_t maxVID;
+  uint8_t minVID;
+  uint8_t maxVID;
 
-	uint16_t setting;
+  uint16_t setting;
 };
 typedef struct SMU_ClockStretcherDataTableEntry SMU_ClockStretcherDataTableEntry;
 
 struct SMU_ClockStretcherDataTable {
-	SMU_ClockStretcherDataTableEntry ClockStretcherDataTableEntry[CLOCK_STRETCHER_MAX_ENTRIES];
+  SMU_ClockStretcherDataTableEntry ClockStretcherDataTableEntry[CLOCK_STRETCHER_MAX_ENTRIES];
 };
 typedef struct SMU_ClockStretcherDataTable SMU_ClockStretcherDataTable;
 
 struct SMU_CKS_LOOKUPTableEntry {
-	uint16_t minFreq;
-	uint16_t maxFreq;
+  uint16_t minFreq;
+  uint16_t maxFreq;
 
-	uint8_t setting;
-	uint8_t padding[3];
+  uint8_t setting;
+  uint8_t padding[3];
 };
 typedef struct SMU_CKS_LOOKUPTableEntry SMU_CKS_LOOKUPTableEntry;
 
 struct SMU_CKS_LOOKUPTable {
-	SMU_CKS_LOOKUPTableEntry CKS_LOOKUPTableEntry[CKS_LOOKUPTable_MAX_ENTRIES];
+  SMU_CKS_LOOKUPTableEntry CKS_LOOKUPTableEntry[CKS_LOOKUPTable_MAX_ENTRIES];
 };
 typedef struct SMU_CKS_LOOKUPTable SMU_CKS_LOOKUPTable;
 

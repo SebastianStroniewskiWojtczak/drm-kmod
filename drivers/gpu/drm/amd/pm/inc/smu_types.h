@@ -23,8 +23,8 @@
 #ifndef __SMU_TYPES_H__
 #define __SMU_TYPES_H__
 
-#define SMU_MESSAGE_TYPES			      \
-       __SMU_DUMMY_MAP(TestMessage),		      \
+#define SMU_MESSAGE_TYPES            \
+       __SMU_DUMMY_MAP(TestMessage),          \
        __SMU_DUMMY_MAP(GetSmuVersion),                \
        __SMU_DUMMY_MAP(GetDriverIfVersion),           \
        __SMU_DUMMY_MAP(SetAllowedFeaturesMaskLow),    \
@@ -35,7 +35,7 @@
        __SMU_DUMMY_MAP(EnableSmuFeaturesHigh),        \
        __SMU_DUMMY_MAP(DisableSmuFeaturesLow),        \
        __SMU_DUMMY_MAP(DisableSmuFeaturesHigh),       \
-       __SMU_DUMMY_MAP(GetEnabledSmuFeatures),	      \
+       __SMU_DUMMY_MAP(GetEnabledSmuFeatures),        \
        __SMU_DUMMY_MAP(GetEnabledSmuFeaturesLow),     \
        __SMU_DUMMY_MAP(GetEnabledSmuFeaturesHigh),    \
        __SMU_DUMMY_MAP(SetWorkloadMask),              \
@@ -130,65 +130,65 @@
        __SMU_DUMMY_MAP(PowerDownIspByTile),           \
        __SMU_DUMMY_MAP(PowerUpIspByTile),             \
        __SMU_DUMMY_MAP(PowerDownSdma),                \
-	__SMU_DUMMY_MAP(PowerUpSdma),                 \
-	__SMU_DUMMY_MAP(SetHardMinIspclkByFreq),      \
-	__SMU_DUMMY_MAP(SetHardMinVcn),               \
-	__SMU_DUMMY_MAP(SetAllowFclkSwitch),          \
-	__SMU_DUMMY_MAP(SetMinVideoGfxclkFreq),       \
-	__SMU_DUMMY_MAP(ActiveProcessNotify),         \
-	__SMU_DUMMY_MAP(SetCustomPolicy),             \
-	__SMU_DUMMY_MAP(QueryPowerLimit),             \
-	__SMU_DUMMY_MAP(SetGfxclkOverdriveByFreqVid), \
-	__SMU_DUMMY_MAP(SetHardMinDcfclkByFreq),      \
-	__SMU_DUMMY_MAP(SetHardMinSocclkByFreq),      \
-	__SMU_DUMMY_MAP(ControlIgpuATS),              \
-	__SMU_DUMMY_MAP(SetMinVideoFclkFreq),         \
-	__SMU_DUMMY_MAP(SetMinDeepSleepDcfclk),       \
-	__SMU_DUMMY_MAP(ForcePowerDownGfx),           \
-	__SMU_DUMMY_MAP(SetPhyclkVoltageByFreq),      \
-	__SMU_DUMMY_MAP(SetDppclkVoltageByFreq),      \
-	__SMU_DUMMY_MAP(SetSoftMinVcn),               \
-	__SMU_DUMMY_MAP(EnablePostCode),              \
-	__SMU_DUMMY_MAP(GetGfxclkFrequency),          \
-	__SMU_DUMMY_MAP(GetFclkFrequency),            \
-	__SMU_DUMMY_MAP(GetMinGfxclkFrequency),       \
-	__SMU_DUMMY_MAP(GetMaxGfxclkFrequency),       \
-	__SMU_DUMMY_MAP(SetGfxCGPG),                  \
-	__SMU_DUMMY_MAP(SetSoftMaxGfxClk),            \
-	__SMU_DUMMY_MAP(SetHardMinGfxClk),            \
-	__SMU_DUMMY_MAP(SetSoftMaxSocclkByFreq),      \
-	__SMU_DUMMY_MAP(SetSoftMaxFclkByFreq),        \
-	__SMU_DUMMY_MAP(SetSoftMaxVcn),               \
-	__SMU_DUMMY_MAP(PowerGateMmHub),              \
-	__SMU_DUMMY_MAP(UpdatePmeRestore),            \
-	__SMU_DUMMY_MAP(GpuChangeState),              \
-	__SMU_DUMMY_MAP(SetPowerLimitPercentage),     \
-	__SMU_DUMMY_MAP(ForceGfxContentSave),         \
-	__SMU_DUMMY_MAP(EnableTmdp48MHzRefclkPwrDown),\
-	__SMU_DUMMY_MAP(PowerGateAtHub),              \
-	__SMU_DUMMY_MAP(SetSoftMinJpeg),              \
-	__SMU_DUMMY_MAP(SetHardMinFclkByFreq),        \
-	__SMU_DUMMY_MAP(DFCstateControl), \
-	__SMU_DUMMY_MAP(GmiPwrDnControl), \
-	__SMU_DUMMY_MAP(spare), \
-	__SMU_DUMMY_MAP(SetNumBadHbmPagesRetired), \
-	__SMU_DUMMY_MAP(GetGmiPwrDnHyst), \
-	__SMU_DUMMY_MAP(SetGmiPwrDnHyst), \
-	__SMU_DUMMY_MAP(EnterGfxoff), \
-	__SMU_DUMMY_MAP(ExitGfxoff), \
-	__SMU_DUMMY_MAP(SetExecuteDMATest), \
-	__SMU_DUMMY_MAP(DAL_DISABLE_DUMMY_PSTATE_CHANGE), \
-	__SMU_DUMMY_MAP(DAL_ENABLE_DUMMY_PSTATE_CHANGE), \
-	__SMU_DUMMY_MAP(SET_DRIVER_DUMMY_TABLE_DRAM_ADDR_HIGH), \
-	__SMU_DUMMY_MAP(SET_DRIVER_DUMMY_TABLE_DRAM_ADDR_LOW), \
-	__SMU_DUMMY_MAP(GET_UMC_FW_WA), \
-	__SMU_DUMMY_MAP(Mode1Reset), \
-	__SMU_DUMMY_MAP(RlcPowerNotify),                 \
-	__SMU_DUMMY_MAP(SetHardMinIspiclkByFreq),        \
-	__SMU_DUMMY_MAP(SetHardMinIspxclkByFreq),        \
-	__SMU_DUMMY_MAP(SetSoftMinSocclkByFreq),         \
-	__SMU_DUMMY_MAP(PowerUpCvip),                    \
-	__SMU_DUMMY_MAP(PowerDownCvip),                  \
+  __SMU_DUMMY_MAP(PowerUpSdma),                 \
+  __SMU_DUMMY_MAP(SetHardMinIspclkByFreq),      \
+  __SMU_DUMMY_MAP(SetHardMinVcn),               \
+  __SMU_DUMMY_MAP(SetAllowFclkSwitch),          \
+  __SMU_DUMMY_MAP(SetMinVideoGfxclkFreq),       \
+  __SMU_DUMMY_MAP(ActiveProcessNotify),         \
+  __SMU_DUMMY_MAP(SetCustomPolicy),             \
+  __SMU_DUMMY_MAP(QueryPowerLimit),             \
+  __SMU_DUMMY_MAP(SetGfxclkOverdriveByFreqVid), \
+  __SMU_DUMMY_MAP(SetHardMinDcfclkByFreq),      \
+  __SMU_DUMMY_MAP(SetHardMinSocclkByFreq),      \
+  __SMU_DUMMY_MAP(ControlIgpuATS),              \
+  __SMU_DUMMY_MAP(SetMinVideoFclkFreq),         \
+  __SMU_DUMMY_MAP(SetMinDeepSleepDcfclk),       \
+  __SMU_DUMMY_MAP(ForcePowerDownGfx),           \
+  __SMU_DUMMY_MAP(SetPhyclkVoltageByFreq),      \
+  __SMU_DUMMY_MAP(SetDppclkVoltageByFreq),      \
+  __SMU_DUMMY_MAP(SetSoftMinVcn),               \
+  __SMU_DUMMY_MAP(EnablePostCode),              \
+  __SMU_DUMMY_MAP(GetGfxclkFrequency),          \
+  __SMU_DUMMY_MAP(GetFclkFrequency),            \
+  __SMU_DUMMY_MAP(GetMinGfxclkFrequency),       \
+  __SMU_DUMMY_MAP(GetMaxGfxclkFrequency),       \
+  __SMU_DUMMY_MAP(SetGfxCGPG),                  \
+  __SMU_DUMMY_MAP(SetSoftMaxGfxClk),            \
+  __SMU_DUMMY_MAP(SetHardMinGfxClk),            \
+  __SMU_DUMMY_MAP(SetSoftMaxSocclkByFreq),      \
+  __SMU_DUMMY_MAP(SetSoftMaxFclkByFreq),        \
+  __SMU_DUMMY_MAP(SetSoftMaxVcn),               \
+  __SMU_DUMMY_MAP(PowerGateMmHub),              \
+  __SMU_DUMMY_MAP(UpdatePmeRestore),            \
+  __SMU_DUMMY_MAP(GpuChangeState),              \
+  __SMU_DUMMY_MAP(SetPowerLimitPercentage),     \
+  __SMU_DUMMY_MAP(ForceGfxContentSave),         \
+  __SMU_DUMMY_MAP(EnableTmdp48MHzRefclkPwrDown),\
+  __SMU_DUMMY_MAP(PowerGateAtHub),              \
+  __SMU_DUMMY_MAP(SetSoftMinJpeg),              \
+  __SMU_DUMMY_MAP(SetHardMinFclkByFreq),        \
+  __SMU_DUMMY_MAP(DFCstateControl), \
+  __SMU_DUMMY_MAP(GmiPwrDnControl), \
+  __SMU_DUMMY_MAP(spare), \
+  __SMU_DUMMY_MAP(SetNumBadHbmPagesRetired), \
+  __SMU_DUMMY_MAP(GetGmiPwrDnHyst), \
+  __SMU_DUMMY_MAP(SetGmiPwrDnHyst), \
+  __SMU_DUMMY_MAP(EnterGfxoff), \
+  __SMU_DUMMY_MAP(ExitGfxoff), \
+  __SMU_DUMMY_MAP(SetExecuteDMATest), \
+  __SMU_DUMMY_MAP(DAL_DISABLE_DUMMY_PSTATE_CHANGE), \
+  __SMU_DUMMY_MAP(DAL_ENABLE_DUMMY_PSTATE_CHANGE), \
+  __SMU_DUMMY_MAP(SET_DRIVER_DUMMY_TABLE_DRAM_ADDR_HIGH), \
+  __SMU_DUMMY_MAP(SET_DRIVER_DUMMY_TABLE_DRAM_ADDR_LOW), \
+  __SMU_DUMMY_MAP(GET_UMC_FW_WA), \
+  __SMU_DUMMY_MAP(Mode1Reset), \
+  __SMU_DUMMY_MAP(RlcPowerNotify),                 \
+  __SMU_DUMMY_MAP(SetHardMinIspiclkByFreq),        \
+  __SMU_DUMMY_MAP(SetHardMinIspxclkByFreq),        \
+  __SMU_DUMMY_MAP(SetSoftMinSocclkByFreq),         \
+  __SMU_DUMMY_MAP(PowerUpCvip),                    \
+  __SMU_DUMMY_MAP(PowerDownCvip),                  \
        __SMU_DUMMY_MAP(EnableGfxOff),                   \
        __SMU_DUMMY_MAP(SetSoftMinGfxclk),               \
        __SMU_DUMMY_MAP(SetSoftMinFclk),                 \
@@ -213,134 +213,134 @@
        __SMU_DUMMY_MAP(StopDramLogging),                    \
        __SMU_DUMMY_MAP(SetSoftMinCclk),                     \
        __SMU_DUMMY_MAP(SetSoftMaxCclk),                     \
-	__SMU_DUMMY_MAP(SetGpoFeaturePMask),             \
-	__SMU_DUMMY_MAP(DisallowGpo),                    \
-	__SMU_DUMMY_MAP(Enable2ndUSB20Port),             \
-	__SMU_DUMMY_MAP(RequestActiveWgp),               \
+  __SMU_DUMMY_MAP(SetGpoFeaturePMask),             \
+  __SMU_DUMMY_MAP(DisallowGpo),                    \
+  __SMU_DUMMY_MAP(Enable2ndUSB20Port),             \
+  __SMU_DUMMY_MAP(RequestActiveWgp),               \
        __SMU_DUMMY_MAP(SetFastPPTLimit),                \
        __SMU_DUMMY_MAP(SetSlowPPTLimit),                \
        __SMU_DUMMY_MAP(GetFastPPTLimit),                \
        __SMU_DUMMY_MAP(GetSlowPPTLimit),                \
-	__SMU_DUMMY_MAP(EnableDeterminism),		\
-	__SMU_DUMMY_MAP(DisableDeterminism),		\
-	__SMU_DUMMY_MAP(SetUclkDpmMode),		\
-	__SMU_DUMMY_MAP(LightSBR),			\
-	__SMU_DUMMY_MAP(GfxDriverResetRecovery),	\
-	__SMU_DUMMY_MAP(BoardPowerCalibration),
+  __SMU_DUMMY_MAP(EnableDeterminism),    \
+  __SMU_DUMMY_MAP(DisableDeterminism),    \
+  __SMU_DUMMY_MAP(SetUclkDpmMode),    \
+  __SMU_DUMMY_MAP(LightSBR),      \
+  __SMU_DUMMY_MAP(GfxDriverResetRecovery),  \
+  __SMU_DUMMY_MAP(BoardPowerCalibration),
 
 #undef __SMU_DUMMY_MAP
-#define __SMU_DUMMY_MAP(type)	SMU_MSG_##type
+#define __SMU_DUMMY_MAP(type)  SMU_MSG_##type
 enum smu_message_type {
-	SMU_MESSAGE_TYPES
-	SMU_MSG_MAX_COUNT,
+  SMU_MESSAGE_TYPES
+  SMU_MSG_MAX_COUNT,
 };
 
 enum smu_clk_type {
-	SMU_GFXCLK,
-	SMU_VCLK,
-	SMU_DCLK,
-	SMU_VCLK1,
-	SMU_DCLK1,
-	SMU_ECLK,
-	SMU_SOCCLK,
-	SMU_UCLK,
-	SMU_DCEFCLK,
-	SMU_DISPCLK,
-	SMU_PIXCLK,
-	SMU_PHYCLK,
-	SMU_FCLK,
-	SMU_SCLK,
-	SMU_MCLK,
-	SMU_PCIE,
-	SMU_LCLK,
-	SMU_OD_CCLK,
-	SMU_OD_SCLK,
-	SMU_OD_MCLK,
-	SMU_OD_VDDC_CURVE,
-	SMU_OD_RANGE,
-	SMU_OD_VDDGFX_OFFSET,
-	SMU_CLK_COUNT,
+  SMU_GFXCLK,
+  SMU_VCLK,
+  SMU_DCLK,
+  SMU_VCLK1,
+  SMU_DCLK1,
+  SMU_ECLK,
+  SMU_SOCCLK,
+  SMU_UCLK,
+  SMU_DCEFCLK,
+  SMU_DISPCLK,
+  SMU_PIXCLK,
+  SMU_PHYCLK,
+  SMU_FCLK,
+  SMU_SCLK,
+  SMU_MCLK,
+  SMU_PCIE,
+  SMU_LCLK,
+  SMU_OD_CCLK,
+  SMU_OD_SCLK,
+  SMU_OD_MCLK,
+  SMU_OD_VDDC_CURVE,
+  SMU_OD_RANGE,
+  SMU_OD_VDDGFX_OFFSET,
+  SMU_CLK_COUNT,
 };
 
-#define SMU_FEATURE_MASKS				\
-       __SMU_DUMMY_MAP(DPM_PREFETCHER),			\
-       __SMU_DUMMY_MAP(DPM_GFXCLK),                    	\
-       __SMU_DUMMY_MAP(DPM_UCLK),                      	\
-       __SMU_DUMMY_MAP(DPM_SOCCLK),                    	\
-       __SMU_DUMMY_MAP(DPM_UVD),                       	\
-       __SMU_DUMMY_MAP(DPM_VCE),                       	\
+#define SMU_FEATURE_MASKS        \
+       __SMU_DUMMY_MAP(DPM_PREFETCHER),      \
+       __SMU_DUMMY_MAP(DPM_GFXCLK),                      \
+       __SMU_DUMMY_MAP(DPM_UCLK),                        \
+       __SMU_DUMMY_MAP(DPM_SOCCLK),                      \
+       __SMU_DUMMY_MAP(DPM_UVD),                         \
+       __SMU_DUMMY_MAP(DPM_VCE),                         \
        __SMU_DUMMY_MAP(DPM_LCLK),                       \
-       __SMU_DUMMY_MAP(ULV),                           	\
-       __SMU_DUMMY_MAP(DPM_MP0CLK),                    	\
-       __SMU_DUMMY_MAP(DPM_LINK),                      	\
-       __SMU_DUMMY_MAP(DPM_DCEFCLK),                   	\
-       __SMU_DUMMY_MAP(DPM_XGMI),			\
-       __SMU_DUMMY_MAP(DS_GFXCLK),                     	\
-       __SMU_DUMMY_MAP(DS_SOCCLK),                     	\
-       __SMU_DUMMY_MAP(DS_LCLK),                       	\
-       __SMU_DUMMY_MAP(PPT),                           	\
-       __SMU_DUMMY_MAP(TDC),                           	\
-       __SMU_DUMMY_MAP(THERMAL),                       	\
-       __SMU_DUMMY_MAP(GFX_PER_CU_CG),                 	\
-       __SMU_DUMMY_MAP(RM),                            	\
-       __SMU_DUMMY_MAP(DS_DCEFCLK),                    	\
-       __SMU_DUMMY_MAP(ACDC),                          	\
-       __SMU_DUMMY_MAP(VR0HOT),                        	\
-       __SMU_DUMMY_MAP(VR1HOT),                        	\
-       __SMU_DUMMY_MAP(FW_CTF),                        	\
-       __SMU_DUMMY_MAP(LED_DISPLAY),                   	\
-       __SMU_DUMMY_MAP(FAN_CONTROL),                   	\
-       __SMU_DUMMY_MAP(GFX_EDC),                       	\
-       __SMU_DUMMY_MAP(GFXOFF),                        	\
-       __SMU_DUMMY_MAP(CG),                            	\
-       __SMU_DUMMY_MAP(DPM_FCLK),                      	\
-       __SMU_DUMMY_MAP(DS_FCLK),                       	\
-       __SMU_DUMMY_MAP(DS_MP1CLK),                     	\
-       __SMU_DUMMY_MAP(DS_MP0CLK),                     	\
-       __SMU_DUMMY_MAP(XGMI),                          	\
+       __SMU_DUMMY_MAP(ULV),                             \
+       __SMU_DUMMY_MAP(DPM_MP0CLK),                      \
+       __SMU_DUMMY_MAP(DPM_LINK),                        \
+       __SMU_DUMMY_MAP(DPM_DCEFCLK),                     \
+       __SMU_DUMMY_MAP(DPM_XGMI),      \
+       __SMU_DUMMY_MAP(DS_GFXCLK),                       \
+       __SMU_DUMMY_MAP(DS_SOCCLK),                       \
+       __SMU_DUMMY_MAP(DS_LCLK),                         \
+       __SMU_DUMMY_MAP(PPT),                             \
+       __SMU_DUMMY_MAP(TDC),                             \
+       __SMU_DUMMY_MAP(THERMAL),                         \
+       __SMU_DUMMY_MAP(GFX_PER_CU_CG),                   \
+       __SMU_DUMMY_MAP(RM),                              \
+       __SMU_DUMMY_MAP(DS_DCEFCLK),                      \
+       __SMU_DUMMY_MAP(ACDC),                            \
+       __SMU_DUMMY_MAP(VR0HOT),                          \
+       __SMU_DUMMY_MAP(VR1HOT),                          \
+       __SMU_DUMMY_MAP(FW_CTF),                          \
+       __SMU_DUMMY_MAP(LED_DISPLAY),                     \
+       __SMU_DUMMY_MAP(FAN_CONTROL),                     \
+       __SMU_DUMMY_MAP(GFX_EDC),                         \
+       __SMU_DUMMY_MAP(GFXOFF),                          \
+       __SMU_DUMMY_MAP(CG),                              \
+       __SMU_DUMMY_MAP(DPM_FCLK),                        \
+       __SMU_DUMMY_MAP(DS_FCLK),                         \
+       __SMU_DUMMY_MAP(DS_MP1CLK),                       \
+       __SMU_DUMMY_MAP(DS_MP0CLK),                       \
+       __SMU_DUMMY_MAP(XGMI),                            \
        __SMU_DUMMY_MAP(XGMI_PER_LINK_PWR_DWN),          \
-       __SMU_DUMMY_MAP(DPM_GFX_PACE),                  	\
-       __SMU_DUMMY_MAP(MEM_VDDCI_SCALING),             	\
-       __SMU_DUMMY_MAP(MEM_MVDD_SCALING),              	\
-       __SMU_DUMMY_MAP(DS_UCLK),                       	\
-       __SMU_DUMMY_MAP(GFX_ULV),                       	\
-       __SMU_DUMMY_MAP(FW_DSTATE),                     	\
-       __SMU_DUMMY_MAP(BACO),                          	\
-       __SMU_DUMMY_MAP(VCN_PG),                        	\
-       __SMU_DUMMY_MAP(MM_DPM_PG),                     	\
-       __SMU_DUMMY_MAP(JPEG_PG),                       	\
-       __SMU_DUMMY_MAP(USB_PG),                        	\
-       __SMU_DUMMY_MAP(RSMU_SMN_CG),                   	\
-       __SMU_DUMMY_MAP(APCC_PLUS),                     	\
-       __SMU_DUMMY_MAP(GTHR),                          	\
-       __SMU_DUMMY_MAP(GFX_DCS),                       	\
-       __SMU_DUMMY_MAP(GFX_SS),                        	\
-       __SMU_DUMMY_MAP(OUT_OF_BAND_MONITOR),           	\
-       __SMU_DUMMY_MAP(TEMP_DEPENDENT_VMIN),           	\
-       __SMU_DUMMY_MAP(MMHUB_PG),                      	\
-       __SMU_DUMMY_MAP(ATHUB_PG),                      	\
-       __SMU_DUMMY_MAP(APCC_DFLL),                     	\
-       __SMU_DUMMY_MAP(DF_CSTATE),                     	\
+       __SMU_DUMMY_MAP(DPM_GFX_PACE),                    \
+       __SMU_DUMMY_MAP(MEM_VDDCI_SCALING),               \
+       __SMU_DUMMY_MAP(MEM_MVDD_SCALING),                \
+       __SMU_DUMMY_MAP(DS_UCLK),                         \
+       __SMU_DUMMY_MAP(GFX_ULV),                         \
+       __SMU_DUMMY_MAP(FW_DSTATE),                       \
+       __SMU_DUMMY_MAP(BACO),                            \
+       __SMU_DUMMY_MAP(VCN_PG),                          \
+       __SMU_DUMMY_MAP(MM_DPM_PG),                       \
+       __SMU_DUMMY_MAP(JPEG_PG),                         \
+       __SMU_DUMMY_MAP(USB_PG),                          \
+       __SMU_DUMMY_MAP(RSMU_SMN_CG),                     \
+       __SMU_DUMMY_MAP(APCC_PLUS),                       \
+       __SMU_DUMMY_MAP(GTHR),                            \
+       __SMU_DUMMY_MAP(GFX_DCS),                         \
+       __SMU_DUMMY_MAP(GFX_SS),                          \
+       __SMU_DUMMY_MAP(OUT_OF_BAND_MONITOR),             \
+       __SMU_DUMMY_MAP(TEMP_DEPENDENT_VMIN),             \
+       __SMU_DUMMY_MAP(MMHUB_PG),                        \
+       __SMU_DUMMY_MAP(ATHUB_PG),                        \
+       __SMU_DUMMY_MAP(APCC_DFLL),                       \
+       __SMU_DUMMY_MAP(DF_CSTATE),                       \
        __SMU_DUMMY_MAP(DPM_GFX_GPO),                    \
        __SMU_DUMMY_MAP(WAFL_CG),                        \
-       __SMU_DUMMY_MAP(CCLK_DPM),                     	\
+       __SMU_DUMMY_MAP(CCLK_DPM),                       \
        __SMU_DUMMY_MAP(FAN_CONTROLLER),                 \
-       __SMU_DUMMY_MAP(VCN_DPM),                     	\
-       __SMU_DUMMY_MAP(LCLK_DPM),                     	\
+       __SMU_DUMMY_MAP(VCN_DPM),                       \
+       __SMU_DUMMY_MAP(LCLK_DPM),                       \
        __SMU_DUMMY_MAP(SHUBCLK_DPM),                    \
        __SMU_DUMMY_MAP(DCFCLK_DPM),                     \
-       __SMU_DUMMY_MAP(DS_DCFCLK),                     	\
-       __SMU_DUMMY_MAP(S0I2),                     	\
+       __SMU_DUMMY_MAP(DS_DCFCLK),                       \
+       __SMU_DUMMY_MAP(S0I2),                       \
        __SMU_DUMMY_MAP(SMU_LOW_POWER),                  \
        __SMU_DUMMY_MAP(GFX_DEM),                        \
-       __SMU_DUMMY_MAP(PSI),                     	\
+       __SMU_DUMMY_MAP(PSI),                       \
        __SMU_DUMMY_MAP(PROCHOT),                        \
-       __SMU_DUMMY_MAP(CPUOFF),                     	\
+       __SMU_DUMMY_MAP(CPUOFF),                       \
        __SMU_DUMMY_MAP(STAPM),                          \
-       __SMU_DUMMY_MAP(S0I3),                     	\
+       __SMU_DUMMY_MAP(S0I3),                       \
        __SMU_DUMMY_MAP(DF_CSTATES),                     \
        __SMU_DUMMY_MAP(PERF_LIMIT),                     \
-       __SMU_DUMMY_MAP(CORE_DLDO),                     	\
+       __SMU_DUMMY_MAP(CORE_DLDO),                       \
        __SMU_DUMMY_MAP(RSMU_LOW_POWER),                 \
        __SMU_DUMMY_MAP(SMN_LOW_POWER),                  \
        __SMU_DUMMY_MAP(THM_LOW_POWER),                  \
@@ -352,18 +352,18 @@ enum smu_clk_type {
        __SMU_DUMMY_MAP(ISP_DPM),                        \
        __SMU_DUMMY_MAP(A55_DPM),                        \
        __SMU_DUMMY_MAP(CVIP_DSP_DPM),                   \
-       __SMU_DUMMY_MAP(MSMU_LOW_POWER),			\
-       __SMU_DUMMY_MAP(FUSE_CG),			\
-       __SMU_DUMMY_MAP(MP1_CG),				\
-       __SMU_DUMMY_MAP(SMUIO_CG),			\
-       __SMU_DUMMY_MAP(THM_CG),				\
-       __SMU_DUMMY_MAP(CLK_CG),				\
+       __SMU_DUMMY_MAP(MSMU_LOW_POWER),      \
+       __SMU_DUMMY_MAP(FUSE_CG),      \
+       __SMU_DUMMY_MAP(MP1_CG),        \
+       __SMU_DUMMY_MAP(SMUIO_CG),      \
+       __SMU_DUMMY_MAP(THM_CG),        \
+       __SMU_DUMMY_MAP(CLK_CG),        \
 
 #undef __SMU_DUMMY_MAP
-#define __SMU_DUMMY_MAP(feature)	SMU_FEATURE_##feature##_BIT
+#define __SMU_DUMMY_MAP(feature)  SMU_FEATURE_##feature##_BIT
 enum smu_feature_mask {
-	SMU_FEATURE_MASKS
-	SMU_FEATURE_COUNT,
+  SMU_FEATURE_MASKS
+  SMU_FEATURE_COUNT,
 };
 
 #endif

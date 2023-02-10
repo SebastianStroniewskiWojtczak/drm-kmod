@@ -42,27 +42,27 @@ struct drm_modeset_lock;
  */
 struct drm_modeset_acquire_ctx {
 
-	struct ww_acquire_ctx ww_ctx;
+  struct ww_acquire_ctx ww_ctx;
 
-	/*
-	 * Contended lock: if a lock is contended you should only call
-	 * drm_modeset_backoff() which drops locks and slow-locks the
-	 * contended lock.
-	 */
-	struct drm_modeset_lock *contended;
+  /*
+   * Contended lock: if a lock is contended you should only call
+   * drm_modeset_backoff() which drops locks and slow-locks the
+   * contended lock.
+   */
+  struct drm_modeset_lock *contended;
 
-	/*
-	 * list of held locks (drm_modeset_lock)
-	 */
-	struct list_head locked;
+  /*
+   * list of held locks (drm_modeset_lock)
+   */
+  struct list_head locked;
 
-	/*
-	 * Trylock mode, use only for panic handlers!
-	 */
-	bool trylock_only;
+  /*
+   * Trylock mode, use only for panic handlers!
+   */
+  bool trylock_only;
 
-	/* Perform interruptible waits on this context. */
-	bool interruptible;
+  /* Perform interruptible waits on this context. */
+  bool interruptible;
 };
 
 /**
@@ -74,22 +74,22 @@ struct drm_modeset_acquire_ctx {
  * Used for locking CRTCs and other modeset resources.
  */
 struct drm_modeset_lock {
-	/*
-	 * modeset lock
-	 */
-	struct ww_mutex mutex;
+  /*
+   * modeset lock
+   */
+  struct ww_mutex mutex;
 
-	/*
-	 * Resources that are locked as part of an atomic update are added
-	 * to a list (so we know what to unlock at the end).
-	 */
-	struct list_head head;
+  /*
+   * Resources that are locked as part of an atomic update are added
+   * to a list (so we know what to unlock at the end).
+   */
+  struct list_head head;
 };
 
 #define DRM_MODESET_ACQUIRE_INTERRUPTIBLE BIT(0)
 
 void drm_modeset_acquire_init(struct drm_modeset_acquire_ctx *ctx,
-		uint32_t flags);
+    uint32_t flags);
 void drm_modeset_acquire_fini(struct drm_modeset_acquire_ctx *ctx);
 void drm_modeset_drop_locks(struct drm_modeset_acquire_ctx *ctx);
 int drm_modeset_backoff(struct drm_modeset_acquire_ctx *ctx);
@@ -102,7 +102,7 @@ void drm_modeset_lock_init(struct drm_modeset_lock *lock);
  */
 static inline void drm_modeset_lock_fini(struct drm_modeset_lock *lock)
 {
-	WARN_ON(!list_empty(&lock->head));
+  WARN_ON(!list_empty(&lock->head));
 }
 
 /**
@@ -111,7 +111,7 @@ static inline void drm_modeset_lock_fini(struct drm_modeset_lock *lock)
  */
 static inline bool drm_modeset_is_locked(struct drm_modeset_lock *lock)
 {
-	return ww_mutex_is_locked(&lock->mutex);
+  return ww_mutex_is_locked(&lock->mutex);
 }
 
 /**
@@ -120,11 +120,11 @@ static inline bool drm_modeset_is_locked(struct drm_modeset_lock *lock)
  */
 static inline void drm_modeset_lock_assert_held(struct drm_modeset_lock *lock)
 {
-	lockdep_assert_held(&lock->mutex.base);
+  lockdep_assert_held(&lock->mutex.base);
 }
 
 int drm_modeset_lock(struct drm_modeset_lock *lock,
-		struct drm_modeset_acquire_ctx *ctx);
+    struct drm_modeset_acquire_ctx *ctx);
 int __must_check drm_modeset_lock_single_interruptible(struct drm_modeset_lock *lock);
 void drm_modeset_unlock(struct drm_modeset_lock *lock);
 
@@ -137,7 +137,7 @@ void drm_modeset_unlock_all(struct drm_device *dev);
 void drm_warn_on_modeset_not_all_locked(struct drm_device *dev);
 
 int drm_modeset_lock_all_ctx(struct drm_device *dev,
-			     struct drm_modeset_acquire_ctx *ctx);
+           struct drm_modeset_acquire_ctx *ctx);
 
 /**
  * DRM_MODESET_LOCK_ALL_BEGIN - Helper to acquire modeset locks
@@ -163,14 +163,14 @@ int drm_modeset_lock_all_ctx(struct drm_device *dev,
  * The only possible value of ret immediately after DRM_MODESET_LOCK_ALL_BEGIN()
  * is 0, so no error checking is necessary
  */
-#define DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, flags, ret)		\
-	if (!drm_drv_uses_atomic_modeset(dev))				\
-		mutex_lock(&dev->mode_config.mutex);			\
-	drm_modeset_acquire_init(&ctx, flags);				\
-modeset_lock_retry:							\
-	ret = drm_modeset_lock_all_ctx(dev, &ctx);			\
-	if (ret)							\
-		goto modeset_lock_fail;
+#define DRM_MODESET_LOCK_ALL_BEGIN(dev, ctx, flags, ret)    \
+  if (!drm_drv_uses_atomic_modeset(dev))        \
+    mutex_lock(&dev->mode_config.mutex);      \
+  drm_modeset_acquire_init(&ctx, flags);        \
+modeset_lock_retry:              \
+  ret = drm_modeset_lock_all_ctx(dev, &ctx);      \
+  if (ret)              \
+    goto modeset_lock_fail;
 
 /**
  * DRM_MODESET_LOCK_ALL_END - Helper to release and cleanup modeset locks
@@ -191,16 +191,16 @@ modeset_lock_retry:							\
  * to that failure. In both of these cases the code between BEGIN/END will not
  * be run, so the failure will reflect the inability to grab the locks.
  */
-#define DRM_MODESET_LOCK_ALL_END(dev, ctx, ret)				\
-modeset_lock_fail:							\
-	if (ret == -EDEADLK) {						\
-		ret = drm_modeset_backoff(&ctx);			\
-		if (!ret)						\
-			goto modeset_lock_retry;			\
-	}								\
-	drm_modeset_drop_locks(&ctx);					\
-	drm_modeset_acquire_fini(&ctx);					\
-	if (!drm_drv_uses_atomic_modeset(dev))				\
-		mutex_unlock(&dev->mode_config.mutex);
+#define DRM_MODESET_LOCK_ALL_END(dev, ctx, ret)        \
+modeset_lock_fail:              \
+  if (ret == -EDEADLK) {            \
+    ret = drm_modeset_backoff(&ctx);      \
+    if (!ret)            \
+      goto modeset_lock_retry;      \
+  }                \
+  drm_modeset_drop_locks(&ctx);          \
+  drm_modeset_acquire_fini(&ctx);          \
+  if (!drm_drv_uses_atomic_modeset(dev))        \
+    mutex_unlock(&dev->mode_config.mutex);
 
 #endif /* DRM_MODESET_LOCK_H_ */

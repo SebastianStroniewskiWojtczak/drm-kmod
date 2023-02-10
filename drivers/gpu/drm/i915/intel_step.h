@@ -11,8 +11,8 @@
 struct drm_i915_private;
 
 struct intel_step_info {
-	u8 gt_step;
-	u8 display_step;
+  u8 gt_step;
+  u8 display_step;
 };
 
 /*
@@ -20,19 +20,19 @@ struct intel_step_info {
  * and display steppings as symbolic names.
  */
 enum intel_step {
-	STEP_NONE = 0,
-	STEP_A0,
-	STEP_A2,
-	STEP_B0,
-	STEP_B1,
-	STEP_C0,
-	STEP_D0,
-	STEP_D1,
-	STEP_E0,
-	STEP_F0,
-	STEP_G0,
-	STEP_FUTURE,
-	STEP_FOREVER,
+  STEP_NONE = 0,
+  STEP_A0,
+  STEP_A2,
+  STEP_B0,
+  STEP_B1,
+  STEP_C0,
+  STEP_D0,
+  STEP_D1,
+  STEP_E0,
+  STEP_F0,
+  STEP_G0,
+  STEP_FUTURE,
+  STEP_FOREVER,
 };
 
 void intel_step_init(struct drm_i915_private *i915);

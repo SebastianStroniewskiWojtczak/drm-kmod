@@ -53,7 +53,7 @@
 
 
 #include <linux/export.h>
-#include <linux/interrupt.h>	/* For task queue support */
+#include <linux/interrupt.h>  /* For task queue support */
 #include <linux/pci.h>
 #include <linux/vgaarb.h>
 
@@ -105,48 +105,48 @@
  */
 int drm_irq_install(struct drm_device *dev, int irq)
 {
-	int ret;
-	unsigned long sh_flags = 0;
+  int ret;
+  unsigned long sh_flags = 0;
 
-	if (irq == 0)
-		return -EINVAL;
+  if (irq == 0)
+    return -EINVAL;
 
-	if (dev->irq_enabled)
-		return -EBUSY;
-	dev->irq_enabled = true;
+  if (dev->irq_enabled)
+    return -EBUSY;
+  dev->irq_enabled = true;
 
-	DRM_DEBUG("irq=%d\n", irq);
+  DRM_DEBUG("irq=%d\n", irq);
 
-	/* Before installing handler */
-	if (dev->driver->irq_preinstall)
-		dev->driver->irq_preinstall(dev);
+  /* Before installing handler */
+  if (dev->driver->irq_preinstall)
+    dev->driver->irq_preinstall(dev);
 
-	/* PCI devices require shared interrupts. */
-	if (dev_is_pci(dev->dev))
-		sh_flags = IRQF_SHARED;
+  /* PCI devices require shared interrupts. */
+  if (dev_is_pci(dev->dev))
+    sh_flags = IRQF_SHARED;
 
-	ret = request_irq(irq, dev->driver->irq_handler,
-			  sh_flags, dev->driver->name, dev);
+  ret = request_irq(irq, dev->driver->irq_handler,
+        sh_flags, dev->driver->name, dev);
 
-	if (ret < 0) {
-		dev->irq_enabled = false;
-		return ret;
-	}
+  if (ret < 0) {
+    dev->irq_enabled = false;
+    return ret;
+  }
 
-	/* After installing handler */
-	if (dev->driver->irq_postinstall)
-		ret = dev->driver->irq_postinstall(dev);
+  /* After installing handler */
+  if (dev->driver->irq_postinstall)
+    ret = dev->driver->irq_postinstall(dev);
 
-	if (ret < 0) {
-		dev->irq_enabled = false;
-		if (drm_core_check_feature(dev, DRIVER_LEGACY))
-			vga_client_register(to_pci_dev(dev->dev), NULL, NULL, NULL);
-		free_irq(irq, dev);
-	} else {
-		dev->irq = irq;
-	}
+  if (ret < 0) {
+    dev->irq_enabled = false;
+    if (drm_core_check_feature(dev, DRIVER_LEGACY))
+      vga_client_register(to_pci_dev(dev->dev), NULL, NULL, NULL);
+    free_irq(irq, dev);
+  } else {
+    dev->irq = irq;
+  }
 
-	return ret;
+  return ret;
 }
 EXPORT_SYMBOL(drm_irq_install);
 
@@ -168,55 +168,55 @@ EXPORT_SYMBOL(drm_irq_install);
  */
 int drm_irq_uninstall(struct drm_device *dev)
 {
-	unsigned long irqflags;
-	bool irq_enabled;
-	int i;
+  unsigned long irqflags;
+  bool irq_enabled;
+  int i;
 
-	irq_enabled = dev->irq_enabled;
-	dev->irq_enabled = false;
+  irq_enabled = dev->irq_enabled;
+  dev->irq_enabled = false;
 
-	/*
-	 * Wake up any waiters so they don't hang. This is just to paper over
-	 * issues for UMS drivers which aren't in full control of their
-	 * vblank/irq handling. KMS drivers must ensure that vblanks are all
-	 * disabled when uninstalling the irq handler.
-	 */
-	if (drm_dev_has_vblank(dev)) {
-		spin_lock_irqsave(&dev->vbl_lock, irqflags);
-		for (i = 0; i < dev->num_crtcs; i++) {
-			struct drm_vblank_crtc *vblank = &dev->vblank[i];
+  /*
+   * Wake up any waiters so they don't hang. This is just to paper over
+   * issues for UMS drivers which aren't in full control of their
+   * vblank/irq handling. KMS drivers must ensure that vblanks are all
+   * disabled when uninstalling the irq handler.
+   */
+  if (drm_dev_has_vblank(dev)) {
+    spin_lock_irqsave(&dev->vbl_lock, irqflags);
+    for (i = 0; i < dev->num_crtcs; i++) {
+      struct drm_vblank_crtc *vblank = &dev->vblank[i];
 
-			if (!vblank->enabled)
-				continue;
+      if (!vblank->enabled)
+        continue;
 
-			WARN_ON(drm_core_check_feature(dev, DRIVER_MODESET));
+      WARN_ON(drm_core_check_feature(dev, DRIVER_MODESET));
 
-			drm_vblank_disable_and_save(dev, i);
-			wake_up(&vblank->queue);
-		}
-		spin_unlock_irqrestore(&dev->vbl_lock, irqflags);
-	}
+      drm_vblank_disable_and_save(dev, i);
+      wake_up(&vblank->queue);
+    }
+    spin_unlock_irqrestore(&dev->vbl_lock, irqflags);
+  }
 
-	if (!irq_enabled)
-		return -EINVAL;
+  if (!irq_enabled)
+    return -EINVAL;
 
-	DRM_DEBUG("irq=%d\n", dev->irq);
+  DRM_DEBUG("irq=%d\n", dev->irq);
 
-	if (drm_core_check_feature(dev, DRIVER_LEGACY))
-		vga_client_register(to_pci_dev(dev->dev), NULL, NULL, NULL);
+  if (drm_core_check_feature(dev, DRIVER_LEGACY))
+    vga_client_register(to_pci_dev(dev->dev), NULL, NULL, NULL);
 
-	if (dev->driver->irq_uninstall)
-		dev->driver->irq_uninstall(dev);
+  if (dev->driver->irq_uninstall)
+    dev->driver->irq_uninstall(dev);
 
-	free_irq(dev->irq, dev);
+  free_irq(dev->irq, dev);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(drm_irq_uninstall);
 
 static void devm_drm_irq_uninstall(void *data)
 {
-	drm_irq_uninstall(data);
+  drm_irq_uninstall(data);
 }
 
 /**
@@ -235,58 +235,58 @@ static void devm_drm_irq_uninstall(void *data)
  */
 int devm_drm_irq_install(struct drm_device *dev, int irq)
 {
-	int ret;
+  int ret;
 
-	ret = drm_irq_install(dev, irq);
-	if (ret)
-		return ret;
+  ret = drm_irq_install(dev, irq);
+  if (ret)
+    return ret;
 
-	return devm_add_action_or_reset(dev->dev,
-					devm_drm_irq_uninstall, dev);
+  return devm_add_action_or_reset(dev->dev,
+          devm_drm_irq_uninstall, dev);
 }
 EXPORT_SYMBOL(devm_drm_irq_install);
 
 #if IS_ENABLED(CONFIG_DRM_LEGACY)
 int drm_legacy_irq_control(struct drm_device *dev, void *data,
-			   struct drm_file *file_priv)
+         struct drm_file *file_priv)
 {
-	struct drm_control *ctl = data;
-	int ret = 0, irq;
-	struct pci_dev *pdev;
+  struct drm_control *ctl = data;
+  int ret = 0, irq;
+  struct pci_dev *pdev;
 
-	/* if we haven't irq we fallback for compatibility reasons -
-	 * this used to be a separate function in drm_dma.h
-	 */
+  /* if we haven't irq we fallback for compatibility reasons -
+   * this used to be a separate function in drm_dma.h
+   */
 
-	if (!drm_core_check_feature(dev, DRIVER_HAVE_IRQ))
-		return 0;
-	if (!drm_core_check_feature(dev, DRIVER_LEGACY))
-		return 0;
-	/* UMS was only ever supported on pci devices. */
-	if (WARN_ON(!dev_is_pci(dev->dev)))
-		return -EINVAL;
+  if (!drm_core_check_feature(dev, DRIVER_HAVE_IRQ))
+    return 0;
+  if (!drm_core_check_feature(dev, DRIVER_LEGACY))
+    return 0;
+  /* UMS was only ever supported on pci devices. */
+  if (WARN_ON(!dev_is_pci(dev->dev)))
+    return -EINVAL;
 
-	switch (ctl->func) {
-	case DRM_INST_HANDLER:
-		pdev = to_pci_dev(dev->dev);
-		irq = pdev->irq;
+  switch (ctl->func) {
+  case DRM_INST_HANDLER:
+    pdev = to_pci_dev(dev->dev);
+    irq = pdev->irq;
 
-		if (dev->if_version < DRM_IF_VERSION(1, 2) &&
-		    ctl->irq != irq)
-			return -EINVAL;
-		mutex_lock(&dev->struct_mutex);
-		ret = drm_irq_install(dev, irq);
-		mutex_unlock(&dev->struct_mutex);
+    if (dev->if_version < DRM_IF_VERSION(1, 2) &&
+        ctl->irq != irq)
+      return -EINVAL;
+    mutex_lock(&dev->struct_mutex);
+    ret = drm_irq_install(dev, irq);
+    mutex_unlock(&dev->struct_mutex);
 
-		return ret;
-	case DRM_UNINST_HANDLER:
-		mutex_lock(&dev->struct_mutex);
-		ret = drm_irq_uninstall(dev);
-		mutex_unlock(&dev->struct_mutex);
+    return ret;
+  case DRM_UNINST_HANDLER:
+    mutex_lock(&dev->struct_mutex);
+    ret = drm_irq_uninstall(dev);
+    mutex_unlock(&dev->struct_mutex);
 
-		return ret;
-	default:
-		return -EINVAL;
-	}
+    return ret;
+  default:
+    return -EINVAL;
+  }
 }
 #endif

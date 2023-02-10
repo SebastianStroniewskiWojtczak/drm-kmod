@@ -44,87 +44,87 @@
  */
 
 struct ttm_range_manager {
-	struct ttm_resource_manager manager;
-	struct drm_mm mm;
-	spinlock_t lock;
+  struct ttm_resource_manager manager;
+  struct drm_mm mm;
+  spinlock_t lock;
 };
 
 static inline struct ttm_range_manager *
 to_range_manager(struct ttm_resource_manager *man)
 {
-	return container_of(man, struct ttm_range_manager, manager);
+  return container_of(man, struct ttm_range_manager, manager);
 }
 
 static int ttm_range_man_alloc(struct ttm_resource_manager *man,
-			       struct ttm_buffer_object *bo,
-			       const struct ttm_place *place,
-			       struct ttm_resource **res)
+             struct ttm_buffer_object *bo,
+             const struct ttm_place *place,
+             struct ttm_resource **res)
 {
-	struct ttm_range_manager *rman = to_range_manager(man);
-	struct ttm_range_mgr_node *node;
-	struct drm_mm *mm = &rman->mm;
-	enum drm_mm_insert_mode mode;
-	unsigned long lpfn;
-	int ret;
+  struct ttm_range_manager *rman = to_range_manager(man);
+  struct ttm_range_mgr_node *node;
+  struct drm_mm *mm = &rman->mm;
+  enum drm_mm_insert_mode mode;
+  unsigned long lpfn;
+  int ret;
 
-	lpfn = place->lpfn;
-	if (!lpfn)
-		lpfn = man->size;
+  lpfn = place->lpfn;
+  if (!lpfn)
+    lpfn = man->size;
 
-	node = kzalloc(struct_size(node, mm_nodes, 1), GFP_KERNEL);
-	if (!node)
-		return -ENOMEM;
+  node = kzalloc(struct_size(node, mm_nodes, 1), GFP_KERNEL);
+  if (!node)
+    return -ENOMEM;
 
-	mode = DRM_MM_INSERT_BEST;
-	if (place->flags & TTM_PL_FLAG_TOPDOWN)
-		mode = DRM_MM_INSERT_HIGH;
+  mode = DRM_MM_INSERT_BEST;
+  if (place->flags & TTM_PL_FLAG_TOPDOWN)
+    mode = DRM_MM_INSERT_HIGH;
 
-	ttm_resource_init(bo, place, &node->base);
+  ttm_resource_init(bo, place, &node->base);
 
-	spin_lock(&rman->lock);
-	ret = drm_mm_insert_node_in_range(mm, &node->mm_nodes[0],
-					  node->base.num_pages,
-					  bo->page_alignment, 0,
-					  place->fpfn, lpfn, mode);
-	spin_unlock(&rman->lock);
+  spin_lock(&rman->lock);
+  ret = drm_mm_insert_node_in_range(mm, &node->mm_nodes[0],
+            node->base.num_pages,
+            bo->page_alignment, 0,
+            place->fpfn, lpfn, mode);
+  spin_unlock(&rman->lock);
 
-	if (unlikely(ret)) {
-		kfree(node);
-		return ret;
-	}
+  if (unlikely(ret)) {
+    kfree(node);
+    return ret;
+  }
 
-	node->base.start = node->mm_nodes[0].start;
-	*res = &node->base;
-	return 0;
+  node->base.start = node->mm_nodes[0].start;
+  *res = &node->base;
+  return 0;
 }
 
 static void ttm_range_man_free(struct ttm_resource_manager *man,
-			       struct ttm_resource *res)
+             struct ttm_resource *res)
 {
-	struct ttm_range_mgr_node *node = to_ttm_range_mgr_node(res);
-	struct ttm_range_manager *rman = to_range_manager(man);
+  struct ttm_range_mgr_node *node = to_ttm_range_mgr_node(res);
+  struct ttm_range_manager *rman = to_range_manager(man);
 
-	spin_lock(&rman->lock);
-	drm_mm_remove_node(&node->mm_nodes[0]);
-	spin_unlock(&rman->lock);
+  spin_lock(&rman->lock);
+  drm_mm_remove_node(&node->mm_nodes[0]);
+  spin_unlock(&rman->lock);
 
-	kfree(node);
+  kfree(node);
 }
 
 static void ttm_range_man_debug(struct ttm_resource_manager *man,
-				struct drm_printer *printer)
+        struct drm_printer *printer)
 {
-	struct ttm_range_manager *rman = to_range_manager(man);
+  struct ttm_range_manager *rman = to_range_manager(man);
 
-	spin_lock(&rman->lock);
-	drm_mm_print(&rman->mm, printer);
-	spin_unlock(&rman->lock);
+  spin_lock(&rman->lock);
+  drm_mm_print(&rman->mm, printer);
+  spin_unlock(&rman->lock);
 }
 
 static const struct ttm_resource_manager_func ttm_range_manager_func = {
-	.alloc = ttm_range_man_alloc,
-	.free = ttm_range_man_free,
-	.debug = ttm_range_man_debug
+  .alloc = ttm_range_man_alloc,
+  .free = ttm_range_man_free,
+  .debug = ttm_range_man_debug
 };
 
 /**
@@ -139,29 +139,29 @@ static const struct ttm_resource_manager_func ttm_range_manager_func = {
  * The range manager is installed for this device in the type slot.
  */
 int ttm_range_man_init(struct ttm_device *bdev,
-		       unsigned type, bool use_tt,
-		       unsigned long p_size)
+           unsigned type, bool use_tt,
+           unsigned long p_size)
 {
-	struct ttm_resource_manager *man;
-	struct ttm_range_manager *rman;
+  struct ttm_resource_manager *man;
+  struct ttm_range_manager *rman;
 
-	rman = kzalloc(sizeof(*rman), GFP_KERNEL);
-	if (!rman)
-		return -ENOMEM;
+  rman = kzalloc(sizeof(*rman), GFP_KERNEL);
+  if (!rman)
+    return -ENOMEM;
 
-	man = &rman->manager;
-	man->use_tt = use_tt;
+  man = &rman->manager;
+  man->use_tt = use_tt;
 
-	man->func = &ttm_range_manager_func;
+  man->func = &ttm_range_manager_func;
 
-	ttm_resource_manager_init(man, p_size);
+  ttm_resource_manager_init(man, p_size);
 
-	drm_mm_init(&rman->mm, 0, p_size);
-	spin_lock_init(&rman->lock);
+  drm_mm_init(&rman->mm, 0, p_size);
+  spin_lock_init(&rman->lock);
 
-	ttm_set_driver_manager(bdev, type, &rman->manager);
-	ttm_resource_manager_set_used(man, true);
-	return 0;
+  ttm_set_driver_manager(bdev, type, &rman->manager);
+  ttm_resource_manager_set_used(man, true);
+  return 0;
 }
 EXPORT_SYMBOL(ttm_range_man_init);
 
@@ -174,30 +174,30 @@ EXPORT_SYMBOL(ttm_range_man_init);
  * Remove the generic range manager from a slot and tear it down.
  */
 int ttm_range_man_fini(struct ttm_device *bdev,
-		       unsigned type)
+           unsigned type)
 {
-	struct ttm_resource_manager *man = ttm_manager_type(bdev, type);
-	struct ttm_range_manager *rman = to_range_manager(man);
-	struct drm_mm *mm = &rman->mm;
-	int ret;
+  struct ttm_resource_manager *man = ttm_manager_type(bdev, type);
+  struct ttm_range_manager *rman = to_range_manager(man);
+  struct drm_mm *mm = &rman->mm;
+  int ret;
 
-	if (!man)
-		return 0;
+  if (!man)
+    return 0;
 
-	ttm_resource_manager_set_used(man, false);
+  ttm_resource_manager_set_used(man, false);
 
-	ret = ttm_resource_manager_evict_all(bdev, man);
-	if (ret)
-		return ret;
+  ret = ttm_resource_manager_evict_all(bdev, man);
+  if (ret)
+    return ret;
 
-	spin_lock(&rman->lock);
-	drm_mm_clean(mm);
-	drm_mm_takedown(mm);
-	spin_unlock(&rman->lock);
+  spin_lock(&rman->lock);
+  drm_mm_clean(mm);
+  drm_mm_takedown(mm);
+  spin_unlock(&rman->lock);
 
-	ttm_resource_manager_cleanup(man);
-	ttm_set_driver_manager(bdev, type, NULL);
-	kfree(rman);
-	return 0;
+  ttm_resource_manager_cleanup(man);
+  ttm_set_driver_manager(bdev, type, NULL);
+  kfree(rman);
+  return 0;
 }
 EXPORT_SYMBOL(ttm_range_man_fini);

@@ -48,58 +48,58 @@
 #       define CURRENT_PROFILE_INDEX_MASK                 (0xf << 4)
 #       define CURRENT_PROFILE_INDEX_SHIFT                4
 
-#define	CG_BIF_REQ_AND_RSP				0x7f4
-#define		CG_CLIENT_REQ(x)			((x) << 0)
-#define		CG_CLIENT_REQ_MASK			(0xff << 0)
-#define		CG_CLIENT_REQ_SHIFT			0
-#define		CG_CLIENT_RESP(x)			((x) << 8)
-#define		CG_CLIENT_RESP_MASK			(0xff << 8)
-#define		CG_CLIENT_RESP_SHIFT			8
-#define		CLIENT_CG_REQ(x)			((x) << 16)
-#define		CLIENT_CG_REQ_MASK			(0xff << 16)
-#define		CLIENT_CG_REQ_SHIFT			16
-#define		CLIENT_CG_RESP(x)			((x) << 24)
-#define		CLIENT_CG_RESP_MASK			(0xff << 24)
-#define		CLIENT_CG_RESP_SHIFT			24
+#define  CG_BIF_REQ_AND_RSP        0x7f4
+#define    CG_CLIENT_REQ(x)      ((x) << 0)
+#define    CG_CLIENT_REQ_MASK      (0xff << 0)
+#define    CG_CLIENT_REQ_SHIFT      0
+#define    CG_CLIENT_RESP(x)      ((x) << 8)
+#define    CG_CLIENT_RESP_MASK      (0xff << 8)
+#define    CG_CLIENT_RESP_SHIFT      8
+#define    CLIENT_CG_REQ(x)      ((x) << 16)
+#define    CLIENT_CG_REQ_MASK      (0xff << 16)
+#define    CLIENT_CG_REQ_SHIFT      16
+#define    CLIENT_CG_RESP(x)      ((x) << 24)
+#define    CLIENT_CG_RESP_MASK      (0xff << 24)
+#define    CLIENT_CG_RESP_SHIFT      24
 
-#define	SCLK_PSKIP_CNTL					0x8c0
-#define		PSKIP_ON_ALLOW_STOP_HI(x)		((x) << 16)
-#define		PSKIP_ON_ALLOW_STOP_HI_MASK		(0xff << 16)
-#define		PSKIP_ON_ALLOW_STOP_HI_SHIFT		16
+#define  SCLK_PSKIP_CNTL          0x8c0
+#define    PSKIP_ON_ALLOW_STOP_HI(x)    ((x) << 16)
+#define    PSKIP_ON_ALLOW_STOP_HI_MASK    (0xff << 16)
+#define    PSKIP_ON_ALLOW_STOP_HI_SHIFT    16
 
-#define	CG_ULV_CONTROL					0x8c8
-#define	CG_ULV_PARAMETER				0x8cc
+#define  CG_ULV_CONTROL          0x8c8
+#define  CG_ULV_PARAMETER        0x8cc
 
-#define	MC_ARB_DRAM_TIMING				0x2774
-#define	MC_ARB_DRAM_TIMING2				0x2778
+#define  MC_ARB_DRAM_TIMING        0x2774
+#define  MC_ARB_DRAM_TIMING2        0x2778
 
-#define	MC_ARB_RFSH_RATE				0x27b0
-#define		POWERMODE0(x)				((x) << 0)
-#define		POWERMODE0_MASK				(0xff << 0)
-#define		POWERMODE0_SHIFT			0
-#define		POWERMODE1(x)				((x) << 8)
-#define		POWERMODE1_MASK				(0xff << 8)
-#define		POWERMODE1_SHIFT			8
-#define		POWERMODE2(x)				((x) << 16)
-#define		POWERMODE2_MASK				(0xff << 16)
-#define		POWERMODE2_SHIFT			16
-#define		POWERMODE3(x)				((x) << 24)
-#define		POWERMODE3_MASK				(0xff << 24)
-#define		POWERMODE3_SHIFT			24
+#define  MC_ARB_RFSH_RATE        0x27b0
+#define    POWERMODE0(x)        ((x) << 0)
+#define    POWERMODE0_MASK        (0xff << 0)
+#define    POWERMODE0_SHIFT      0
+#define    POWERMODE1(x)        ((x) << 8)
+#define    POWERMODE1_MASK        (0xff << 8)
+#define    POWERMODE1_SHIFT      8
+#define    POWERMODE2(x)        ((x) << 16)
+#define    POWERMODE2_MASK        (0xff << 16)
+#define    POWERMODE2_SHIFT      16
+#define    POWERMODE3(x)        ((x) << 24)
+#define    POWERMODE3_MASK        (0xff << 24)
+#define    POWERMODE3_SHIFT      24
 
 #define MC_ARB_BURST_TIME                               0x2808
-#define		STATE0(x)				((x) << 0)
-#define		STATE0_MASK				(0x1f << 0)
-#define		STATE0_SHIFT				0
-#define		STATE1(x)				((x) << 5)
-#define		STATE1_MASK				(0x1f << 5)
-#define		STATE1_SHIFT				5
-#define		STATE2(x)				((x) << 10)
-#define		STATE2_MASK				(0x1f << 10)
-#define		STATE2_SHIFT				10
-#define		STATE3(x)				((x) << 15)
-#define		STATE3_MASK				(0x1f << 15)
-#define		STATE3_SHIFT				15
+#define    STATE0(x)        ((x) << 0)
+#define    STATE0_MASK        (0x1f << 0)
+#define    STATE0_SHIFT        0
+#define    STATE1(x)        ((x) << 5)
+#define    STATE1_MASK        (0x1f << 5)
+#define    STATE1_SHIFT        5
+#define    STATE2(x)        ((x) << 10)
+#define    STATE2_MASK        (0x1f << 10)
+#define    STATE2_SHIFT        10
+#define    STATE3(x)        ((x) << 15)
+#define    STATE3_MASK        (0x1f << 15)
+#define    STATE3_SHIFT        15
 
 #define MC_SEQ_RAS_TIMING                               0x28a0
 #define MC_SEQ_CAS_TIMING                               0x28a4
@@ -132,18 +132,18 @@
 #define MC_SEQ_MISC7                                    0x2a64
 
 #define MC_SEQ_CG                                       0x2a68
-#define		CG_SEQ_REQ(x)				((x) << 0)
-#define		CG_SEQ_REQ_MASK				(0xff << 0)
-#define		CG_SEQ_REQ_SHIFT			0
-#define		CG_SEQ_RESP(x)				((x) << 8)
-#define		CG_SEQ_RESP_MASK			(0xff << 8)
-#define		CG_SEQ_RESP_SHIFT			8
-#define		SEQ_CG_REQ(x)				((x) << 16)
-#define		SEQ_CG_REQ_MASK				(0xff << 16)
-#define		SEQ_CG_REQ_SHIFT			16
-#define		SEQ_CG_RESP(x)				((x) << 24)
-#define		SEQ_CG_RESP_MASK			(0xff << 24)
-#define		SEQ_CG_RESP_SHIFT			24
+#define    CG_SEQ_REQ(x)        ((x) << 0)
+#define    CG_SEQ_REQ_MASK        (0xff << 0)
+#define    CG_SEQ_REQ_SHIFT      0
+#define    CG_SEQ_RESP(x)        ((x) << 8)
+#define    CG_SEQ_RESP_MASK      (0xff << 8)
+#define    CG_SEQ_RESP_SHIFT      8
+#define    SEQ_CG_REQ(x)        ((x) << 16)
+#define    SEQ_CG_REQ_MASK        (0xff << 16)
+#define    SEQ_CG_REQ_SHIFT      16
+#define    SEQ_CG_RESP(x)        ((x) << 24)
+#define    SEQ_CG_RESP_MASK      (0xff << 24)
+#define    SEQ_CG_RESP_SHIFT      24
 #define MC_SEQ_RAS_TIMING_LP                            0x2a6c
 #define MC_SEQ_CAS_TIMING_LP                            0x2a70
 #define MC_SEQ_MISC_TIMING_LP                           0x2a74
@@ -161,9 +161,9 @@
 #define MC_PMG_CMD_MRS1                                 0x2b44
 #define MC_SEQ_PMG_CMD_MRS1_LP                          0x2b48
 
-#define	LB_SYNC_RESET_SEL				0x6b28
-#define		LB_SYNC_RESET_SEL_MASK			(3 << 0)
-#define		LB_SYNC_RESET_SEL_SHIFT			0
+#define  LB_SYNC_RESET_SEL        0x6b28
+#define    LB_SYNC_RESET_SEL_MASK      (3 << 0)
+#define    LB_SYNC_RESET_SEL_SHIFT      0
 
 /* PCIE link stuff */
 #define PCIE_LC_SPEED_CNTL                                0xa4 /* PCIE_P */

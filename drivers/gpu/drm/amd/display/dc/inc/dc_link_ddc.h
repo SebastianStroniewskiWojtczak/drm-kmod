@@ -59,70 +59,70 @@ struct aux_payloads;
 enum aux_return_code_type;
 
 void dal_ddc_i2c_payloads_add(
-		struct i2c_payloads *payloads,
-		uint32_t address,
-		uint32_t len,
-		uint8_t *data,
-		bool write);
+    struct i2c_payloads *payloads,
+    uint32_t address,
+    uint32_t len,
+    uint8_t *data,
+    bool write);
 
 struct ddc_service_init_data {
-	struct graphics_object_id id;
-	struct dc_context *ctx;
-	struct dc_link *link;
+  struct graphics_object_id id;
+  struct dc_context *ctx;
+  struct dc_link *link;
 };
 
 struct ddc_service *dal_ddc_service_create(
-		struct ddc_service_init_data *ddc_init_data);
+    struct ddc_service_init_data *ddc_init_data);
 
 void dal_ddc_service_destroy(struct ddc_service **ddc);
 
 enum ddc_service_type dal_ddc_service_get_type(struct ddc_service *ddc);
 
 void dal_ddc_service_set_transaction_type(
-		struct ddc_service *ddc,
-		enum ddc_transaction_type type);
+    struct ddc_service *ddc,
+    enum ddc_transaction_type type);
 
 bool dal_ddc_service_is_in_aux_transaction_mode(struct ddc_service *ddc);
 
 void dal_ddc_service_i2c_query_dp_dual_mode_adaptor(
-		struct ddc_service *ddc,
-		struct display_sink_capability *sink_cap);
+    struct ddc_service *ddc,
+    struct display_sink_capability *sink_cap);
 
 bool dal_ddc_service_query_ddc_data(
-		struct ddc_service *ddc,
-		uint32_t address,
-		uint8_t *write_buf,
-		uint32_t write_size,
-		uint8_t *read_buf,
-		uint32_t read_size);
+    struct ddc_service *ddc,
+    uint32_t address,
+    uint8_t *write_buf,
+    uint32_t write_size,
+    uint8_t *read_buf,
+    uint32_t read_size);
 
 bool dal_ddc_submit_aux_command(struct ddc_service *ddc,
-		struct aux_payload *payload);
+    struct aux_payload *payload);
 
 int dc_link_aux_transfer_raw(struct ddc_service *ddc,
-		struct aux_payload *payload,
-		enum aux_return_code_type *operation_result);
+    struct aux_payload *payload,
+    enum aux_return_code_type *operation_result);
 
 bool dc_link_aux_transfer_with_retries(struct ddc_service *ddc,
-		struct aux_payload *payload);
+    struct aux_payload *payload);
 
 bool dc_link_aux_try_to_configure_timeout(struct ddc_service *ddc,
-		uint32_t timeout);
+    uint32_t timeout);
 
 void dal_ddc_service_write_scdc_data(
-		struct ddc_service *ddc_service,
-		uint32_t pix_clk,
-		bool lte_340_scramble);
+    struct ddc_service *ddc_service,
+    uint32_t pix_clk,
+    bool lte_340_scramble);
 
 void dal_ddc_service_read_scdc_data(
-		struct ddc_service *ddc_service);
+    struct ddc_service *ddc_service);
 
 void ddc_service_set_dongle_type(struct ddc_service *ddc,
-		enum display_dongle_type dongle_type);
+    enum display_dongle_type dongle_type);
 
 void dal_ddc_service_set_ddc_pin(
-		struct ddc_service *ddc_service,
-		struct ddc *ddc);
+    struct ddc_service *ddc_service,
+    struct ddc *ddc);
 
 struct ddc *dal_ddc_service_get_ddc_pin(struct ddc_service *ddc_service);
 

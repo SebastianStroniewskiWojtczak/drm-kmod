@@ -38,34 +38,34 @@ struct mod_hdcp_display;
 struct cp_psp;
 
 struct hdcp_workqueue {
-	struct work_struct cpirq_work;
-	struct work_struct property_update_work;
-	struct delayed_work callback_dwork;
-	struct delayed_work watchdog_timer_dwork;
-	struct delayed_work property_validate_dwork;
-	struct amdgpu_dm_connector *aconnector;
-	struct mutex mutex;
+  struct work_struct cpirq_work;
+  struct work_struct property_update_work;
+  struct delayed_work callback_dwork;
+  struct delayed_work watchdog_timer_dwork;
+  struct delayed_work property_validate_dwork;
+  struct amdgpu_dm_connector *aconnector;
+  struct mutex mutex;
 
-	struct mod_hdcp hdcp;
-	struct mod_hdcp_output output;
-	struct mod_hdcp_display display;
-	struct mod_hdcp_link link;
+  struct mod_hdcp hdcp;
+  struct mod_hdcp_output output;
+  struct mod_hdcp_display display;
+  struct mod_hdcp_link link;
 
-	enum mod_hdcp_encryption_status encryption_status;
-	uint8_t max_link;
+  enum mod_hdcp_encryption_status encryption_status;
+  uint8_t max_link;
 
-	uint8_t *srm;
-	uint8_t *srm_temp;
-	uint32_t srm_version;
-	uint32_t srm_size;
-	struct bin_attribute attr;
+  uint8_t *srm;
+  uint8_t *srm_temp;
+  uint32_t srm_version;
+  uint32_t srm_size;
+  struct bin_attribute attr;
 };
 
 void hdcp_update_display(struct hdcp_workqueue *hdcp_work,
-			 unsigned int link_index,
-			 struct amdgpu_dm_connector *aconnector,
-			 uint8_t content_type,
-			 bool enable_encryption);
+       unsigned int link_index,
+       struct amdgpu_dm_connector *aconnector,
+       uint8_t content_type,
+       bool enable_encryption);
 
 void hdcp_reset_display(struct hdcp_workqueue *work, unsigned int link_index);
 void hdcp_handle_cpirq(struct hdcp_workqueue *work, unsigned int link_index);

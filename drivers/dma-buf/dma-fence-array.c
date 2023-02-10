@@ -35,100 +35,100 @@ static const char *
 dma_fence_array_get_driver_name(struct dma_fence *fence)
 {
 
-	return ("dma_fence_array");
+  return ("dma_fence_array");
 }
 
 static const char *
 dma_fence_array_get_timeline_name(struct dma_fence *fence)
 {
 
-	return ("unbound");
+  return ("unbound");
 }
 
 static void
 irq_dma_fence_array_work(struct irq_work *work)
 {
-	struct dma_fence_array *array;
+  struct dma_fence_array *array;
 
-	array = container_of(work, typeof(*array), work);
+  array = container_of(work, typeof(*array), work);
 
-	dma_fence_signal(&array->base);
-	dma_fence_put(&array->base);
+  dma_fence_signal(&array->base);
+  dma_fence_put(&array->base);
 }
 
 static void
 dma_fence_array_cb_func(struct dma_fence *f, struct dma_fence_cb *cb)
 {
-	struct dma_fence_array_cb *array_cb;
+  struct dma_fence_array_cb *array_cb;
 
-	array_cb = container_of(cb, struct dma_fence_array_cb, cb);
-	if (atomic_dec_and_test(&array_cb->array->num_pending))
-		irq_work_queue(&array_cb->array->work);
-	else
-		dma_fence_put(&array_cb->array->base);
+  array_cb = container_of(cb, struct dma_fence_array_cb, cb);
+  if (atomic_dec_and_test(&array_cb->array->num_pending))
+    irq_work_queue(&array_cb->array->work);
+  else
+    dma_fence_put(&array_cb->array->base);
 }
 
 static bool
 dma_fence_array_enable_signaling(struct dma_fence *fence)
 {
-	struct dma_fence_array *array;
-	struct dma_fence_array_cb *cb;
-	int i;
+  struct dma_fence_array *array;
+  struct dma_fence_array_cb *cb;
+  int i;
 
-	array = to_dma_fence_array(fence);
-	cb = (void *)(&array[1]);
-	if (array == NULL)
-		return (false);
+  array = to_dma_fence_array(fence);
+  cb = (void *)(&array[1]);
+  if (array == NULL)
+    return (false);
 
-	for (i = 0; i < array->num_fences; i++) {
-		cb[i].array = array;
-		dma_fence_get(&array->base);
-		if (dma_fence_add_callback(array->fences[i], &cb[i].cb,
-		    dma_fence_array_cb_func)) {
-			dma_fence_put(&array->base);
-			if (atomic_dec_and_test(&array->num_pending))
-				return (false);
-		}
-	}
+  for (i = 0; i < array->num_fences; i++) {
+    cb[i].array = array;
+    dma_fence_get(&array->base);
+    if (dma_fence_add_callback(array->fences[i], &cb[i].cb,
+        dma_fence_array_cb_func)) {
+      dma_fence_put(&array->base);
+      if (atomic_dec_and_test(&array->num_pending))
+        return (false);
+    }
+  }
 
-	return (true);
+  return (true);
 }
 
 static bool
 dma_fence_array_signaled(struct dma_fence *fence)
 {
-	struct dma_fence_array *array;
+  struct dma_fence_array *array;
 
-	array = to_dma_fence_array(fence);
-	if (array == NULL)
-		return (false);
+  array = to_dma_fence_array(fence);
+  if (array == NULL)
+    return (false);
 
-	return (atomic_read(&array->num_pending) <= 0);
+  return (atomic_read(&array->num_pending) <= 0);
 }
 
 static void
 dma_fence_array_release(struct dma_fence *fence)
 {
-	struct dma_fence_array *array;
-	int i;
+  struct dma_fence_array *array;
+  int i;
 
-	array = to_dma_fence_array(fence);
-	if (array == NULL)
-		return;
+  array = to_dma_fence_array(fence);
+  if (array == NULL)
+    return;
 
-	for (i = 0; i < array->num_fences; i++)
-		dma_fence_put(array->fences[i]);
+  for (i = 0; i < array->num_fences; i++)
+    dma_fence_put(array->fences[i]);
 
-	free(array->fences, M_DMABUF);
-	dma_fence_free(fence);
+  free(array->fences, M_DMABUF);
+  dma_fence_free(fence);
 }
 
 const struct dma_fence_ops dma_fence_array_ops = {
-	.get_driver_name = dma_fence_array_get_driver_name,
-	.get_timeline_name = dma_fence_array_get_timeline_name,
-	.enable_signaling = dma_fence_array_enable_signaling,
-	.signaled = dma_fence_array_signaled,
-	.release = dma_fence_array_release,
+  .get_driver_name = dma_fence_array_get_driver_name,
+  .get_timeline_name = dma_fence_array_get_timeline_name,
+  .enable_signaling = dma_fence_array_enable_signaling,
+  .signaled = dma_fence_array_signaled,
+  .release = dma_fence_array_release,
 };
 
 /*
@@ -140,21 +140,21 @@ dma_fence_array_create(int num_fences,
     u64 context, unsigned seqno,
     bool signal_on_any)
 {
-	struct dma_fence_array *array;
+  struct dma_fence_array *array;
 
-	array = malloc(sizeof(*array) +
-	    (num_fences * sizeof(struct dma_fence_array_cb)),
-	    M_DMABUF, M_WAITOK | M_ZERO);
+  array = malloc(sizeof(*array) +
+      (num_fences * sizeof(struct dma_fence_array_cb)),
+      M_DMABUF, M_WAITOK | M_ZERO);
 
-	spin_lock_init(&array->lock);
-	dma_fence_init(&array->base, &dma_fence_array_ops,
-	  &array->lock, context, seqno);
-	init_irq_work(&array->work, irq_dma_fence_array_work);
-	array->num_fences = num_fences;
-	atomic_set(&array->num_pending, signal_on_any ? 1 : num_fences);
-	array->fences = fences;
+  spin_lock_init(&array->lock);
+  dma_fence_init(&array->base, &dma_fence_array_ops,
+    &array->lock, context, seqno);
+  init_irq_work(&array->work, irq_dma_fence_array_work);
+  array->num_fences = num_fences;
+  atomic_set(&array->num_pending, signal_on_any ? 1 : num_fences);
+  array->fences = fences;
 
-	return (array);
+  return (array);
 }
 
 /*
@@ -163,7 +163,7 @@ dma_fence_array_create(int num_fences,
 bool dma_fence_is_array(struct dma_fence *fence)
 {
 
-	return (fence->ops == &dma_fence_array_ops);
+  return (fence->ops == &dma_fence_array_ops);
 }
 
 /*
@@ -173,8 +173,8 @@ struct dma_fence_array *
 to_dma_fence_array(struct dma_fence *fence)
 {
 
-	if (fence->ops != &dma_fence_array_ops)
-		return NULL;
+  if (fence->ops != &dma_fence_array_ops)
+    return NULL;
 
-	return (container_of(fence, struct dma_fence_array, base));
+  return (container_of(fence, struct dma_fence_array, base));
 }

@@ -8,9 +8,9 @@
 
 struct drm_master;
 
-#define drm_lease_held(f, id)		(true)
-#define _drm_lease_held(f, id)		(true)
-#define drm_lease_filter_crtcs(f, in)	(in)
+#define drm_lease_held(f, id)    (true)
+#define _drm_lease_held(f, id)    (true)
+#define drm_lease_filter_crtcs(f, in)  (in)
 
 static inline void
 drm_lease_revoke(struct drm_master *m)

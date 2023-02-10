@@ -29,9 +29,9 @@
 void dcn3_init_clocks(struct clk_mgr *clk_mgr_base);
 
 void dcn3_clk_mgr_construct(struct dc_context *ctx,
-		struct clk_mgr_internal *clk_mgr,
-		struct pp_smu_funcs *pp_smu,
-		struct dccg *dccg);
+    struct clk_mgr_internal *clk_mgr,
+    struct pp_smu_funcs *pp_smu,
+    struct dccg *dccg);
 
 void dcn3_clk_mgr_destroy(struct clk_mgr_internal *clk_mgr);
 

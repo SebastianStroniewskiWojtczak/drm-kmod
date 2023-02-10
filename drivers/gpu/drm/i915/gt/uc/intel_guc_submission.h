@@ -23,18 +23,18 @@ int intel_guc_submission_setup(struct intel_engine_cs *engine);
 
 static inline bool intel_guc_submission_is_supported(struct intel_guc *guc)
 {
-	/* XXX: GuC submission is unavailable for now */
-	return false;
+  /* XXX: GuC submission is unavailable for now */
+  return false;
 }
 
 static inline bool intel_guc_submission_is_wanted(struct intel_guc *guc)
 {
-	return guc->submission_selected;
+  return guc->submission_selected;
 }
 
 static inline bool intel_guc_submission_is_used(struct intel_guc *guc)
 {
-	return intel_guc_is_used(guc) && intel_guc_submission_is_wanted(guc);
+  return intel_guc_is_used(guc) && intel_guc_submission_is_wanted(guc);
 }
 
 #endif

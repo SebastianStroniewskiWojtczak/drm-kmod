@@ -34,18 +34,18 @@
  */
 void dmub_enable_outbox_notification(struct dc *dc)
 {
-	union dmub_rb_cmd cmd;
-	struct dc_context *dc_ctx = dc->ctx;
+  union dmub_rb_cmd cmd;
+  struct dc_context *dc_ctx = dc->ctx;
 
-	memset(&cmd, 0x0, sizeof(cmd));
-	cmd.outbox1_enable.header.type = DMUB_CMD__OUTBOX1_ENABLE;
-	cmd.outbox1_enable.header.sub_type = 0;
-	cmd.outbox1_enable.header.payload_bytes =
-		sizeof(cmd.outbox1_enable) -
-		sizeof(cmd.outbox1_enable.header);
-	cmd.outbox1_enable.enable = true;
+  memset(&cmd, 0x0, sizeof(cmd));
+  cmd.outbox1_enable.header.type = DMUB_CMD__OUTBOX1_ENABLE;
+  cmd.outbox1_enable.header.sub_type = 0;
+  cmd.outbox1_enable.header.payload_bytes =
+    sizeof(cmd.outbox1_enable) -
+    sizeof(cmd.outbox1_enable.header);
+  cmd.outbox1_enable.enable = true;
 
-	dc_dmub_srv_cmd_queue(dc_ctx->dmub_srv, &cmd);
-	dc_dmub_srv_cmd_execute(dc_ctx->dmub_srv);
-	dc_dmub_srv_wait_idle(dc_ctx->dmub_srv);
+  dc_dmub_srv_cmd_queue(dc_ctx->dmub_srv, &cmd);
+  dc_dmub_srv_cmd_execute(dc_ctx->dmub_srv);
+  dc_dmub_srv_wait_idle(dc_ctx->dmub_srv);
 }

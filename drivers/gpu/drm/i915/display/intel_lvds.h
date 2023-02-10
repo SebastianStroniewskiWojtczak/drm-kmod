@@ -14,7 +14,7 @@ enum pipe;
 struct drm_i915_private;
 
 bool intel_lvds_port_enabled(struct drm_i915_private *dev_priv,
-			     i915_reg_t lvds_reg, enum pipe *pipe);
+           i915_reg_t lvds_reg, enum pipe *pipe);
 void intel_lvds_init(struct drm_i915_private *dev_priv);
 struct intel_encoder *intel_get_lvds_encoder(struct drm_i915_private *dev_priv);
 bool intel_is_dual_link_lvds(struct drm_i915_private *dev_priv);

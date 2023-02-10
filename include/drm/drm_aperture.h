@@ -9,10 +9,10 @@ struct drm_device;
 struct pci_dev;
 
 int devm_aperture_acquire_from_firmware(struct drm_device *dev, resource_size_t base,
-					resource_size_t size);
+          resource_size_t size);
 
 int drm_aperture_remove_conflicting_framebuffers(resource_size_t base, resource_size_t size,
-						 bool primary, const char *name);
+             bool primary, const char *name);
 
 int drm_aperture_remove_conflicting_pci_framebuffers(struct pci_dev *pdev, const char *name);
 
@@ -29,7 +29,7 @@ int drm_aperture_remove_conflicting_pci_framebuffers(struct pci_dev *pdev, const
  */
 static inline int drm_aperture_remove_framebuffers(bool primary, const char *name)
 {
-	return drm_aperture_remove_conflicting_framebuffers(0, (resource_size_t)-1, primary, name);
+  return drm_aperture_remove_conflicting_framebuffers(0, (resource_size_t)-1, primary, name);
 }
 
 #endif

@@ -11,17 +11,17 @@
 #include "intel_huc_fw.h"
 
 struct intel_huc {
-	/* Generic uC firmware management */
-	struct intel_uc_fw fw;
+  /* Generic uC firmware management */
+  struct intel_uc_fw fw;
 
-	/* HuC-specific additions */
-	struct i915_vma *rsa_data;
+  /* HuC-specific additions */
+  struct i915_vma *rsa_data;
 
-	struct {
-		i915_reg_t reg;
-		u32 mask;
-		u32 value;
-	} status;
+  struct {
+    i915_reg_t reg;
+    u32 mask;
+    u32 value;
+  } status;
 };
 
 void intel_huc_init_early(struct intel_huc *huc);
@@ -32,29 +32,29 @@ int intel_huc_check_status(struct intel_huc *huc);
 
 static inline int intel_huc_sanitize(struct intel_huc *huc)
 {
-	intel_uc_fw_sanitize(&huc->fw);
-	return 0;
+  intel_uc_fw_sanitize(&huc->fw);
+  return 0;
 }
 
 static inline bool intel_huc_is_supported(struct intel_huc *huc)
 {
-	return intel_uc_fw_is_supported(&huc->fw);
+  return intel_uc_fw_is_supported(&huc->fw);
 }
 
 static inline bool intel_huc_is_wanted(struct intel_huc *huc)
 {
-	return intel_uc_fw_is_enabled(&huc->fw);
+  return intel_uc_fw_is_enabled(&huc->fw);
 }
 
 static inline bool intel_huc_is_used(struct intel_huc *huc)
 {
-	GEM_BUG_ON(__intel_uc_fw_status(&huc->fw) == INTEL_UC_FIRMWARE_SELECTED);
-	return intel_uc_fw_is_available(&huc->fw);
+  GEM_BUG_ON(__intel_uc_fw_status(&huc->fw) == INTEL_UC_FIRMWARE_SELECTED);
+  return intel_uc_fw_is_available(&huc->fw);
 }
 
 static inline bool intel_huc_is_authenticated(struct intel_huc *huc)
 {
-	return intel_uc_fw_is_running(&huc->fw);
+  return intel_uc_fw_is_running(&huc->fw);
 }
 
 void intel_huc_load_status(struct intel_huc *huc, struct drm_printer *p);

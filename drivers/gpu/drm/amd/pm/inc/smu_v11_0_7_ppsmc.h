@@ -88,9 +88,9 @@
 #define PPSMC_MSG_AllowGfxOff                    0x28
 #define PPSMC_MSG_DisallowGfxOff                 0x29
 #define PPSMC_MSG_PowerUpVcn                     0x2A
-#define PPSMC_MSG_PowerDownVcn	                 0x2B
+#define PPSMC_MSG_PowerDownVcn                   0x2B
 #define PPSMC_MSG_PowerUpJpeg                    0x2C
-#define PPSMC_MSG_PowerDownJpeg	                 0x2D
+#define PPSMC_MSG_PowerDownJpeg                   0x2D
 
 //Resets
 #define PPSMC_MSG_PrepareMp1ForUnload            0x2E

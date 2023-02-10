@@ -283,15 +283,15 @@
 #       define CG_L_SHIFT                               16
 #define CG_AT_1                                         0x72c
 #define CG_AT_2                                         0x730
-#define	CG_THERMAL_INT					0x734
-#define		DIG_THERM_INTH(x)			((x) << 8)
-#define		DIG_THERM_INTH_MASK			0x0000FF00
-#define		DIG_THERM_INTH_SHIFT			8
-#define		DIG_THERM_INTL(x)			((x) << 16)
-#define		DIG_THERM_INTL_MASK			0x00FF0000
-#define		DIG_THERM_INTL_SHIFT			16
-#define 	THERM_INT_MASK_HIGH			(1 << 24)
-#define 	THERM_INT_MASK_LOW			(1 << 25)
+#define  CG_THERMAL_INT          0x734
+#define    DIG_THERM_INTH(x)      ((x) << 8)
+#define    DIG_THERM_INTH_MASK      0x0000FF00
+#define    DIG_THERM_INTH_SHIFT      8
+#define    DIG_THERM_INTL(x)      ((x) << 16)
+#define    DIG_THERM_INTL_MASK      0x00FF0000
+#define    DIG_THERM_INTL_SHIFT      16
+#define   THERM_INT_MASK_HIGH      (1 << 24)
+#define   THERM_INT_MASK_LOW      (1 << 25)
 #define CG_AT_3                                         0x738
 #define CG_AT_4                                         0x73c
 #define CG_AT_5                                         0x740
@@ -360,13 +360,13 @@
 
 #define CG_SCLK_DPM_CTRL_11                             0x830
 
-#define HW_REV   					0x5564
+#define HW_REV             0x5564
 #       define ATI_REV_ID_MASK                          (0xf << 28)
 #       define ATI_REV_ID_SHIFT                         28
 /* 0 = A0, 1 = A1, 2 = B0, 3 = C0, etc. */
 
-#define DOUT_SCRATCH3   				0x611c
+#define DOUT_SCRATCH3           0x611c
 
-#define GB_ADDR_CONFIG  				0x98f8
+#define GB_ADDR_CONFIG          0x98f8
 
 #endif

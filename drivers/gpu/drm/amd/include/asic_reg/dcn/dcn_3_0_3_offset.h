@@ -1892,10 +1892,10 @@
 #define mmHUBP0_HUBP_CLK_CNTL_BASE_IDX                                                                 2
 #define mmHUBP0_DCHUBP_VMPG_CONFIG                                                                     0x05f5
 #define mmHUBP0_DCHUBP_VMPG_CONFIG_BASE_IDX                                                            2
-#define mmHUBP0_HUBPREQ_DEBUG_DB 								       0x05f6
-#define mmHUBP0_HUBPREQ_DEBUG_DB_BASE_IDX							       2
-#define mmHUBP0_HUBPREQ_DEBUG 									       0x05f7
-#define mmHUBP0_HUBPREQ_DEBUG_BASE_IDX								       2
+#define mmHUBP0_HUBPREQ_DEBUG_DB                        0x05f6
+#define mmHUBP0_HUBPREQ_DEBUG_DB_BASE_IDX                     2
+#define mmHUBP0_HUBPREQ_DEBUG                          0x05f7
+#define mmHUBP0_HUBPREQ_DEBUG_BASE_IDX                       2
 #define mmHUBP0_HUBP_MEASURE_WIN_CTRL_DCFCLK                                                           0x05fb
 #define mmHUBP0_HUBP_MEASURE_WIN_CTRL_DCFCLK_BASE_IDX                                                  2
 #define mmHUBP0_HUBP_MEASURE_WIN_CTRL_DPPCLK                                                           0x05fc

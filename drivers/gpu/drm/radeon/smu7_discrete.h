@@ -433,24 +433,24 @@ typedef struct SMU7_Discrete_MCRegisters SMU7_Discrete_MCRegisters;
 
 struct SMU7_Discrete_FanTable
 {
-	uint16_t FdoMode;
-	int16_t  TempMin;
-	int16_t  TempMed;
-	int16_t  TempMax;
-	int16_t  Slope1;
-	int16_t  Slope2;
-	int16_t  FdoMin;
-	int16_t  HystUp;
-	int16_t  HystDown;
-	int16_t  HystSlope;
-	int16_t  TempRespLim;
-	int16_t  TempCurr;
-	int16_t  SlopeCurr;
-	int16_t  PwmCurr;
-	uint32_t RefreshPeriod;
-	int16_t  FdoMax;
-	uint8_t  TempSrc;
-	int8_t   Padding;
+  uint16_t FdoMode;
+  int16_t  TempMin;
+  int16_t  TempMed;
+  int16_t  TempMax;
+  int16_t  Slope1;
+  int16_t  Slope2;
+  int16_t  FdoMin;
+  int16_t  HystUp;
+  int16_t  HystDown;
+  int16_t  HystSlope;
+  int16_t  TempRespLim;
+  int16_t  TempCurr;
+  int16_t  SlopeCurr;
+  int16_t  PwmCurr;
+  uint32_t RefreshPeriod;
+  int16_t  FdoMax;
+  uint8_t  TempSrc;
+  int8_t   Padding;
 };
 
 typedef struct SMU7_Discrete_FanTable SMU7_Discrete_FanTable;

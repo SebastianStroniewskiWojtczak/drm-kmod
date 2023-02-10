@@ -55,39 +55,39 @@ struct pci_driver;
  * DMA buffer.
  */
 struct drm_buf {
-	int idx;		       /**< Index into master buflist */
-	int total;		       /**< Buffer size */
-	int order;		       /**< log-base-2(total) */
-	int used;		       /**< Amount of buffer in use (for DMA) */
-	unsigned long offset;	       /**< Byte offset (used internally) */
-	void *address;		       /**< Address of buffer */
-	unsigned long bus_address;     /**< Bus address of buffer */
-	struct drm_buf *next;	       /**< Kernel-only: used for free list */
-	__volatile__ int waiting;      /**< On kernel DMA queue */
-	__volatile__ int pending;      /**< On hardware DMA queue */
-	struct drm_file *file_priv;    /**< Private of holding file descr */
-	int context;		       /**< Kernel queue for this buffer */
-	int while_locked;	       /**< Dispatch this buffer while locked */
-	enum {
-		DRM_LIST_NONE = 0,
-		DRM_LIST_FREE = 1,
-		DRM_LIST_WAIT = 2,
-		DRM_LIST_PEND = 3,
-		DRM_LIST_PRIO = 4,
-		DRM_LIST_RECLAIM = 5
-	} list;			       /**< Which list we're on */
+  int idx;           /**< Index into master buflist */
+  int total;           /**< Buffer size */
+  int order;           /**< log-base-2(total) */
+  int used;           /**< Amount of buffer in use (for DMA) */
+  unsigned long offset;         /**< Byte offset (used internally) */
+  void *address;           /**< Address of buffer */
+  unsigned long bus_address;     /**< Bus address of buffer */
+  struct drm_buf *next;         /**< Kernel-only: used for free list */
+  __volatile__ int waiting;      /**< On kernel DMA queue */
+  __volatile__ int pending;      /**< On hardware DMA queue */
+  struct drm_file *file_priv;    /**< Private of holding file descr */
+  int context;           /**< Kernel queue for this buffer */
+  int while_locked;         /**< Dispatch this buffer while locked */
+  enum {
+    DRM_LIST_NONE = 0,
+    DRM_LIST_FREE = 1,
+    DRM_LIST_WAIT = 2,
+    DRM_LIST_PEND = 3,
+    DRM_LIST_PRIO = 4,
+    DRM_LIST_RECLAIM = 5
+  } list;             /**< Which list we're on */
 
-	int dev_priv_size;		 /**< Size of buffer private storage */
-	void *dev_private;		 /**< Per-buffer private storage */
+  int dev_priv_size;     /**< Size of buffer private storage */
+  void *dev_private;     /**< Per-buffer private storage */
 };
 
 typedef struct drm_dma_handle {
-	dma_addr_t busaddr;
-	void *vaddr;
-	size_t size;
+  dma_addr_t busaddr;
+  void *vaddr;
+  size_t size;
 #ifdef __FreeBSD__
-	bus_dma_tag_t tag;
-	bus_dmamap_t map;
+  bus_dma_tag_t tag;
+  bus_dmamap_t map;
 #endif
 } drm_dma_handle_t;
 
@@ -95,15 +95,15 @@ typedef struct drm_dma_handle {
  * Buffer entry.  There is one of this for each buffer size order.
  */
 struct drm_buf_entry {
-	int buf_size;			/**< size */
-	int buf_count;			/**< number of buffers */
-	struct drm_buf *buflist;		/**< buffer list */
-	int seg_count;
-	int page_order;
-	struct drm_dma_handle **seglist;
+  int buf_size;      /**< size */
+  int buf_count;      /**< number of buffers */
+  struct drm_buf *buflist;    /**< buffer list */
+  int seg_count;
+  int page_order;
+  struct drm_dma_handle **seglist;
 
-	int low_mark;			/**< Low water mark */
-	int high_mark;			/**< High water mark */
+  int low_mark;      /**< Low water mark */
+  int high_mark;      /**< High water mark */
 };
 
 /**
@@ -111,19 +111,19 @@ struct drm_buf_entry {
  */
 struct drm_device_dma {
 
-	struct drm_buf_entry bufs[DRM_MAX_ORDER + 1];	/**< buffers, grouped by their size order */
-	int buf_count;			/**< total number of buffers */
-	struct drm_buf **buflist;		/**< Vector of pointers into drm_device_dma::bufs */
-	int seg_count;
-	int page_count;			/**< number of pages */
-	unsigned long *pagelist;	/**< page list */
-	unsigned long byte_count;
-	enum {
-		_DRM_DMA_USE_AGP = 0x01,
-		_DRM_DMA_USE_SG = 0x02,
-		_DRM_DMA_USE_FB = 0x04,
-		_DRM_DMA_USE_PCI_RO = 0x08
-	} flags;
+  struct drm_buf_entry bufs[DRM_MAX_ORDER + 1];  /**< buffers, grouped by their size order */
+  int buf_count;      /**< total number of buffers */
+  struct drm_buf **buflist;    /**< Vector of pointers into drm_device_dma::bufs */
+  int seg_count;
+  int page_count;      /**< number of pages */
+  unsigned long *pagelist;  /**< page list */
+  unsigned long byte_count;
+  enum {
+    _DRM_DMA_USE_AGP = 0x01,
+    _DRM_DMA_USE_SG = 0x02,
+    _DRM_DMA_USE_FB = 0x04,
+    _DRM_DMA_USE_PCI_RO = 0x08
+  } flags;
 
 };
 
@@ -131,28 +131,28 @@ struct drm_device_dma {
  * Scatter-gather memory.
  */
 struct drm_sg_mem {
-	unsigned long handle;
-	void *virtual;
+  unsigned long handle;
+  void *virtual;
 #ifdef __linux__
-	int pages;
+  int pages;
 #elif defined(__FreeBSD__)
-	vm_pindex_t pages;
+  vm_pindex_t pages;
 #endif
-	struct page **pagelist;
-	dma_addr_t *busaddr;
+  struct page **pagelist;
+  dma_addr_t *busaddr;
 };
 
 /**
  * Kernel side of a mapping
  */
 struct drm_local_map {
-	dma_addr_t offset;	 /**< Requested physical address (0 for SAREA)*/
-	unsigned long size;	 /**< Requested physical size (bytes) */
-	enum drm_map_type type;	 /**< Type of memory to map */
-	enum drm_map_flags flags;	 /**< Flags */
-	void *handle;		 /**< User-space: "Handle" to pass to mmap() */
-				 /**< Kernel-space: kernel-virtual address */
-	int mtrr;		 /**< MTRR slot used */
+  dma_addr_t offset;   /**< Requested physical address (0 for SAREA)*/
+  unsigned long size;   /**< Requested physical size (bytes) */
+  enum drm_map_type type;   /**< Type of memory to map */
+  enum drm_map_flags flags;   /**< Flags */
+  void *handle;     /**< User-space: "Handle" to pass to mmap() */
+         /**< Kernel-space: kernel-virtual address */
+  int mtrr;     /**< MTRR slot used */
 };
 
 typedef struct drm_local_map drm_local_map_t;
@@ -161,16 +161,16 @@ typedef struct drm_local_map drm_local_map_t;
  * Mappings list
  */
 struct drm_map_list {
-	struct list_head head;		/**< list head */
-	struct drm_hash_item hash;
-	struct drm_local_map *map;	/**< mapping */
-	uint64_t user_token;
-	struct drm_master *master;
+  struct list_head head;    /**< list head */
+  struct drm_hash_item hash;
+  struct drm_local_map *map;  /**< mapping */
+  uint64_t user_token;
+  struct drm_master *master;
 };
 
 int drm_legacy_addmap(struct drm_device *d, resource_size_t offset,
-		      unsigned int size, enum drm_map_type type,
-		      enum drm_map_flags flags, struct drm_local_map **map_p);
+          unsigned int size, enum drm_map_type type,
+          enum drm_map_flags flags, struct drm_local_map **map_p);
 struct drm_local_map *drm_legacy_findmap(struct drm_device *dev, unsigned int token);
 void drm_legacy_rmmap(struct drm_device *d, struct drm_local_map *map);
 int drm_legacy_rmmap_locked(struct drm_device *d, struct drm_local_map *map);
@@ -186,15 +186,15 @@ int drm_legacy_addbufs_pci(struct drm_device *d, struct drm_buf_desc *req);
  * \param dev DRM device.
  * \param filp file pointer of the caller.
  */
-#define LOCK_TEST_WITH_RETURN( dev, _file_priv )				\
-do {										\
-	if (!_DRM_LOCK_IS_HELD(_file_priv->master->lock.hw_lock->lock) ||	\
-	    _file_priv->master->lock.file_priv != _file_priv)	{		\
-		DRM_ERROR( "%s called without lock held, held  %d owner %p %p\n",\
-			   __func__, _DRM_LOCK_IS_HELD(_file_priv->master->lock.hw_lock->lock),\
-			   _file_priv->master->lock.file_priv, _file_priv);	\
-		return -EINVAL;							\
-	}									\
+#define LOCK_TEST_WITH_RETURN( dev, _file_priv )        \
+do {                    \
+  if (!_DRM_LOCK_IS_HELD(_file_priv->master->lock.hw_lock->lock) ||  \
+      _file_priv->master->lock.file_priv != _file_priv)  {    \
+    DRM_ERROR( "%s called without lock held, held  %d owner %p %p\n",\
+         __func__, _DRM_LOCK_IS_HELD(_file_priv->master->lock.hw_lock->lock),\
+         _file_priv->master->lock.file_priv, _file_priv);  \
+    return -EINVAL;              \
+  }                  \
 } while (0)
 
 void drm_legacy_idlelock_take(struct drm_lock_data *lock);
@@ -205,31 +205,31 @@ void drm_legacy_idlelock_release(struct drm_lock_data *lock);
 #ifdef CONFIG_PCI
 
 int drm_legacy_pci_init(const struct drm_driver *driver,
-			struct pci_driver *pdriver);
+      struct pci_driver *pdriver);
 void drm_legacy_pci_exit(const struct drm_driver *driver,
-			 struct pci_driver *pdriver);
+       struct pci_driver *pdriver);
 
 #else
 
 static inline struct drm_dma_handle *drm_pci_alloc(struct drm_device *dev,
-						   size_t size, size_t align)
+               size_t size, size_t align)
 {
-	return NULL;
+  return NULL;
 }
 
 static inline void drm_pci_free(struct drm_device *dev,
-				struct drm_dma_handle *dmah)
+        struct drm_dma_handle *dmah)
 {
 }
 
 static inline int drm_legacy_pci_init(const struct drm_driver *driver,
-				      struct pci_driver *pdriver)
+              struct pci_driver *pdriver)
 {
-	return -EINVAL;
+  return -EINVAL;
 }
 
 static inline void drm_legacy_pci_exit(const struct drm_driver *driver,
-				       struct pci_driver *pdriver)
+               struct pci_driver *pdriver)
 {
 }
 
@@ -240,16 +240,16 @@ static inline void drm_legacy_pci_exit(const struct drm_driver *driver,
  */
 
 struct drm_agp_head {
-	struct agp_kern_info agp_info;
-	struct list_head memory;
-	unsigned long mode;
-	struct agp_bridge_data *bridge;
-	int enabled;
-	int acquired;
-	unsigned long base;
-	int agp_mtrr;
-	int cant_use_aperture;
-	unsigned long page_mask;
+  struct agp_kern_info agp_info;
+  struct list_head memory;
+  unsigned long mode;
+  struct agp_bridge_data *bridge;
+  int enabled;
+  int acquired;
+  unsigned long base;
+  int agp_mtrr;
+  int cant_use_aperture;
+  unsigned long page_mask;
 };
 
 #if IS_ENABLED(CONFIG_DRM_LEGACY) && IS_ENABLED(CONFIG_AGP)
@@ -265,53 +265,53 @@ int drm_legacy_agp_bind(struct drm_device *dev, struct drm_agp_binding *request)
 #else
 static inline struct drm_agp_head *drm_legacy_agp_init(struct drm_device *dev)
 {
-	return NULL;
+  return NULL;
 }
 
 static inline int drm_legacy_agp_acquire(struct drm_device *dev)
 {
-	return -ENODEV;
+  return -ENODEV;
 }
 
 static inline int drm_legacy_agp_release(struct drm_device *dev)
 {
-	return -ENODEV;
+  return -ENODEV;
 }
 
 static inline int drm_legacy_agp_enable(struct drm_device *dev,
-					struct drm_agp_mode mode)
+          struct drm_agp_mode mode)
 {
-	return -ENODEV;
+  return -ENODEV;
 }
 
 static inline int drm_legacy_agp_info(struct drm_device *dev,
-				      struct drm_agp_info *info)
+              struct drm_agp_info *info)
 {
-	return -ENODEV;
+  return -ENODEV;
 }
 
 static inline int drm_legacy_agp_alloc(struct drm_device *dev,
-				       struct drm_agp_buffer *request)
+               struct drm_agp_buffer *request)
 {
-	return -ENODEV;
+  return -ENODEV;
 }
 
 static inline int drm_legacy_agp_free(struct drm_device *dev,
-				      struct drm_agp_buffer *request)
+              struct drm_agp_buffer *request)
 {
-	return -ENODEV;
+  return -ENODEV;
 }
 
 static inline int drm_legacy_agp_unbind(struct drm_device *dev,
-					struct drm_agp_binding *request)
+          struct drm_agp_binding *request)
 {
-	return -ENODEV;
+  return -ENODEV;
 }
 
 static inline int drm_legacy_agp_bind(struct drm_device *dev,
-				      struct drm_agp_binding *request)
+              struct drm_agp_binding *request)
 {
-	return -ENODEV;
+  return -ENODEV;
 }
 #endif
 

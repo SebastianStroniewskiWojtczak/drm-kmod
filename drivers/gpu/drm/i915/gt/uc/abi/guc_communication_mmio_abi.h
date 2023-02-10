@@ -47,6 +47,6 @@
  *   field.
  */
 
-#define GUC_MAX_MMIO_MSG_LEN		8
+#define GUC_MAX_MMIO_MSG_LEN    8
 
 #endif /* _ABI_GUC_COMMUNICATION_MMIO_ABI_H */

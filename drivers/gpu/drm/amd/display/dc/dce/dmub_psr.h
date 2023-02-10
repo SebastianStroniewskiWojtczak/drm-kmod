@@ -30,22 +30,22 @@
 #include "dc_link.h"
 
 struct dmub_psr {
-	struct dc_context *ctx;
-	const struct dmub_psr_funcs *funcs;
+  struct dc_context *ctx;
+  const struct dmub_psr_funcs *funcs;
 };
 
 struct dmub_psr_funcs {
-	bool (*psr_copy_settings)(struct dmub_psr *dmub, struct dc_link *link,
-	struct psr_context *psr_context, uint8_t panel_inst);
-	void (*psr_enable)(struct dmub_psr *dmub, bool enable, bool wait,
-	uint8_t panel_inst);
-	void (*psr_get_state)(struct dmub_psr *dmub, enum dc_psr_state *dc_psr_state,
-	uint8_t panel_inst);
-	void (*psr_set_level)(struct dmub_psr *dmub, uint16_t psr_level,
-	uint8_t panel_inst);
-	void (*psr_force_static)(struct dmub_psr *dmub, uint8_t panel_inst);
-	void (*psr_get_residency)(struct dmub_psr *dmub, uint32_t *residency,
-	uint8_t panel_inst);
+  bool (*psr_copy_settings)(struct dmub_psr *dmub, struct dc_link *link,
+  struct psr_context *psr_context, uint8_t panel_inst);
+  void (*psr_enable)(struct dmub_psr *dmub, bool enable, bool wait,
+  uint8_t panel_inst);
+  void (*psr_get_state)(struct dmub_psr *dmub, enum dc_psr_state *dc_psr_state,
+  uint8_t panel_inst);
+  void (*psr_set_level)(struct dmub_psr *dmub, uint16_t psr_level,
+  uint8_t panel_inst);
+  void (*psr_force_static)(struct dmub_psr *dmub, uint8_t panel_inst);
+  void (*psr_get_residency)(struct dmub_psr *dmub, uint32_t *residency,
+  uint8_t panel_inst);
 };
 
 struct dmub_psr *dmub_psr_create(struct dc_context *ctx);

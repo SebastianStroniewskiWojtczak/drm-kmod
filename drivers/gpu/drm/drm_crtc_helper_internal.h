@@ -41,7 +41,7 @@ void drm_dp_aux_unregister_devnode(struct drm_dp_aux *aux);
 #else
 static inline int drm_dp_aux_dev_init(void)
 {
-	return 0;
+  return 0;
 }
 
 static inline void drm_dp_aux_dev_exit(void)
@@ -50,7 +50,7 @@ static inline void drm_dp_aux_dev_exit(void)
 
 static inline int drm_dp_aux_register_devnode(struct drm_dp_aux *aux)
 {
-	return 0;
+  return 0;
 }
 
 static inline void drm_dp_aux_unregister_devnode(struct drm_dp_aux *aux)
@@ -60,14 +60,14 @@ static inline void drm_dp_aux_unregister_devnode(struct drm_dp_aux *aux)
 
 /* drm_probe_helper.c */
 enum drm_mode_status drm_crtc_mode_valid(struct drm_crtc *crtc,
-					 const struct drm_display_mode *mode);
+           const struct drm_display_mode *mode);
 enum drm_mode_status drm_encoder_mode_valid(struct drm_encoder *encoder,
-					    const struct drm_display_mode *mode);
+              const struct drm_display_mode *mode);
 int
 drm_connector_mode_valid(struct drm_connector *connector,
-			 struct drm_display_mode *mode,
-			 struct drm_modeset_acquire_ctx *ctx,
-			 enum drm_mode_status *status);
+       struct drm_display_mode *mode,
+       struct drm_modeset_acquire_ctx *ctx,
+       enum drm_mode_status *status);
 
 struct drm_encoder *
 drm_connector_get_single_encoder(struct drm_connector *connector);

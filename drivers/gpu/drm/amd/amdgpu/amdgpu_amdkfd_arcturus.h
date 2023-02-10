@@ -21,10 +21,10 @@
  */
 
 int kgd_arcturus_hqd_sdma_load(struct kgd_dev *kgd, void *mqd,
-			     uint32_t __user *wptr, struct mm_struct *mm);
+           uint32_t __user *wptr, struct mm_struct *mm);
 int kgd_arcturus_hqd_sdma_dump(struct kgd_dev *kgd,
-			     uint32_t engine_id, uint32_t queue_id,
-			     uint32_t (**dump)[2], uint32_t *n_regs);
+           uint32_t engine_id, uint32_t queue_id,
+           uint32_t (**dump)[2], uint32_t *n_regs);
 bool kgd_arcturus_hqd_sdma_is_occupied(struct kgd_dev *kgd, void *mqd);
 int kgd_arcturus_hqd_sdma_destroy(struct kgd_dev *kgd, void *mqd,
-				unsigned int utimeout);
+        unsigned int utimeout);

@@ -28,58 +28,58 @@
 
 enum AMDGPU_RESET_FLAGS {
 
-	AMDGPU_NEED_FULL_RESET = 0,
-	AMDGPU_SKIP_HW_RESET = 1,
+  AMDGPU_NEED_FULL_RESET = 0,
+  AMDGPU_SKIP_HW_RESET = 1,
 };
 
 struct amdgpu_reset_context {
-	enum amd_reset_method method;
-	struct amdgpu_device *reset_req_dev;
-	struct amdgpu_job *job;
-	struct amdgpu_hive_info *hive;
-	unsigned long flags;
+  enum amd_reset_method method;
+  struct amdgpu_device *reset_req_dev;
+  struct amdgpu_job *job;
+  struct amdgpu_hive_info *hive;
+  unsigned long flags;
 };
 
 struct amdgpu_reset_handler {
-	enum amd_reset_method reset_method;
-	struct list_head handler_list;
-	int (*prepare_env)(struct amdgpu_reset_control *reset_ctl,
-			   struct amdgpu_reset_context *context);
-	int (*prepare_hwcontext)(struct amdgpu_reset_control *reset_ctl,
-				 struct amdgpu_reset_context *context);
-	int (*perform_reset)(struct amdgpu_reset_control *reset_ctl,
-			     struct amdgpu_reset_context *context);
-	int (*restore_hwcontext)(struct amdgpu_reset_control *reset_ctl,
-				 struct amdgpu_reset_context *context);
-	int (*restore_env)(struct amdgpu_reset_control *reset_ctl,
-			   struct amdgpu_reset_context *context);
+  enum amd_reset_method reset_method;
+  struct list_head handler_list;
+  int (*prepare_env)(struct amdgpu_reset_control *reset_ctl,
+         struct amdgpu_reset_context *context);
+  int (*prepare_hwcontext)(struct amdgpu_reset_control *reset_ctl,
+         struct amdgpu_reset_context *context);
+  int (*perform_reset)(struct amdgpu_reset_control *reset_ctl,
+           struct amdgpu_reset_context *context);
+  int (*restore_hwcontext)(struct amdgpu_reset_control *reset_ctl,
+         struct amdgpu_reset_context *context);
+  int (*restore_env)(struct amdgpu_reset_control *reset_ctl,
+         struct amdgpu_reset_context *context);
 
-	int (*do_reset)(struct amdgpu_device *adev);
+  int (*do_reset)(struct amdgpu_device *adev);
 };
 
 struct amdgpu_reset_control {
-	void *handle;
-	struct work_struct reset_work;
-	struct mutex reset_lock;
-	struct list_head reset_handlers;
-	atomic_t in_reset;
-	enum amd_reset_method active_reset;
-	struct amdgpu_reset_handler *(*get_reset_handler)(
-		struct amdgpu_reset_control *reset_ctl,
-		struct amdgpu_reset_context *context);
-	void (*async_reset)(struct work_struct *work);
+  void *handle;
+  struct work_struct reset_work;
+  struct mutex reset_lock;
+  struct list_head reset_handlers;
+  atomic_t in_reset;
+  enum amd_reset_method active_reset;
+  struct amdgpu_reset_handler *(*get_reset_handler)(
+    struct amdgpu_reset_control *reset_ctl,
+    struct amdgpu_reset_context *context);
+  void (*async_reset)(struct work_struct *work);
 };
 
 int amdgpu_reset_init(struct amdgpu_device *adev);
 int amdgpu_reset_fini(struct amdgpu_device *adev);
 
 int amdgpu_reset_prepare_hwcontext(struct amdgpu_device *adev,
-				   struct amdgpu_reset_context *reset_context);
+           struct amdgpu_reset_context *reset_context);
 
 int amdgpu_reset_perform_reset(struct amdgpu_device *adev,
-			       struct amdgpu_reset_context *reset_context);
+             struct amdgpu_reset_context *reset_context);
 
 int amdgpu_reset_add_handler(struct amdgpu_reset_control *reset_ctl,
-			     struct amdgpu_reset_handler *handler);
+           struct amdgpu_reset_handler *handler);
 
 #endif

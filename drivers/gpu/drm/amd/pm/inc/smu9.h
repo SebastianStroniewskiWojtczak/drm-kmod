@@ -120,26 +120,26 @@
 #define ULV_CLIENT_DCEFCLK_DPM_MASK 0x00001000
 
 typedef struct {
-	/* MP1_EXT_SCRATCH0 */
-	uint32_t CurrLevel_GFXCLK  : 4;
-	uint32_t CurrLevel_UVD     : 4;
-	uint32_t CurrLevel_VCE     : 4;
-	uint32_t CurrLevel_LCLK    : 4;
-	uint32_t CurrLevel_MP0CLK  : 4;
-	uint32_t CurrLevel_UCLK    : 4;
-	uint32_t CurrLevel_SOCCLK  : 4;
-	uint32_t CurrLevel_DCEFCLK : 4;
-	/* MP1_EXT_SCRATCH1 */
-	uint32_t TargLevel_GFXCLK  : 4;
-	uint32_t TargLevel_UVD     : 4;
-	uint32_t TargLevel_VCE     : 4;
-	uint32_t TargLevel_LCLK    : 4;
-	uint32_t TargLevel_MP0CLK  : 4;
-	uint32_t TargLevel_UCLK    : 4;
-	uint32_t TargLevel_SOCCLK  : 4;
-	uint32_t TargLevel_DCEFCLK : 4;
-	/* MP1_EXT_SCRATCH2-7 */
-	uint32_t Reserved[6];
+  /* MP1_EXT_SCRATCH0 */
+  uint32_t CurrLevel_GFXCLK  : 4;
+  uint32_t CurrLevel_UVD     : 4;
+  uint32_t CurrLevel_VCE     : 4;
+  uint32_t CurrLevel_LCLK    : 4;
+  uint32_t CurrLevel_MP0CLK  : 4;
+  uint32_t CurrLevel_UCLK    : 4;
+  uint32_t CurrLevel_SOCCLK  : 4;
+  uint32_t CurrLevel_DCEFCLK : 4;
+  /* MP1_EXT_SCRATCH1 */
+  uint32_t TargLevel_GFXCLK  : 4;
+  uint32_t TargLevel_UVD     : 4;
+  uint32_t TargLevel_VCE     : 4;
+  uint32_t TargLevel_LCLK    : 4;
+  uint32_t TargLevel_MP0CLK  : 4;
+  uint32_t TargLevel_UCLK    : 4;
+  uint32_t TargLevel_SOCCLK  : 4;
+  uint32_t TargLevel_DCEFCLK : 4;
+  /* MP1_EXT_SCRATCH2-7 */
+  uint32_t Reserved[6];
 } FwStatus_t;
 
 #pragma pack(pop)

@@ -36,8 +36,8 @@
  * Initialise link encoder resource tracking.
  */
 void link_enc_cfg_init(
-		struct dc *dc,
-		struct dc_state *state);
+    struct dc *dc,
+    struct dc_state *state);
 
 /*
  * Algorithm for assigning available DIG link encoders to streams.
@@ -50,10 +50,10 @@ void link_enc_cfg_init(
  * b) Then assign encoders to mappable endpoints.
  */
 void link_enc_cfg_link_encs_assign(
-		struct dc *dc,
-		struct dc_state *state,
-		struct dc_stream_state *streams[],
-		uint8_t stream_count);
+    struct dc *dc,
+    struct dc_state *state,
+    struct dc_stream_state *streams[],
+    uint8_t stream_count);
 
 /*
  * Unassign a link encoder from a stream.
@@ -62,30 +62,30 @@ void link_enc_cfg_link_encs_assign(
  * struct resource_context.
  */
 void link_enc_cfg_link_enc_unassign(
-		struct dc_state *state,
-		struct dc_stream_state *stream);
+    struct dc_state *state,
+    struct dc_stream_state *stream);
 
 /*
  * Check whether the transmitter driven by a link encoder is a mappable
  * endpoint.
  */
 bool link_enc_cfg_is_transmitter_mappable(
-		struct dc_state *state,
-		struct link_encoder *link_enc);
+    struct dc_state *state,
+    struct link_encoder *link_enc);
 
 /* Return link using DIG link encoder resource. NULL if unused. */
 struct dc_link *link_enc_cfg_get_link_using_link_enc(
-		struct dc_state *state,
-		enum engine_id eng_id);
+    struct dc_state *state,
+    enum engine_id eng_id);
 
 /* Return DIG link encoder used by link. NULL if unused. */
 struct link_encoder *link_enc_cfg_get_link_enc_used_by_link(
-		struct dc_state *state,
-		const struct dc_link *link);
+    struct dc_state *state,
+    const struct dc_link *link);
 
 /* Return next available DIG link encoder. NULL if none available. */
 struct link_encoder *link_enc_cfg_get_next_avail_link_enc(
-	const struct dc *dc,
-	const struct dc_state *state);
+  const struct dc *dc,
+  const struct dc_state *state);
 
 #endif /* DC_INC_LINK_ENC_CFG_H_ */

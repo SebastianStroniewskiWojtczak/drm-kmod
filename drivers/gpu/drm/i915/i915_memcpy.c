@@ -40,60 +40,60 @@ static DEFINE_STATIC_KEY_FALSE(has_movntdqa);
 
 static void __memcpy_ntdqa(void *dst, const void *src, unsigned long len)
 {
-	kernel_fpu_begin();
+  kernel_fpu_begin();
 
-	while (len >= 4) {
-		asm("movntdqa   (%0), %%xmm0\n"
-		    "movntdqa 16(%0), %%xmm1\n"
-		    "movntdqa 32(%0), %%xmm2\n"
-		    "movntdqa 48(%0), %%xmm3\n"
-		    "movaps %%xmm0,   (%1)\n"
-		    "movaps %%xmm1, 16(%1)\n"
-		    "movaps %%xmm2, 32(%1)\n"
-		    "movaps %%xmm3, 48(%1)\n"
-		    :: "r" (src), "r" (dst) : "memory");
-		src += 64;
-		dst += 64;
-		len -= 4;
-	}
-	while (len--) {
-		asm("movntdqa (%0), %%xmm0\n"
-		    "movaps %%xmm0, (%1)\n"
-		    :: "r" (src), "r" (dst) : "memory");
-		src += 16;
-		dst += 16;
-	}
+  while (len >= 4) {
+    asm("movntdqa   (%0), %%xmm0\n"
+        "movntdqa 16(%0), %%xmm1\n"
+        "movntdqa 32(%0), %%xmm2\n"
+        "movntdqa 48(%0), %%xmm3\n"
+        "movaps %%xmm0,   (%1)\n"
+        "movaps %%xmm1, 16(%1)\n"
+        "movaps %%xmm2, 32(%1)\n"
+        "movaps %%xmm3, 48(%1)\n"
+        :: "r" (src), "r" (dst) : "memory");
+    src += 64;
+    dst += 64;
+    len -= 4;
+  }
+  while (len--) {
+    asm("movntdqa (%0), %%xmm0\n"
+        "movaps %%xmm0, (%1)\n"
+        :: "r" (src), "r" (dst) : "memory");
+    src += 16;
+    dst += 16;
+  }
 
-	kernel_fpu_end();
+  kernel_fpu_end();
 }
 
 static void __memcpy_ntdqu(void *dst, const void *src, unsigned long len)
 {
-	kernel_fpu_begin();
+  kernel_fpu_begin();
 
-	while (len >= 4) {
-		asm("movntdqa   (%0), %%xmm0\n"
-		    "movntdqa 16(%0), %%xmm1\n"
-		    "movntdqa 32(%0), %%xmm2\n"
-		    "movntdqa 48(%0), %%xmm3\n"
-		    "movups %%xmm0,   (%1)\n"
-		    "movups %%xmm1, 16(%1)\n"
-		    "movups %%xmm2, 32(%1)\n"
-		    "movups %%xmm3, 48(%1)\n"
-		    :: "r" (src), "r" (dst) : "memory");
-		src += 64;
-		dst += 64;
-		len -= 4;
-	}
-	while (len--) {
-		asm("movntdqa (%0), %%xmm0\n"
-		    "movups %%xmm0, (%1)\n"
-		    :: "r" (src), "r" (dst) : "memory");
-		src += 16;
-		dst += 16;
-	}
+  while (len >= 4) {
+    asm("movntdqa   (%0), %%xmm0\n"
+        "movntdqa 16(%0), %%xmm1\n"
+        "movntdqa 32(%0), %%xmm2\n"
+        "movntdqa 48(%0), %%xmm3\n"
+        "movups %%xmm0,   (%1)\n"
+        "movups %%xmm1, 16(%1)\n"
+        "movups %%xmm2, 32(%1)\n"
+        "movups %%xmm3, 48(%1)\n"
+        :: "r" (src), "r" (dst) : "memory");
+    src += 64;
+    dst += 64;
+    len -= 4;
+  }
+  while (len--) {
+    asm("movntdqa (%0), %%xmm0\n"
+        "movups %%xmm0, (%1)\n"
+        :: "r" (src), "r" (dst) : "memory");
+    src += 16;
+    dst += 16;
+  }
 
-	kernel_fpu_end();
+  kernel_fpu_end();
 }
 
 /**
@@ -115,16 +115,16 @@ static void __memcpy_ntdqu(void *dst, const void *src, unsigned long len)
  */
 bool i915_memcpy_from_wc(void *dst, const void *src, unsigned long len)
 {
-	if (unlikely(((unsigned long)dst | (unsigned long)src | len) & 15))
-		return false;
+  if (unlikely(((unsigned long)dst | (unsigned long)src | len) & 15))
+    return false;
 
-	if (static_branch_likely(&has_movntdqa)) {
-		if (likely(len))
-			__memcpy_ntdqa(dst, src, len >> 4);
-		return true;
-	}
+  if (static_branch_likely(&has_movntdqa)) {
+    if (likely(len))
+      __memcpy_ntdqa(dst, src, len >> 4);
+    return true;
+  }
 
-	return false;
+  return false;
 }
 
 /**
@@ -140,32 +140,32 @@ bool i915_memcpy_from_wc(void *dst, const void *src, unsigned long len)
  */
 void i915_unaligned_memcpy_from_wc(void *dst, const void *src, unsigned long len)
 {
-	unsigned long addr;
+  unsigned long addr;
 
-	CI_BUG_ON(!i915_has_memcpy_from_wc());
+  CI_BUG_ON(!i915_has_memcpy_from_wc());
 
-	addr = (unsigned long)src;
-	if (!IS_ALIGNED(addr, 16)) {
-		unsigned long x = min(ALIGN(addr, 16) - addr, len);
+  addr = (unsigned long)src;
+  if (!IS_ALIGNED(addr, 16)) {
+    unsigned long x = min(ALIGN(addr, 16) - addr, len);
 
-		memcpy(dst, src, x);
+    memcpy(dst, src, x);
 
-		len -= x;
-		dst += x;
-		src += x;
-	}
+    len -= x;
+    dst += x;
+    src += x;
+  }
 
-	if (likely(len))
-		__memcpy_ntdqu(dst, src, DIV_ROUND_UP(len, 16));
+  if (likely(len))
+    __memcpy_ntdqu(dst, src, DIV_ROUND_UP(len, 16));
 }
 
 void i915_memcpy_init_early(struct drm_i915_private *dev_priv)
 {
-	/*
-	 * Some hypervisors (e.g. KVM) don't support VEX-prefix instructions
-	 * emulation. So don't enable movntdqa in hypervisor guest.
-	 */
-	if (static_cpu_has(X86_FEATURE_XMM4_1) &&
-	    !boot_cpu_has(X86_FEATURE_HYPERVISOR))
-		static_branch_enable(&has_movntdqa);
+  /*
+   * Some hypervisors (e.g. KVM) don't support VEX-prefix instructions
+   * emulation. So don't enable movntdqa in hypervisor guest.
+   */
+  if (static_cpu_has(X86_FEATURE_XMM4_1) &&
+      !boot_cpu_has(X86_FEATURE_HYPERVISOR))
+    static_branch_enable(&has_movntdqa);
 }

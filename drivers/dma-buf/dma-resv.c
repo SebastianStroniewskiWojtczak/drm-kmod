@@ -62,16 +62,16 @@ EXPORT_SYMBOL(reservation_ww_class);
  */
 static struct dma_resv_list *dma_resv_list_alloc(unsigned int shared_max)
 {
-	struct dma_resv_list *list;
+  struct dma_resv_list *list;
 
-	list = kmalloc(struct_size(list, shared, shared_max), GFP_KERNEL);
-	if (!list)
-		return NULL;
+  list = kmalloc(struct_size(list, shared, shared_max), GFP_KERNEL);
+  if (!list)
+    return NULL;
 
-	list->shared_max = (ksize(list) - offsetof(typeof(*list), shared)) /
-		sizeof(*list->shared);
+  list->shared_max = (ksize(list) - offsetof(typeof(*list), shared)) /
+    sizeof(*list->shared);
 
-	return list;
+  return list;
 }
 
 /**
@@ -82,15 +82,15 @@ static struct dma_resv_list *dma_resv_list_alloc(unsigned int shared_max)
  */
 static void dma_resv_list_free(struct dma_resv_list *list)
 {
-	unsigned int i;
+  unsigned int i;
 
-	if (!list)
-		return;
+  if (!list)
+    return;
 
-	for (i = 0; i < list->shared_count; ++i)
-		dma_fence_put(rcu_dereference_protected(list->shared[i], true));
+  for (i = 0; i < list->shared_count; ++i)
+    dma_fence_put(rcu_dereference_protected(list->shared[i], true));
 
-	kfree_rcu(list, rcu);
+  kfree_rcu(list, rcu);
 }
 
 /**
@@ -99,14 +99,14 @@ static void dma_resv_list_free(struct dma_resv_list *list)
  */
 void dma_resv_init(struct dma_resv *obj)
 {
-	ww_mutex_init(&obj->lock, &reservation_ww_class);
+  ww_mutex_init(&obj->lock, &reservation_ww_class);
 #ifdef __FreeBSD__
-	rw_init_flags(&obj->rw, "dma_resv_rw", RW_NEW);
+  rw_init_flags(&obj->rw, "dma_resv_rw", RW_NEW);
 #endif
-	seqcount_ww_mutex_init(&obj->seq, &obj->lock);
+  seqcount_ww_mutex_init(&obj->seq, &obj->lock);
 
-	RCU_INIT_POINTER(obj->fence, NULL);
-	RCU_INIT_POINTER(obj->fence_excl, NULL);
+  RCU_INIT_POINTER(obj->fence, NULL);
+  RCU_INIT_POINTER(obj->fence_excl, NULL);
 }
 EXPORT_SYMBOL(dma_resv_init);
 
@@ -116,23 +116,23 @@ EXPORT_SYMBOL(dma_resv_init);
  */
 void dma_resv_fini(struct dma_resv *obj)
 {
-	struct dma_resv_list *fobj;
-	struct dma_fence *excl;
+  struct dma_resv_list *fobj;
+  struct dma_fence *excl;
 
-	/*
-	 * This object should be dead and all references must have
-	 * been released to it, so no need to be protected with rcu.
-	 */
-	excl = rcu_dereference_protected(obj->fence_excl, 1);
-	if (excl)
-		dma_fence_put(excl);
+  /*
+   * This object should be dead and all references must have
+   * been released to it, so no need to be protected with rcu.
+   */
+  excl = rcu_dereference_protected(obj->fence_excl, 1);
+  if (excl)
+    dma_fence_put(excl);
 
-	fobj = rcu_dereference_protected(obj->fence, 1);
-	dma_resv_list_free(fobj);
+  fobj = rcu_dereference_protected(obj->fence, 1);
+  dma_resv_list_free(fobj);
 #ifdef __FreeBSD__
-	rw_destroy(&obj->rw);
+  rw_destroy(&obj->rw);
 #endif
-	ww_mutex_destroy(&obj->lock);
+  ww_mutex_destroy(&obj->lock);
 }
 EXPORT_SYMBOL(dma_resv_fini);
 
@@ -150,66 +150,66 @@ EXPORT_SYMBOL(dma_resv_fini);
  */
 int dma_resv_reserve_shared(struct dma_resv *obj, unsigned int num_fences)
 {
-	struct dma_resv_list *old, *new;
-	unsigned int i, j, k, max;
+  struct dma_resv_list *old, *new;
+  unsigned int i, j, k, max;
 
-	dma_resv_assert_held(obj);
+  dma_resv_assert_held(obj);
 
-	old = dma_resv_shared_list(obj);
-	if (old && old->shared_max) {
-		if ((old->shared_count + num_fences) <= old->shared_max)
-			return 0;
-		max = max(old->shared_count + num_fences, old->shared_max * 2);
-	} else {
-		max = max(4ul, roundup_pow_of_two(num_fences));
-	}
+  old = dma_resv_shared_list(obj);
+  if (old && old->shared_max) {
+    if ((old->shared_count + num_fences) <= old->shared_max)
+      return 0;
+    max = max(old->shared_count + num_fences, old->shared_max * 2);
+  } else {
+    max = max(4ul, roundup_pow_of_two(num_fences));
+  }
 
-	new = dma_resv_list_alloc(max);
-	if (!new)
-		return -ENOMEM;
+  new = dma_resv_list_alloc(max);
+  if (!new)
+    return -ENOMEM;
 
-	/*
-	 * no need to bump fence refcounts, rcu_read access
-	 * requires the use of kref_get_unless_zero, and the
-	 * references from the old struct are carried over to
-	 * the new.
-	 */
-	for (i = 0, j = 0, k = max; i < (old ? old->shared_count : 0); ++i) {
-		struct dma_fence *fence;
+  /*
+   * no need to bump fence refcounts, rcu_read access
+   * requires the use of kref_get_unless_zero, and the
+   * references from the old struct are carried over to
+   * the new.
+   */
+  for (i = 0, j = 0, k = max; i < (old ? old->shared_count : 0); ++i) {
+    struct dma_fence *fence;
 
-		fence = rcu_dereference_protected(old->shared[i],
-						  dma_resv_held(obj));
-		if (dma_fence_is_signaled(fence))
-			RCU_INIT_POINTER(new->shared[--k], fence);
-		else
-			RCU_INIT_POINTER(new->shared[j++], fence);
-	}
-	new->shared_count = j;
+    fence = rcu_dereference_protected(old->shared[i],
+              dma_resv_held(obj));
+    if (dma_fence_is_signaled(fence))
+      RCU_INIT_POINTER(new->shared[--k], fence);
+    else
+      RCU_INIT_POINTER(new->shared[j++], fence);
+  }
+  new->shared_count = j;
 
-	/*
-	 * We are not changing the effective set of fences here so can
-	 * merely update the pointer to the new array; both existing
-	 * readers and new readers will see exactly the same set of
-	 * active (unsignaled) shared fences. Individual fences and the
-	 * old array are protected by RCU and so will not vanish under
-	 * the gaze of the rcu_read_lock() readers.
-	 */
-	rcu_assign_pointer(obj->fence, new);
+  /*
+   * We are not changing the effective set of fences here so can
+   * merely update the pointer to the new array; both existing
+   * readers and new readers will see exactly the same set of
+   * active (unsignaled) shared fences. Individual fences and the
+   * old array are protected by RCU and so will not vanish under
+   * the gaze of the rcu_read_lock() readers.
+   */
+  rcu_assign_pointer(obj->fence, new);
 
-	if (!old)
-		return 0;
+  if (!old)
+    return 0;
 
-	/* Drop the references to the signaled fences */
-	for (i = k; i < max; ++i) {
-		struct dma_fence *fence;
+  /* Drop the references to the signaled fences */
+  for (i = k; i < max; ++i) {
+    struct dma_fence *fence;
 
-		fence = rcu_dereference_protected(new->shared[i],
-						  dma_resv_held(obj));
-		dma_fence_put(fence);
-	}
-	kfree_rcu(old, rcu);
+    fence = rcu_dereference_protected(new->shared[i],
+              dma_resv_held(obj));
+    dma_fence_put(fence);
+  }
+  kfree_rcu(old, rcu);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(dma_resv_reserve_shared);
 
@@ -224,13 +224,13 @@ EXPORT_SYMBOL(dma_resv_reserve_shared);
  */
 void dma_resv_reset_shared_max(struct dma_resv *obj)
 {
-	struct dma_resv_list *fences = dma_resv_shared_list(obj);
+  struct dma_resv_list *fences = dma_resv_shared_list(obj);
 
-	dma_resv_assert_held(obj);
+  dma_resv_assert_held(obj);
 
-	/* Test shared fence slot reservation */
-	if (fences)
-		fences->shared_max = fences->shared_count;
+  /* Test shared fence slot reservation */
+  if (fences)
+    fences->shared_max = fences->shared_count;
 }
 EXPORT_SYMBOL(dma_resv_reset_shared_max);
 #endif
@@ -245,53 +245,53 @@ EXPORT_SYMBOL(dma_resv_reset_shared_max);
  */
 void dma_resv_add_shared_fence(struct dma_resv *obj, struct dma_fence *fence)
 {
-	struct dma_resv_list *fobj;
-	struct dma_fence *old;
-	unsigned int i, count;
+  struct dma_resv_list *fobj;
+  struct dma_fence *old;
+  unsigned int i, count;
 
-	dma_fence_get(fence);
+  dma_fence_get(fence);
 
-	dma_resv_assert_held(obj);
+  dma_resv_assert_held(obj);
 
-	fobj = dma_resv_shared_list(obj);
-	count = fobj->shared_count;
+  fobj = dma_resv_shared_list(obj);
+  count = fobj->shared_count;
 
 #ifdef __linux__
-	preempt_disable();
+  preempt_disable();
 #elif defined(__FreeBSD__)
-	/*
-	 * Under FreeBSD dma_fence_is_signaled can be blocked. Prevent readers
-	 * from spinning on seqlock in that case with blocking on rwlock.
-	 */
-	rw_wlock(&obj->rw);
+  /*
+   * Under FreeBSD dma_fence_is_signaled can be blocked. Prevent readers
+   * from spinning on seqlock in that case with blocking on rwlock.
+   */
+  rw_wlock(&obj->rw);
 #endif
-	write_seqcount_begin(&obj->seq);
+  write_seqcount_begin(&obj->seq);
 
-	for (i = 0; i < count; ++i) {
+  for (i = 0; i < count; ++i) {
 
-		old = rcu_dereference_protected(fobj->shared[i],
-						dma_resv_held(obj));
-		if (old->context == fence->context ||
-		    dma_fence_is_signaled(old))
-			goto replace;
-	}
+    old = rcu_dereference_protected(fobj->shared[i],
+            dma_resv_held(obj));
+    if (old->context == fence->context ||
+        dma_fence_is_signaled(old))
+      goto replace;
+  }
 
-	BUG_ON(fobj->shared_count >= fobj->shared_max);
-	old = NULL;
-	count++;
+  BUG_ON(fobj->shared_count >= fobj->shared_max);
+  old = NULL;
+  count++;
 
 replace:
-	RCU_INIT_POINTER(fobj->shared[i], fence);
-	/* pointer update must be visible before we extend the shared_count */
-	smp_store_mb(fobj->shared_count, count);
+  RCU_INIT_POINTER(fobj->shared[i], fence);
+  /* pointer update must be visible before we extend the shared_count */
+  smp_store_mb(fobj->shared_count, count);
 
-	write_seqcount_end(&obj->seq);
+  write_seqcount_end(&obj->seq);
 #ifdef __linux__
-	preempt_enable();
+  preempt_enable();
 #elif defined(__FreeBSD__)
-	rw_wunlock(&obj->rw);
+  rw_wunlock(&obj->rw);
 #endif
-	dma_fence_put(old);
+  dma_fence_put(old);
 }
 EXPORT_SYMBOL(dma_resv_add_shared_fence);
 
@@ -304,32 +304,32 @@ EXPORT_SYMBOL(dma_resv_add_shared_fence);
  */
 void dma_resv_add_excl_fence(struct dma_resv *obj, struct dma_fence *fence)
 {
-	struct dma_fence *old_fence = dma_resv_excl_fence(obj);
-	struct dma_resv_list *old;
-	u32 i = 0;
+  struct dma_fence *old_fence = dma_resv_excl_fence(obj);
+  struct dma_resv_list *old;
+  u32 i = 0;
 
-	dma_resv_assert_held(obj);
+  dma_resv_assert_held(obj);
 
-	old = dma_resv_shared_list(obj);
-	if (old)
-		i = old->shared_count;
+  old = dma_resv_shared_list(obj);
+  if (old)
+    i = old->shared_count;
 
-	if (fence)
-		dma_fence_get(fence);
+  if (fence)
+    dma_fence_get(fence);
 
-	write_seqcount_begin(&obj->seq);
-	/* write_seqcount_begin provides the necessary memory barrier */
-	RCU_INIT_POINTER(obj->fence_excl, fence);
-	if (old)
-		old->shared_count = 0;
-	write_seqcount_end(&obj->seq);
+  write_seqcount_begin(&obj->seq);
+  /* write_seqcount_begin provides the necessary memory barrier */
+  RCU_INIT_POINTER(obj->fence_excl, fence);
+  if (old)
+    old->shared_count = 0;
+  write_seqcount_end(&obj->seq);
 
-	/* inplace update, no shared fences */
-	while (i--)
-		dma_fence_put(rcu_dereference_protected(old->shared[i],
-						dma_resv_held(obj)));
+  /* inplace update, no shared fences */
+  while (i--)
+    dma_fence_put(rcu_dereference_protected(old->shared[i],
+            dma_resv_held(obj)));
 
-	dma_fence_put(old_fence);
+  dma_fence_put(old_fence);
 }
 EXPORT_SYMBOL(dma_resv_add_excl_fence);
 
@@ -342,76 +342,76 @@ EXPORT_SYMBOL(dma_resv_add_excl_fence);
  */
 int dma_resv_copy_fences(struct dma_resv *dst, struct dma_resv *src)
 {
-	struct dma_resv_list *src_list, *dst_list;
-	struct dma_fence *old, *new;
-	unsigned int i;
+  struct dma_resv_list *src_list, *dst_list;
+  struct dma_fence *old, *new;
+  unsigned int i;
 
-	dma_resv_assert_held(dst);
+  dma_resv_assert_held(dst);
 
-	rcu_read_lock();
-	src_list = dma_resv_shared_list(src);
+  rcu_read_lock();
+  src_list = dma_resv_shared_list(src);
 
 retry:
-	if (src_list) {
-		unsigned int shared_count = src_list->shared_count;
+  if (src_list) {
+    unsigned int shared_count = src_list->shared_count;
 
-		rcu_read_unlock();
+    rcu_read_unlock();
 
-		dst_list = dma_resv_list_alloc(shared_count);
-		if (!dst_list)
-			return -ENOMEM;
+    dst_list = dma_resv_list_alloc(shared_count);
+    if (!dst_list)
+      return -ENOMEM;
 
-		rcu_read_lock();
-		src_list = dma_resv_shared_list(src);
-		if (!src_list || src_list->shared_count > shared_count) {
-			kfree(dst_list);
-			goto retry;
-		}
+    rcu_read_lock();
+    src_list = dma_resv_shared_list(src);
+    if (!src_list || src_list->shared_count > shared_count) {
+      kfree(dst_list);
+      goto retry;
+    }
 
-		dst_list->shared_count = 0;
-		for (i = 0; i < src_list->shared_count; ++i) {
-			struct dma_fence __rcu **dst;
-			struct dma_fence *fence;
+    dst_list->shared_count = 0;
+    for (i = 0; i < src_list->shared_count; ++i) {
+      struct dma_fence __rcu **dst;
+      struct dma_fence *fence;
 
-			fence = rcu_dereference(src_list->shared[i]);
-			if (test_bit(DMA_FENCE_FLAG_SIGNALED_BIT,
-				     &fence->flags))
-				continue;
+      fence = rcu_dereference(src_list->shared[i]);
+      if (test_bit(DMA_FENCE_FLAG_SIGNALED_BIT,
+             &fence->flags))
+        continue;
 
-			if (!dma_fence_get_rcu(fence)) {
-				dma_resv_list_free(dst_list);
-				src_list = dma_resv_shared_list(src);
-				goto retry;
-			}
+      if (!dma_fence_get_rcu(fence)) {
+        dma_resv_list_free(dst_list);
+        src_list = dma_resv_shared_list(src);
+        goto retry;
+      }
 
-			if (dma_fence_is_signaled(fence)) {
-				dma_fence_put(fence);
-				continue;
-			}
+      if (dma_fence_is_signaled(fence)) {
+        dma_fence_put(fence);
+        continue;
+      }
 
-			dst = &dst_list->shared[dst_list->shared_count++];
-			rcu_assign_pointer(*dst, fence);
-		}
-	} else {
-		dst_list = NULL;
-	}
+      dst = &dst_list->shared[dst_list->shared_count++];
+      rcu_assign_pointer(*dst, fence);
+    }
+  } else {
+    dst_list = NULL;
+  }
 
-	new = dma_fence_get_rcu_safe(&src->fence_excl);
-	rcu_read_unlock();
+  new = dma_fence_get_rcu_safe(&src->fence_excl);
+  rcu_read_unlock();
 
-	src_list = dma_resv_shared_list(dst);
-	old = dma_resv_excl_fence(dst);
+  src_list = dma_resv_shared_list(dst);
+  old = dma_resv_excl_fence(dst);
 
-	write_seqcount_begin(&dst->seq);
-	/* write_seqcount_begin provides the necessary memory barrier */
-	RCU_INIT_POINTER(dst->fence_excl, new);
-	RCU_INIT_POINTER(dst->fence, dst_list);
-	write_seqcount_end(&dst->seq);
+  write_seqcount_begin(&dst->seq);
+  /* write_seqcount_begin provides the necessary memory barrier */
+  RCU_INIT_POINTER(dst->fence_excl, new);
+  RCU_INIT_POINTER(dst->fence, dst_list);
+  write_seqcount_end(&dst->seq);
 
-	dma_resv_list_free(src_list);
-	dma_fence_put(old);
+  dma_resv_list_free(src_list);
+  dma_fence_put(old);
 
-	return 0;
+  return 0;
 }
 EXPORT_SYMBOL(dma_resv_copy_fences);
 
@@ -429,100 +429,100 @@ EXPORT_SYMBOL(dma_resv_copy_fences);
  * shared fences as well. Returns either zero or -ENOMEM.
  */
 int dma_resv_get_fences(struct dma_resv *obj, struct dma_fence **pfence_excl,
-			unsigned int *pshared_count,
-			struct dma_fence ***pshared)
+      unsigned int *pshared_count,
+      struct dma_fence ***pshared)
 {
-	struct dma_fence **shared = NULL;
-	struct dma_fence *fence_excl;
-	unsigned int shared_count;
-	int ret = 1;
+  struct dma_fence **shared = NULL;
+  struct dma_fence *fence_excl;
+  unsigned int shared_count;
+  int ret = 1;
 
-	do {
-		struct dma_resv_list *fobj;
-		unsigned int i, seq;
-		size_t sz = 0;
+  do {
+    struct dma_resv_list *fobj;
+    unsigned int i, seq;
+    size_t sz = 0;
 
-		shared_count = i = 0;
+    shared_count = i = 0;
 
-		rcu_read_lock();
-		seq = read_seqcount_begin(&obj->seq);
+    rcu_read_lock();
+    seq = read_seqcount_begin(&obj->seq);
 
-		fence_excl = dma_resv_excl_fence(obj);
-		if (fence_excl && !dma_fence_get_rcu(fence_excl))
-			goto unlock;
+    fence_excl = dma_resv_excl_fence(obj);
+    if (fence_excl && !dma_fence_get_rcu(fence_excl))
+      goto unlock;
 
-		fobj = dma_resv_shared_list(obj);
-		if (fobj)
-			sz += sizeof(*shared) * fobj->shared_max;
+    fobj = dma_resv_shared_list(obj);
+    if (fobj)
+      sz += sizeof(*shared) * fobj->shared_max;
 
-		if (!pfence_excl && fence_excl)
-			sz += sizeof(*shared);
+    if (!pfence_excl && fence_excl)
+      sz += sizeof(*shared);
 
-		if (sz) {
-			struct dma_fence **nshared;
+    if (sz) {
+      struct dma_fence **nshared;
 
-			nshared = krealloc(shared, sz,
-					   GFP_NOWAIT | __GFP_NOWARN);
-			if (!nshared) {
-				rcu_read_unlock();
+      nshared = krealloc(shared, sz,
+             GFP_NOWAIT | __GFP_NOWARN);
+      if (!nshared) {
+        rcu_read_unlock();
 
-				dma_fence_put(fence_excl);
-				fence_excl = NULL;
+        dma_fence_put(fence_excl);
+        fence_excl = NULL;
 
-				nshared = krealloc(shared, sz, GFP_KERNEL);
-				if (nshared) {
-					shared = nshared;
-					continue;
-				}
+        nshared = krealloc(shared, sz, GFP_KERNEL);
+        if (nshared) {
+          shared = nshared;
+          continue;
+        }
 
-				ret = -ENOMEM;
-				break;
-			}
-			shared = nshared;
-			shared_count = fobj ? fobj->shared_count : 0;
-			for (i = 0; i < shared_count; ++i) {
-				shared[i] = rcu_dereference(fobj->shared[i]);
-				if (!dma_fence_get_rcu(shared[i]))
-					break;
-			}
-		}
+        ret = -ENOMEM;
+        break;
+      }
+      shared = nshared;
+      shared_count = fobj ? fobj->shared_count : 0;
+      for (i = 0; i < shared_count; ++i) {
+        shared[i] = rcu_dereference(fobj->shared[i]);
+        if (!dma_fence_get_rcu(shared[i]))
+          break;
+      }
+    }
 
-		if (i != shared_count || read_seqcount_retry(&obj->seq, seq)) {
-			while (i--)
-				dma_fence_put(shared[i]);
-			dma_fence_put(fence_excl);
-			goto unlock;
-		}
+    if (i != shared_count || read_seqcount_retry(&obj->seq, seq)) {
+      while (i--)
+        dma_fence_put(shared[i]);
+      dma_fence_put(fence_excl);
+      goto unlock;
+    }
 
-		ret = 0;
+    ret = 0;
 unlock:
-		rcu_read_unlock();
+    rcu_read_unlock();
 #ifdef __FreeBSD__
-		/*
-		 * On FreeBSD, thread holding reservation object seqcount lock
-		 * for write may be blocked. In that case reader thread should
-		 * be blocked too.
-		 */
-		if (ret != 0) {
-			rw_rlock(&obj->rw);
-			rw_runlock(&obj->rw);
-		}
+    /*
+     * On FreeBSD, thread holding reservation object seqcount lock
+     * for write may be blocked. In that case reader thread should
+     * be blocked too.
+     */
+    if (ret != 0) {
+      rw_rlock(&obj->rw);
+      rw_runlock(&obj->rw);
+    }
 #endif
-	} while (ret);
+  } while (ret);
 
-	if (pfence_excl)
-		*pfence_excl = fence_excl;
-	else if (fence_excl)
-		shared[shared_count++] = fence_excl;
+  if (pfence_excl)
+    *pfence_excl = fence_excl;
+  else if (fence_excl)
+    shared[shared_count++] = fence_excl;
 
-	if (!shared_count) {
-		kfree(shared);
-		shared = NULL;
-	}
+  if (!shared_count) {
+    kfree(shared);
+    shared = NULL;
+  }
 
-	*pshared_count = shared_count;
-	*pshared = shared;
-	return ret;
+  *pshared_count = shared_count;
+  *pshared = shared;
+  return ret;
 }
 EXPORT_SYMBOL_GPL(dma_resv_get_fences);
 
@@ -541,99 +541,99 @@ EXPORT_SYMBOL_GPL(dma_resv_get_fences);
  * greater than zer on success.
  */
 long dma_resv_wait_timeout(struct dma_resv *obj, bool wait_all, bool intr,
-			   unsigned long timeout)
+         unsigned long timeout)
 {
-	long ret = timeout ? timeout : 1;
-	unsigned int seq, shared_count;
-	struct dma_fence *fence;
-	int i;
+  long ret = timeout ? timeout : 1;
+  unsigned int seq, shared_count;
+  struct dma_fence *fence;
+  int i;
 
 retry:
-	shared_count = 0;
-	seq = read_seqcount_begin(&obj->seq);
-	rcu_read_lock();
-	i = -1;
+  shared_count = 0;
+  seq = read_seqcount_begin(&obj->seq);
+  rcu_read_lock();
+  i = -1;
 
-	fence = dma_resv_excl_fence(obj);
-	if (fence && !test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence->flags)) {
-		if (!dma_fence_get_rcu(fence))
-			goto unlock_retry;
+  fence = dma_resv_excl_fence(obj);
+  if (fence && !test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &fence->flags)) {
+    if (!dma_fence_get_rcu(fence))
+      goto unlock_retry;
 
-		if (dma_fence_is_signaled(fence)) {
-			dma_fence_put(fence);
-			fence = NULL;
-		}
+    if (dma_fence_is_signaled(fence)) {
+      dma_fence_put(fence);
+      fence = NULL;
+    }
 
-	} else {
-		fence = NULL;
-	}
+  } else {
+    fence = NULL;
+  }
 
-	if (wait_all) {
-		struct dma_resv_list *fobj = dma_resv_shared_list(obj);
+  if (wait_all) {
+    struct dma_resv_list *fobj = dma_resv_shared_list(obj);
 
-		if (fobj)
-			shared_count = fobj->shared_count;
+    if (fobj)
+      shared_count = fobj->shared_count;
 
-		for (i = 0; !fence && i < shared_count; ++i) {
-			struct dma_fence *lfence;
+    for (i = 0; !fence && i < shared_count; ++i) {
+      struct dma_fence *lfence;
 
-			lfence = rcu_dereference(fobj->shared[i]);
-			if (test_bit(DMA_FENCE_FLAG_SIGNALED_BIT,
-				     &lfence->flags))
-				continue;
+      lfence = rcu_dereference(fobj->shared[i]);
+      if (test_bit(DMA_FENCE_FLAG_SIGNALED_BIT,
+             &lfence->flags))
+        continue;
 
-			if (!dma_fence_get_rcu(lfence))
-				goto unlock_retry;
+      if (!dma_fence_get_rcu(lfence))
+        goto unlock_retry;
 
-			if (dma_fence_is_signaled(lfence)) {
-				dma_fence_put(lfence);
-				continue;
-			}
+      if (dma_fence_is_signaled(lfence)) {
+        dma_fence_put(lfence);
+        continue;
+      }
 
-			fence = lfence;
-			break;
-		}
-	}
+      fence = lfence;
+      break;
+    }
+  }
 
-	rcu_read_unlock();
-	if (fence) {
-		if (read_seqcount_retry(&obj->seq, seq)) {
-			dma_fence_put(fence);
-			goto retry;
-		}
+  rcu_read_unlock();
+  if (fence) {
+    if (read_seqcount_retry(&obj->seq, seq)) {
+      dma_fence_put(fence);
+      goto retry;
+    }
 
-		ret = dma_fence_wait_timeout(fence, intr, ret);
-		dma_fence_put(fence);
-		if (ret > 0 && wait_all && (i + 1 < shared_count))
-			goto retry;
-	}
-	return ret;
+    ret = dma_fence_wait_timeout(fence, intr, ret);
+    dma_fence_put(fence);
+    if (ret > 0 && wait_all && (i + 1 < shared_count))
+      goto retry;
+  }
+  return ret;
 
 unlock_retry:
-	rcu_read_unlock();
+  rcu_read_unlock();
 #ifdef __FreeBSD__
-	rw_rlock(&obj->rw);
-	rw_runlock(&obj->rw);
+  rw_rlock(&obj->rw);
+  rw_runlock(&obj->rw);
 #endif
-	goto retry;
+  goto retry;
 }
 EXPORT_SYMBOL_GPL(dma_resv_wait_timeout);
 
 
 static inline int dma_resv_test_signaled_single(struct dma_fence *passed_fence)
 {
-	struct dma_fence *fence, *lfence = passed_fence;
-	int ret = 1;
+  struct dma_fence *fence, *lfence = passed_fence;
+  int ret = 1;
 
-	if (!test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &lfence->flags)) {
-		fence = dma_fence_get_rcu(lfence);
-		if (!fence)
-			return -1;
+  if (!test_bit(DMA_FENCE_FLAG_SIGNALED_BIT, &lfence->flags)) {
+    fence = dma_fence_get_rcu(lfence);
+    if (!fence)
+      return -1;
 
-		ret = !!dma_fence_is_signaled(fence);
-		dma_fence_put(fence);
-	}
-	return ret;
+    ret = !!dma_fence_is_signaled(fence);
+    dma_fence_put(fence);
+  }
+  return ret;
 }
 
 /**
@@ -650,114 +650,114 @@ static inline int dma_resv_test_signaled_single(struct dma_fence *passed_fence)
  */
 bool dma_resv_test_signaled(struct dma_resv *obj, bool test_all)
 {
-	unsigned int seq, shared_count;
-	int ret;
+  unsigned int seq, shared_count;
+  int ret;
 
-	rcu_read_lock();
+  rcu_read_lock();
 retry:
-	ret = true;
-	shared_count = 0;
-	seq = read_seqcount_begin(&obj->seq);
+  ret = true;
+  shared_count = 0;
+  seq = read_seqcount_begin(&obj->seq);
 
-	if (test_all) {
-		struct dma_resv_list *fobj = dma_resv_shared_list(obj);
-		unsigned int i;
+  if (test_all) {
+    struct dma_resv_list *fobj = dma_resv_shared_list(obj);
+    unsigned int i;
 
-		if (fobj)
-			shared_count = fobj->shared_count;
+    if (fobj)
+      shared_count = fobj->shared_count;
 
-		for (i = 0; i < shared_count; ++i) {
-			struct dma_fence *fence;
+    for (i = 0; i < shared_count; ++i) {
+      struct dma_fence *fence;
 
-			fence = rcu_dereference(fobj->shared[i]);
-			ret = dma_resv_test_signaled_single(fence);
-			if (ret < 0)
-				goto retry;
-			else if (!ret)
-				break;
-		}
+      fence = rcu_dereference(fobj->shared[i]);
+      ret = dma_resv_test_signaled_single(fence);
+      if (ret < 0)
+        goto retry;
+      else if (!ret)
+        break;
+    }
 
-		if (read_seqcount_retry(&obj->seq, seq))
+    if (read_seqcount_retry(&obj->seq, seq))
 #ifdef __linux__
-			goto retry;
+      goto retry;
 #elif defined(__FreeBSD__)
-		{
-			rcu_read_unlock();
-			rw_rlock(&obj->rw);
-			rw_runlock(&obj->rw);
-			rcu_read_lock();
-			goto retry;
-		}
+    {
+      rcu_read_unlock();
+      rw_rlock(&obj->rw);
+      rw_runlock(&obj->rw);
+      rcu_read_lock();
+      goto retry;
+    }
 #endif
-	}
+  }
 
-	if (!shared_count) {
-		struct dma_fence *fence_excl = dma_resv_excl_fence(obj);
+  if (!shared_count) {
+    struct dma_fence *fence_excl = dma_resv_excl_fence(obj);
 
-		if (fence_excl) {
-			ret = dma_resv_test_signaled_single(fence_excl);
-			if (ret < 0)
-				goto retry;
+    if (fence_excl) {
+      ret = dma_resv_test_signaled_single(fence_excl);
+      if (ret < 0)
+        goto retry;
 
-			if (read_seqcount_retry(&obj->seq, seq))
+      if (read_seqcount_retry(&obj->seq, seq))
 #ifdef __linux__
-				goto retry;
+        goto retry;
 #elif defined(__FreeBSD__)
-			{
-				rcu_read_unlock();
-				rw_rlock(&obj->rw);
-				rw_runlock(&obj->rw);
-				rcu_read_lock();
-				goto retry;
-			}
+      {
+        rcu_read_unlock();
+        rw_rlock(&obj->rw);
+        rw_runlock(&obj->rw);
+        rcu_read_lock();
+        goto retry;
+      }
 #endif
-		}
-	}
+    }
+  }
 
-	rcu_read_unlock();
-	return ret;
+  rcu_read_unlock();
+  return ret;
 }
 EXPORT_SYMBOL_GPL(dma_resv_test_signaled);
 
 #if IS_ENABLED(CONFIG_LOCKDEP)
 static int __init dma_resv_lockdep(void)
 {
-	struct mm_struct *mm = mm_alloc();
-	struct ww_acquire_ctx ctx;
-	struct dma_resv obj;
-	struct address_space mapping;
-	int ret;
+  struct mm_struct *mm = mm_alloc();
+  struct ww_acquire_ctx ctx;
+  struct dma_resv obj;
+  struct address_space mapping;
+  int ret;
 
-	if (!mm)
-		return -ENOMEM;
+  if (!mm)
+    return -ENOMEM;
 
-	dma_resv_init(&obj);
-	address_space_init_once(&mapping);
+  dma_resv_init(&obj);
+  address_space_init_once(&mapping);
 
-	mmap_read_lock(mm);
-	ww_acquire_init(&ctx, &reservation_ww_class);
-	ret = dma_resv_lock(&obj, &ctx);
-	if (ret == -EDEADLK)
-		dma_resv_lock_slow(&obj, &ctx);
-	fs_reclaim_acquire(GFP_KERNEL);
-	/* for unmap_mapping_range on trylocked buffer objects in shrinkers */
-	i_mmap_lock_write(&mapping);
-	i_mmap_unlock_write(&mapping);
+  mmap_read_lock(mm);
+  ww_acquire_init(&ctx, &reservation_ww_class);
+  ret = dma_resv_lock(&obj, &ctx);
+  if (ret == -EDEADLK)
+    dma_resv_lock_slow(&obj, &ctx);
+  fs_reclaim_acquire(GFP_KERNEL);
+  /* for unmap_mapping_range on trylocked buffer objects in shrinkers */
+  i_mmap_lock_write(&mapping);
+  i_mmap_unlock_write(&mapping);
 #ifdef CONFIG_MMU_NOTIFIER
-	lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
-	__dma_fence_might_wait();
-	lock_map_release(&__mmu_notifier_invalidate_range_start_map);
+  lock_map_acquire(&__mmu_notifier_invalidate_range_start_map);
+  __dma_fence_might_wait();
+  lock_map_release(&__mmu_notifier_invalidate_range_start_map);
 #else
-	__dma_fence_might_wait();
+  __dma_fence_might_wait();
 #endif
-	fs_reclaim_release(GFP_KERNEL);
-	ww_mutex_unlock(&obj.lock);
-	ww_acquire_fini(&ctx);
-	mmap_read_unlock(mm);
+  fs_reclaim_release(GFP_KERNEL);
+  ww_mutex_unlock(&obj.lock);
+  ww_acquire_fini(&ctx);
+  mmap_read_unlock(mm);
 
-	mmput(mm);
+  mmput(mm);
 
-	return 0;
+  return 0;
 }
 subsys_initcall(dma_resv_lockdep);
 #endif

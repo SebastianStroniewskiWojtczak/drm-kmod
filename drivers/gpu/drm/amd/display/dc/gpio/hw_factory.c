@@ -62,62 +62,62 @@
  */
 
 bool dal_hw_factory_init(
-	struct hw_factory *factory,
-	enum dce_version dce_version,
-	enum dce_environment dce_environment)
+  struct hw_factory *factory,
+  enum dce_version dce_version,
+  enum dce_environment dce_environment)
 {
-	if (IS_FPGA_MAXIMUS_DC(dce_environment)) {
-		dal_hw_factory_diag_fpga_init(factory);
-		return true;
-	}
+  if (IS_FPGA_MAXIMUS_DC(dce_environment)) {
+    dal_hw_factory_diag_fpga_init(factory);
+    return true;
+  }
 
-	switch (dce_version) {
+  switch (dce_version) {
 #if defined(CONFIG_DRM_AMD_DC_SI)
-	case DCE_VERSION_6_0:
-	case DCE_VERSION_6_1:
-	case DCE_VERSION_6_4:
-		dal_hw_factory_dce60_init(factory);
-		return true;
+  case DCE_VERSION_6_0:
+  case DCE_VERSION_6_1:
+  case DCE_VERSION_6_4:
+    dal_hw_factory_dce60_init(factory);
+    return true;
 #endif
-	case DCE_VERSION_8_0:
-	case DCE_VERSION_8_1:
-	case DCE_VERSION_8_3:
-		dal_hw_factory_dce80_init(factory);
-		return true;
+  case DCE_VERSION_8_0:
+  case DCE_VERSION_8_1:
+  case DCE_VERSION_8_3:
+    dal_hw_factory_dce80_init(factory);
+    return true;
 
-	case DCE_VERSION_10_0:
-		dal_hw_factory_dce110_init(factory);
-		return true;
-	case DCE_VERSION_11_0:
-	case DCE_VERSION_11_2:
-	case DCE_VERSION_11_22:
-		dal_hw_factory_dce110_init(factory);
-		return true;
-	case DCE_VERSION_12_0:
-	case DCE_VERSION_12_1:
-		dal_hw_factory_dce120_init(factory);
-		return true;
+  case DCE_VERSION_10_0:
+    dal_hw_factory_dce110_init(factory);
+    return true;
+  case DCE_VERSION_11_0:
+  case DCE_VERSION_11_2:
+  case DCE_VERSION_11_22:
+    dal_hw_factory_dce110_init(factory);
+    return true;
+  case DCE_VERSION_12_0:
+  case DCE_VERSION_12_1:
+    dal_hw_factory_dce120_init(factory);
+    return true;
 #if defined(CONFIG_DRM_AMD_DC_DCN)
-	case DCN_VERSION_1_0:
-	case DCN_VERSION_1_01:
-		dal_hw_factory_dcn10_init(factory);
-		return true;
-	case DCN_VERSION_2_0:
-		dal_hw_factory_dcn20_init(factory);
-		return true;
-	case DCN_VERSION_2_1:
-		dal_hw_factory_dcn21_init(factory);
-		return true;
-	case DCN_VERSION_3_0:
-	case DCN_VERSION_3_01:
-	case DCN_VERSION_3_02:
-	case DCN_VERSION_3_03:
-	case DCN_VERSION_3_1:
-		dal_hw_factory_dcn30_init(factory);
-		return true;
+  case DCN_VERSION_1_0:
+  case DCN_VERSION_1_01:
+    dal_hw_factory_dcn10_init(factory);
+    return true;
+  case DCN_VERSION_2_0:
+    dal_hw_factory_dcn20_init(factory);
+    return true;
+  case DCN_VERSION_2_1:
+    dal_hw_factory_dcn21_init(factory);
+    return true;
+  case DCN_VERSION_3_0:
+  case DCN_VERSION_3_01:
+  case DCN_VERSION_3_02:
+  case DCN_VERSION_3_03:
+  case DCN_VERSION_3_1:
+    dal_hw_factory_dcn30_init(factory);
+    return true;
 #endif
-	default:
-		ASSERT_CRITICAL(false);
-		return false;
-	}
+  default:
+    ASSERT_CRITICAL(false);
+    return false;
+  }
 }

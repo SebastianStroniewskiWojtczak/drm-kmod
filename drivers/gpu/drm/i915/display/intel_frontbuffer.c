@@ -21,7 +21,7 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * Authors:
- *	Daniel Vetter <daniel.vetter@ffwll.ch>
+ *  Daniel Vetter <daniel.vetter@ffwll.ch>
  */
 
 /**
@@ -77,23 +77,23 @@
  * Can be called without any locks held.
  */
 static void frontbuffer_flush(struct drm_i915_private *i915,
-			      unsigned int frontbuffer_bits,
-			      enum fb_op_origin origin)
+            unsigned int frontbuffer_bits,
+            enum fb_op_origin origin)
 {
-	/* Delay flushing when rings are still busy.*/
-	spin_lock(&i915->fb_tracking.lock);
-	frontbuffer_bits &= ~i915->fb_tracking.busy_bits;
-	spin_unlock(&i915->fb_tracking.lock);
+  /* Delay flushing when rings are still busy.*/
+  spin_lock(&i915->fb_tracking.lock);
+  frontbuffer_bits &= ~i915->fb_tracking.busy_bits;
+  spin_unlock(&i915->fb_tracking.lock);
 
-	if (!frontbuffer_bits)
-		return;
+  if (!frontbuffer_bits)
+    return;
 
-	trace_intel_frontbuffer_flush(frontbuffer_bits, origin);
+  trace_intel_frontbuffer_flush(frontbuffer_bits, origin);
 
-	might_sleep();
-	intel_edp_drrs_flush(i915, frontbuffer_bits);
-	intel_psr_flush(i915, frontbuffer_bits, origin);
-	intel_fbc_flush(i915, frontbuffer_bits, origin);
+  might_sleep();
+  intel_edp_drrs_flush(i915, frontbuffer_bits);
+  intel_psr_flush(i915, frontbuffer_bits, origin);
+  intel_fbc_flush(i915, frontbuffer_bits, origin);
 }
 
 /**
@@ -109,13 +109,13 @@ static void frontbuffer_flush(struct drm_i915_private *i915,
  * Can be called without any locks held.
  */
 void intel_frontbuffer_flip_prepare(struct drm_i915_private *i915,
-				    unsigned frontbuffer_bits)
+            unsigned frontbuffer_bits)
 {
-	spin_lock(&i915->fb_tracking.lock);
-	i915->fb_tracking.flip_bits |= frontbuffer_bits;
-	/* Remove stale busy bits due to the old buffer. */
-	i915->fb_tracking.busy_bits &= ~frontbuffer_bits;
-	spin_unlock(&i915->fb_tracking.lock);
+  spin_lock(&i915->fb_tracking.lock);
+  i915->fb_tracking.flip_bits |= frontbuffer_bits;
+  /* Remove stale busy bits due to the old buffer. */
+  i915->fb_tracking.busy_bits &= ~frontbuffer_bits;
+  spin_unlock(&i915->fb_tracking.lock);
 }
 
 /**
@@ -129,16 +129,16 @@ void intel_frontbuffer_flip_prepare(struct drm_i915_private *i915,
  * Can be called without any locks held.
  */
 void intel_frontbuffer_flip_complete(struct drm_i915_private *i915,
-				     unsigned frontbuffer_bits)
+             unsigned frontbuffer_bits)
 {
-	spin_lock(&i915->fb_tracking.lock);
-	/* Mask any cancelled flips. */
-	frontbuffer_bits &= i915->fb_tracking.flip_bits;
-	i915->fb_tracking.flip_bits &= ~frontbuffer_bits;
-	spin_unlock(&i915->fb_tracking.lock);
+  spin_lock(&i915->fb_tracking.lock);
+  /* Mask any cancelled flips. */
+  frontbuffer_bits &= i915->fb_tracking.flip_bits;
+  i915->fb_tracking.flip_bits &= ~frontbuffer_bits;
+  spin_unlock(&i915->fb_tracking.lock);
 
-	if (frontbuffer_bits)
-		frontbuffer_flush(i915, frontbuffer_bits, ORIGIN_FLIP);
+  if (frontbuffer_bits)
+    frontbuffer_flush(i915, frontbuffer_bits, ORIGIN_FLIP);
 }
 
 /**
@@ -153,140 +153,140 @@ void intel_frontbuffer_flip_complete(struct drm_i915_private *i915,
  * Can be called without any locks held.
  */
 void intel_frontbuffer_flip(struct drm_i915_private *i915,
-			    unsigned frontbuffer_bits)
+          unsigned frontbuffer_bits)
 {
-	spin_lock(&i915->fb_tracking.lock);
-	/* Remove stale busy bits due to the old buffer. */
-	i915->fb_tracking.busy_bits &= ~frontbuffer_bits;
-	spin_unlock(&i915->fb_tracking.lock);
+  spin_lock(&i915->fb_tracking.lock);
+  /* Remove stale busy bits due to the old buffer. */
+  i915->fb_tracking.busy_bits &= ~frontbuffer_bits;
+  spin_unlock(&i915->fb_tracking.lock);
 
-	frontbuffer_flush(i915, frontbuffer_bits, ORIGIN_FLIP);
+  frontbuffer_flush(i915, frontbuffer_bits, ORIGIN_FLIP);
 }
 
 void __intel_fb_invalidate(struct intel_frontbuffer *front,
-			   enum fb_op_origin origin,
-			   unsigned int frontbuffer_bits)
+         enum fb_op_origin origin,
+         unsigned int frontbuffer_bits)
 {
-	struct drm_i915_private *i915 = to_i915(front->obj->base.dev);
+  struct drm_i915_private *i915 = to_i915(front->obj->base.dev);
 
-	if (origin == ORIGIN_CS) {
-		spin_lock(&i915->fb_tracking.lock);
-		i915->fb_tracking.busy_bits |= frontbuffer_bits;
-		i915->fb_tracking.flip_bits &= ~frontbuffer_bits;
-		spin_unlock(&i915->fb_tracking.lock);
-	}
+  if (origin == ORIGIN_CS) {
+    spin_lock(&i915->fb_tracking.lock);
+    i915->fb_tracking.busy_bits |= frontbuffer_bits;
+    i915->fb_tracking.flip_bits &= ~frontbuffer_bits;
+    spin_unlock(&i915->fb_tracking.lock);
+  }
 
-	trace_intel_frontbuffer_invalidate(frontbuffer_bits, origin);
+  trace_intel_frontbuffer_invalidate(frontbuffer_bits, origin);
 
-	might_sleep();
-	intel_psr_invalidate(i915, frontbuffer_bits, origin);
-	intel_edp_drrs_invalidate(i915, frontbuffer_bits);
-	intel_fbc_invalidate(i915, frontbuffer_bits, origin);
+  might_sleep();
+  intel_psr_invalidate(i915, frontbuffer_bits, origin);
+  intel_edp_drrs_invalidate(i915, frontbuffer_bits);
+  intel_fbc_invalidate(i915, frontbuffer_bits, origin);
 }
 
 void __intel_fb_flush(struct intel_frontbuffer *front,
-		      enum fb_op_origin origin,
-		      unsigned int frontbuffer_bits)
+          enum fb_op_origin origin,
+          unsigned int frontbuffer_bits)
 {
-	struct drm_i915_private *i915 = to_i915(front->obj->base.dev);
+  struct drm_i915_private *i915 = to_i915(front->obj->base.dev);
 
-	if (origin == ORIGIN_CS) {
-		spin_lock(&i915->fb_tracking.lock);
-		/* Filter out new bits since rendering started. */
-		frontbuffer_bits &= i915->fb_tracking.busy_bits;
-		i915->fb_tracking.busy_bits &= ~frontbuffer_bits;
-		spin_unlock(&i915->fb_tracking.lock);
-	}
+  if (origin == ORIGIN_CS) {
+    spin_lock(&i915->fb_tracking.lock);
+    /* Filter out new bits since rendering started. */
+    frontbuffer_bits &= i915->fb_tracking.busy_bits;
+    i915->fb_tracking.busy_bits &= ~frontbuffer_bits;
+    spin_unlock(&i915->fb_tracking.lock);
+  }
 
-	if (frontbuffer_bits)
-		frontbuffer_flush(i915, frontbuffer_bits, origin);
+  if (frontbuffer_bits)
+    frontbuffer_flush(i915, frontbuffer_bits, origin);
 }
 
 static int frontbuffer_active(struct i915_active *ref)
 {
-	struct intel_frontbuffer *front =
-		container_of(ref, typeof(*front), write);
+  struct intel_frontbuffer *front =
+    container_of(ref, typeof(*front), write);
 
-	kref_get(&front->ref);
-	return 0;
+  kref_get(&front->ref);
+  return 0;
 }
 
 static void frontbuffer_retire(struct i915_active *ref)
 {
-	struct intel_frontbuffer *front =
-		container_of(ref, typeof(*front), write);
+  struct intel_frontbuffer *front =
+    container_of(ref, typeof(*front), write);
 
-	intel_frontbuffer_flush(front, ORIGIN_CS);
-	intel_frontbuffer_put(front);
+  intel_frontbuffer_flush(front, ORIGIN_CS);
+  intel_frontbuffer_put(front);
 }
 
 static void frontbuffer_release(struct kref *ref)
-	__releases(&to_i915(front->obj->base.dev)->fb_tracking.lock)
+  __releases(&to_i915(front->obj->base.dev)->fb_tracking.lock)
 {
-	struct intel_frontbuffer *front =
-		container_of(ref, typeof(*front), ref);
-	struct drm_i915_gem_object *obj = front->obj;
-	struct i915_vma *vma;
+  struct intel_frontbuffer *front =
+    container_of(ref, typeof(*front), ref);
+  struct drm_i915_gem_object *obj = front->obj;
+  struct i915_vma *vma;
 
-	drm_WARN_ON(obj->base.dev, atomic_read(&front->bits));
+  drm_WARN_ON(obj->base.dev, atomic_read(&front->bits));
 
-	spin_lock(&obj->vma.lock);
-	for_each_ggtt_vma(vma, obj) {
-		i915_vma_clear_scanout(vma);
-		vma->display_alignment = I915_GTT_MIN_ALIGNMENT;
-	}
-	spin_unlock(&obj->vma.lock);
+  spin_lock(&obj->vma.lock);
+  for_each_ggtt_vma(vma, obj) {
+    i915_vma_clear_scanout(vma);
+    vma->display_alignment = I915_GTT_MIN_ALIGNMENT;
+  }
+  spin_unlock(&obj->vma.lock);
 
-	RCU_INIT_POINTER(obj->frontbuffer, NULL);
-	spin_unlock(&to_i915(obj->base.dev)->fb_tracking.lock);
+  RCU_INIT_POINTER(obj->frontbuffer, NULL);
+  spin_unlock(&to_i915(obj->base.dev)->fb_tracking.lock);
 
-	i915_active_fini(&front->write);
+  i915_active_fini(&front->write);
 
-	i915_gem_object_put(obj);
-	kfree_rcu(front, rcu);
+  i915_gem_object_put(obj);
+  kfree_rcu(front, rcu);
 }
 
 struct intel_frontbuffer *
 intel_frontbuffer_get(struct drm_i915_gem_object *obj)
 {
-	struct drm_i915_private *i915 = to_i915(obj->base.dev);
-	struct intel_frontbuffer *front;
+  struct drm_i915_private *i915 = to_i915(obj->base.dev);
+  struct intel_frontbuffer *front;
 
-	front = __intel_frontbuffer_get(obj);
-	if (front)
-		return front;
+  front = __intel_frontbuffer_get(obj);
+  if (front)
+    return front;
 
-	front = kmalloc(sizeof(*front), GFP_KERNEL);
-	if (!front)
-		return NULL;
+  front = kmalloc(sizeof(*front), GFP_KERNEL);
+  if (!front)
+    return NULL;
 
-	front->obj = obj;
-	kref_init(&front->ref);
-	atomic_set(&front->bits, 0);
-	i915_active_init(&front->write,
-			 frontbuffer_active,
-			 frontbuffer_retire,
-			 I915_ACTIVE_RETIRE_SLEEPS);
+  front->obj = obj;
+  kref_init(&front->ref);
+  atomic_set(&front->bits, 0);
+  i915_active_init(&front->write,
+       frontbuffer_active,
+       frontbuffer_retire,
+       I915_ACTIVE_RETIRE_SLEEPS);
 
-	spin_lock(&i915->fb_tracking.lock);
-	if (rcu_access_pointer(obj->frontbuffer)) {
-		kfree(front);
-		front = rcu_dereference_protected(obj->frontbuffer, true);
-		kref_get(&front->ref);
-	} else {
-		i915_gem_object_get(obj);
-		rcu_assign_pointer(obj->frontbuffer, front);
-	}
-	spin_unlock(&i915->fb_tracking.lock);
+  spin_lock(&i915->fb_tracking.lock);
+  if (rcu_access_pointer(obj->frontbuffer)) {
+    kfree(front);
+    front = rcu_dereference_protected(obj->frontbuffer, true);
+    kref_get(&front->ref);
+  } else {
+    i915_gem_object_get(obj);
+    rcu_assign_pointer(obj->frontbuffer, front);
+  }
+  spin_unlock(&i915->fb_tracking.lock);
 
-	return front;
+  return front;
 }
 
 void intel_frontbuffer_put(struct intel_frontbuffer *front)
 {
-	kref_put_lock(&front->ref,
-		      frontbuffer_release,
-		      &to_i915(front->obj->base.dev)->fb_tracking.lock);
+  kref_put_lock(&front->ref,
+          frontbuffer_release,
+          &to_i915(front->obj->base.dev)->fb_tracking.lock);
 }
 
 /**
@@ -299,28 +299,28 @@ void intel_frontbuffer_put(struct intel_frontbuffer *front)
  * from @old and setting them in @new. Both @old and @new can be NULL.
  */
 void intel_frontbuffer_track(struct intel_frontbuffer *old,
-			     struct intel_frontbuffer *new,
-			     unsigned int frontbuffer_bits)
+           struct intel_frontbuffer *new,
+           unsigned int frontbuffer_bits)
 {
-	/*
-	 * Control of individual bits within the mask are guarded by
-	 * the owning plane->mutex, i.e. we can never see concurrent
-	 * manipulation of individual bits. But since the bitfield as a whole
-	 * is updated using RMW, we need to use atomics in order to update
-	 * the bits.
-	 */
-	BUILD_BUG_ON(INTEL_FRONTBUFFER_BITS_PER_PIPE * I915_MAX_PIPES >
-		     BITS_PER_TYPE(atomic_t));
+  /*
+   * Control of individual bits within the mask are guarded by
+   * the owning plane->mutex, i.e. we can never see concurrent
+   * manipulation of individual bits. But since the bitfield as a whole
+   * is updated using RMW, we need to use atomics in order to update
+   * the bits.
+   */
+  BUILD_BUG_ON(INTEL_FRONTBUFFER_BITS_PER_PIPE * I915_MAX_PIPES >
+         BITS_PER_TYPE(atomic_t));
 
-	if (old) {
-		drm_WARN_ON(old->obj->base.dev,
-			    !(atomic_read(&old->bits) & frontbuffer_bits));
-		atomic_andnot(frontbuffer_bits, &old->bits);
-	}
+  if (old) {
+    drm_WARN_ON(old->obj->base.dev,
+          !(atomic_read(&old->bits) & frontbuffer_bits));
+    atomic_andnot(frontbuffer_bits, &old->bits);
+  }
 
-	if (new) {
-		drm_WARN_ON(new->obj->base.dev,
-			    atomic_read(&new->bits) & frontbuffer_bits);
-		atomic_or(frontbuffer_bits, &new->bits);
-	}
+  if (new) {
+    drm_WARN_ON(new->obj->base.dev,
+          atomic_read(&new->bits) & frontbuffer_bits);
+    atomic_or(frontbuffer_bits, &new->bits);
+  }
 }

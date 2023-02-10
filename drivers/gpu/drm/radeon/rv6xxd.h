@@ -164,26 +164,26 @@
 #       define CLKV_SHIFT                                 11
 #define CG_MPLL_SPREAD_SPECTRUM                           0x830
 
-#define CITF_CNTL					0x200c
+#define CITF_CNTL          0x200c
 #       define BLACKOUT_RD                              (1 << 0)
 #       define BLACKOUT_WR                              (1 << 1)
 
-#define RAMCFG						0x2408
-#define		NOOFBANK_SHIFT					0
-#define		NOOFBANK_MASK					0x00000001
-#define		NOOFRANK_SHIFT					1
-#define		NOOFRANK_MASK					0x00000002
-#define		NOOFROWS_SHIFT					2
-#define		NOOFROWS_MASK					0x0000001C
-#define		NOOFCOLS_SHIFT					5
-#define		NOOFCOLS_MASK					0x00000060
-#define		CHANSIZE_SHIFT					7
-#define		CHANSIZE_MASK					0x00000080
-#define		BURSTLENGTH_SHIFT				8
-#define		BURSTLENGTH_MASK				0x00000100
-#define		CHANSIZE_OVERRIDE				(1 << 10)
+#define RAMCFG            0x2408
+#define    NOOFBANK_SHIFT          0
+#define    NOOFBANK_MASK          0x00000001
+#define    NOOFRANK_SHIFT          1
+#define    NOOFRANK_MASK          0x00000002
+#define    NOOFROWS_SHIFT          2
+#define    NOOFROWS_MASK          0x0000001C
+#define    NOOFCOLS_SHIFT          5
+#define    NOOFCOLS_MASK          0x00000060
+#define    CHANSIZE_SHIFT          7
+#define    CHANSIZE_MASK          0x00000080
+#define    BURSTLENGTH_SHIFT        8
+#define    BURSTLENGTH_MASK        0x00000100
+#define    CHANSIZE_OVERRIDE        (1 << 10)
 
-#define SQM_RATIO					0x2424
+#define SQM_RATIO          0x2424
 #       define STATE0(x)                                ((x) << 0)
 #       define STATE0_MASK                              (0xff << 0)
 #       define STATE1(x)                                ((x) << 8)
@@ -193,9 +193,9 @@
 #       define STATE3(x)                                ((x) << 24)
 #       define STATE3_MASK                              (0xff << 24)
 
-#define ARB_RFSH_CNTL					0x2460
+#define ARB_RFSH_CNTL          0x2460
 #       define ENABLE                                   (1 << 0)
-#define ARB_RFSH_RATE					0x2464
+#define ARB_RFSH_RATE          0x2464
 #       define POWERMODE0(x)                            ((x) << 0)
 #       define POWERMODE0_MASK                          (0xff << 0)
 #       define POWERMODE1(x)                            ((x) << 8)
@@ -205,13 +205,13 @@
 #       define POWERMODE3(x)                            ((x) << 24)
 #       define POWERMODE3_MASK                          (0xff << 24)
 
-#define MC_SEQ_DRAM					0x2608
+#define MC_SEQ_DRAM          0x2608
 #       define CKE_DYN                                  (1 << 12)
 
-#define MC_SEQ_CMD					0x26c4
+#define MC_SEQ_CMD          0x26c4
 
-#define MC_SEQ_RESERVE_S				0x2890
-#define MC_SEQ_RESERVE_M				0x2894
+#define MC_SEQ_RESERVE_S        0x2890
+#define MC_SEQ_RESERVE_M        0x2894
 
 #define LVTMA_DATA_SYNCHRONIZATION                      0x7adc
 #       define LVTMA_PFREQCHG                           (1 << 8)

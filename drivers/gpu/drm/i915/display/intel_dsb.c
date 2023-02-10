@@ -28,53 +28,53 @@
  */
 
 /* DSB opcodes. */
-#define DSB_OPCODE_SHIFT		24
-#define DSB_OPCODE_MMIO_WRITE		0x1
-#define DSB_OPCODE_INDEXED_WRITE	0x9
-#define DSB_BYTE_EN			0xF
-#define DSB_BYTE_EN_SHIFT		20
-#define DSB_REG_VALUE_MASK		0xfffff
+#define DSB_OPCODE_SHIFT    24
+#define DSB_OPCODE_MMIO_WRITE    0x1
+#define DSB_OPCODE_INDEXED_WRITE  0x9
+#define DSB_BYTE_EN      0xF
+#define DSB_BYTE_EN_SHIFT    20
+#define DSB_REG_VALUE_MASK    0xfffff
 
 static bool is_dsb_busy(struct drm_i915_private *i915, enum pipe pipe,
-			enum dsb_id id)
+      enum dsb_id id)
 {
-	return DSB_STATUS & intel_de_read(i915, DSB_CTRL(pipe, id));
+  return DSB_STATUS & intel_de_read(i915, DSB_CTRL(pipe, id));
 }
 
 static bool intel_dsb_enable_engine(struct drm_i915_private *i915,
-				    enum pipe pipe, enum dsb_id id)
+            enum pipe pipe, enum dsb_id id)
 {
-	u32 dsb_ctrl;
+  u32 dsb_ctrl;
 
-	dsb_ctrl = intel_de_read(i915, DSB_CTRL(pipe, id));
-	if (DSB_STATUS & dsb_ctrl) {
-		drm_dbg_kms(&i915->drm, "DSB engine is busy.\n");
-		return false;
-	}
+  dsb_ctrl = intel_de_read(i915, DSB_CTRL(pipe, id));
+  if (DSB_STATUS & dsb_ctrl) {
+    drm_dbg_kms(&i915->drm, "DSB engine is busy.\n");
+    return false;
+  }
 
-	dsb_ctrl |= DSB_ENABLE;
-	intel_de_write(i915, DSB_CTRL(pipe, id), dsb_ctrl);
+  dsb_ctrl |= DSB_ENABLE;
+  intel_de_write(i915, DSB_CTRL(pipe, id), dsb_ctrl);
 
-	intel_de_posting_read(i915, DSB_CTRL(pipe, id));
-	return true;
+  intel_de_posting_read(i915, DSB_CTRL(pipe, id));
+  return true;
 }
 
 static bool intel_dsb_disable_engine(struct drm_i915_private *i915,
-				     enum pipe pipe, enum dsb_id id)
+             enum pipe pipe, enum dsb_id id)
 {
-	u32 dsb_ctrl;
+  u32 dsb_ctrl;
 
-	dsb_ctrl = intel_de_read(i915, DSB_CTRL(pipe, id));
-	if (DSB_STATUS & dsb_ctrl) {
-		drm_dbg_kms(&i915->drm, "DSB engine is busy.\n");
-		return false;
-	}
+  dsb_ctrl = intel_de_read(i915, DSB_CTRL(pipe, id));
+  if (DSB_STATUS & dsb_ctrl) {
+    drm_dbg_kms(&i915->drm, "DSB engine is busy.\n");
+    return false;
+  }
 
-	dsb_ctrl &= ~DSB_ENABLE;
-	intel_de_write(i915, DSB_CTRL(pipe, id), dsb_ctrl);
+  dsb_ctrl &= ~DSB_ENABLE;
+  intel_de_write(i915, DSB_CTRL(pipe, id), dsb_ctrl);
 
-	intel_de_posting_read(i915, DSB_CTRL(pipe, id));
-	return true;
+  intel_de_posting_read(i915, DSB_CTRL(pipe, id));
+  return true;
 }
 
 /**
@@ -91,68 +91,68 @@ static bool intel_dsb_disable_engine(struct drm_i915_private *i915,
  */
 
 void intel_dsb_indexed_reg_write(const struct intel_crtc_state *crtc_state,
-				 i915_reg_t reg, u32 val)
+         i915_reg_t reg, u32 val)
 {
-	struct intel_dsb *dsb = crtc_state->dsb;
-	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
-	struct drm_i915_private *dev_priv = to_i915(crtc->base.dev);
-	u32 *buf;
-	u32 reg_val;
+  struct intel_dsb *dsb = crtc_state->dsb;
+  struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
+  struct drm_i915_private *dev_priv = to_i915(crtc->base.dev);
+  u32 *buf;
+  u32 reg_val;
 
-	if (!dsb) {
-		intel_de_write(dev_priv, reg, val);
-		return;
-	}
-	buf = dsb->cmd_buf;
-	if (drm_WARN_ON(&dev_priv->drm, dsb->free_pos >= DSB_BUF_SIZE)) {
-		drm_dbg_kms(&dev_priv->drm, "DSB buffer overflow\n");
-		return;
-	}
+  if (!dsb) {
+    intel_de_write(dev_priv, reg, val);
+    return;
+  }
+  buf = dsb->cmd_buf;
+  if (drm_WARN_ON(&dev_priv->drm, dsb->free_pos >= DSB_BUF_SIZE)) {
+    drm_dbg_kms(&dev_priv->drm, "DSB buffer overflow\n");
+    return;
+  }
 
-	/*
-	 * For example the buffer will look like below for 3 dwords for auto
-	 * increment register:
-	 * +--------------------------------------------------------+
-	 * | size = 3 | offset &| value1 | value2 | value3 | zero   |
-	 * |          | opcode  |        |        |        |        |
-	 * +--------------------------------------------------------+
-	 * +          +         +        +        +        +        +
-	 * 0          4         8        12       16       20       24
-	 * Byte
-	 *
-	 * As every instruction is 8 byte aligned the index of dsb instruction
-	 * will start always from even number while dealing with u32 array. If
-	 * we are writing odd no of dwords, Zeros will be added in the end for
-	 * padding.
-	 */
-	reg_val = buf[dsb->ins_start_offset + 1] & DSB_REG_VALUE_MASK;
-	if (reg_val != i915_mmio_reg_offset(reg)) {
-		/* Every instruction should be 8 byte aligned. */
-		dsb->free_pos = ALIGN(dsb->free_pos, 2);
+  /*
+   * For example the buffer will look like below for 3 dwords for auto
+   * increment register:
+   * +--------------------------------------------------------+
+   * | size = 3 | offset &| value1 | value2 | value3 | zero   |
+   * |          | opcode  |        |        |        |        |
+   * +--------------------------------------------------------+
+   * +          +         +        +        +        +        +
+   * 0          4         8        12       16       20       24
+   * Byte
+   *
+   * As every instruction is 8 byte aligned the index of dsb instruction
+   * will start always from even number while dealing with u32 array. If
+   * we are writing odd no of dwords, Zeros will be added in the end for
+   * padding.
+   */
+  reg_val = buf[dsb->ins_start_offset + 1] & DSB_REG_VALUE_MASK;
+  if (reg_val != i915_mmio_reg_offset(reg)) {
+    /* Every instruction should be 8 byte aligned. */
+    dsb->free_pos = ALIGN(dsb->free_pos, 2);
 
-		dsb->ins_start_offset = dsb->free_pos;
+    dsb->ins_start_offset = dsb->free_pos;
 
-		/* Update the size. */
-		buf[dsb->free_pos++] = 1;
+    /* Update the size. */
+    buf[dsb->free_pos++] = 1;
 
-		/* Update the opcode and reg. */
-		buf[dsb->free_pos++] = (DSB_OPCODE_INDEXED_WRITE  <<
-					DSB_OPCODE_SHIFT) |
-					i915_mmio_reg_offset(reg);
+    /* Update the opcode and reg. */
+    buf[dsb->free_pos++] = (DSB_OPCODE_INDEXED_WRITE  <<
+          DSB_OPCODE_SHIFT) |
+          i915_mmio_reg_offset(reg);
 
-		/* Update the value. */
-		buf[dsb->free_pos++] = val;
-	} else {
-		/* Update the new value. */
-		buf[dsb->free_pos++] = val;
+    /* Update the value. */
+    buf[dsb->free_pos++] = val;
+  } else {
+    /* Update the new value. */
+    buf[dsb->free_pos++] = val;
 
-		/* Update the size. */
-		buf[dsb->ins_start_offset]++;
-	}
+    /* Update the size. */
+    buf[dsb->ins_start_offset]++;
+  }
 
-	/* if number of data words is odd, then the last dword should be 0.*/
-	if (dsb->free_pos & 0x1)
-		buf[dsb->free_pos] = 0;
+  /* if number of data words is odd, then the last dword should be 0.*/
+  if (dsb->free_pos & 0x1)
+    buf[dsb->free_pos] = 0;
 }
 
 /**
@@ -168,30 +168,30 @@ void intel_dsb_indexed_reg_write(const struct intel_crtc_state *crtc_state,
  * through mmio write.
  */
 void intel_dsb_reg_write(const struct intel_crtc_state *crtc_state,
-			 i915_reg_t reg, u32 val)
+       i915_reg_t reg, u32 val)
 {
-	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
-	struct drm_i915_private *dev_priv = to_i915(crtc->base.dev);
-	struct intel_dsb *dsb;
-	u32 *buf;
+  struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
+  struct drm_i915_private *dev_priv = to_i915(crtc->base.dev);
+  struct intel_dsb *dsb;
+  u32 *buf;
 
-	dsb = crtc_state->dsb;
-	if (!dsb) {
-		intel_de_write(dev_priv, reg, val);
-		return;
-	}
+  dsb = crtc_state->dsb;
+  if (!dsb) {
+    intel_de_write(dev_priv, reg, val);
+    return;
+  }
 
-	buf = dsb->cmd_buf;
-	if (drm_WARN_ON(&dev_priv->drm, dsb->free_pos >= DSB_BUF_SIZE)) {
-		drm_dbg_kms(&dev_priv->drm, "DSB buffer overflow\n");
-		return;
-	}
+  buf = dsb->cmd_buf;
+  if (drm_WARN_ON(&dev_priv->drm, dsb->free_pos >= DSB_BUF_SIZE)) {
+    drm_dbg_kms(&dev_priv->drm, "DSB buffer overflow\n");
+    return;
+  }
 
-	dsb->ins_start_offset = dsb->free_pos;
-	buf[dsb->free_pos++] = val;
-	buf[dsb->free_pos++] = (DSB_OPCODE_MMIO_WRITE  << DSB_OPCODE_SHIFT) |
-			       (DSB_BYTE_EN << DSB_BYTE_EN_SHIFT) |
-			       i915_mmio_reg_offset(reg);
+  dsb->ins_start_offset = dsb->free_pos;
+  buf[dsb->free_pos++] = val;
+  buf[dsb->free_pos++] = (DSB_OPCODE_MMIO_WRITE  << DSB_OPCODE_SHIFT) |
+             (DSB_BYTE_EN << DSB_BYTE_EN_SHIFT) |
+             i915_mmio_reg_offset(reg);
 }
 
 /**
@@ -203,52 +203,52 @@ void intel_dsb_reg_write(const struct intel_crtc_state *crtc_state,
  */
 void intel_dsb_commit(const struct intel_crtc_state *crtc_state)
 {
-	struct intel_dsb *dsb = crtc_state->dsb;
-	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
-	struct drm_device *dev = crtc->base.dev;
-	struct drm_i915_private *dev_priv = to_i915(dev);
-	enum pipe pipe = crtc->pipe;
-	u32 tail;
+  struct intel_dsb *dsb = crtc_state->dsb;
+  struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
+  struct drm_device *dev = crtc->base.dev;
+  struct drm_i915_private *dev_priv = to_i915(dev);
+  enum pipe pipe = crtc->pipe;
+  u32 tail;
 
-	if (!(dsb && dsb->free_pos))
-		return;
+  if (!(dsb && dsb->free_pos))
+    return;
 
-	if (!intel_dsb_enable_engine(dev_priv, pipe, dsb->id))
-		goto reset;
+  if (!intel_dsb_enable_engine(dev_priv, pipe, dsb->id))
+    goto reset;
 
-	if (is_dsb_busy(dev_priv, pipe, dsb->id)) {
-		drm_err(&dev_priv->drm,
-			"HEAD_PTR write failed - dsb engine is busy.\n");
-		goto reset;
-	}
-	intel_de_write(dev_priv, DSB_HEAD(pipe, dsb->id),
-		       i915_ggtt_offset(dsb->vma));
+  if (is_dsb_busy(dev_priv, pipe, dsb->id)) {
+    drm_err(&dev_priv->drm,
+      "HEAD_PTR write failed - dsb engine is busy.\n");
+    goto reset;
+  }
+  intel_de_write(dev_priv, DSB_HEAD(pipe, dsb->id),
+           i915_ggtt_offset(dsb->vma));
 
-	tail = ALIGN(dsb->free_pos * 4, CACHELINE_BYTES);
-	if (tail > dsb->free_pos * 4)
-		memset(&dsb->cmd_buf[dsb->free_pos], 0,
-		       (tail - dsb->free_pos * 4));
+  tail = ALIGN(dsb->free_pos * 4, CACHELINE_BYTES);
+  if (tail > dsb->free_pos * 4)
+    memset(&dsb->cmd_buf[dsb->free_pos], 0,
+           (tail - dsb->free_pos * 4));
 
-	if (is_dsb_busy(dev_priv, pipe, dsb->id)) {
-		drm_err(&dev_priv->drm,
-			"TAIL_PTR write failed - dsb engine is busy.\n");
-		goto reset;
-	}
-	drm_dbg_kms(&dev_priv->drm,
-		    "DSB execution started - head 0x%x, tail 0x%x\n",
-		    i915_ggtt_offset(dsb->vma), tail);
-	intel_de_write(dev_priv, DSB_TAIL(pipe, dsb->id),
-		       i915_ggtt_offset(dsb->vma) + tail);
-	if (wait_for(!is_dsb_busy(dev_priv, pipe, dsb->id), 1)) {
-		drm_err(&dev_priv->drm,
-			"Timed out waiting for DSB workload completion.\n");
-		goto reset;
-	}
+  if (is_dsb_busy(dev_priv, pipe, dsb->id)) {
+    drm_err(&dev_priv->drm,
+      "TAIL_PTR write failed - dsb engine is busy.\n");
+    goto reset;
+  }
+  drm_dbg_kms(&dev_priv->drm,
+        "DSB execution started - head 0x%x, tail 0x%x\n",
+        i915_ggtt_offset(dsb->vma), tail);
+  intel_de_write(dev_priv, DSB_TAIL(pipe, dsb->id),
+           i915_ggtt_offset(dsb->vma) + tail);
+  if (wait_for(!is_dsb_busy(dev_priv, pipe, dsb->id), 1)) {
+    drm_err(&dev_priv->drm,
+      "Timed out waiting for DSB workload completion.\n");
+    goto reset;
+  }
 
 reset:
-	dsb->free_pos = 0;
-	dsb->ins_start_offset = 0;
-	intel_dsb_disable_engine(dev_priv, pipe, dsb->id);
+  dsb->free_pos = 0;
+  dsb->ins_start_offset = 0;
+  intel_dsb_disable_engine(dev_priv, pipe, dsb->id);
 }
 
 /**
@@ -260,56 +260,56 @@ reset:
  */
 void intel_dsb_prepare(struct intel_crtc_state *crtc_state)
 {
-	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
-	struct drm_i915_private *i915 = to_i915(crtc->base.dev);
-	struct intel_dsb *dsb;
-	struct drm_i915_gem_object *obj;
-	struct i915_vma *vma;
-	u32 *buf;
-	intel_wakeref_t wakeref;
+  struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
+  struct drm_i915_private *i915 = to_i915(crtc->base.dev);
+  struct intel_dsb *dsb;
+  struct drm_i915_gem_object *obj;
+  struct i915_vma *vma;
+  u32 *buf;
+  intel_wakeref_t wakeref;
 
-	if (!HAS_DSB(i915))
-		return;
+  if (!HAS_DSB(i915))
+    return;
 
-	dsb = kmalloc(sizeof(*dsb), GFP_KERNEL);
-	if (!dsb) {
-		drm_err(&i915->drm, "DSB object creation failed\n");
-		return;
-	}
+  dsb = kmalloc(sizeof(*dsb), GFP_KERNEL);
+  if (!dsb) {
+    drm_err(&i915->drm, "DSB object creation failed\n");
+    return;
+  }
 
-	wakeref = intel_runtime_pm_get(&i915->runtime_pm);
+  wakeref = intel_runtime_pm_get(&i915->runtime_pm);
 
-	obj = i915_gem_object_create_internal(i915, DSB_BUF_SIZE);
-	if (IS_ERR(obj)) {
-		drm_err(&i915->drm, "Gem object creation failed\n");
-		kfree(dsb);
-		goto out;
-	}
+  obj = i915_gem_object_create_internal(i915, DSB_BUF_SIZE);
+  if (IS_ERR(obj)) {
+    drm_err(&i915->drm, "Gem object creation failed\n");
+    kfree(dsb);
+    goto out;
+  }
 
-	vma = i915_gem_object_ggtt_pin(obj, NULL, 0, 0, 0);
-	if (IS_ERR(vma)) {
-		drm_err(&i915->drm, "Vma creation failed\n");
-		i915_gem_object_put(obj);
-		kfree(dsb);
-		goto out;
-	}
+  vma = i915_gem_object_ggtt_pin(obj, NULL, 0, 0, 0);
+  if (IS_ERR(vma)) {
+    drm_err(&i915->drm, "Vma creation failed\n");
+    i915_gem_object_put(obj);
+    kfree(dsb);
+    goto out;
+  }
 
-	buf = i915_gem_object_pin_map_unlocked(vma->obj, I915_MAP_WC);
-	if (IS_ERR(buf)) {
-		drm_err(&i915->drm, "Command buffer creation failed\n");
-		i915_vma_unpin_and_release(&vma, I915_VMA_RELEASE_MAP);
-		kfree(dsb);
-		goto out;
-	}
+  buf = i915_gem_object_pin_map_unlocked(vma->obj, I915_MAP_WC);
+  if (IS_ERR(buf)) {
+    drm_err(&i915->drm, "Command buffer creation failed\n");
+    i915_vma_unpin_and_release(&vma, I915_VMA_RELEASE_MAP);
+    kfree(dsb);
+    goto out;
+  }
 
-	dsb->id = DSB1;
-	dsb->vma = vma;
-	dsb->cmd_buf = buf;
-	dsb->free_pos = 0;
-	dsb->ins_start_offset = 0;
-	crtc_state->dsb = dsb;
+  dsb->id = DSB1;
+  dsb->vma = vma;
+  dsb->cmd_buf = buf;
+  dsb->free_pos = 0;
+  dsb->ins_start_offset = 0;
+  crtc_state->dsb = dsb;
 out:
-	intel_runtime_pm_put(&i915->runtime_pm, wakeref);
+  intel_runtime_pm_put(&i915->runtime_pm, wakeref);
 }
 
 /**
@@ -321,10 +321,10 @@ out:
  */
 void intel_dsb_cleanup(struct intel_crtc_state *crtc_state)
 {
-	if (!crtc_state->dsb)
-		return;
+  if (!crtc_state->dsb)
+    return;
 
-	i915_vma_unpin_and_release(&crtc_state->dsb->vma, I915_VMA_RELEASE_MAP);
-	kfree(crtc_state->dsb);
-	crtc_state->dsb = NULL;
+  i915_vma_unpin_and_release(&crtc_state->dsb->vma, I915_VMA_RELEASE_MAP);
+  kfree(crtc_state->dsb);
+  crtc_state->dsb = NULL;
 }

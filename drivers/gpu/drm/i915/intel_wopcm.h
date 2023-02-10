@@ -17,16 +17,16 @@
  * @guc.size: Size of the GuC WOPCM region.
  */
 struct intel_wopcm {
-	u32 size;
-	struct {
-		u32 base;
-		u32 size;
-	} guc;
+  u32 size;
+  struct {
+    u32 base;
+    u32 size;
+  } guc;
 };
 
 /**
  * intel_wopcm_guc_base()
- * @wopcm:	intel_wopcm structure
+ * @wopcm:  intel_wopcm structure
  *
  * Returns the base of the WOPCM shadowed region.
  *
@@ -36,12 +36,12 @@ struct intel_wopcm {
  */
 static inline u32 intel_wopcm_guc_base(struct intel_wopcm *wopcm)
 {
-	return wopcm->guc.base;
+  return wopcm->guc.base;
 }
 
 /**
  * intel_wopcm_guc_size()
- * @wopcm:	intel_wopcm structure
+ * @wopcm:  intel_wopcm structure
  *
  * Returns size of the WOPCM shadowed region.
  *
@@ -51,7 +51,7 @@ static inline u32 intel_wopcm_guc_base(struct intel_wopcm *wopcm)
  */
 static inline u32 intel_wopcm_guc_size(struct intel_wopcm *wopcm)
 {
-	return wopcm->guc.size;
+  return wopcm->guc.size;
 }
 
 void intel_wopcm_init_early(struct intel_wopcm *wopcm);

@@ -43,20 +43,20 @@
 
 /* function table */
 static const struct hw_factory_funcs funcs = {
-	.init_ddc_data = NULL,
-	.init_generic = NULL,
-	.init_hpd = NULL,
+  .init_ddc_data = NULL,
+  .init_generic = NULL,
+  .init_hpd = NULL,
 };
 
 void dal_hw_factory_diag_fpga_init(struct hw_factory *factory)
 {
-	factory->number_of_pins[GPIO_ID_DDC_DATA] = 8;
-	factory->number_of_pins[GPIO_ID_DDC_CLOCK] = 8;
-	factory->number_of_pins[GPIO_ID_GENERIC] = 7;
-	factory->number_of_pins[GPIO_ID_HPD] = 6;
-	factory->number_of_pins[GPIO_ID_GPIO_PAD] = 31;
-	factory->number_of_pins[GPIO_ID_VIP_PAD] = 0;
-	factory->number_of_pins[GPIO_ID_SYNC] = 2;
-	factory->number_of_pins[GPIO_ID_GSL] = 4;
-	factory->funcs = &funcs;
+  factory->number_of_pins[GPIO_ID_DDC_DATA] = 8;
+  factory->number_of_pins[GPIO_ID_DDC_CLOCK] = 8;
+  factory->number_of_pins[GPIO_ID_GENERIC] = 7;
+  factory->number_of_pins[GPIO_ID_HPD] = 6;
+  factory->number_of_pins[GPIO_ID_GPIO_PAD] = 31;
+  factory->number_of_pins[GPIO_ID_VIP_PAD] = 0;
+  factory->number_of_pins[GPIO_ID_SYNC] = 2;
+  factory->number_of_pins[GPIO_ID_GSL] = 4;
+  factory->funcs = &funcs;
 }

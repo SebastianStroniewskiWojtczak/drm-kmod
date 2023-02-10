@@ -31,17 +31,17 @@
 #include <linux/irq_work.h>
 
 struct dma_fence_array_cb {
-	struct dma_fence_cb cb;
-	struct dma_fence_array *array;
+  struct dma_fence_cb cb;
+  struct dma_fence_array *array;
 };
 
 struct dma_fence_array {
-	struct dma_fence base;
-	spinlock_t lock;
-	unsigned int num_fences;
-	atomic_t num_pending;
-	struct dma_fence **fences;
-	struct irq_work work;
+  struct dma_fence base;
+  spinlock_t lock;
+  unsigned int num_fences;
+  atomic_t num_pending;
+  struct dma_fence **fences;
+  struct irq_work work;
 };
 
 bool dma_fence_is_array(struct dma_fence *fence);

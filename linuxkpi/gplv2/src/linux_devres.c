@@ -6,15 +6,15 @@
  */
 
 struct action_devres {
-	void *data;
-	void (*action)(void *);
+  void *data;
+  void (*action)(void *);
 };
 
 static void devm_action_release(struct device *dev, void *res)
 {
-	struct action_devres *devres = res;
+  struct action_devres *devres = res;
 
-	devres->action(devres->data);
+  devres->action(devres->data);
 }
 
 /**
@@ -28,17 +28,17 @@ static void devm_action_release(struct device *dev, void *res)
  */
 int devm_add_action(struct device *dev, void (*action)(void *), void *data)
 {
-	struct action_devres *devres;
+  struct action_devres *devres;
 
-	devres = devres_alloc(devm_action_release,
-			      sizeof(struct action_devres), GFP_KERNEL);
-	if (!devres)
-		return -ENOMEM;
+  devres = devres_alloc(devm_action_release,
+            sizeof(struct action_devres), GFP_KERNEL);
+  if (!devres)
+    return -ENOMEM;
 
-	devres->data = data;
-	devres->action = action;
+  devres->data = data;
+  devres->action = action;
 
-	devres_add(dev, devres);
-	return 0;
+  devres_add(dev, devres);
+  return 0;
 }
 EXPORT_SYMBOL_GPL(devm_add_action);

@@ -16,9 +16,9 @@ struct intel_crtc;
 void intel_crtc_crc_init(struct intel_crtc *crtc);
 int intel_crtc_set_crc_source(struct drm_crtc *crtc, const char *source_name);
 int intel_crtc_verify_crc_source(struct drm_crtc *crtc,
-				 const char *source_name, size_t *values_cnt);
+         const char *source_name, size_t *values_cnt);
 const char *const *intel_crtc_get_crc_sources(struct drm_crtc *crtc,
-					      size_t *count);
+                size_t *count);
 void intel_crtc_disable_pipe_crc(struct intel_crtc *crtc);
 void intel_crtc_enable_pipe_crc(struct intel_crtc *crtc);
 #else

@@ -79,46 +79,46 @@ struct dmcub_trace_buf_entry;
 
 /* enum dmub_status - return code for dmcub functions */
 enum dmub_status {
-	DMUB_STATUS_OK = 0,
-	DMUB_STATUS_NO_CTX,
-	DMUB_STATUS_QUEUE_FULL,
-	DMUB_STATUS_TIMEOUT,
-	DMUB_STATUS_INVALID,
+  DMUB_STATUS_OK = 0,
+  DMUB_STATUS_NO_CTX,
+  DMUB_STATUS_QUEUE_FULL,
+  DMUB_STATUS_TIMEOUT,
+  DMUB_STATUS_INVALID,
 };
 
 /* enum dmub_asic - dmub asic identifier */
 enum dmub_asic {
-	DMUB_ASIC_NONE = 0,
-	DMUB_ASIC_DCN20,
-	DMUB_ASIC_DCN21,
-	DMUB_ASIC_DCN30,
-	DMUB_ASIC_DCN301,
-	DMUB_ASIC_DCN302,
-	DMUB_ASIC_DCN303,
-	DMUB_ASIC_DCN31,
-	DMUB_ASIC_MAX,
+  DMUB_ASIC_NONE = 0,
+  DMUB_ASIC_DCN20,
+  DMUB_ASIC_DCN21,
+  DMUB_ASIC_DCN30,
+  DMUB_ASIC_DCN301,
+  DMUB_ASIC_DCN302,
+  DMUB_ASIC_DCN303,
+  DMUB_ASIC_DCN31,
+  DMUB_ASIC_MAX,
 };
 
 /* enum dmub_window_id - dmub window identifier */
 enum dmub_window_id {
-	DMUB_WINDOW_0_INST_CONST = 0,
-	DMUB_WINDOW_1_STACK,
-	DMUB_WINDOW_2_BSS_DATA,
-	DMUB_WINDOW_3_VBIOS,
-	DMUB_WINDOW_4_MAILBOX,
-	DMUB_WINDOW_5_TRACEBUFF,
-	DMUB_WINDOW_6_FW_STATE,
-	DMUB_WINDOW_7_SCRATCH_MEM,
-	DMUB_WINDOW_TOTAL,
+  DMUB_WINDOW_0_INST_CONST = 0,
+  DMUB_WINDOW_1_STACK,
+  DMUB_WINDOW_2_BSS_DATA,
+  DMUB_WINDOW_3_VBIOS,
+  DMUB_WINDOW_4_MAILBOX,
+  DMUB_WINDOW_5_TRACEBUFF,
+  DMUB_WINDOW_6_FW_STATE,
+  DMUB_WINDOW_7_SCRATCH_MEM,
+  DMUB_WINDOW_TOTAL,
 };
 
 /* enum dmub_notification_type - dmub outbox notification identifier */
 enum dmub_notification_type {
-	DMUB_NOTIFICATION_NO_DATA = 0,
-	DMUB_NOTIFICATION_AUX_REPLY,
-	DMUB_NOTIFICATION_HPD,
-	DMUB_NOTIFICATION_HPD_IRQ,
-	DMUB_NOTIFICATION_MAX
+  DMUB_NOTIFICATION_NO_DATA = 0,
+  DMUB_NOTIFICATION_AUX_REPLY,
+  DMUB_NOTIFICATION_HPD,
+  DMUB_NOTIFICATION_HPD_IRQ,
+  DMUB_NOTIFICATION_MAX
 };
 
 /**
@@ -127,8 +127,8 @@ enum dmub_notification_type {
  * @top: top address for region
  */
 struct dmub_region {
-	uint32_t base;
-	uint32_t top;
+  uint32_t base;
+  uint32_t top;
 };
 
 /**
@@ -137,8 +137,8 @@ struct dmub_region {
  * @r: region in uc address space for cache window
  */
 struct dmub_window {
-	union dmub_addr offset;
-	struct dmub_region region;
+  union dmub_addr offset;
+  struct dmub_region region;
 };
 
 /**
@@ -148,9 +148,9 @@ struct dmub_window {
  * @size: size of the region in bytes, zero if invalid
  */
 struct dmub_fb {
-	void *cpu_addr;
-	uint64_t gpu_addr;
-	uint32_t size;
+  void *cpu_addr;
+  uint64_t gpu_addr;
+  uint32_t size;
 };
 
 /**
@@ -161,11 +161,11 @@ struct dmub_fb {
  * @fw_bss_data: raw firmware bss data section
  */
 struct dmub_srv_region_params {
-	uint32_t inst_const_size;
-	uint32_t bss_data_size;
-	uint32_t vbios_size;
-	const uint8_t *fw_inst_const;
-	const uint8_t *fw_bss_data;
+  uint32_t inst_const_size;
+  uint32_t bss_data_size;
+  uint32_t vbios_size;
+  const uint8_t *fw_inst_const;
+  const uint8_t *fw_bss_data;
 };
 
 /**
@@ -184,9 +184,9 @@ struct dmub_srv_region_params {
  * region base address is 256 byte aligned.
  */
 struct dmub_srv_region_info {
-	uint32_t fb_size;
-	uint8_t num_regions;
-	struct dmub_region regions[DMUB_WINDOW_TOTAL];
+  uint32_t fb_size;
+  uint8_t num_regions;
+  struct dmub_region regions[DMUB_WINDOW_TOTAL];
 };
 
 /**
@@ -196,9 +196,9 @@ struct dmub_srv_region_info {
  * @gpu_addr: base gpu virtual address for the framebuffer
  */
 struct dmub_srv_fb_params {
-	const struct dmub_srv_region_info *region_info;
-	void *cpu_addr;
-	uint64_t gpu_addr;
+  const struct dmub_srv_region_info *region_info;
+  void *cpu_addr;
+  uint64_t gpu_addr;
 };
 
 /**
@@ -215,8 +215,8 @@ struct dmub_srv_fb_params {
  * by the dmub service.
  */
 struct dmub_srv_fb_info {
-	uint8_t num_fb;
-	struct dmub_fb fb[DMUB_WINDOW_TOTAL];
+  uint8_t num_fb;
+  struct dmub_fb fb[DMUB_WINDOW_TOTAL];
 };
 
 /*
@@ -228,13 +228,13 @@ struct dmub_srv_fb_info {
  * @load_inst_const: true if DMUB should load inst const fw
  */
 struct dmub_srv_hw_params {
-	struct dmub_fb *fb[DMUB_WINDOW_TOTAL];
-	uint64_t fb_base;
-	uint64_t fb_offset;
-	uint32_t psp_version;
-	bool load_inst_const;
-	bool skip_panel_power_sequence;
-	bool disable_z10;
+  struct dmub_fb *fb[DMUB_WINDOW_TOTAL];
+  uint64_t fb_base;
+  uint64_t fb_offset;
+  uint32_t psp_version;
+  bool load_inst_const;
+  bool skip_panel_power_sequence;
+  bool disable_z10;
 };
 
 /**
@@ -242,120 +242,120 @@ struct dmub_srv_hw_params {
  * debugging purposes, including logging, crash analysis, etc.
  */
 struct dmub_diagnostic_data {
-	uint32_t dmcub_version;
-	uint32_t scratch[16];
-	uint32_t pc;
-	uint32_t undefined_address_fault_addr;
-	uint32_t inst_fetch_fault_addr;
-	uint32_t data_write_fault_addr;
-	uint32_t inbox1_rptr;
-	uint32_t inbox1_wptr;
-	uint32_t inbox1_size;
-	uint32_t inbox0_rptr;
-	uint32_t inbox0_wptr;
-	uint32_t inbox0_size;
-	uint8_t is_dmcub_enabled : 1;
-	uint8_t is_dmcub_soft_reset : 1;
-	uint8_t is_dmcub_secure_reset : 1;
-	uint8_t is_traceport_en : 1;
-	uint8_t is_cw0_enabled : 1;
-	uint8_t is_cw6_enabled : 1;
+  uint32_t dmcub_version;
+  uint32_t scratch[16];
+  uint32_t pc;
+  uint32_t undefined_address_fault_addr;
+  uint32_t inst_fetch_fault_addr;
+  uint32_t data_write_fault_addr;
+  uint32_t inbox1_rptr;
+  uint32_t inbox1_wptr;
+  uint32_t inbox1_size;
+  uint32_t inbox0_rptr;
+  uint32_t inbox0_wptr;
+  uint32_t inbox0_size;
+  uint8_t is_dmcub_enabled : 1;
+  uint8_t is_dmcub_soft_reset : 1;
+  uint8_t is_dmcub_secure_reset : 1;
+  uint8_t is_traceport_en : 1;
+  uint8_t is_cw0_enabled : 1;
+  uint8_t is_cw6_enabled : 1;
 };
 
 /**
  * struct dmub_srv_base_funcs - Driver specific base callbacks
  */
 struct dmub_srv_base_funcs {
-	/**
-	 * @reg_read:
-	 *
-	 * Hook for reading a register.
-	 *
-	 * Return: The 32-bit register value from the given address.
-	 */
-	uint32_t (*reg_read)(void *ctx, uint32_t address);
+  /**
+   * @reg_read:
+   *
+   * Hook for reading a register.
+   *
+   * Return: The 32-bit register value from the given address.
+   */
+  uint32_t (*reg_read)(void *ctx, uint32_t address);
 
-	/**
-	 * @reg_write:
-	 *
-	 * Hook for writing a value to the register specified by address.
-	 */
-	void (*reg_write)(void *ctx, uint32_t address, uint32_t value);
+  /**
+   * @reg_write:
+   *
+   * Hook for writing a value to the register specified by address.
+   */
+  void (*reg_write)(void *ctx, uint32_t address, uint32_t value);
 };
 
 /**
  * struct dmub_srv_hw_funcs - hardware sequencer funcs for dmub
  */
 struct dmub_srv_hw_funcs {
-	/* private: internal use only */
+  /* private: internal use only */
 
-	void (*init)(struct dmub_srv *dmub);
+  void (*init)(struct dmub_srv *dmub);
 
-	void (*reset)(struct dmub_srv *dmub);
+  void (*reset)(struct dmub_srv *dmub);
 
-	void (*reset_release)(struct dmub_srv *dmub);
+  void (*reset_release)(struct dmub_srv *dmub);
 
-	void (*backdoor_load)(struct dmub_srv *dmub,
-			      const struct dmub_window *cw0,
-			      const struct dmub_window *cw1);
+  void (*backdoor_load)(struct dmub_srv *dmub,
+            const struct dmub_window *cw0,
+            const struct dmub_window *cw1);
 
-	void (*setup_windows)(struct dmub_srv *dmub,
-			      const struct dmub_window *cw2,
-			      const struct dmub_window *cw3,
-			      const struct dmub_window *cw4,
-			      const struct dmub_window *cw5,
-			      const struct dmub_window *cw6);
+  void (*setup_windows)(struct dmub_srv *dmub,
+            const struct dmub_window *cw2,
+            const struct dmub_window *cw3,
+            const struct dmub_window *cw4,
+            const struct dmub_window *cw5,
+            const struct dmub_window *cw6);
 
-	void (*setup_mailbox)(struct dmub_srv *dmub,
-			      const struct dmub_region *inbox1);
+  void (*setup_mailbox)(struct dmub_srv *dmub,
+            const struct dmub_region *inbox1);
 
-	uint32_t (*get_inbox1_rptr)(struct dmub_srv *dmub);
+  uint32_t (*get_inbox1_rptr)(struct dmub_srv *dmub);
 
-	void (*set_inbox1_wptr)(struct dmub_srv *dmub, uint32_t wptr_offset);
+  void (*set_inbox1_wptr)(struct dmub_srv *dmub, uint32_t wptr_offset);
 
-	void (*setup_out_mailbox)(struct dmub_srv *dmub,
-			      const struct dmub_region *outbox1);
+  void (*setup_out_mailbox)(struct dmub_srv *dmub,
+            const struct dmub_region *outbox1);
 
-	uint32_t (*get_outbox1_wptr)(struct dmub_srv *dmub);
+  uint32_t (*get_outbox1_wptr)(struct dmub_srv *dmub);
 
-	void (*set_outbox1_rptr)(struct dmub_srv *dmub, uint32_t rptr_offset);
+  void (*set_outbox1_rptr)(struct dmub_srv *dmub, uint32_t rptr_offset);
 
-	void (*setup_outbox0)(struct dmub_srv *dmub,
-			      const struct dmub_region *outbox0);
+  void (*setup_outbox0)(struct dmub_srv *dmub,
+            const struct dmub_region *outbox0);
 
-	uint32_t (*get_outbox0_wptr)(struct dmub_srv *dmub);
+  uint32_t (*get_outbox0_wptr)(struct dmub_srv *dmub);
 
-	void (*set_outbox0_rptr)(struct dmub_srv *dmub, uint32_t rptr_offset);
+  void (*set_outbox0_rptr)(struct dmub_srv *dmub, uint32_t rptr_offset);
 
-	uint32_t (*emul_get_inbox1_rptr)(struct dmub_srv *dmub);
+  uint32_t (*emul_get_inbox1_rptr)(struct dmub_srv *dmub);
 
-	void (*emul_set_inbox1_wptr)(struct dmub_srv *dmub, uint32_t wptr_offset);
+  void (*emul_set_inbox1_wptr)(struct dmub_srv *dmub, uint32_t wptr_offset);
 
-	bool (*is_supported)(struct dmub_srv *dmub);
+  bool (*is_supported)(struct dmub_srv *dmub);
 
-	bool (*is_hw_init)(struct dmub_srv *dmub);
+  bool (*is_hw_init)(struct dmub_srv *dmub);
 
-	bool (*is_phy_init)(struct dmub_srv *dmub);
-	void (*enable_dmub_boot_options)(struct dmub_srv *dmub,
-				const struct dmub_srv_hw_params *params);
+  bool (*is_phy_init)(struct dmub_srv *dmub);
+  void (*enable_dmub_boot_options)(struct dmub_srv *dmub,
+        const struct dmub_srv_hw_params *params);
 
-	void (*skip_dmub_panel_power_sequence)(struct dmub_srv *dmub, bool skip);
+  void (*skip_dmub_panel_power_sequence)(struct dmub_srv *dmub, bool skip);
 
-	union dmub_fw_boot_status (*get_fw_status)(struct dmub_srv *dmub);
+  union dmub_fw_boot_status (*get_fw_status)(struct dmub_srv *dmub);
 
 
-	void (*set_gpint)(struct dmub_srv *dmub,
-			  union dmub_gpint_data_register reg);
+  void (*set_gpint)(struct dmub_srv *dmub,
+        union dmub_gpint_data_register reg);
 
-	bool (*is_gpint_acked)(struct dmub_srv *dmub,
-			       union dmub_gpint_data_register reg);
+  bool (*is_gpint_acked)(struct dmub_srv *dmub,
+             union dmub_gpint_data_register reg);
 
-	uint32_t (*get_gpint_response)(struct dmub_srv *dmub);
+  uint32_t (*get_gpint_response)(struct dmub_srv *dmub);
 
-	void (*send_inbox0_cmd)(struct dmub_srv *dmub, union dmub_inbox0_data_register data);
-	uint32_t (*get_current_time)(struct dmub_srv *dmub);
+  void (*send_inbox0_cmd)(struct dmub_srv *dmub, union dmub_inbox0_data_register data);
+  uint32_t (*get_current_time)(struct dmub_srv *dmub);
 
-	void (*get_diagnostic_data)(struct dmub_srv *dmub, struct dmub_diagnostic_data *dmub_oca);
+  void (*get_diagnostic_data)(struct dmub_srv *dmub, struct dmub_diagnostic_data *dmub_oca);
 };
 
 /**
@@ -368,12 +368,12 @@ struct dmub_srv_hw_funcs {
  * @is_virtual: false for hw support only
  */
 struct dmub_srv_create_params {
-	struct dmub_srv_base_funcs funcs;
-	struct dmub_srv_hw_funcs *hw_funcs;
-	void *user_ctx;
-	enum dmub_asic asic;
-	uint32_t fw_version;
-	bool is_virtual;
+  struct dmub_srv_base_funcs funcs;
+  struct dmub_srv_hw_funcs *hw_funcs;
+  void *user_ctx;
+  enum dmub_asic asic;
+  uint32_t fw_version;
+  bool is_virtual;
 };
 
 /**
@@ -385,37 +385,37 @@ struct dmub_srv_create_params {
  * @fw_state: dmub firmware state pointer
  */
 struct dmub_srv {
-	enum dmub_asic asic;
-	void *user_ctx;
-	uint32_t fw_version;
-	bool is_virtual;
-	struct dmub_fb scratch_mem_fb;
-	volatile const struct dmub_fw_state *fw_state;
+  enum dmub_asic asic;
+  void *user_ctx;
+  uint32_t fw_version;
+  bool is_virtual;
+  struct dmub_fb scratch_mem_fb;
+  volatile const struct dmub_fw_state *fw_state;
 
-	/* private: internal use only */
-	const struct dmub_srv_common_regs *regs;
-	const struct dmub_srv_dcn31_regs *regs_dcn31;
+  /* private: internal use only */
+  const struct dmub_srv_common_regs *regs;
+  const struct dmub_srv_dcn31_regs *regs_dcn31;
 
-	struct dmub_srv_base_funcs funcs;
-	struct dmub_srv_hw_funcs hw_funcs;
-	struct dmub_rb inbox1_rb;
-	/**
-	 * outbox1_rb is accessed without locks (dal & dc)
-	 * and to be used only in dmub_srv_stat_get_notification()
-	 */
-	struct dmub_rb outbox1_rb;
+  struct dmub_srv_base_funcs funcs;
+  struct dmub_srv_hw_funcs hw_funcs;
+  struct dmub_rb inbox1_rb;
+  /**
+   * outbox1_rb is accessed without locks (dal & dc)
+   * and to be used only in dmub_srv_stat_get_notification()
+   */
+  struct dmub_rb outbox1_rb;
 
-	struct dmub_rb outbox0_rb;
+  struct dmub_rb outbox0_rb;
 
-	bool sw_init;
-	bool hw_init;
+  bool sw_init;
+  bool hw_init;
 
-	uint64_t fb_base;
-	uint64_t fb_offset;
-	uint32_t psp_version;
+  uint64_t fb_base;
+  uint64_t fb_offset;
+  uint32_t psp_version;
 
-	/* Feature capabilities reported by fw */
-	struct dmub_feature_caps feature_caps;
+  /* Feature capabilities reported by fw */
+  struct dmub_feature_caps feature_caps;
 };
 
 /**
@@ -428,14 +428,14 @@ struct dmub_srv {
  * @hpd_status: hpd status
  */
 struct dmub_notification {
-	enum dmub_notification_type type;
-	uint8_t link_index;
-	uint8_t result;
-	bool pending_notification;
-	union {
-		struct aux_reply_data aux_reply;
-		enum dp_hpd_status hpd_status;
-	};
+  enum dmub_notification_type type;
+  uint8_t link_index;
+  uint8_t result;
+  bool pending_notification;
+  union {
+    struct aux_reply_data aux_reply;
+    enum dp_hpd_status hpd_status;
+  };
 };
 
 /**
@@ -443,7 +443,7 @@ struct dmub_notification {
  * of a firmware to know if feature or functionality is supported or present.
  */
 #define DMUB_FW_VERSION(major, minor, revision) \
-	((((major) & 0xFF) << 24) | (((minor) & 0xFF) << 16) | ((revision) & 0xFFFF))
+  ((((major) & 0xFF) << 24) | (((minor) & 0xFF) << 16) | ((revision) & 0xFFFF))
 
 /**
  * dmub_srv_create() - creates the DMUB service.
@@ -455,7 +455,7 @@ struct dmub_notification {
  *   DMUB_STATUS_INVALID - unspecified error
  */
 enum dmub_status dmub_srv_create(struct dmub_srv *dmub,
-				 const struct dmub_srv_create_params *params);
+         const struct dmub_srv_create_params *params);
 
 /**
  * dmub_srv_destroy() - destroys the DMUB service.
@@ -478,8 +478,8 @@ void dmub_srv_destroy(struct dmub_srv *dmub);
  */
 enum dmub_status
 dmub_srv_calc_region_info(struct dmub_srv *dmub,
-			  const struct dmub_srv_region_params *params,
-			  struct dmub_srv_region_info *out);
+        const struct dmub_srv_region_params *params,
+        struct dmub_srv_region_info *out);
 
 /**
  * dmub_srv_calc_region_info() - retreives fb info from the dmub service
@@ -495,8 +495,8 @@ dmub_srv_calc_region_info(struct dmub_srv *dmub,
  *   DMUB_STATUS_INVALID - unspecified error
  */
 enum dmub_status dmub_srv_calc_fb_info(struct dmub_srv *dmub,
-				       const struct dmub_srv_fb_params *params,
-				       struct dmub_srv_fb_info *out);
+               const struct dmub_srv_fb_params *params,
+               struct dmub_srv_fb_info *out);
 
 /**
  * dmub_srv_has_hw_support() - returns hw support state for dmcub
@@ -512,7 +512,7 @@ enum dmub_status dmub_srv_calc_fb_info(struct dmub_srv *dmub,
  *   DMUB_STATUS_INVALID - unspecified error
  */
 enum dmub_status dmub_srv_has_hw_support(struct dmub_srv *dmub,
-					 bool *is_supported);
+           bool *is_supported);
 
 /**
  * dmub_srv_is_hw_init() - returns hardware init state
@@ -537,7 +537,7 @@ enum dmub_status dmub_srv_is_hw_init(struct dmub_srv *dmub, bool *is_hw_init);
  *   DMUB_STATUS_INVALID - unspecified error
  */
 enum dmub_status dmub_srv_hw_init(struct dmub_srv *dmub,
-				  const struct dmub_srv_hw_params *params);
+          const struct dmub_srv_hw_params *params);
 
 /**
  * dmub_srv_hw_reset() - puts the DMUB hardware in reset state if initialized
@@ -568,7 +568,7 @@ enum dmub_status dmub_srv_hw_reset(struct dmub_srv *dmub);
  *   DMUB_STATUS_INVALID - unspecified error
  */
 enum dmub_status dmub_srv_cmd_queue(struct dmub_srv *dmub,
-				    const union dmub_rb_cmd *cmd);
+            const union dmub_rb_cmd *cmd);
 
 /**
  * dmub_srv_cmd_execute() - Executes a queued sequence to the dmub
@@ -599,7 +599,7 @@ enum dmub_status dmub_srv_cmd_execute(struct dmub_srv *dmub);
  *   DMUB_STATUS_INVALID - unspecified error
  */
 enum dmub_status dmub_srv_wait_for_auto_load(struct dmub_srv *dmub,
-					     uint32_t timeout_us);
+               uint32_t timeout_us);
 
 /**
  * dmub_srv_wait_for_phy_init() - Waits for DMUB PHY init to complete
@@ -618,7 +618,7 @@ enum dmub_status dmub_srv_wait_for_auto_load(struct dmub_srv *dmub,
  *   DMUB_STATUS_INVALID - unspecified error
  */
 enum dmub_status dmub_srv_wait_for_phy_init(struct dmub_srv *dmub,
-					    uint32_t timeout_us);
+              uint32_t timeout_us);
 
 /**
  * dmub_srv_wait_for_idle() - Waits for the DMUB to be idle
@@ -635,7 +635,7 @@ enum dmub_status dmub_srv_wait_for_phy_init(struct dmub_srv *dmub,
  *   DMUB_STATUS_INVALID - unspecified error
  */
 enum dmub_status dmub_srv_wait_for_idle(struct dmub_srv *dmub,
-					uint32_t timeout_us);
+          uint32_t timeout_us);
 
 /**
  * dmub_srv_send_gpint_command() - Sends a GPINT based command.
@@ -657,8 +657,8 @@ enum dmub_status dmub_srv_wait_for_idle(struct dmub_srv *dmub,
  */
 enum dmub_status
 dmub_srv_send_gpint_command(struct dmub_srv *dmub,
-			    enum dmub_gpint_command command_code,
-			    uint16_t param, uint32_t timeout_us);
+          enum dmub_gpint_command command_code,
+          uint16_t param, uint32_t timeout_us);
 
 /**
  * dmub_srv_get_gpint_response() - Queries the GPINT response.
@@ -674,7 +674,7 @@ dmub_srv_send_gpint_command(struct dmub_srv *dmub,
  *   DMUB_STATUS_INVALID - unspecified error
  */
 enum dmub_status dmub_srv_get_gpint_response(struct dmub_srv *dmub,
-					     uint32_t *response);
+               uint32_t *response);
 
 /**
  * dmub_flush_buffer_mem() - Read back entire frame buffer region.
@@ -697,10 +697,10 @@ void dmub_flush_buffer_mem(const struct dmub_fb *fb);
  *   DMUB_STATUS_INVALID - unspecified error, unsupported
  */
 enum dmub_status dmub_srv_get_fw_boot_status(struct dmub_srv *dmub,
-					     union dmub_fw_boot_status *status);
+               union dmub_fw_boot_status *status);
 
 enum dmub_status dmub_srv_cmd_with_reply_data(struct dmub_srv *dmub,
-					      union dmub_rb_cmd *cmd);
+                union dmub_rb_cmd *cmd);
 
 bool dmub_srv_get_outbox0_msg(struct dmub_srv *dmub, struct dmcub_trace_buf_entry *entry);
 

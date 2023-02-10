@@ -32,10 +32,10 @@
 
 #ifdef __linux__
 int amdgpu_hmm_range_get_pages(struct mmu_interval_notifier *notifier,
-			       struct mm_struct *mm, struct page **pages,
-			       uint64_t start, uint64_t npages,
-			       struct hmm_range **phmm_range, bool readonly,
-			       bool mmap_locked, void *owner);
+             struct mm_struct *mm, struct page **pages,
+             uint64_t start, uint64_t npages,
+             struct hmm_range **phmm_range, bool readonly,
+             bool mmap_locked, void *owner);
 int amdgpu_hmm_range_get_pages_done(struct hmm_range *hmm_range);
 #endif
 
@@ -45,9 +45,9 @@ void amdgpu_mn_unregister(struct amdgpu_bo *bo);
 #else
 static inline int amdgpu_mn_register(struct amdgpu_bo *bo, unsigned long addr)
 {
-	DRM_WARN_ONCE("HMM_MIRROR kernel config option is not enabled, "
-		      "add CONFIG_ZONE_DEVICE=y in config file to fix this\n");
-	return -ENODEV;
+  DRM_WARN_ONCE("HMM_MIRROR kernel config option is not enabled, "
+          "add CONFIG_ZONE_DEVICE=y in config file to fix this\n");
+  return -ENODEV;
 }
 static inline void amdgpu_mn_unregister(struct amdgpu_bo *bo) {}
 #endif

@@ -37,19 +37,19 @@ struct opregion_swsci;
 struct opregion_asle;
 
 struct intel_opregion {
-	struct opregion_header *header;
-	struct opregion_acpi *acpi;
-	struct opregion_swsci *swsci;
-	u32 swsci_gbda_sub_functions;
-	u32 swsci_sbcb_sub_functions;
-	struct opregion_asle *asle;
-	void *rvda;
-	void *vbt_firmware;
-	const void *vbt;
-	u32 vbt_size;
-	u32 *lid_state;
-	struct work_struct asle_work;
-	struct notifier_block acpi_notifier;
+  struct opregion_header *header;
+  struct opregion_acpi *acpi;
+  struct opregion_swsci *swsci;
+  u32 swsci_gbda_sub_functions;
+  u32 swsci_sbcb_sub_functions;
+  struct opregion_asle *asle;
+  void *rvda;
+  void *vbt_firmware;
+  const void *vbt;
+  u32 vbt_size;
+  u32 *lid_state;
+  struct work_struct asle_work;
+  struct notifier_block acpi_notifier;
 };
 
 #define OPREGION_SIZE            (8 * 1024)
@@ -63,20 +63,20 @@ void intel_opregion_unregister(struct drm_i915_private *dev_priv);
 
 void intel_opregion_resume(struct drm_i915_private *dev_priv);
 void intel_opregion_suspend(struct drm_i915_private *dev_priv,
-			    pci_power_t state);
+          pci_power_t state);
 
 void intel_opregion_asle_intr(struct drm_i915_private *dev_priv);
 int intel_opregion_notify_encoder(struct intel_encoder *intel_encoder,
-				  bool enable);
+          bool enable);
 int intel_opregion_notify_adapter(struct drm_i915_private *dev_priv,
-				  pci_power_t state);
+          pci_power_t state);
 int intel_opregion_get_panel_type(struct drm_i915_private *dev_priv);
 
 #else /* CONFIG_ACPI*/
 
 static inline int intel_opregion_setup(struct drm_i915_private *dev_priv)
 {
-	return 0;
+  return 0;
 }
 
 static inline void intel_opregion_register(struct drm_i915_private *dev_priv)
@@ -92,7 +92,7 @@ static inline void intel_opregion_resume(struct drm_i915_private *dev_priv)
 }
 
 static inline void intel_opregion_suspend(struct drm_i915_private *dev_priv,
-					  pci_power_t state)
+            pci_power_t state)
 {
 }
 
@@ -103,18 +103,18 @@ static inline void intel_opregion_asle_intr(struct drm_i915_private *dev_priv)
 static inline int
 intel_opregion_notify_encoder(struct intel_encoder *intel_encoder, bool enable)
 {
-	return 0;
+  return 0;
 }
 
 static inline int
 intel_opregion_notify_adapter(struct drm_i915_private *dev, pci_power_t state)
 {
-	return 0;
+  return 0;
 }
 
 static inline int intel_opregion_get_panel_type(struct drm_i915_private *dev)
 {
-	return -ENODEV;
+  return -ENODEV;
 }
 
 #endif /* CONFIG_ACPI */
